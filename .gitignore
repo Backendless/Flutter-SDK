@@ -12,3 +12,4 @@ build/
 
 pubspec.lock
 example/ios/Podfile.lock
+.metadata

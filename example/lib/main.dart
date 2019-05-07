@@ -25,7 +25,8 @@ class _MyAppState extends State<MyApp> {
     String platformVersion;
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
-      platformVersion = await BackendlessSdk.platformVersion;
+      Backendless.initApp("4C50E3CB-D44F-2019-FF4D-ECE3F1E06B00", "FD99AED3-300E-8BAC-FF42-6DCBE4084F00");
+      platformVersion = await Backendless.Cache.get("myKey");
     } on PlatformException {
       platformVersion = 'Failed to get platform version.';
     }
