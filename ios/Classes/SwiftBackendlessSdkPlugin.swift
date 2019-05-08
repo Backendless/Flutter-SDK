@@ -23,42 +23,47 @@ fileprivate enum FlutterPluginChannels {
 }
 
 public class SwiftBackendlessSdkPlugin: NSObject, FlutterPlugin {
-
-  static let backendless = Backendless.shared
-
-  public static func register(with registrar: FlutterPluginRegistrar) {
-    let instance = SwiftBackendlessSdkPlugin()
-
-    FlutterPluginChannels.allChannels
-        .forEach { channelName in
-            let channel = FlutterMethodChannel(name: channelName, binaryMessenger: registrar.messenger())
-                
-            let handler: FlutterCallHandlerProtocol
-
-            switch channelName {
-            case FlutterPluginChannels.backendlessChannel:
-                handler = BackendlessCallHandler()
-            case FlutterPluginChannels.cacheChannel:
-                handler = CacheCallHandler()
-            case FlutterPluginChannels.dataChannel:
-                handler = DataCallHandler()
-            case FlutterPluginChannels.commerceChannel:
-                handler = CommerceCallHandler()
-            case FlutterPluginChannels.countersChannel:
-                handler = CountersCallHandler()
-            case FlutterPluginChannels.eventsChannel:
-                handler = EventsCallHandler()
-            case FlutterPluginChannels.filesChannel:
-                handler = FilesCallHandler()
-            case FlutterPluginChannels.geoChannel:
-                handler = GeoCallHandler()
-            default:
-                return
-            }
-            
-            channel.setMethodCallHandler(handler.callRouter)
-            registrar.addMethodCallDelegate(instance, channel: channel)
-        }
     
-  }
+    static var handlers: [FlutterCallHandlerProtocol] = []
+    
+    static let backendless = Backendless.shared
+    
+    public static func register(with registrar: FlutterPluginRegistrar) {
+        FlutterPluginChannels.allChannels
+            .forEach { channelName in
+                let channel = FlutterMethodChannel(name: channelName, binaryMessenger: registrar.messenger())
+                
+                let handler: FlutterCallHandlerProtocol
+                
+                switch channelName {
+                case FlutterPluginChannels.backendlessChannel:
+                    handler = BackendlessCallHandler()
+                case FlutterPluginChannels.cacheChannel:
+                    handler = CacheCallHandler()
+                case FlutterPluginChannels.dataChannel:
+                    handler = DataCallHandler()
+                case FlutterPluginChannels.commerceChannel:
+                    handler = CommerceCallHandler()
+                case FlutterPluginChannels.countersChannel:
+                    handler = CountersCallHandler()
+                case FlutterPluginChannels.eventsChannel:
+                    handler = EventsCallHandler()
+                case FlutterPluginChannels.filesChannel:
+                    handler = FilesCallHandler()
+                case FlutterPluginChannels.geoChannel:
+                    handler = GeoCallHandler()
+                case FlutterPluginChannels.loggingChannel:
+                    handler = LoggingCallHandler()
+                case FlutterPluginChannels.messagingChannel:
+                    handler = MessagingCallHandler(messagingChannel: channel)
+                default:
+                    return
+                }
+                
+                handlers.append(handler)
+                
+                channel.setMethodCallHandler(handler.callRouter)
+        }
+    }
+    
 }
