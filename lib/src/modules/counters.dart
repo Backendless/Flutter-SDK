@@ -7,53 +7,53 @@ class BackendlessCounters {
   static final BackendlessCounters _instance = new BackendlessCounters._internal();
   BackendlessCounters._internal();
 
-  Future<int> addAndGet(String counterName, int value) async =>
+  Future<int> addAndGet(String counterName, int value) =>
     _channel.invokeMethod("Backendless.Counters.addAndGet", <String, dynamic> {
       "counterName":counterName,
       "value":value
     });
 
-  Future<bool> compareAndSet(String counterName, int expected, int updated) async =>
+  Future<bool> compareAndSet(String counterName, int expected, int updated) =>
     _channel.invokeMethod("Backendless.Counters.compareAndSet", <String, dynamic> {
       "counterName":counterName,
       "expected":expected,
       "updated":updated
     });
   
-  Future<int> decrementAndGet(String counterName) async =>
+  Future<int> decrementAndGet(String counterName) =>
     _channel.invokeMethod("Backendless.Counters.decrementAndGet", <String, dynamic> {
       "counterName":counterName
     });
 
-  Future<int> getValue(String counterName) async =>
+  Future<int> getValue(String counterName) =>
     _channel.invokeMethod("Backendless.Counters.get", <String, dynamic> {
       "counterName":counterName
     });
 
-  Future<int> getAndAdd(String counterName, int value) async =>
+  Future<int> getAndAdd(String counterName, int value) =>
     _channel.invokeMethod("Backendless.Counters.getAndAdd", <String, dynamic> {
       "counterName":counterName,
       "value":value
     }); 
 
-  Future<int> getAndDecrement(String counterName) async =>
+  Future<int> getAndDecrement(String counterName) =>
     _channel.invokeMethod("Backendless.Counters.getAndDecrement", <String, dynamic> {
       "counterName":counterName
     });
 
-  Future<int> getAndIncrement(String counterName) async =>
+  Future<int> getAndIncrement(String counterName) =>
     _channel.invokeMethod("Backendless.Counters.getAndIncrement", <String, dynamic> {
       "counterName":counterName
     });
 
-  Future<int> incrementAndGet(String counterName) async =>
+  Future<int> incrementAndGet(String counterName) =>
     _channel.invokeMethod("Backendless.Counters.incrementAndGet", <String, dynamic> {
       "counterName":counterName
     });
 
   IAtomic of(String counterName) => new AtomicService(counterName);
 
-  void reset(String counterName) =>
+  Future<void> reset(String counterName) =>
     _channel.invokeMethod("Backendless.Counters.reset", <String, dynamic> {
       "counterName":counterName
     });
@@ -77,7 +77,7 @@ abstract class IAtomic {
 
   Future<int> incrementAndGet();
 
-  void reset();
+  Future<void> reset();
 }
 
 class AtomicService implements IAtomic {
@@ -113,5 +113,5 @@ class AtomicService implements IAtomic {
   Future<int> incrementAndGet() => _counters.incrementAndGet(_counterName);
 
   @override
-  void reset() => _counters.reset(_counterName);
+  Future<void> reset() => _counters.reset(_counterName);
 }

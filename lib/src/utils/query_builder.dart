@@ -48,7 +48,7 @@ class PagedQueryBuilder {
 
 class DataQueryBuilder {
   static const int DEFAULT_RELATIONS_DEPTH = 0;
-  PagedQueryBuilder pagedQueryBuilder;
+  PagedQueryBuilder _pagedQueryBuilder;
   List<String> properties;
   String whereClause;
   List<String> groupByList;
@@ -58,7 +58,7 @@ class DataQueryBuilder {
   int relationsDepth;
 
   DataQueryBuilder() {
-    pagedQueryBuilder = new PagedQueryBuilder();
+    _pagedQueryBuilder = new PagedQueryBuilder();
     properties = new List();
     groupByList = new List();
     havingClause = "";
@@ -67,17 +67,17 @@ class DataQueryBuilder {
     relationsDepth = DEFAULT_RELATIONS_DEPTH;
   }
 
-  set pageSize(int pageSize) => pagedQueryBuilder.pageSize = pageSize;
+  set pageSize(int pageSize) => _pagedQueryBuilder.pageSize = pageSize;
 
-  get pageSize => pagedQueryBuilder.pageSize;
+  get pageSize => _pagedQueryBuilder.pageSize;
 
-  set offset(int offset) => pagedQueryBuilder.offset = offset;
+  set offset(int offset) => _pagedQueryBuilder.offset = offset;
 
-  get offset => pagedQueryBuilder.offset;
+  get offset => _pagedQueryBuilder.offset;
 
-  void prepareNextPage() => pagedQueryBuilder.prepareNextPage();
+  void prepareNextPage() => _pagedQueryBuilder.prepareNextPage();
 
-  void preparePreviousPage() => pagedQueryBuilder.preparePreviousPage();
+  void preparePreviousPage() => _pagedQueryBuilder.preparePreviousPage();
 }
 
 /// This class does not support relation types other than Map for now.

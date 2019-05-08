@@ -24,7 +24,7 @@ class BackendlessFiles {
     });
   }
 
-  Future<String> copyFile(String sourcePathName, String targetPath) async =>
+  Future<String> copyFile(String sourcePathName, String targetPath) =>
     _channel.invokeMethod("Backendless.Files.copyFile", <String, dynamic> {
       "sourcePathName":sourcePathName,
       "targetPath":targetPath
@@ -58,7 +58,7 @@ class BackendlessFiles {
     })).cast<FileInfo>();
   }
 
-  Future<String> moveFile(String sourcePathName, String targetPath) async =>
+  Future<String> moveFile(String sourcePathName, String targetPath) =>
     _channel.invokeMethod("Backendless.Files.moveFile", <String, dynamic> {
       "sourcePathName":sourcePathName,
       "targetPath":targetPath
@@ -69,7 +69,7 @@ class BackendlessFiles {
       "fileUrl":fileUrl
     });
   
-  Future<int> removeDirectory(String directoryPath, [String pattern, bool recursive]) async {
+  Future<int> removeDirectory(String directoryPath, [String pattern, bool recursive]) {
     if (pattern != null && recursive == null)
       throw new ArgumentError("Argument 'pattern' should be defined with argument 'recursive'");    
     
@@ -80,13 +80,13 @@ class BackendlessFiles {
     });
   }
 
-  Future<String> renameFile(String oldPathName, String newName) async =>
+  Future<String> renameFile(String oldPathName, String newName) =>
     _channel.invokeMethod("Backendless.Files.renameFile", <String, dynamic> {
       "oldPathName":oldPathName,
       "newName":newName
     });
 
-  Future<String> saveFile(Uint8List fileContent, {String path, String fileName, String filePathName, bool overwrite}) async {
+  Future<String> saveFile(Uint8List fileContent, {String path, String fileName, String filePathName, bool overwrite}) {
     checkArguments({"path":path, "fileName":fileName}, {"filePathName":filePathName});
 
     return _channel.invokeMethod("Backendless.Files.saveFile", <String, dynamic> {
@@ -98,7 +98,7 @@ class BackendlessFiles {
     });
   }
 
-  Future<String> upload(File file, String path, {bool overwrite, void onProgressUpdate(int progress)}) async {
+  Future<String> upload(File file, String path, {bool overwrite, void onProgressUpdate(int progress)}) {
     Map<String, dynamic> args = <String, dynamic> {
       "filePath":file.path,
       "path":path,

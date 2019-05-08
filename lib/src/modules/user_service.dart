@@ -12,19 +12,19 @@ class BackendlessUserService {
   static final BackendlessUserService _instance = new BackendlessUserService._internal();
   BackendlessUserService._internal();
 
-  Future<void> assignRole(String identity, String roleName) async =>
+  Future<void> assignRole(String identity, String roleName) =>
     _channel.invokeMethod("Backendless.UserService.assignRole", <String, dynamic> {
       "identity":identity,
       "roleName":roleName,
     });
 
-  Future<BackendlessUser> currentUser() async =>
+  Future<BackendlessUser> currentUser() =>
     _channel.invokeMethod("Backendless.UserService.currentUser");
 
   Future<List<UserProperty>> describeUserClass() async =>
     (await _channel.invokeMethod("Backendless.UserService.describeUserClass")).cast<UserProperty>();
 
-  Future<BackendlessUser> findById(String id) async =>
+  Future<BackendlessUser> findById(String id) =>
     _channel.invokeMethod("Backendless.UserService.findById", <String, dynamic> {
       "id":id
     });
@@ -32,60 +32,54 @@ class BackendlessUserService {
   Future<List<String>> getUserRoles() async =>
     (await _channel.invokeMethod("Backendless.UserService.getUserRoles")).cast<String>();
 
-  Future<bool> isValidLogin() async =>
+  Future<bool> isValidLogin() =>
     _channel.invokeMethod("Backendless.UserService.isValidLogin");
 
-  Future<String> loggedInUser() async =>
+  Future<String> loggedInUser() =>
     _channel.invokeMethod("Backendless.UserService.loggedInUser");
 
-  Future<BackendlessUser> login(String login, String password, [bool stayLoggedIn]) async =>
+  Future<BackendlessUser> login(String login, String password, [bool stayLoggedIn]) =>
     _channel.invokeMethod("Backendless.UserService.login", <String, dynamic> {
       "login":login,
       "password":password,
       "stayLoggedIn":stayLoggedIn
     });
 
-  Future<void> logout() async =>
+  Future<void> logout() =>
     _channel.invokeMethod("Backendless.UserService.logout");
 
-  Future<BackendlessUser> register(BackendlessUser user) async =>
+  Future<BackendlessUser> register(BackendlessUser user) =>
     _channel.invokeMethod("Backendless.UserService.register", <String, dynamic> {
       "user":user
     });
 
-  Future<void> resendEmailConfirmation(String email) async =>
+  Future<void> resendEmailConfirmation(String email) =>
     _channel.invokeMethod("Backendless.UserService.resendEmailConfirmation", <String, dynamic> {
       "email":email
     });
 
-  Future<void> restorePassword(String identity) async =>
+  Future<void> restorePassword(String identity) =>
     _channel.invokeMethod("Backendless.UserService.restorePassword", <String, dynamic> {
       "identity":identity
     });
 
-  Future<void> setCurrentUser(BackendlessUser user) async =>
+  Future<void> setCurrentUser(BackendlessUser user) =>
     _channel.invokeMethod("Backendless.UserService.setCurrentUser", <String, dynamic> {
       "user":user
     });
 
-  Future<void> unassignRole(String identity, String roleName) async =>
+  Future<void> unassignRole(String identity, String roleName) =>
     _channel.invokeMethod("Backendless.UserService.unassignRole", <String, dynamic> {
       "identity":identity,
       "roleName":roleName,
     });
 
-  Future<BackendlessUser> update(BackendlessUser user) async =>
+  Future<BackendlessUser> update(BackendlessUser user) =>
     _channel.invokeMethod("Backendless.UserService.update", <String, dynamic> {
       "user":user
     });
 
 }
-
-
-
-
-
-
 
 class BackendlessUser {
   Map<String, dynamic> _properties = new Map<String, Object>();
@@ -121,8 +115,6 @@ class BackendlessUser {
 
   dynamic removeProperty(String key) => _properties.remove(key);
 
-  
-
   @override
   bool operator ==(other) => 
     identical(this, other) || 
@@ -141,5 +133,4 @@ class UserProperty extends AbstractProperty {
   bool identity;
 
   UserProperty(String name, bool required, DateTypeEnum type, this.identity): super(name:name, required: required, type: type);
-
 }

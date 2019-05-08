@@ -1,7 +1,5 @@
 package com.backendless.backendless_sdk.call_handlers;
 
-import android.util.Log;
-
 import com.backendless.Backendless;
 import com.backendless.BackendlessUser;
 import com.backendless.backendless_sdk.utils.FlutterCallback;
@@ -79,7 +77,6 @@ public class UserServiceCallHandler implements MethodChannel.MethodCallHandler {
 
     private void currentUser(MethodChannel.Result result) {
         result.success(Backendless.UserService.CurrentUser());
-
     }
 
     private void describeUserClass(MethodChannel.Result result) {
@@ -152,6 +149,4 @@ public class UserServiceCallHandler implements MethodChannel.MethodCallHandler {
         BackendlessUser user = call.argument("user");
         Backendless.UserService.update(user, new FlutterCallback<BackendlessUser>(result));
     }
-
-
 }

@@ -20,31 +20,33 @@ public class LoggingCallHandler implements MethodChannel.MethodCallHandler {
     public void onMethodCall(MethodCall call, MethodChannel.Result result) {
         switch (call.method) {
             case "Backendless.Logging.flush":
-                flush();
+                flush(result);
                 break;
             case "Backendless.Logging.setLogReportingPolicy":
-                setLogReportingPolicy(call);
+                setLogReportingPolicy(call, result);
                 break;
             case "Backendless.Logging.Logger":
-                invokeLoggerMethod(call);
+                invokeLoggerMethod(call, result);
                 break;
             default:
                 result.notImplemented();
         }
     }
 
-    private void flush() {
+    private void flush(MethodChannel.Result result) {
         Backendless.Logging.flush();
+        result.success(null);
     }
 
-    private void setLogReportingPolicy(MethodCall call) {
+    private void setLogReportingPolicy(MethodCall call, MethodChannel.Result result) {
         Integer numOfMessages = call.argument("numOfMessages");
         Integer timeFrequencyInSeconds = call.argument("timeFrequencyInSeconds");
 
         Backendless.Logging.setLogReportingPolicy(numOfMessages, timeFrequencyInSeconds);
+        result.success(null);
     }
 
-    private void invokeLoggerMethod(MethodCall call) {
+    private void invokeLoggerMethod(MethodCall call, MethodChannel.Result result) {
         String loggerName = call.argument("loggerName");
         String methodName = call.argument("methodName");
         String message = call.argument("message");
@@ -80,5 +82,6 @@ public class LoggingCallHandler implements MethodChannel.MethodCallHandler {
             default:
                 throw new IllegalArgumentException("Wrong Logger method name");
         }
+        result.success(null);
     }
 }

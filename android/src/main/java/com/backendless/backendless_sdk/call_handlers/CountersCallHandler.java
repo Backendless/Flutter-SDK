@@ -42,7 +42,7 @@ public class CountersCallHandler implements MethodChannel.MethodCallHandler {
                 incrementAndGet(counterName, result);
                 break;
             case ("Backendless.Counters.reset"):
-                reset(counterName);
+                reset(counterName, result);
                 break;
             default:
                 result.notImplemented();
@@ -84,8 +84,8 @@ public class CountersCallHandler implements MethodChannel.MethodCallHandler {
         Backendless.Counters.incrementAndGet(counterName, new FlutterAtomicCallback(result));
     }
 
-    private void reset(String counterName) {
-        Backendless.Counters.reset(counterName, new FlutterCallback<>(null));
+    private void reset(String counterName, MethodChannel.Result result) {
+        Backendless.Counters.reset(counterName, new FlutterCallback<>(result));
     }
 
 //    Workaround to bypass ReflectionUtil.getCallbackGenericType call in AtomicCallback

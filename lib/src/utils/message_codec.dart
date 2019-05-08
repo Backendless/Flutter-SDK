@@ -92,7 +92,7 @@ class BackendlessMessageCodec extends StandardMessageCodec {
         return DateTime.fromMillisecondsSinceEpoch(buffer.getInt64());
       case _kGeoPoint:
         return GeoPoint.of(readValue(buffer), readValue(buffer), readValue(buffer),
-          readValue(buffer), readValue(buffer), readValue(buffer));
+          readValue(buffer)?.cast<String>(), readValue(buffer)?.cast<String, Object>(), readValue(buffer));
       case _kObjectProperty:
         return new ObjectProperty(
           relatedTable: readValue(buffer), 
@@ -126,30 +126,30 @@ class BackendlessMessageCodec extends StandardMessageCodec {
           name: readValue(buffer),
           size: readValue(buffer));
       case _kGeoQuery:
-        return new BackendlessGeoQuery.of(readValue(buffer), readValue(buffer), readValue(buffer), readValue(buffer), 
-          readValue(buffer), readValue(buffer), readValue(buffer), readValue(buffer), readValue(buffer), readValue(buffer), 
+        return new BackendlessGeoQuery.of(readValue(buffer), readValue(buffer), readValue(buffer), readValue(buffer)?.cast<String>(), 
+          readValue(buffer)?.cast<String, Object>(), readValue(buffer)?.cast<String, String>(), readValue(buffer), readValue(buffer), readValue(buffer)?.cast<String>(), readValue(buffer), 
           readValue(buffer), readValue(buffer), readValue(buffer), Units.values[readValue(buffer)], readValue(buffer), readValue(buffer));
       case _kGeoCluster:
-        return GeoCluster.of(readValue(buffer), readValue(buffer), readValue(buffer), readValue(buffer), 
-          readValue(buffer), readValue(buffer), readValue(buffer), readValue(buffer));
+        return GeoCluster.of(readValue(buffer), readValue(buffer), readValue(buffer), readValue(buffer)?.cast<String>(), 
+          readValue(buffer)?.cast<String, Object>(), readValue(buffer), readValue(buffer), readValue(buffer));
       case _kSearchMatchesResult:
         return new SearchMatchesResult(readValue(buffer), readValue(buffer));
       case _kMessageStatus:
         return new MessageStatus(readValue(buffer), readValue(buffer), PublishStatusEnum.values[readValue(buffer)]);
       case _kDeviceRegistration:
         return new DeviceRegistration(readValue(buffer), readValue(buffer), readValue(buffer), 
-          readValue(buffer), readValue(buffer), readValue(buffer), readValue(buffer));
+          readValue(buffer), readValue(buffer), readValue(buffer), readValue(buffer)?.cast<String>());
       case _kMessage:
-        return new Message(readValue(buffer), readValue(buffer), readValue(buffer), readValue(buffer), readValue(buffer));
+        return new Message(readValue(buffer), readValue(buffer)?.cast<String, String>(), readValue(buffer), readValue(buffer), readValue(buffer));
       case _kPublishOptions:
-        return new PublishOptions(readValue(buffer), readValue(buffer), readValue(buffer));
+        return new PublishOptions(readValue(buffer), readValue(buffer), readValue(buffer)?.cast<String, String>());
       case _kDeliveryOptions:
-        return new DeliveryOptions.of(readValue(buffer), readValue(buffer), readValue(buffer), PublishPolicyEnum.values[readValue(buffer)], readValue(buffer), readValue(buffer), readValue(buffer));
+        return new DeliveryOptions.of(readValue(buffer), readValue(buffer)?.cast<String>(), readValue(buffer), PublishPolicyEnum.values[readValue(buffer)], readValue(buffer), readValue(buffer), readValue(buffer));
       case _kPublishMessageInfo:
         return new PublishMessageInfo.of(readValue(buffer), readValue(buffer), readValue(buffer), readValue(buffer), readValue(buffer), readValue(buffer)?.cast<String>(), 
-          readValue(buffer), readValue(buffer), readValue(buffer), readValue(buffer), readValue(buffer), readValue(buffer), readValue(buffer).cast<String, String>());
+          readValue(buffer), readValue(buffer), readValue(buffer), readValue(buffer), readValue(buffer), readValue(buffer), readValue(buffer)?.cast<String, String>());
       case _kDeviceRegistrationResult:
-        return new DeviceRegistrationResult(readValue(buffer), readValue(buffer));
+        return new DeviceRegistrationResult(readValue(buffer), readValue(buffer)?.cast<String, String>());
       case _kCommand:
         String dataType = readValue(buffer);
         if (dataType == "String")
@@ -160,11 +160,11 @@ class BackendlessMessageCodec extends StandardMessageCodec {
       case _kUserInfo:
         return new UserInfo(readValue(buffer), readValue(buffer));
       case _kUserStatusResponse:
-        return new UserStatusResponse(UserStatus.values[readValue(buffer)], readValue(buffer));
+        return new UserStatusResponse(UserStatus.values[readValue(buffer)], readValue(buffer)?.cast<UserInfo>());
       case _kReconnectAttempt:
         return new ReconnectAttempt(readValue(buffer), readValue(buffer));
       case _kBackendlessUser:
-        return new BackendlessUser()..setProperties(readValue(buffer).cast<String, dynamic>());
+        return new BackendlessUser()..setProperties(readValue(buffer)?.cast<String, dynamic>());
       case _kUserProperty:
         return new UserProperty(readValue(buffer), readValue(buffer), DateTypeEnum.values[readValue(buffer)], readValue(buffer));
       case _kBulkEvent:

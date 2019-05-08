@@ -48,20 +48,20 @@ class BackendlessGeo {
     });
   }
 
-  Future<GeoCategory> addCategory(String categoryName) async =>
+  Future<GeoCategory> addCategory(String categoryName) =>
     _channel.invokeMethod("Backendless.Geo.addCategory", <String, dynamic> {
       "categoryName":categoryName
     });
 
-  Future<bool> deleteCategory(String categoryName) async =>
+  Future<bool> deleteCategory(String categoryName) =>
     _channel.invokeMethod("Backendless.Geo.deleteCategory", <String, dynamic> {
       "categoryName":categoryName
     });
 
-  Future<List<GeoCategory>> getCategories() async =>
+  Future<List<GeoCategory>> getCategories() =>
     _channel.invokeMethod("Backendless.Geo.getCategories");
 
-  Future<int> getGeopointCount(BackendlessGeoQuery query, [String geoFenceName]) async =>
+  Future<int> getGeopointCount(BackendlessGeoQuery query, [String geoFenceName]) =>
     _channel.invokeMethod("Backendless.Geo.getGeopointCount", <String, dynamic> {
       "query":query,
       "geoFenceName":geoFenceName
@@ -78,7 +78,7 @@ class BackendlessGeo {
     })).cast<GeoPoint>();
   }
 
-  Future<GeoPoint> loadMetadata(GeoPoint geoPoint) async =>
+  Future<GeoPoint> loadMetadata(GeoPoint geoPoint) =>
     _channel.invokeMethod("Backendless.Geo.loadMetadata", <String, dynamic> {
       "geoPoint":geoPoint
     });
@@ -88,35 +88,35 @@ class BackendlessGeo {
       "geoQuery":geoQuery
     })).cast<SearchMatchesResult>();
 
-  void removePoint(GeoPoint geoPoint) async => 
+  Future<void> removePoint(GeoPoint geoPoint) => 
     _channel.invokeMethod("Backendless.Geo.removePoint", <String, dynamic> {
       "geoPoint":geoPoint
     });
 
-  void runOnEnterAction(String geoFenceName, [GeoPoint geoPoint]) async =>
+  Future<void> runOnEnterAction(String geoFenceName, [GeoPoint geoPoint]) =>
     _channel.invokeMethod("Backendless.Geo.runOnEnterAction", <String, dynamic> {
       "geoFenceName":geoFenceName,
       "geoPoint":geoPoint
     });
 
-  void runOnExitAction(String geoFenceName, [GeoPoint geoPoint]) async =>
+  Future<void> runOnExitAction(String geoFenceName, [GeoPoint geoPoint]) =>
     _channel.invokeMethod("Backendless.Geo.runOnExitAction", <String, dynamic> {
       "geoFenceName":geoFenceName,
       "geoPoint":geoPoint
     });
 
-  void runOnStayAction(String geoFenceName, [GeoPoint geoPoint]) async =>
+  Future<void> runOnStayAction(String geoFenceName, [GeoPoint geoPoint]) =>
     _channel.invokeMethod("Backendless.Geo.runOnStayAction", <String, dynamic> {
       "geoFenceName":geoFenceName,
       "geoPoint":geoPoint
     });
 
-  Future<GeoPoint> savePoint(GeoPoint geoPoint) async =>
+  Future<GeoPoint> savePoint(GeoPoint geoPoint) =>
     _channel.invokeMethod("Backendless.Geo.savePoint", <String, dynamic> {
       "geoPoint":geoPoint
     });
 
-  Future<GeoPoint> savePointLatLon(double latitude, double longitude, Map<String, Object> metadata, [List<String> categories]) async =>
+  Future<GeoPoint> savePointLatLon(double latitude, double longitude, Map<String, Object> metadata, [List<String> categories]) =>
     _channel.invokeMethod("Backendless.Geo.savePoint", <String, dynamic> {
       "latitude":latitude,
       "longitude":longitude,
@@ -124,7 +124,7 @@ class BackendlessGeo {
       "metadata":metadata
     });
 
-  void setLocationTrackerParameters(int minTime, int minDistance, int acceptedDistanceAfterReboot) =>
+  Future<void> setLocationTrackerParameters(int minTime, int minDistance, int acceptedDistanceAfterReboot) =>
     _channel.invokeMethod("Backendless.Geo.setLocationTrackerParameters", <String, dynamic> {
       "minTime":minTime,
       "minDistance":minDistance,
@@ -132,7 +132,7 @@ class BackendlessGeo {
     });
 
   Future<void> startClientGeofenceMonitoring({String geofenceName, GeofenceCallback geoPointEntered, 
-      GeofenceCallback geoPointStayed, GeofenceCallback geoPointExited}) async {
+      GeofenceCallback geoPointStayed, GeofenceCallback geoPointExited}) {
     int handle = _nextHandle++;
     ClientGeofenceCallback callback = new ClientGeofenceCallback(geoPointEntered, geoPointStayed, geoPointExited);
     _geofenceCallbacks[handle] = callback;
@@ -143,13 +143,13 @@ class BackendlessGeo {
     });
   }
 
-  Future<void> startServerGeofenceMonitoring(GeoPoint geoPoint, [String geofenceName]) async =>
+  Future<void> startServerGeofenceMonitoring(GeoPoint geoPoint, [String geofenceName]) =>
     _channel.invokeMethod("Backendless.Geo.startServerGeofenceMonitoring", <String, dynamic> {
       "geoPoint":geoPoint,
       "geofenceName":geofenceName
     });
 
-  Future<void> stopGeofenceMonitoring([String geofenceName]) async =>
+  Future<void> stopGeofenceMonitoring([String geofenceName]) =>
     _channel.invokeMethod("Backendless.Geo.stopGeofenceMonitoring", <String, dynamic> {
       "geofenceName":geofenceName
     });

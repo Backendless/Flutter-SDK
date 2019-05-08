@@ -10,39 +10,39 @@ class BackendlessCache {
   static final BackendlessCache _instance = new BackendlessCache._internal();
   BackendlessCache._internal();
 
-  Future<bool> contains(String key) async => 
+  Future<bool> contains(String key) => 
     _channel.invokeMethod("Backendless.Cache.contains", <String, dynamic> {
       "key":key
     });
 
-  void delete(String key) async => 
+  Future<void> delete(String key) => 
     _channel.invokeMethod("Backendless.Cache.delete", <String, dynamic> {
       "key":key
     });
 
-  void expireAt(String key, {DateTime date, int timestamp}) async {
+  Future<void> expireAt(String key, {DateTime date, int timestamp}) {
     checkArguments({"date":date}, {"timestamp":timestamp});
-    _channel.invokeMethod("Backendless.Cache.expireAt", <String, dynamic> {
+    return _channel.invokeMethod("Backendless.Cache.expireAt", <String, dynamic> {
       "key":key,
       "date":date,
       "timestamp":timestamp
     });
   }
 
-  void expireIn(String key, int seconds) async => 
+  Future<void> expireIn(String key, int seconds) => 
     _channel.invokeMethod("Backendless.Cache.expireIn", <String, dynamic> { 
       "key":key,
       "seconds":seconds
     });
 
   /// This method does not support retrieving custom classes for now
-  Future<dynamic> get(String key) async =>
+  Future<dynamic> get(String key) =>
     _channel.invokeMethod("Backendless.Cache.get", <String, dynamic> {
       "key":key
     });
 
   /// This method does not support putting custom classes for now
-  void put(String key, Object object, [int timeToLive]) async =>
+  Future<void> put(String key, Object object, [int timeToLive]) =>
     _channel.invokeMethod("Backendless.Cache.put", <String, dynamic> {
       "key":key,
       "object":object,
@@ -56,15 +56,15 @@ abstract class ICache {
 
   Future<bool> contains();
 
-  void delete();
+  Future<void> delete();
 
-  void expireAt({DateTime date, int timestamp});
+  Future<void> expireAt({DateTime date, int timestamp});
 
-  void expireIn(int seconds);
+  Future<void> expireIn(int seconds);
 
   Future<dynamic> get();
 
-  void put(Object object, [int timeToLive]);
+  Future<void> put(Object object, [int timeToLive]);
 }
 
 class CacheService implements ICache {
@@ -79,18 +79,18 @@ class CacheService implements ICache {
   Future<bool> contains() => _cache.contains(_key);
 
   @override
-  void delete() => _cache.delete(_key);
+  Future<void> delete() => _cache.delete(_key);
 
   @override
-  void expireAt({DateTime date, int timestamp}) => _cache.expireAt(_key, date: date, timestamp: timestamp);
+  Future<void> expireAt({DateTime date, int timestamp}) => _cache.expireAt(_key, date: date, timestamp: timestamp);
 
   @override
-  void expireIn(int seconds) => _cache.expireIn(_key, seconds);
+  Future<void> expireIn(int seconds) => _cache.expireIn(_key, seconds);
 
   @override
   Future<dynamic> get() => _cache.get(_key);
 
   @override
-  void put(Object object, [int timeToLive]) => _cache.put(_key, object, timeToLive);
+  Future<void> put(Object object, [int timeToLive]) => _cache.put(_key, object, timeToLive);
 
 }

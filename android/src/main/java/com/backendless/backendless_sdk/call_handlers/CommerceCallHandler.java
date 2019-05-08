@@ -17,7 +17,7 @@ public class CommerceCallHandler implements MethodChannel.MethodCallHandler {
     public void onMethodCall(MethodCall call, MethodChannel.Result result) {
         switch (call.method) {
             case "Backendless.Commerce.cancelPlaySubscription":
-                cancelPlaySubscription(call);
+                cancelPlaySubscription(call, result);
                 break;
             case "Backendless.Commerce.getPlaySubscriptionsStatus":
                 getPlaySubscriptionsStatus(call, result);
@@ -30,12 +30,13 @@ public class CommerceCallHandler implements MethodChannel.MethodCallHandler {
         }
     }
 
-    private void cancelPlaySubscription(MethodCall call) {
+    private void cancelPlaySubscription(MethodCall call, MethodChannel.Result result) {
         String packageName = call.argument("packageName");
         String subscriptionId = call.argument("subscriptionId");
         String token = call.argument("token");
 
-        Backendless.Commerce.cancelPlaySubscription(packageName, subscriptionId, token, new FlutterCallback<Void>(null));
+        Backendless.Commerce.cancelPlaySubscription(packageName, subscriptionId,
+            token, new FlutterCallback<Void>(result));
     }
 
     private void getPlaySubscriptionsStatus(MethodCall call, MethodChannel.Result result) {
@@ -43,7 +44,8 @@ public class CommerceCallHandler implements MethodChannel.MethodCallHandler {
         String subscriptionId = call.argument("subscriptionId");
         String token = call.argument("token");
 
-        Backendless.Commerce.getPlaySubscriptionsStatus(packageName, subscriptionId, token, new FlutterCallback<GooglePlaySubscriptionStatus>(result));
+        Backendless.Commerce.getPlaySubscriptionsStatus(packageName, subscriptionId,
+            token, new FlutterCallback<GooglePlaySubscriptionStatus>(result));
     }
 
     private void validatePlayPurchase(MethodCall call, MethodChannel.Result result) {
@@ -51,6 +53,7 @@ public class CommerceCallHandler implements MethodChannel.MethodCallHandler {
         String productId = call.argument("productId");
         String token = call.argument("token");
 
-        Backendless.Commerce.validatePlayPurchase(packageName, productId, token, new FlutterCallback<GooglePlayPurchaseStatus>(result));
+        Backendless.Commerce.validatePlayPurchase(packageName, productId,
+            token, new FlutterCallback<GooglePlayPurchaseStatus>(result));
     }
 }

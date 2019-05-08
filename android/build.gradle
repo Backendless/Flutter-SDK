@@ -35,8 +35,5 @@ android {
 
 dependencies {
     implementation 'com.backendless:backendless:5.2.4'
-    // implementation ('io.socket:socket.io-client:1.0.0') {
-    //     // excluding org.json which is provided by Android
-    //     exclude group: 'org.json', module: 'json'
-    // }
+    implementation 'com.android.support:support-annotations:28.0.0'
 }

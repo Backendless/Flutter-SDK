@@ -51,22 +51,22 @@ public class GeoCallHandler implements MethodChannel.MethodCallHandler {
                 relativeFind(call, result);
                 break;
             case "Backendless.Geo.removePoint":
-                removePoint(call);
+                removePoint(call, result);
                 break;
             case "Backendless.Geo.runOnEnterAction":
-                runOnEnterAction(call);
+                runOnEnterAction(call, result);
                 break;
             case "Backendless.Geo.runOnExitAction":
-                runOnExitAction(call);
+                runOnExitAction(call, result);
                 break;
             case "Backendless.Geo.runOnStayAction":
-                runOnStayAction(call);
+                runOnStayAction(call, result);
                 break;
             case "Backendless.Geo.savePoint":
                 savePoint(call, result);
                 break;
             case "Backendless.Geo.setLocationTrackerParameters":
-                setLocationTrackerParameters(call);
+                setLocationTrackerParameters(call, result);
                 break;
             case "Backendless.Geo.startClientGeofenceMonitoring":
                 startClientGeofenceMonitoring(call, result);
@@ -139,41 +139,41 @@ public class GeoCallHandler implements MethodChannel.MethodCallHandler {
         Backendless.Geo.relativeFind(geoQuery, new FlutterCallback<List<SearchMatchesResult>>(result));
     }
 
-    private void removePoint(MethodCall call) {
+    private void removePoint(MethodCall call, MethodChannel.Result result) {
         GeoPoint geoPoint = call.argument("geoPoint");
-        Backendless.Geo.removePoint(geoPoint, new FlutterCallback<Void>(null));
+        Backendless.Geo.removePoint(geoPoint, new FlutterCallback<Void>(result));
     }
 
-    private void runOnEnterAction(MethodCall call) {
+    private void runOnEnterAction(MethodCall call, MethodChannel.Result result) {
         String geoFenceName = call.argument("geoFenceName");
         GeoPoint geoPoint = call.argument("geoPoint");
 
         if (geoPoint != null) {
-            Backendless.Geo.runOnEnterAction(geoFenceName, geoPoint, new FlutterCallback<Void>(null));
+            Backendless.Geo.runOnEnterAction(geoFenceName, geoPoint, new FlutterCallback<Void>(result));
         } else {
-            Backendless.Geo.runOnEnterAction(geoFenceName, new FlutterCallback<Integer>(null));
+            Backendless.Geo.runOnEnterAction(geoFenceName, new FlutterCallback<Integer>(result));
         }
     }
 
-    private void runOnExitAction(MethodCall call) {
+    private void runOnExitAction(MethodCall call, MethodChannel.Result result) {
         String geoFenceName = call.argument("geoFenceName");
         GeoPoint geoPoint = call.argument("geoPoint");
 
         if (geoPoint != null) {
-            Backendless.Geo.runOnExitAction(geoFenceName, geoPoint, new FlutterCallback<Void>(null));
+            Backendless.Geo.runOnExitAction(geoFenceName, geoPoint, new FlutterCallback<Void>(result));
         } else {
-            Backendless.Geo.runOnExitAction(geoFenceName, new FlutterCallback<Integer>(null));
+            Backendless.Geo.runOnExitAction(geoFenceName, new FlutterCallback<Integer>(result));
         }
     }
 
-    private void runOnStayAction(MethodCall call) {
+    private void runOnStayAction(MethodCall call, MethodChannel.Result result) {
         String geoFenceName = call.argument("geoFenceName");
         GeoPoint geoPoint = call.argument("geoPoint");
 
         if (geoPoint != null) {
-            Backendless.Geo.runOnStayAction(geoFenceName, geoPoint, new FlutterCallback<Void>(null));
+            Backendless.Geo.runOnStayAction(geoFenceName, geoPoint, new FlutterCallback<Void>(result));
         } else {
-            Backendless.Geo.runOnStayAction(geoFenceName, new FlutterCallback<Integer>(null));
+            Backendless.Geo.runOnStayAction(geoFenceName, new FlutterCallback<Integer>(result));
         }
     }
 
@@ -197,7 +197,7 @@ public class GeoCallHandler implements MethodChannel.MethodCallHandler {
         }
     }
 
-    private void setLocationTrackerParameters(MethodCall call) {
+    private void setLocationTrackerParameters(MethodCall call, MethodChannel.Result result) {
         Integer minTime = call.argument("minTime");
         Integer minDistance = call.argument("minDistance");
         Integer acceptedDistanceAfterReboot = call.argument("acceptedDistanceAfterReboot");

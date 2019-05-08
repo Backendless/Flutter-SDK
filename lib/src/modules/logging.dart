@@ -13,13 +13,13 @@ class BackendlessLogging {
     return new Logger._(_channel, loggerName);
   }
 
-  void setLogReportingPolicy(int numOfMessages, int timeFrequencyInSeconds) =>
+  Future<void> flush() => _channel.invokeMethod("Backendless.Logging.flush");
+
+  Future<void> setLogReportingPolicy(int numOfMessages, int timeFrequencyInSeconds) =>
     _channel.invokeMethod("Backendless.Logging.setLogReportingPolicy", <String, dynamic> {
       "numOfMessages":numOfMessages,
       "timeFrequencyInSeconds":timeFrequencyInSeconds
     });
-
-  void flush() => _channel.invokeMethod("Backendless.Logging.flush");
 }
 
 class Logger {
@@ -28,19 +28,19 @@ class Logger {
 
   Logger._(this._channel, this._name);
 
-  void debug(String message) => _invokeLoggerMethod("debug", message);
+  Future<void> debug(String message) => _invokeLoggerMethod("debug", message);
   
-  void info(String message) => _invokeLoggerMethod("info", message);
+  Future<void> info(String message) => _invokeLoggerMethod("info", message);
   
-  void warn(String message, [Exception e]) => _invokeLoggerMethod("warn", message + (e != null ? " : ${e.toString()}":""));
+  Future<void> warn(String message, [Exception e]) => _invokeLoggerMethod("warn", message + (e != null ? " : ${e.toString()}":""));
   
-  void error(String message, [Exception e]) => _invokeLoggerMethod("error", message + (e != null ? " : ${e.toString()}":""));
+  Future<void> error(String message, [Exception e]) => _invokeLoggerMethod("error", message + (e != null ? " : ${e.toString()}":""));
 
-  void fatal(String message, [Exception e]) => _invokeLoggerMethod("fatal", message + (e != null ? " : ${e.toString()}":""));
+  Future<void> fatal(String message, [Exception e]) => _invokeLoggerMethod("fatal", message + (e != null ? " : ${e.toString()}":""));
 
-  void trace(String message) => _invokeLoggerMethod("trace", message);
+  Future<void> trace(String message) => _invokeLoggerMethod("trace", message);
 
-  void _invokeLoggerMethod(String methodName, String message) =>
+  Future<void> _invokeLoggerMethod(String methodName, String message) =>
     _channel.invokeMethod("Backendless.Logging.Logger", <String, dynamic> {
       "loggerName":_name,
       "methodName":methodName,

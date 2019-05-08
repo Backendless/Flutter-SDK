@@ -62,21 +62,21 @@ class BackendlessMessaging {
     });
   }
 
-  Future<MessageStatus> cancel(String messageId) async =>
+  Future<MessageStatus> cancel(String messageId) =>
     _channel.invokeMethod("Backendless.Messaging.cancel", <String, dynamic> {
       "messageId":messageId
     });
 
-  Future<DeviceRegistration> getDeviceRegistration() async =>
+  Future<DeviceRegistration> getDeviceRegistration() =>
     _channel.invokeMethod("Backendless.Messaging.getDeviceRegistration");
 
-  Future<MessageStatus> getMessageStatus(String messageId) async =>
+  Future<MessageStatus> getMessageStatus(String messageId) =>
     _channel.invokeMethod("Backendless.Messaging.getMessageStatus", <String, dynamic> {
       "messageId":messageId
     });
 
   Future<MessageStatus> publish(Object message, {String channelName, 
-      PublishOptions publishOptions, DeliveryOptions deliveryOptions}) async {
+      PublishOptions publishOptions, DeliveryOptions deliveryOptions}) {
     if (deliveryOptions != null && publishOptions == null)
       throw new ArgumentError("Argument 'deliveryOptions' should be defined with argument 'publishOptions'");    
     return _channel.invokeMethod("Backendless.Messaging.publish", <String, dynamic> {
@@ -87,23 +87,23 @@ class BackendlessMessaging {
     });
   }
 
-  Future<MessageStatus> pushWithTemplate(String templateName) async =>
+  Future<MessageStatus> pushWithTemplate(String templateName) =>
     _channel.invokeMethod("Backendless.Messaging.pushWithTemplate", <String, dynamic> {
       "templateName":templateName
     });
 
-  Future<bool> refreshDeviceToken(String newDeviceToken) async =>
+  Future<bool> refreshDeviceToken(String newDeviceToken) =>
    _channel.invokeMethod("Backendless.Messaging.refreshDeviceToken", <String, dynamic> {
      "newDeviceToken":newDeviceToken
     });
 
-  Future<DeviceRegistrationResult> registerDevice([List<String> channels, DateTime expiration]) async =>
+  Future<DeviceRegistrationResult> registerDevice([List<String> channels, DateTime expiration]) =>
     _channel.invokeMethod("Backendless.Messaging.registerDevice", <String, dynamic> {
      "channels":channels,
      "expiration":expiration
     });
 
-  Future<MessageStatus> sendEmail(String subject, BodyParts bodyParts, List<String> recipients, [List<String> attachments]) async =>
+  Future<MessageStatus> sendEmail(String subject, BodyParts bodyParts, List<String> recipients, [List<String> attachments]) =>
     _channel.invokeMethod("Backendless.Messaging.sendEmail", <String, dynamic> {
       "textMessage":bodyParts.textMessage,
       "htmlMessage":bodyParts.htmlMessage,
@@ -112,49 +112,47 @@ class BackendlessMessaging {
       "attachments":attachments
     });
 
-  Future<MessageStatus> sendHTMLEmail(String subject, String messageBody, List<String> recipients) async => 
+  Future<MessageStatus> sendHTMLEmail(String subject, String messageBody, List<String> recipients) => 
     _channel.invokeMethod("Backendless.Messaging.sendHTMLEmail", <String, dynamic> {
       "subject":subject,
       "messageBody":messageBody,
       "recipients":recipients
     });
 
-  Future<MessageStatus> sendTextEmail(String subject, String messageBody, List<String> recipients) async => 
+  Future<MessageStatus> sendTextEmail(String subject, String messageBody, List<String> recipients) => 
     _channel.invokeMethod("Backendless.Messaging.sendTextEmail", <String, dynamic> {
       "subject":subject,
       "messageBody":messageBody,
       "recipients":recipients
     });
 
-  Future<int> unregisterDevice([List<String> channels]) async =>
+  Future<int> unregisterDevice([List<String> channels]) =>
     _channel.invokeMethod("Backendless.Messaging.unregisterDevice", <String, dynamic> {
       "channels":channels
     });
 
-  Channel subscribe([String channelName = DEFAULT_CHANNEL_NAME]) {
+  Future<Channel> subscribe([String channelName = DEFAULT_CHANNEL_NAME]) async {
     int handle = _channelHandle++;
-    _channel.invokeMethod("Backendless.Messaging.subscribe", <String, dynamic> {
+    return _channel.invokeMethod("Backendless.Messaging.subscribe", <String, dynamic> {
       "channelName":channelName,
       "channelHandle":handle
-    });
-    return new Channel(_channel, channelName, handle);
+    }).then((value) => new Channel(_channel, channelName, handle));
   }
-
 }
 
 class Channel {
   final MethodChannel _methodChannel;
-  final String _channelName;
+  final String channelName;
   final int _channelHandle;
 
-  Channel(this._methodChannel, this._channelName, this._channelHandle);
+  Channel(this._methodChannel, this.channelName, this._channelHandle);
   
-  void join() => 
+  Future<void> join() => 
     _methodChannel.invokeMethod("Backendless.Messaging.Channel.join", <String, dynamic> {
       "channelHandle":_channelHandle
     });
 
-  void leave() =>
+  Future<void> leave() =>
     _methodChannel.invokeMethod("Backendless.Messaging.Channel.leave", <String, dynamic> {
       "channelHandle":_channelHandle
     });
@@ -164,10 +162,9 @@ class Channel {
       "channelHandle":_channelHandle
     });
 
-  void addJoinListener(Function callback, {void onError(String error)}) {
+  Future<void> addJoinListener(Function callback, {void onError(String error)}) =>
     _methodChannel.invokeMethod("Backendless.Messaging.Channel.addJoinListener", {"channelHandle":_channelHandle})
       .then((handle) => BackendlessMessaging._joinCallbacks[handle] = new EventCallback(callback, onError));
-  }
 
   void removeJoinListener(Function callback) {
     List<int> handles = _findCallbacks(BackendlessMessaging._joinCallbacks, (eventCallback) => eventCallback.handleResponse == callback);
@@ -181,12 +178,12 @@ class Channel {
     });
   }
 
-  void addMessageListener<T>(void callback(T response), {void onError(String error), String selector}) {
+  Future<void> addMessageListener<T>(void callback(T response), {void onError(String error), String selector}) {
     if (T != String && T != PublishMessageInfo)
       throw UnimplementedError();   // Custom type message
 
     Map<String, dynamic> args = {"selector":selector, "messageType":T.toString()};
-    _methodChannel.invokeMethod("Backendless.Messaging.Channel.addMessageListener", <String, dynamic> {
+    return _methodChannel.invokeMethod("Backendless.Messaging.Channel.addMessageListener", <String, dynamic> {
         "channelHandle":_channelHandle
       }..addAll(args))
       .then((handle) => BackendlessMessaging._messageCallbacks[handle] = new EventCallback(callback, onError, args));
@@ -212,10 +209,9 @@ class Channel {
     });
   }
 
-  void addCommandListener(void callback(Command<String> response), {void onError(String error)}) {
+  Future<void> addCommandListener(void callback(Command<String> response), {void onError(String error)}) =>
     _methodChannel.invokeMethod("Backendless.Messaging.Channel.addCommandListener", {"channelHandle":_channelHandle})
       .then((handle) => BackendlessMessaging._commandCallbacks[handle] = new EventCallback(callback, onError));
-  }
 
   void removeCommandListener(Function callback ) {
     List<int> handles = _findCallbacks(BackendlessMessaging._commandCallbacks, (eventCallback) => eventCallback.handleResponse == callback);
@@ -229,18 +225,16 @@ class Channel {
     });
   }
 
-  Future<void> sendCommand( String type, Object data) async {
+  Future<void> sendCommand( String type, Object data) =>
     _methodChannel.invokeMethod("Backendless.Messaging.Channel.sendCommand", <String, dynamic> {
       "channelHandle":_channelHandle,
       "type":type,
       "data":data
     });
-  }
 
-  void addUserStatusListener(void callback(UserStatusResponse response), {void onError(String error)}) {
+  Future<void> addUserStatusListener(void callback(UserStatusResponse response), {void onError(String error)}) =>
     _methodChannel.invokeMethod("Backendless.Messaging.Channel.addUserStatusListener", {"channelHandle":_channelHandle})
       .then((handle) => BackendlessMessaging._userStatusCallbacks[handle] = new EventCallback(callback, onError));
-  }
 
   void removeUserStatusListener(Function callback) {
     List<int> handles = _findCallbacks(BackendlessMessaging._userStatusCallbacks, (eventCallback) => eventCallback.handleResponse == callback);

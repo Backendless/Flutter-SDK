@@ -24,28 +24,23 @@ public class CacheCallHandler implements MethodChannel.MethodCallHandler {
                 contains(call, result);
                 break;
             case "Backendless.Cache.delete":
-                delete(call);
+                delete(call, result);
                 break;
             case "Backendless.Cache.expireAt":
-                expireAt(call);
+                expireAt(call, result);
                 break;
             case "Backendless.Cache.expireIn":
-                expireIn(call);
+                expireIn(call, result);
                 break;
             case "Backendless.Cache.get":
                 get(call, result);
                 break;
             case "Backendless.Cache.put":
-                put(call);
+                put(call, result);
                 break;
             default:
                 result.notImplemented();
         }
-    }
-
-    private void delete(MethodCall call) {
-        String key = call.argument("key");
-        Backendless.Cache.delete(key, new FlutterCallback<>(null));
     }
 
     private void contains(MethodCall call, MethodChannel.Result result) {
@@ -53,21 +48,27 @@ public class CacheCallHandler implements MethodChannel.MethodCallHandler {
         Backendless.Cache.contains(key, new FlutterCallback<Boolean>(result));
     }
 
-    private void expireAt(MethodCall call) {
+    private void delete(MethodCall call, MethodChannel.Result result) {
+        String key = call.argument("key");
+        Backendless.Cache.delete(key, new FlutterCallback<>(result));
+    }
+
+    private void expireAt(MethodCall call, MethodChannel.Result result) {
         String key = call.argument("key");
         Date date = call.argument("date");
         Long timestamp = call.argument("timestamp");
+        FlutterCallback<Object> callback = new FlutterCallback<>(result);
         if (date != null) {
-            Backendless.Cache.expireAt(key, date, new FlutterCallback<>(null));
+            Backendless.Cache.expireAt(key, date, callback);
         } else if (timestamp != null) {
-            Backendless.Cache.expireAt(key, timestamp, new FlutterCallback<>(null));
+            Backendless.Cache.expireAt(key, timestamp, callback);
         }
     }
 
-    private void expireIn(MethodCall call) {
+    private void expireIn(MethodCall call, MethodChannel.Result result) {
         String key = call.argument("key");
         Integer seconds = call.argument("seconds");
-        Backendless.Cache.expireIn(key, seconds, new FlutterCallback<>(null));
+        Backendless.Cache.expireIn(key, seconds, new FlutterCallback<>(result));
     }
 
     private void get(MethodCall call, final MethodChannel.Result result) {
@@ -86,12 +87,12 @@ public class CacheCallHandler implements MethodChannel.MethodCallHandler {
         });
     }
 
-    private void put(MethodCall call) {
+    private void put(MethodCall call, MethodChannel.Result result) {
         String key = call.argument("key");
         Object object = call.argument("object");
         Integer timeToLive = call.argument("timeToLive");
 
-        FlutterCallback<Object> callback = new FlutterCallback<>(null);
+        FlutterCallback<Object> callback = new FlutterCallback<>(result);
         if (timeToLive != null) {
             Backendless.Cache.put(key, object, timeToLive, callback);
         } else {
