@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/services.dart';
 import 'package:backendless_sdk/src/modules/modules.dart';
 
@@ -19,7 +21,10 @@ class Backendless {
   static const MethodChannel _channel =
       const MethodChannel('backendless');
 
-  static void initApp(final String applicationId, final String apiKey) {
+  static void initApp(String applicationId, String androidApiKey, String iosApiKey) {
+    String apiKey;
+    if (Platform.isAndroid) apiKey = androidApiKey;
+    else if (Platform.isIOS) apiKey = iosApiKey;
     _channel.invokeMethod('Backendless.initApp', <String, dynamic> {
       'applicationId': applicationId,
       'apiKey': apiKey
