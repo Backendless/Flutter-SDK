@@ -99,9 +99,8 @@ class DataCallHandler: FlutterCallHandlerProtocol {
                 self.callStoredProcedure(tableName, arguments, result)
             case Methods.describe:
                 self.describe(tableName, result)
-                
             default:
-                break
+                result(FlutterMethodNotImplemented)
             }
         }
     }

@@ -90,7 +90,7 @@ class GeoCallHandler: FlutterCallHandlerProtocol {
             case Methods.setLocationTrackerParameters:
                 self.setLocationTrackerParameters(arguments, result)
             default:
-                break
+                result(FlutterMethodNotImplemented)
             }
         }
     }

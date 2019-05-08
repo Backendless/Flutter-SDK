@@ -119,7 +119,7 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
             case Methods.addMessageListener:
                 self.addMessageListener(arguments, result)
             default:
-                break
+                result(FlutterMethodNotImplemented)
             }
         }
     }

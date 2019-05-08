@@ -75,7 +75,7 @@ class CountersCallHandler: FlutterCallHandlerProtocol {
             case Methods.reset:
                 self.reset(counterName, result)
             default:
-                break
+                result(FlutterMethodNotImplemented)
             }
         }
     }

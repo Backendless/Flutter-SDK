@@ -68,7 +68,7 @@ class LoggingCallHandler: FlutterCallHandlerProtocol {
             case Methods.invokeLoggerMethod:
                 self.invokeLoggerMethod(arguments, result)
             default:
-                break
+                result(FlutterMethodNotImplemented)
             }
         }
     }

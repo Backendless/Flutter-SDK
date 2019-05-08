@@ -87,7 +87,7 @@ class FilesCallHandler: FlutterCallHandlerProtocol {
             case Methods.upload:
                 self.upload(arguments, result)
             default:
-                break
+                result(FlutterMethodNotImplemented)
             }
         }
     }

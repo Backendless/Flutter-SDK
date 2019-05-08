@@ -49,7 +49,7 @@ class CacheCallHandler: FlutterCallHandlerProtocol {
         callRouter = { [weak self] (call, result) in
             guard
                 let self = self,
-                let arguments: [String: String] = call.arguments.flatMap(cast)
+                let arguments: [String: Any] = call.arguments.flatMap(cast)
             else { return }
             
             switch call.method {
@@ -66,17 +66,17 @@ class CacheCallHandler: FlutterCallHandlerProtocol {
                 guard let putArgs: [String: Any] = call.arguments.flatMap(cast) else { return }
                 self.put(putArgs, result)
             default:
-                break
+                result(FlutterMethodNotImplemented)
             }
         }
     }
     
     // MARK: -
     // MARK: - Contains
-    private func contains(_ arguments: [String: String], _ result: @escaping FlutterResult) {
+    private func contains(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
         print("~~~> Hello, contains")
         
-        guard let key = arguments[Args.key] else {
+        guard let key: String = arguments[Args.key].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             
             return
@@ -93,10 +93,10 @@ class CacheCallHandler: FlutterCallHandlerProtocol {
     
     // MARK: -
     // MARK: - Delete
-    private func delete(_ arguments: [String: String], _ result: @escaping FlutterResult) {
+    private func delete(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
         print("~~~> Hello, delete")
         
-        guard let key = arguments[Args.key] else {
+        guard let key: String = arguments[Args.key].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             
             return
@@ -161,7 +161,7 @@ class CacheCallHandler: FlutterCallHandlerProtocol {
     
     // MARK: -
     // MARK: - Get
-    private func get(_ arguments: [String: String], _ result: @escaping FlutterResult) {
+    private func get(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
         print("~~~> Hello, get")
         
         guard let key: String = arguments[Args.key].flatMap(cast) else {

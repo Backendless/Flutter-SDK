@@ -40,26 +40,26 @@ class BackendlessCallHandler: FlutterCallHandlerProtocol {
         callRouter = { [weak self] (call, result) in
             guard
                 let self = self,
-                let arguments: [String: String] = call.arguments.flatMap(cast)
+                let arguments: [String: Any] = call.arguments.flatMap(cast)
             else { return }
             
             switch call.method {
             case Methods.initApp:
                 self.initApp(arguments, result)
             default:
-                break
+                result(FlutterMethodNotImplemented)
             }
         }
     }
     
     // MARK: -
     // MARK: - InitApp
-    private func initApp(_ arguments: [String: String], _ result: FlutterResult) {
+    private func initApp(_ arguments: [String: Any], _ result: FlutterResult) {
         print("~~~> Hello, init app")
         
         guard
-            let applicationId = arguments[Args.applicationId],
-            let apiKey = arguments[Args.apiKey]
+            let applicationId: String = arguments[Args.applicationId].flatMap(cast),
+            let apiKey: String = arguments[Args.apiKey].flatMap(cast)
         else {
             result(FlutterError.noRequiredArguments)
             

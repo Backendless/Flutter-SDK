@@ -53,7 +53,7 @@ class CommerceCallHandler: FlutterCallHandlerProtocol {
             case Methods.validatePlayPurchase:
                 self.validatePlayPurchase(arguments, result)
             default:
-                break
+                result(FlutterMethodNotImplemented)
             }
         }
     }
