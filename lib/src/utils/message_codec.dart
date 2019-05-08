@@ -91,82 +91,150 @@ class BackendlessMessageCodec extends StandardMessageCodec {
       case _kDateTime:
         return DateTime.fromMillisecondsSinceEpoch(buffer.getInt64());
       case _kGeoPoint:
-        return GeoPoint.of(readValue(buffer), readValue(buffer), readValue(buffer),
-          readValue(buffer)?.cast<String>(), readValue(buffer)?.cast<String, Object>(), readValue(buffer));
+        return GeoPoint.of(
+            readValue(buffer),
+            readValue(buffer),
+            readValue(buffer),
+            readValue(buffer)?.cast<String>(),
+            readValue(buffer)?.cast<String, Object>(),
+            readValue(buffer));
       case _kObjectProperty:
         return new ObjectProperty(
-          relatedTable: readValue(buffer), 
-          defaultValue: readValue(buffer), 
-          name: readValue(buffer), 
-          required: readValue(buffer), 
-          type: DateTypeEnum.values[readValue(buffer)]);
+            relatedTable: readValue(buffer),
+            defaultValue: readValue(buffer),
+            name: readValue(buffer),
+            required: readValue(buffer),
+            type: DateTypeEnum.values[readValue(buffer)]);
       case _kGooglePlaySubscriptionStatus:
         return new GooglePlaySubscriptionStatus(
-          autoRenewing: readValue(buffer), 
-          startTimeMillis: readValue(buffer), 
-          kind: readValue(buffer), 
-          expiryTimeMillis: readValue(buffer));
+            autoRenewing: readValue(buffer),
+            startTimeMillis: readValue(buffer),
+            kind: readValue(buffer),
+            expiryTimeMillis: readValue(buffer));
       case _kGooglePlayPurchaseStatus:
         return new GooglePlayPurchaseStatus(
-          kind: readValue(buffer), 
-          purchaseTimeMillis: readValue(buffer), 
-          purchaseState: readValue(buffer), 
-          consumptionState: readValue(buffer), 
-          developerPayload: readValue(buffer));  
+            kind: readValue(buffer),
+            purchaseTimeMillis: readValue(buffer),
+            purchaseState: readValue(buffer),
+            consumptionState: readValue(buffer),
+            developerPayload: readValue(buffer));
       case _kFileInfo:
         return new FileInfo(
-          name: readValue(buffer), 
-          createdOn: readValue(buffer), 
-          publicUrl: readValue(buffer), 
-          url: readValue(buffer), size: 
-          readValue(buffer));
+            name: readValue(buffer),
+            createdOn: readValue(buffer),
+            publicUrl: readValue(buffer),
+            url: readValue(buffer),
+            size: readValue(buffer));
       case _kGeoCategory:
         return new GeoCategory(
-          id: readValue(buffer),
-          name: readValue(buffer),
-          size: readValue(buffer));
+            id: readValue(buffer),
+            name: readValue(buffer),
+            size: readValue(buffer));
       case _kGeoQuery:
-        return new BackendlessGeoQuery.of(readValue(buffer), readValue(buffer), readValue(buffer), readValue(buffer)?.cast<String>(), 
-          readValue(buffer)?.cast<String, Object>(), readValue(buffer)?.cast<String, String>(), readValue(buffer), readValue(buffer), readValue(buffer)?.cast<String>(), readValue(buffer), 
-          readValue(buffer), readValue(buffer), readValue(buffer), Units.values[readValue(buffer)], readValue(buffer), readValue(buffer));
+        return new BackendlessGeoQuery.of(
+            readValue(buffer),
+            readValue(buffer),
+            readValue(buffer),
+            readValue(buffer)?.cast<String>(),
+            readValue(buffer)?.cast<String, Object>(),
+            readValue(buffer)?.cast<String, String>(),
+            readValue(buffer),
+            readValue(buffer),
+            readValue(buffer)?.cast<String>(),
+            readValue(buffer),
+            readValue(buffer),
+            readValue(buffer),
+            readValue(buffer),
+            Units.values[readValue(buffer)],
+            readValue(buffer),
+            readValue(buffer));
       case _kGeoCluster:
-        return GeoCluster.of(readValue(buffer), readValue(buffer), readValue(buffer), readValue(buffer)?.cast<String>(), 
-          readValue(buffer)?.cast<String, Object>(), readValue(buffer), readValue(buffer), readValue(buffer));
+        return GeoCluster.of(
+            readValue(buffer),
+            readValue(buffer),
+            readValue(buffer),
+            readValue(buffer)?.cast<String>(),
+            readValue(buffer)?.cast<String, Object>(),
+            readValue(buffer),
+            readValue(buffer),
+            readValue(buffer));
       case _kSearchMatchesResult:
         return new SearchMatchesResult(readValue(buffer), readValue(buffer));
       case _kMessageStatus:
-        return new MessageStatus(readValue(buffer), readValue(buffer), PublishStatusEnum.values[readValue(buffer)]);
+        return new MessageStatus(readValue(buffer), readValue(buffer),
+            PublishStatusEnum.values[readValue(buffer)]);
       case _kDeviceRegistration:
-        return new DeviceRegistration(readValue(buffer), readValue(buffer), readValue(buffer), 
-          readValue(buffer), readValue(buffer), readValue(buffer), readValue(buffer)?.cast<String>());
+        return new DeviceRegistration(
+            readValue(buffer),
+            readValue(buffer),
+            readValue(buffer),
+            readValue(buffer),
+            readValue(buffer),
+            readValue(buffer),
+            readValue(buffer)?.cast<String>());
       case _kMessage:
-        return new Message(readValue(buffer), readValue(buffer)?.cast<String, String>(), readValue(buffer), readValue(buffer), readValue(buffer));
+        return new Message(
+            readValue(buffer),
+            readValue(buffer)?.cast<String, String>(),
+            readValue(buffer),
+            readValue(buffer),
+            readValue(buffer));
       case _kPublishOptions:
-        return new PublishOptions(readValue(buffer), readValue(buffer), readValue(buffer)?.cast<String, String>());
+        return new PublishOptions(readValue(buffer), readValue(buffer),
+            readValue(buffer)?.cast<String, String>());
       case _kDeliveryOptions:
-        return new DeliveryOptions.of(readValue(buffer), readValue(buffer)?.cast<String>(), readValue(buffer), PublishPolicyEnum.values[readValue(buffer)], readValue(buffer), readValue(buffer), readValue(buffer));
+        return new DeliveryOptions.of(
+            readValue(buffer),
+            readValue(buffer)?.cast<String>(),
+            readValue(buffer),
+            PublishPolicyEnum.values[readValue(buffer)],
+            readValue(buffer),
+            readValue(buffer),
+            readValue(buffer));
       case _kPublishMessageInfo:
-        return new PublishMessageInfo.of(readValue(buffer), readValue(buffer), readValue(buffer), readValue(buffer), readValue(buffer), readValue(buffer)?.cast<String>(), 
-          readValue(buffer), readValue(buffer), readValue(buffer), readValue(buffer), readValue(buffer), readValue(buffer), readValue(buffer)?.cast<String, String>());
+        return new PublishMessageInfo.of(
+            readValue(buffer),
+            readValue(buffer),
+            readValue(buffer),
+            readValue(buffer),
+            readValue(buffer),
+            readValue(buffer)?.cast<String>(),
+            readValue(buffer),
+            readValue(buffer),
+            readValue(buffer),
+            readValue(buffer),
+            readValue(buffer),
+            readValue(buffer),
+            readValue(buffer)?.cast<String, String>());
       case _kDeviceRegistrationResult:
-        return new DeviceRegistrationResult(readValue(buffer), readValue(buffer)?.cast<String, String>());
+        return new DeviceRegistrationResult(
+            readValue(buffer), readValue(buffer)?.cast<String, String>());
       case _kCommand:
         String dataType = readValue(buffer);
         if (dataType == "String")
-          return Command.string()..type = readValue(buffer)..data = readValue(buffer)..userInfo = readValue(buffer);
+          return Command.string()
+            ..type = readValue(buffer)
+            ..data = readValue(buffer)
+            ..userInfo = readValue(buffer);
         else if (dataType == "Map")
-          return Command.map()..type = readValue(buffer)..data = readValue(buffer)..userInfo = readValue(buffer);
+          return Command.map()
+            ..type = readValue(buffer)
+            ..data = readValue(buffer)
+            ..userInfo = readValue(buffer);
         throw new UnimplementedError();
       case _kUserInfo:
         return new UserInfo(readValue(buffer), readValue(buffer));
       case _kUserStatusResponse:
-        return new UserStatusResponse(UserStatus.values[readValue(buffer)], readValue(buffer)?.cast<UserInfo>());
+        return new UserStatusResponse(UserStatus.values[readValue(buffer)],
+            readValue(buffer)?.cast<UserInfo>());
       case _kReconnectAttempt:
         return new ReconnectAttempt(readValue(buffer), readValue(buffer));
       case _kBackendlessUser:
-        return new BackendlessUser()..setProperties(readValue(buffer)?.cast<String, dynamic>());
+        return new BackendlessUser()
+          ..setProperties(readValue(buffer)?.cast<String, dynamic>());
       case _kUserProperty:
-        return new UserProperty(readValue(buffer), readValue(buffer), DateTypeEnum.values[readValue(buffer)], readValue(buffer));
+        return new UserProperty(readValue(buffer), readValue(buffer),
+            DateTypeEnum.values[readValue(buffer)], readValue(buffer));
       case _kBulkEvent:
         return new BulkEvent(readValue(buffer), readValue(buffer));
       default:
@@ -194,14 +262,15 @@ class BackendlessMessageCodec extends StandardMessageCodec {
     buffer.putInt32(value.offset);
     writeValue(buffer, value.sortByList);
     writeValue(buffer, value.relatedList);
-    buffer.putInt32(value.relationsDepth);      
+    buffer.putInt32(value.relationsDepth);
   }
 
-  _writeLoadRelationsQueryBuilder(WriteBuffer buffer, LoadRelationsQueryBuilder value) {
+  _writeLoadRelationsQueryBuilder(
+      WriteBuffer buffer, LoadRelationsQueryBuilder value) {
     buffer.putUint8(_kLoadRelationsQueryBuilder);
     writeValue(buffer, value.relationName);
     buffer.putInt32(value.pageSize);
-    buffer.putInt32(value.offset);     
+    buffer.putInt32(value.offset);
   }
 
   _writeObjectProperty(WriteBuffer buffer, ObjectProperty value) {
@@ -213,7 +282,8 @@ class BackendlessMessageCodec extends StandardMessageCodec {
     writeValue(buffer, value.type.index);
   }
 
-  _writeGooglePlaySubscriptionStatus(WriteBuffer buffer, GooglePlaySubscriptionStatus value) {
+  _writeGooglePlaySubscriptionStatus(
+      WriteBuffer buffer, GooglePlaySubscriptionStatus value) {
     buffer.putUint8(_kGooglePlaySubscriptionStatus);
     writeValue(buffer, value.autoRenewing);
     writeValue(buffer, value.startTimeMillis);
@@ -221,7 +291,8 @@ class BackendlessMessageCodec extends StandardMessageCodec {
     writeValue(buffer, value.expiryTimeMillis);
   }
 
-  _writeGooglePlayPurchaseStatus(WriteBuffer buffer, GooglePlayPurchaseStatus value) {
+  _writeGooglePlayPurchaseStatus(
+      WriteBuffer buffer, GooglePlayPurchaseStatus value) {
     buffer.putUint8(_kGooglePlayPurchaseStatus);
     writeValue(buffer, value.kind);
     writeValue(buffer, value.purchaseTimeMillis);
@@ -244,7 +315,7 @@ class BackendlessMessageCodec extends StandardMessageCodec {
     writeValue(buffer, value.objectId);
     writeValue(buffer, value.name);
     writeValue(buffer, value.size);
- }
+  }
 
   _writeBackendlessGeoQuery(WriteBuffer buffer, BackendlessGeoQuery value) {
     buffer.putUint8(_kGeoQuery);
@@ -264,7 +335,7 @@ class BackendlessMessageCodec extends StandardMessageCodec {
     writeValue(buffer, value.units.index);
     writeValue(buffer, value.includeMeta);
     writeValue(buffer, value.searchRectangle);
- }
+  }
 
   _writeGeoCluster(WriteBuffer buffer, GeoCluster value) {
     buffer.putUint8(_kGeoCluster);
@@ -276,22 +347,22 @@ class BackendlessMessageCodec extends StandardMessageCodec {
     writeValue(buffer, value.distance);
     writeValue(buffer, value.totalPoints);
     writeValue(buffer, value.geoQuery);
- }
+  }
 
- _writeSearchMatchesResult(WriteBuffer buffer, SearchMatchesResult value) {
+  _writeSearchMatchesResult(WriteBuffer buffer, SearchMatchesResult value) {
     buffer.putUint8(_kSearchMatchesResult);
     writeValue(buffer, value.matches);
     writeValue(buffer, value.geoPoint);
- }
+  }
 
- _writeMessageStatus(WriteBuffer buffer, MessageStatus value) {
+  _writeMessageStatus(WriteBuffer buffer, MessageStatus value) {
     buffer.putUint8(_kMessageStatus);
     writeValue(buffer, value.messageId);
     writeValue(buffer, value.errorMessage);
     writeValue(buffer, value.status.index);
- }
+  }
 
- _writeDeviceRegistration(WriteBuffer buffer, DeviceRegistration value) {
+  _writeDeviceRegistration(WriteBuffer buffer, DeviceRegistration value) {
     buffer.putUint8(_kDeviceRegistration);
     writeValue(buffer, value.id);
     writeValue(buffer, value.deviceToken);
@@ -300,23 +371,23 @@ class BackendlessMessageCodec extends StandardMessageCodec {
     writeValue(buffer, value.osVersion);
     writeValue(buffer, value.expiration);
     writeValue(buffer, value.channels);
- }
+  }
 
- _writeMessage(WriteBuffer buffer, Message value) {
+  _writeMessage(WriteBuffer buffer, Message value) {
     buffer.putUint8(_kMessage);
     writeValue(buffer, value.messageId);
     writeValue(buffer, value.headers);
     writeValue(buffer, value.data);
     writeValue(buffer, value.publisherId);
     writeValue(buffer, value.timestamp);
- }
+  }
 
   _writePublishOptions(WriteBuffer buffer, PublishOptions value) {
     buffer.putUint8(_kPublishOptions);
     writeValue(buffer, value.publisherId);
     writeValue(buffer, value.headers);
     writeValue(buffer, value.subtopic);
- }
+  }
 
   _writeDeliveryOptions(WriteBuffer buffer, DeliveryOptions value) {
     buffer.putUint8(_kDeliveryOptions);
@@ -362,5 +433,4 @@ class BackendlessMessageCodec extends StandardMessageCodec {
     writeValue(buffer, value.whereClause);
     writeValue(buffer, value.count);
   }
-
 }

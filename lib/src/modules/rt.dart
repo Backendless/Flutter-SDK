@@ -7,7 +7,6 @@ class BackendlessRT {
   final Map<int, Result> _connectErrorCallbacks = <int, Result>{};
   final Map<int, Result> _disconnectCallbacks = <int, Result>{};
 
-
   factory BackendlessRT() => _instance;
   static final BackendlessRT _instance = new BackendlessRT._internal();
 
@@ -30,7 +29,7 @@ class BackendlessRT {
             break;
           case ("Backendless.RT.Disconnect.EventResponse"):
             _disconnectCallbacks[handle].handle(result);
-            break; 
+            break;
         }
       }
     });
@@ -38,18 +37,28 @@ class BackendlessRT {
 
   Future<void> connect() => _channel.invokeMethod("Backendless.RT.connect");
 
-  Future<void> disconnect() => _channel.invokeMethod("Backendless.RT.disconnect");
+  Future<void> disconnect() =>
+      _channel.invokeMethod("Backendless.RT.disconnect");
 
-  Future<void> addConnectListener(void callback()) => _addListener("addConnectListener", callback, _connectCallbacks);
+  Future<void> addConnectListener(void callback()) =>
+      _addListener("addConnectListener", callback, _connectCallbacks);
 
-  Future<void> addReconnectAttemptListener(void callback(ReconnectAttempt result)) => _addListener("addReconnectAttemptListener", callback, _reconnectCallbacks);
+  Future<void> addReconnectAttemptListener(
+          void callback(ReconnectAttempt result)) =>
+      _addListener(
+          "addReconnectAttemptListener", callback, _reconnectCallbacks);
 
-  Future<void> addConnectErrorListener(void callback(BackendlessFault fault)) => _addListener("addConnectErrorListener", callback, _connectErrorCallbacks);
+  Future<void> addConnectErrorListener(void callback(BackendlessFault fault)) =>
+      _addListener("addConnectErrorListener", callback, _connectErrorCallbacks);
 
-  Future<void> addDisconnectListener(void callback(String result)) => _addListener("addDisconnectListener", callback, _disconnectCallbacks);
+  Future<void> addDisconnectListener(void callback(String result)) =>
+      _addListener("addDisconnectListener", callback, _disconnectCallbacks);
 
-  Future<void> _addListener(String methodName, Function callback, Map<int, Result> callbacks) =>
-    _channel.invokeMethod("Backendless.RT.$methodName").then((handle) => callbacks[handle] = new Result(callback));
+  Future<void> _addListener(
+          String methodName, Function callback, Map<int, Result> callbacks) =>
+      _channel
+          .invokeMethod("Backendless.RT.$methodName")
+          .then((handle) => callbacks[handle] = new Result(callback));
 
   void removeListener(Function callback) {
     _removeListenerFrom(callback, _connectCallbacks, "connect");
@@ -58,7 +67,8 @@ class BackendlessRT {
     _removeListenerFrom(callback, _disconnectCallbacks, "disconnect");
   }
 
-  void _removeListenerFrom(Function callback, Map<int, Result> callbacks, String callbacksName) {
+  void _removeListenerFrom(
+      Function callback, Map<int, Result> callbacks, String callbacksName) {
     List<int> toRemove = [];
     callbacks.forEach((handle, result) {
       if (result.handle == callback) {
@@ -67,22 +77,19 @@ class BackendlessRT {
     });
 
     toRemove.forEach((handle) {
-      _channel.invokeMethod("Backendless.RT.removeListener", <String, dynamic> {
-        "callbacksName":callbacksName,
-        "handle":handle
-      });
+      _channel.invokeMethod("Backendless.RT.removeListener",
+          <String, dynamic>{"callbacksName": callbacksName, "handle": handle});
       callbacks.remove(handle);
     });
   }
-  
+
   void removeConnectionListeners() {
     _connectCallbacks.clear();
     _channel.invokeMethod("Backendless.RT.removeConnectionListeners");
   }
 }
 
-class BackendlessFault {
-}
+class BackendlessFault {}
 
 class ReconnectAttempt {
   final int timeout;
@@ -92,7 +99,6 @@ class ReconnectAttempt {
 
   @override
   String toString() => "ReconnectAttempt{timeout=$timeout, attempt=$attempt}";
-
 }
 
 class Result {

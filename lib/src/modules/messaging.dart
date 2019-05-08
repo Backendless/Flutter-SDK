@@ -8,16 +8,19 @@ import 'package:backendless_sdk/src/utils/utils.dart';
 class BackendlessMessaging {
   static const String DEFAULT_CHANNEL_NAME = "default";
   static const MethodChannel _channel = const MethodChannel(
-    'backendless/messaging', 
-    StandardMethodCodec(BackendlessMessageCodec()));
+      'backendless/messaging', StandardMethodCodec(BackendlessMessageCodec()));
   static final Map<int, EventCallback> _joinCallbacks = <int, EventCallback>{};
-  static final Map<int, EventCallback> _messageCallbacks = <int, EventCallback>{};
-  static final Map<int, EventCallback> _commandCallbacks = <int, EventCallback>{};
-  static final Map<int, EventCallback> _userStatusCallbacks = <int, EventCallback>{};
+  static final Map<int, EventCallback> _messageCallbacks =
+      <int, EventCallback>{};
+  static final Map<int, EventCallback> _commandCallbacks =
+      <int, EventCallback>{};
+  static final Map<int, EventCallback> _userStatusCallbacks =
+      <int, EventCallback>{};
   int _channelHandle = 0;
-    
+
   factory BackendlessMessaging() => _instance;
-  static final BackendlessMessaging _instance = new BackendlessMessaging._internal();
+  static final BackendlessMessaging _instance =
+      new BackendlessMessaging._internal();
 
   BackendlessMessaging._internal() {
     _channel.setMethodCallHandler((MethodCall call) async {
@@ -43,7 +46,7 @@ class BackendlessMessaging {
       } else if (call.method.contains("EventFault")) {
         int handle = call.arguments["handle"];
         String fault = call.arguments["fault"];
-        
+
         switch (call.method) {
           case ("Backendless.Messaging.Channel.Join.EventFault"):
             _joinCallbacks[handle].handleFault(fault);
@@ -62,80 +65,86 @@ class BackendlessMessaging {
     });
   }
 
-  Future<MessageStatus> cancel(String messageId) =>
-    _channel.invokeMethod("Backendless.Messaging.cancel", <String, dynamic> {
-      "messageId":messageId
-    });
+  Future<MessageStatus> cancel(String messageId) => _channel.invokeMethod(
+      "Backendless.Messaging.cancel",
+      <String, dynamic>{"messageId": messageId});
 
   Future<DeviceRegistration> getDeviceRegistration() =>
-    _channel.invokeMethod("Backendless.Messaging.getDeviceRegistration");
+      _channel.invokeMethod("Backendless.Messaging.getDeviceRegistration");
 
   Future<MessageStatus> getMessageStatus(String messageId) =>
-    _channel.invokeMethod("Backendless.Messaging.getMessageStatus", <String, dynamic> {
-      "messageId":messageId
-    });
+      _channel.invokeMethod("Backendless.Messaging.getMessageStatus",
+          <String, dynamic>{"messageId": messageId});
 
-  Future<MessageStatus> publish(Object message, {String channelName, 
-      PublishOptions publishOptions, DeliveryOptions deliveryOptions}) {
+  Future<MessageStatus> publish(Object message,
+      {String channelName,
+      PublishOptions publishOptions,
+      DeliveryOptions deliveryOptions}) {
     if (deliveryOptions != null && publishOptions == null)
-      throw new ArgumentError("Argument 'deliveryOptions' should be defined with argument 'publishOptions'");    
-    return _channel.invokeMethod("Backendless.Messaging.publish", <String, dynamic> {
-      "message":message,
-      "channelName":channelName,
-      "publishOptions":publishOptions,
-      "deliveryOptions":deliveryOptions
+      throw new ArgumentError(
+          "Argument 'deliveryOptions' should be defined with argument 'publishOptions'");
+    return _channel
+        .invokeMethod("Backendless.Messaging.publish", <String, dynamic>{
+      "message": message,
+      "channelName": channelName,
+      "publishOptions": publishOptions,
+      "deliveryOptions": deliveryOptions
     });
   }
 
   Future<MessageStatus> pushWithTemplate(String templateName) =>
-    _channel.invokeMethod("Backendless.Messaging.pushWithTemplate", <String, dynamic> {
-      "templateName":templateName
-    });
+      _channel.invokeMethod("Backendless.Messaging.pushWithTemplate",
+          <String, dynamic>{"templateName": templateName});
 
   Future<bool> refreshDeviceToken(String newDeviceToken) =>
-   _channel.invokeMethod("Backendless.Messaging.refreshDeviceToken", <String, dynamic> {
-     "newDeviceToken":newDeviceToken
-    });
+      _channel.invokeMethod("Backendless.Messaging.refreshDeviceToken",
+          <String, dynamic>{"newDeviceToken": newDeviceToken});
 
-  Future<DeviceRegistrationResult> registerDevice([List<String> channels, DateTime expiration]) =>
-    _channel.invokeMethod("Backendless.Messaging.registerDevice", <String, dynamic> {
-     "channels":channels,
-     "expiration":expiration
-    });
+  Future<DeviceRegistrationResult> registerDevice(
+          [List<String> channels, DateTime expiration]) =>
+      _channel.invokeMethod("Backendless.Messaging.registerDevice",
+          <String, dynamic>{"channels": channels, "expiration": expiration});
 
-  Future<MessageStatus> sendEmail(String subject, BodyParts bodyParts, List<String> recipients, [List<String> attachments]) =>
-    _channel.invokeMethod("Backendless.Messaging.sendEmail", <String, dynamic> {
-      "textMessage":bodyParts.textMessage,
-      "htmlMessage":bodyParts.htmlMessage,
-      "subject":subject,
-      "recipients":recipients,
-      "attachments":attachments
-    });
+  Future<MessageStatus> sendEmail(
+          String subject, BodyParts bodyParts, List<String> recipients,
+          [List<String> attachments]) =>
+      _channel
+          .invokeMethod("Backendless.Messaging.sendEmail", <String, dynamic>{
+        "textMessage": bodyParts.textMessage,
+        "htmlMessage": bodyParts.htmlMessage,
+        "subject": subject,
+        "recipients": recipients,
+        "attachments": attachments
+      });
 
-  Future<MessageStatus> sendHTMLEmail(String subject, String messageBody, List<String> recipients) => 
-    _channel.invokeMethod("Backendless.Messaging.sendHTMLEmail", <String, dynamic> {
-      "subject":subject,
-      "messageBody":messageBody,
-      "recipients":recipients
-    });
+  Future<MessageStatus> sendHTMLEmail(
+          String subject, String messageBody, List<String> recipients) =>
+      _channel.invokeMethod(
+          "Backendless.Messaging.sendHTMLEmail", <String, dynamic>{
+        "subject": subject,
+        "messageBody": messageBody,
+        "recipients": recipients
+      });
 
-  Future<MessageStatus> sendTextEmail(String subject, String messageBody, List<String> recipients) => 
-    _channel.invokeMethod("Backendless.Messaging.sendTextEmail", <String, dynamic> {
-      "subject":subject,
-      "messageBody":messageBody,
-      "recipients":recipients
-    });
+  Future<MessageStatus> sendTextEmail(
+          String subject, String messageBody, List<String> recipients) =>
+      _channel.invokeMethod(
+          "Backendless.Messaging.sendTextEmail", <String, dynamic>{
+        "subject": subject,
+        "messageBody": messageBody,
+        "recipients": recipients
+      });
 
   Future<int> unregisterDevice([List<String> channels]) =>
-    _channel.invokeMethod("Backendless.Messaging.unregisterDevice", <String, dynamic> {
-      "channels":channels
-    });
+      _channel.invokeMethod("Backendless.Messaging.unregisterDevice",
+          <String, dynamic>{"channels": channels});
 
   Future<Channel> subscribe([String channelName = DEFAULT_CHANNEL_NAME]) async {
     int handle = _channelHandle++;
-    return _channel.invokeMethod("Backendless.Messaging.subscribe", <String, dynamic> {
-      "channelName":channelName,
-      "channelHandle":handle
+    return _channel.invokeMethod(
+        "Backendless.Messaging.subscribe", <String, dynamic>{
+      "channelName": channelName,
+      "channelHandle": handle
     }).then((value) => new Channel(_channel, channelName, handle));
   }
 }
@@ -146,116 +155,139 @@ class Channel {
   final int _channelHandle;
 
   Channel(this._methodChannel, this.channelName, this._channelHandle);
-  
-  Future<void> join() => 
-    _methodChannel.invokeMethod("Backendless.Messaging.Channel.join", <String, dynamic> {
-      "channelHandle":_channelHandle
-    });
 
-  Future<void> leave() =>
-    _methodChannel.invokeMethod("Backendless.Messaging.Channel.leave", <String, dynamic> {
-      "channelHandle":_channelHandle
-    });
+  Future<void> join() => _methodChannel.invokeMethod(
+      "Backendless.Messaging.Channel.join",
+      <String, dynamic>{"channelHandle": _channelHandle});
 
-  Future<bool> isJoined() =>
-    _methodChannel.invokeMethod("Backendless.Messaging.Channel.isJoined", <String, dynamic> {
-      "channelHandle":_channelHandle
-    });
+  Future<void> leave() => _methodChannel.invokeMethod(
+      "Backendless.Messaging.Channel.leave",
+      <String, dynamic>{"channelHandle": _channelHandle});
 
-  Future<void> addJoinListener(Function callback, {void onError(String error)}) =>
-    _methodChannel.invokeMethod("Backendless.Messaging.Channel.addJoinListener", {"channelHandle":_channelHandle})
-      .then((handle) => BackendlessMessaging._joinCallbacks[handle] = new EventCallback(callback, onError));
+  Future<bool> isJoined() => _methodChannel.invokeMethod(
+      "Backendless.Messaging.Channel.isJoined",
+      <String, dynamic>{"channelHandle": _channelHandle});
+
+  Future<void> addJoinListener(Function callback,
+          {void onError(String error)}) =>
+      _methodChannel.invokeMethod(
+          "Backendless.Messaging.Channel.addJoinListener", {
+        "channelHandle": _channelHandle
+      }).then((handle) => BackendlessMessaging._joinCallbacks[handle] =
+          new EventCallback(callback, onError));
 
   void removeJoinListener(Function callback) {
-    List<int> handles = _findCallbacks(BackendlessMessaging._joinCallbacks, (eventCallback) => eventCallback.handleResponse == callback);
-    
+    List<int> handles = _findCallbacks(BackendlessMessaging._joinCallbacks,
+        (eventCallback) => eventCallback.handleResponse == callback);
+
     handles.forEach((handle) {
-      _methodChannel.invokeMethod("Backendless.Messaging.Channel.removeJoinListener", <String, dynamic> {
-        "channelHandle":_channelHandle,
-        'handle':handle
-      });
+      _methodChannel.invokeMethod(
+          "Backendless.Messaging.Channel.removeJoinListener",
+          <String, dynamic>{"channelHandle": _channelHandle, 'handle': handle});
       BackendlessMessaging._joinCallbacks.remove(handle);
     });
   }
 
-  Future<void> addMessageListener<T>(void callback(T response), {void onError(String error), String selector}) {
+  Future<void> addMessageListener<T>(void callback(T response),
+      {void onError(String error), String selector}) {
     if (T != String && T != PublishMessageInfo)
-      throw UnimplementedError();   // Custom type message
+      throw UnimplementedError(); // Custom type message
 
-    Map<String, dynamic> args = {"selector":selector, "messageType":T.toString()};
-    return _methodChannel.invokeMethod("Backendless.Messaging.Channel.addMessageListener", <String, dynamic> {
-        "channelHandle":_channelHandle
-      }..addAll(args))
-      .then((handle) => BackendlessMessaging._messageCallbacks[handle] = new EventCallback(callback, onError, args));
+    Map<String, dynamic> args = {
+      "selector": selector,
+      "messageType": T.toString()
+    };
+    return _methodChannel
+        .invokeMethod("Backendless.Messaging.Channel.addMessageListener",
+            <String, dynamic>{"channelHandle": _channelHandle}..addAll(args))
+        .then((handle) => BackendlessMessaging._messageCallbacks[handle] =
+            new EventCallback(callback, onError, args));
   }
 
   void removeMessageListeners({String selector, Function callback}) {
-    List<int> handles = _findCallbacks(BackendlessMessaging._messageCallbacks, (eventCallback) => 
-      ((selector == null || selector == eventCallback.args["selector"]) && (callback == null || callback == eventCallback.handleResponse)));
+    List<int> handles = _findCallbacks(
+        BackendlessMessaging._messageCallbacks,
+        (eventCallback) => ((selector == null ||
+                selector == eventCallback.args["selector"]) &&
+            (callback == null || callback == eventCallback.handleResponse)));
 
     handles.forEach((handle) {
-      _methodChannel.invokeMethod("Backendless.Messaging.Channel.removeMessageListener", <String, dynamic> {
-        "channelHandle":_channelHandle,
-        'handle':handle
-      });
+      _methodChannel.invokeMethod(
+          "Backendless.Messaging.Channel.removeMessageListener",
+          <String, dynamic>{"channelHandle": _channelHandle, 'handle': handle});
       BackendlessMessaging._messageCallbacks.remove(handle);
     });
   }
 
   void removeAllMessageListeners() {
     BackendlessMessaging._messageCallbacks.clear();
-    _methodChannel.invokeMethod("Backendless.Messaging.Channel.removeAllMessageListeners", <String, dynamic> {
-      "channelHandle":_channelHandle,
-    });
+    _methodChannel.invokeMethod(
+        "Backendless.Messaging.Channel.removeAllMessageListeners",
+        <String, dynamic>{
+          "channelHandle": _channelHandle,
+        });
   }
 
-  Future<void> addCommandListener(void callback(Command<String> response), {void onError(String error)}) =>
-    _methodChannel.invokeMethod("Backendless.Messaging.Channel.addCommandListener", {"channelHandle":_channelHandle})
-      .then((handle) => BackendlessMessaging._commandCallbacks[handle] = new EventCallback(callback, onError));
+  Future<void> addCommandListener(void callback(Command<String> response),
+          {void onError(String error)}) =>
+      _methodChannel.invokeMethod(
+          "Backendless.Messaging.Channel.addCommandListener", {
+        "channelHandle": _channelHandle
+      }).then((handle) => BackendlessMessaging._commandCallbacks[handle] =
+          new EventCallback(callback, onError));
 
-  void removeCommandListener(Function callback ) {
-    List<int> handles = _findCallbacks(BackendlessMessaging._commandCallbacks, (eventCallback) => eventCallback.handleResponse == callback);
-    
+  void removeCommandListener(Function callback) {
+    List<int> handles = _findCallbacks(BackendlessMessaging._commandCallbacks,
+        (eventCallback) => eventCallback.handleResponse == callback);
+
     handles.forEach((handle) {
-      _methodChannel.invokeMethod("Backendless.Messaging.Channel.removeCommandListener", <String, dynamic> {
-        "channelHandle":_channelHandle,
-        'handle':handle
-      });
+      _methodChannel.invokeMethod(
+          "Backendless.Messaging.Channel.removeCommandListener",
+          <String, dynamic>{"channelHandle": _channelHandle, 'handle': handle});
       BackendlessMessaging._commandCallbacks.remove(handle);
     });
   }
 
-  Future<void> sendCommand( String type, Object data) =>
-    _methodChannel.invokeMethod("Backendless.Messaging.Channel.sendCommand", <String, dynamic> {
-      "channelHandle":_channelHandle,
-      "type":type,
-      "data":data
-    });
+  Future<void> sendCommand(String type, Object data) =>
+      _methodChannel.invokeMethod(
+          "Backendless.Messaging.Channel.sendCommand", <String, dynamic>{
+        "channelHandle": _channelHandle,
+        "type": type,
+        "data": data
+      });
 
-  Future<void> addUserStatusListener(void callback(UserStatusResponse response), {void onError(String error)}) =>
-    _methodChannel.invokeMethod("Backendless.Messaging.Channel.addUserStatusListener", {"channelHandle":_channelHandle})
-      .then((handle) => BackendlessMessaging._userStatusCallbacks[handle] = new EventCallback(callback, onError));
+  Future<void> addUserStatusListener(void callback(UserStatusResponse response),
+          {void onError(String error)}) =>
+      _methodChannel.invokeMethod(
+          "Backendless.Messaging.Channel.addUserStatusListener", {
+        "channelHandle": _channelHandle
+      }).then((handle) => BackendlessMessaging._userStatusCallbacks[handle] =
+          new EventCallback(callback, onError));
 
   void removeUserStatusListener(Function callback) {
-    List<int> handles = _findCallbacks(BackendlessMessaging._userStatusCallbacks, (eventCallback) => eventCallback.handleResponse == callback);
-    
+    List<int> handles = _findCallbacks(
+        BackendlessMessaging._userStatusCallbacks,
+        (eventCallback) => eventCallback.handleResponse == callback);
+
     handles.forEach((handle) {
-      _methodChannel.invokeMethod("Backendless.Messaging.Channel.removeUserStatusListener", <String, dynamic> {
-        "channelHandle":_channelHandle,
-        'handle':handle
-      });
+      _methodChannel.invokeMethod(
+          "Backendless.Messaging.Channel.removeUserStatusListener",
+          <String, dynamic>{"channelHandle": _channelHandle, 'handle': handle});
       BackendlessMessaging._userStatusCallbacks.remove(handle);
     });
   }
 
   void removeUserStatusListeners() {
     BackendlessMessaging._userStatusCallbacks.clear();
-    _methodChannel.invokeMethod("Backendless.Messaging.Channel.removeUserStatusListeners", <String, dynamic> {
-      "channelHandle":_channelHandle,
-    });
+    _methodChannel.invokeMethod(
+        "Backendless.Messaging.Channel.removeUserStatusListeners",
+        <String, dynamic>{
+          "channelHandle": _channelHandle,
+        });
   }
 
-  List<int> _findCallbacks(Map<int, EventCallback> callbacks, bool test(EventCallback eventCallback)) {
+  List<int> _findCallbacks(Map<int, EventCallback> callbacks,
+      bool test(EventCallback eventCallback)) {
     List<int> toRemove = [];
     callbacks.forEach((handle, callback) {
       if (test(callback)) {
@@ -264,7 +296,6 @@ class Channel {
     });
     return toRemove;
   }
-  
 }
 
 class MessageStatus implements Comparable<MessageStatus> {
@@ -275,29 +306,34 @@ class MessageStatus implements Comparable<MessageStatus> {
   MessageStatus(this.messageId, this.errorMessage, this.status);
 
   @override
-  bool operator ==(other) => 
-    identical(this, other) || 
-    other is MessageStatus &&
-    runtimeType == other.runtimeType &&
-    this.messageId == other.messageId &&
-    this.status == other.status;
+  bool operator ==(other) =>
+      identical(this, other) ||
+      other is MessageStatus &&
+          runtimeType == other.runtimeType &&
+          this.messageId == other.messageId &&
+          this.status == other.status;
 
   @override
   int get hashCode => hashValues(messageId, status);
 
   @override
-  String toString() => "MessageStatus{messageId='$messageId', status='$status'}";
+  String toString() =>
+      "MessageStatus{messageId='$messageId', status='$status'}";
 
   @override
   int compareTo(MessageStatus other) {
     if (this == other) {
       return 0;
     } else {
-      int statusDiff = this.status == null ? (other.status == null ? 0 : -1) : this.status.index.compareTo(other.status.index);
+      int statusDiff = this.status == null
+          ? (other.status == null ? 0 : -1)
+          : this.status.index.compareTo(other.status.index);
       if (statusDiff != 0) {
         return statusDiff;
       } else {
-        return this.messageId == null ? (other.messageId == null ? 0 : -1) : this.messageId.compareTo(other.messageId);
+        return this.messageId == null
+            ? (other.messageId == null ? 0 : -1)
+            : this.messageId.compareTo(other.messageId);
       }
     }
   }
@@ -312,7 +348,8 @@ class DeviceRegistration {
   DateTime expiration;
   List<String> channels = new List<String>();
 
-  DeviceRegistration(this.id, this.deviceToken, this.deviceId, this.os, this.osVersion, this.expiration, this.channels);
+  DeviceRegistration(this.id, this.deviceToken, this.deviceId, this.os,
+      this.osVersion, this.expiration, this.channels);
 }
 
 /// Message class does not support passing custom classes to 'data' for now
@@ -323,24 +360,27 @@ class Message {
   String publisherId;
   int timestamp;
 
-  Message(this.messageId, this.headers, this.data, this.publisherId, this.timestamp);
+  Message(this.messageId, this.headers, this.data, this.publisherId,
+      this.timestamp);
 
   @override
-  bool operator ==(other) => 
-    identical(this, other) || 
-    other is Message &&
-    this.runtimeType == other.runtimeType &&
-    this.messageId == other.messageId &&
-    MapEquality().equals(this.headers, other.headers) &&
-    this.data == other.data &&
-    this.publisherId == other.publisherId &&
-    this.timestamp == other.timestamp;
+  bool operator ==(other) =>
+      identical(this, other) ||
+      other is Message &&
+          this.runtimeType == other.runtimeType &&
+          this.messageId == other.messageId &&
+          MapEquality().equals(this.headers, other.headers) &&
+          this.data == other.data &&
+          this.publisherId == other.publisherId &&
+          this.timestamp == other.timestamp;
 
   @override
-  int get hashCode => hashValues(messageId, headers, data, publisherId, timestamp);
+  int get hashCode =>
+      hashValues(messageId, headers, data, publisherId, timestamp);
 
   @override
-  String toString() => "Message{messageId='$messageId', data=$data, headers=$headers, publisherId=$publisherId, timestamp=$timestamp}";
+  String toString() =>
+      "Message{messageId='$messageId', data=$data, headers=$headers, publisherId=$publisherId, timestamp=$timestamp}";
 }
 
 class PublishOptions {
@@ -382,9 +422,9 @@ class PublishOptions {
 
   PublishOptions.from(PublishMessageInfo info) {
     this.publisherId = info.publisherId;
-      if (info.headers != null) {
-        this.headers.addAll(info.headers);
-      }
+    if (info.headers != null) {
+      this.headers.addAll(info.headers);
+    }
     this.subtopic = info.subtopic;
   }
 }
@@ -402,7 +442,14 @@ class DeliveryOptions {
     publishPolicy = PublishPolicyEnum.BOTH;
   }
 
-  DeliveryOptions.of(this.pushBroadcast, this.pushSinglecast, this.segmentQuery, this.publishPolicy, this.publishAt, this.repeatEvery, this.repeatExpiresAt);
+  DeliveryOptions.of(
+      this.pushBroadcast,
+      this.pushSinglecast,
+      this.segmentQuery,
+      this.publishPolicy,
+      this.publishAt,
+      this.repeatEvery,
+      this.repeatExpiresAt);
 
   DeliveryOptions.from(PublishMessageInfo info) {
     this.publishPolicy = PublishPolicyEnum.BOTH;
@@ -410,15 +457,16 @@ class DeliveryOptions {
     this.segmentQuery = info.query;
     if (info.publishAt > 0)
       this.publishAt = new DateTime.fromMillisecondsSinceEpoch(info.publishAt);
-    if (info.repeatEvery > 0)
-      this.repeatEvery = info.repeatEvery;
+    if (info.repeatEvery > 0) this.repeatEvery = info.repeatEvery;
     if (info.repeatExpiresAt > 0)
-      this.repeatExpiresAt = new DateTime.fromMillisecondsSinceEpoch(info.repeatExpiresAt);
+      this.repeatExpiresAt =
+          new DateTime.fromMillisecondsSinceEpoch(info.repeatExpiresAt);
     if (info.pushSinglecast != null && info.pushSinglecast.length > 0)
       this.pushSinglecast = info.pushSinglecast;
     if (info.publishPolicy != null) {
       try {
-        this.publishPolicy = getEnumFromString(PublishPolicyEnum.values, info.publishPolicy.toUpperCase());
+        this.publishPolicy = getEnumFromString(
+            PublishPolicyEnum.values, info.publishPolicy.toUpperCase());
       } catch (e) {
         this.publishPolicy = PublishPolicyEnum.BOTH;
       }
@@ -426,7 +474,8 @@ class DeliveryOptions {
   }
 
   @override
-  String toString() => """DeliveryOptions{pushBroadcast=$pushBroadcast, pushSinglecast=$pushSinglecast, publishPolicy=$publishPolicy, 
+  String toString() =>
+      """DeliveryOptions{pushBroadcast=$pushBroadcast, pushSinglecast=$pushSinglecast, publishPolicy=$publishPolicy, 
     publishAt=$publishAt, repeatEvery=$repeatEvery, repeatExpiresAt=$repeatExpiresAt}""";
 }
 
@@ -447,8 +496,20 @@ class PublishMessageInfo {
 
   PublishMessageInfo();
 
-  PublishMessageInfo.of(this._messageId, this._timestamp, this.message, this.publisherId, this.subtopic, this.pushSinglecast, 
-    this.pushBroadcast, this.publishPolicy, this.query, this.publishAt, this.repeatEvery, this.repeatExpiresAt, this.headers);
+  PublishMessageInfo.of(
+      this._messageId,
+      this._timestamp,
+      this.message,
+      this.publisherId,
+      this.subtopic,
+      this.pushSinglecast,
+      this.pushBroadcast,
+      this.publishPolicy,
+      this.query,
+      this.publishAt,
+      this.repeatEvery,
+      this.repeatExpiresAt,
+      this.headers);
 
   get messageId => _messageId;
   get timestamp => _timestamp;
@@ -497,7 +558,8 @@ class DeviceRegistrationResult {
   get channelRegistrations => _channelRegistrations;
 
   @override
-  String toString() => "DeviceRegistrationResult{deviceToken='$deviceToken', channelRegistrations=$channelRegistrations}";
+  String toString() =>
+      "DeviceRegistrationResult{deviceToken='$deviceToken', channelRegistrations=$channelRegistrations}";
 }
 
 class Command<T> {
@@ -508,22 +570,24 @@ class Command<T> {
 
   Command._(this.dataType);
 
-  Command.string(): this._(String);
+  Command.string() : this._(String);
 
-  Command.map(): this._(Map);
+  Command.map() : this._(Map);
 
   @override
-  String toString() => "RTCommand{dataType=$dataType, type='$type', data=$data, userInfo=$userInfo}";
+  String toString() =>
+      "RTCommand{dataType=$dataType, type='$type', data=$data, userInfo=$userInfo}";
 }
 
-class UserInfo  {
+class UserInfo {
   String connectionId;
   String userId;
 
   UserInfo(this.connectionId, this.userId);
 
   @override
-  String toString() => "UserInfo{connectionId='$connectionId', userId='$userId'}";
+  String toString() =>
+      "UserInfo{connectionId='$connectionId', userId='$userId'}";
 }
 
 class UserStatusResponse {
@@ -543,23 +607,8 @@ class BodyParts {
   BodyParts(this.textMessage, this.htmlMessage);
 }
 
-enum PublishStatusEnum {
-  FAILED,
-  PUBLISHED,
-  SCHEDULED,
-  CANCELLED,
-  UNKNOWN
-}
+enum PublishStatusEnum { FAILED, PUBLISHED, SCHEDULED, CANCELLED, UNKNOWN }
 
-enum PublishPolicyEnum {
-  PUSH,
-  PUBSUB,
-  BOTH
-}
+enum PublishPolicyEnum { PUSH, PUBSUB, BOTH }
 
-enum UserStatus {
-  LISTING,
-  CONNECTED,
-  DISCONNECTED,
-  USERUPDATE
-}
+enum UserStatus { LISTING, CONNECTED, DISCONNECTED, USERUPDATE }
