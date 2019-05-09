@@ -3,7 +3,7 @@ import 'dart:collection';
 import 'dart:typed_data';
 import 'dart:ui' show hashValues;
 
-import 'package:collection/equality.dart';
+import 'package:collection/collection.dart';
 import 'package:backendless_sdk/src/modules/geo.dart';
 
 class PagedQueryBuilder {

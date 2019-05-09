@@ -266,12 +266,9 @@ class MapDataStore implements IDataStore<Map> {
 class EventHandler<T> {
   static const MethodChannel _channel = const MethodChannel(
       'backendless/data', StandardMethodCodec(BackendlessMessageCodec()));
-  Type _type;
   String _tableName;
 
-  EventHandler(String tableName) : this._(Map, tableName);
-
-  EventHandler._(this._type, this._tableName);
+  EventHandler(this._tableName);
 
 // Create
 
