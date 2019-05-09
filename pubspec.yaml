@@ -1,8 +1,8 @@
 name: backendless_sdk
-description: A new flutter plugin project.
+description: Flutter plugin for Backendless SDK. It provides access to the Backendless services. These services enable the server-side functionality for developing and running mobile and desktop applications.
 version: 0.0.1
-author:
-homepage:
+author: Backendless Team <info@backendless.com>
+homepage: https://backendless.com
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
