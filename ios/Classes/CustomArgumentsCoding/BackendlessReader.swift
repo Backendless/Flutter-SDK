@@ -49,6 +49,26 @@ class BackendlessReader: FlutterStandardReader {
             value = readMesage()
         case .publishOptions:
             value = readPublishOptions()
+        case .deliveryOptions:
+            value = readDeliveryOptions()
+        case .publishMessageInfo:
+            value = readPublishMessageInfo()
+        case .deviceRegistrationResult:
+            value = readDeviceRegistrationResult()
+        case .command:
+            value = readCommand()
+        case .userInfo:
+            value = readUserInfo()
+        case .userStatusResponse:
+            value = readUserStatusResponse()
+        case .reconnectAttempt:
+            value = readReconnectAttempt()
+        case .backendlessUser:
+            value = readBackendlessUser()
+        case .userProperty:
+            value = readUserProperty()
+        case .bulkEvent:
+            value = readBulkEvent()
         default:
             value = nil
         }
@@ -217,7 +237,6 @@ class BackendlessReader: FlutterStandardReader {
     // MARK: -
     // MARK: - Read DeviceRegistration
     private func readDeviceRegistration() -> DeviceRegistration? {
-        
         guard
             let id: String? = readValue().flatMap(cast),
             let diviceToken: String? = readValue().flatMap(cast),
@@ -255,10 +274,139 @@ class BackendlessReader: FlutterStandardReader {
         return publishOptions
     }
     
+    // MARK: -
+    // MARK: - Read DeliveryOptions
+    private func readDeliveryOptions() -> DeliveryOptions {
+        let deliveryOptions = DeliveryOptions()
+        
+        readValue().flatMap(cast).map { deliveryOptions.setPushBroadcast(pushBroadcast: $0) }
+        readValue().flatMap(cast).map { deliveryOptions.setPushSinglecast(singlecast: $0) }
+        _ = readValue() // segmentQuery
+        readValue().flatMap(cast).map { deliveryOptions.setPublishPolicy(publishPolicy: $0) }
+        readDate().map { deliveryOptions.publishAt = $0 }
+        readValue().flatMap(cast).map { deliveryOptions.repeatEvery = $0 }
+        readValue().flatMap(cast).map { deliveryOptions.repeatExpiresAt = $0 }
+        
+        return deliveryOptions
+    }
     
+    // MARK: -
+    // MARK: - Read PublishMessageInfo
+    private func readPublishMessageInfo() -> PublishMessageInfo {
+        let publishMessageInfo = PublishMessageInfo()
+        
+        readValue().flatMap(cast).map { publishMessageInfo.messageId = $0 }
+        readValue().flatMap(cast).map { publishMessageInfo.timestamp = $0 }
+        readValue().flatMap(cast).map { publishMessageInfo.message = $0 } // Need to check
+        readValue().flatMap(cast).map { publishMessageInfo.publisherId = $0 }
+        readValue().flatMap(cast).map { publishMessageInfo.subtopic = $0 }
+        readValue().flatMap(cast).map { publishMessageInfo.pushSinglecast = $0 }
+        readValue().flatMap(cast).map { publishMessageInfo.pushBroadcast = $0 }
+        readValue().flatMap(cast).map { publishMessageInfo.publishPolicy = $0 }
+        readValue().flatMap(cast).map { publishMessageInfo.query = $0 }
+        readValue().flatMap(cast).map { publishMessageInfo.publishAt = $0 }
+        readValue().flatMap(cast).map { publishMessageInfo.repeatEvery = $0 }
+        _ = readValue() // repeatExpiresAt
+        readValue().flatMap(cast).map { publishMessageInfo.headers = $0 }
+        
+        return publishMessageInfo
+    }
     
+    // MARK: -
+    // MARK: - Read DeviceRegistrationResult
+    private func readDeviceRegistrationResult() -> Any? {
+        
+        // TODO: -
+        // TODO: - DeviceRegistrationResult
+        // TODO: - Just a String in iOS method responseHandler
+        
+        return nil
+    }
     
+    private func readCommand() -> Any? {
+        
+        // TODO: -
+        // TODO: - What is Command Object?
+        
+        return nil
+    }
     
+    // MARK: -
+    // MARK: - Read UserInfo
+    private func readUserInfo() -> UserInfo {
+        let userInfo = UserInfo()
+        
+        readValue().flatMap(cast).map { userInfo.connectionId = $0 }
+        readValue().flatMap(cast).map { userInfo.userId = $0 }
+        
+        return userInfo
+    }
     
+    // MARK: -
+    // MARK: - Read UserStatusResponse
+    private func readUserStatusResponse() -> Any? {
+        
+        // TODO: -
+        // TODO: - UserStatusResponse
+        
+        return nil
+    }
     
+    // MARK: -
+    // MARK: - Read ReconnectAttempt
+    private func readReconnectAttempt() -> ReconnectAttemptObject {
+        let reconnectAttempt = ReconnectAttemptObject()
+        
+        readValue().flatMap(cast).map { reconnectAttempt.timeout = $0 }
+        readValue().flatMap(cast).map { reconnectAttempt.attempt = $0 }
+        
+        return reconnectAttempt
+    }
+    
+    // MARK: -
+    // MARK: - Read BackendlessUser
+    private func readBackendlessUser() -> BackendlessUser? {
+        let backendlessUser = BackendlessUser()
+        
+        readValue().flatMap(cast).map { backendlessUser.setProperties(properties: $0) }
+        
+        return backendlessUser
+    }
+    
+    // MARK: -
+    // MARK: - Read UserProperty
+    private func readUserProperty() -> Any? {
+        guard
+            let name: String = readValue().flatMap(cast),
+            let isRequired: Bool = readValue().flatMap(cast),
+            let type: Int = readValue().flatMap(cast)
+            // TODO: -
+            // TODO: - Can't convert type: Int to DataTypeEnum with String rawValue
+        else {
+            return nil
+        }
+        
+        // TODO: -
+        // TODO: - Return UserProperty
+        
+        return nil
+    }
+    
+    // MARK: -
+    // MARK: - Read BulkEvent
+    private func readBulkEvent() -> BulkEvent {
+        let bulkEvent = BulkEvent()
+        
+        readValue().flatMap(cast).map { bulkEvent.whereClause = $0 }
+        readValue().flatMap(cast).map { bulkEvent.count = $0 }
+        
+        return bulkEvent
+    }
+}
+
+enum NewEnum {
+    
+    func newMethod() {
+        
+    }
 }
