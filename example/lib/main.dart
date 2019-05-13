@@ -3,6 +3,7 @@ import 'dart:async';
 
 import 'package:flutter/services.dart';
 import 'package:backendless_sdk/backendless_sdk.dart';
+import 'package:backendless_sdk/src/utils/query_builder.dart';
 
 void main() => runApp(MyApp());
 
@@ -25,8 +26,17 @@ class _MyAppState extends State<MyApp> {
     String platformVersion;
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
-      Backendless.initApp("4C50E3CB-D44F-2019-FF4D-ECE3F1E06B00", "FD99AED3-300E-8BAC-FF42-6DCBE4084F00", "2809016A-662D-7133-FFC0-08EC52CA6800");
-      platformVersion = await Backendless.Cache.get("myKey");
+      // Backendless.initApp("4C50E3CB-D44F-2019-FF4D-ECE3F1E06B00", "FD99AED3-300E-8BAC-FF42-6DCBE4084F00", "2809016A-662D-7133-FFC0-08EC52CA6800");
+      // platformVersion = await Backendless.Cache.get("myKey");
+
+      DataQueryBuilder builder = DataQueryBuilder();
+      builder.properties = ["a", "b", "c"];
+      builder.whereClause = "WooooHoooo!";
+      Backendless.Data.getView("viewName", builder);
+
+      Backendless.Cache.expireAt("someKey");
+
+
     } on PlatformException {
       platformVersion = 'Failed to get platform version.';
     }
@@ -54,4 +64,7 @@ class _MyAppState extends State<MyApp> {
       ),
     );
   }
+}
+
+class QueryBuilder {
 }

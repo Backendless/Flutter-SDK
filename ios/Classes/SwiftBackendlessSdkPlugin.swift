@@ -29,32 +29,47 @@ public class SwiftBackendlessSdkPlugin: NSObject, FlutterPlugin {
     static let backendless = Backendless.shared
     
     public static func register(with registrar: FlutterPluginRegistrar) {
+        
+        let readerWriter = BackendlessReaderWriter()
+        let codec = FlutterStandardMethodCodec(readerWriter: readerWriter)
+        let messenger = registrar.messenger()
+        
         FlutterPluginChannels.allChannels
             .forEach { channelName in
-                let channel = FlutterMethodChannel(name: channelName, binaryMessenger: registrar.messenger())
                 
+                let channel: FlutterMethodChannel
                 let handler: FlutterCallHandlerProtocol
                 
                 switch channelName {
                 case FlutterPluginChannels.backendlessChannel:
+                    channel = FlutterMethodChannel(name: channelName, binaryMessenger: messenger)
                     handler = BackendlessCallHandler()
                 case FlutterPluginChannels.cacheChannel:
+                    channel = FlutterMethodChannel(name: channelName, binaryMessenger: messenger, codec: codec)
                     handler = CacheCallHandler()
                 case FlutterPluginChannels.dataChannel:
+                    channel = FlutterMethodChannel(name: channelName, binaryMessenger: messenger, codec: codec)
                     handler = DataCallHandler()
                 case FlutterPluginChannels.commerceChannel:
+                    channel = FlutterMethodChannel(name: channelName, binaryMessenger: messenger, codec: codec)
                     handler = CommerceCallHandler()
                 case FlutterPluginChannels.countersChannel:
+                    channel = FlutterMethodChannel(name: channelName, binaryMessenger: registrar.messenger())
                     handler = CountersCallHandler()
                 case FlutterPluginChannels.eventsChannel:
+                    channel = FlutterMethodChannel(name: channelName, binaryMessenger: messenger, codec: codec)
                     handler = EventsCallHandler()
                 case FlutterPluginChannels.filesChannel:
+                    channel = FlutterMethodChannel(name: channelName, binaryMessenger: messenger, codec: codec)
                     handler = FilesCallHandler()
                 case FlutterPluginChannels.geoChannel:
+                    channel = FlutterMethodChannel(name: channelName, binaryMessenger: messenger, codec: codec)
                     handler = GeoCallHandler()
                 case FlutterPluginChannels.loggingChannel:
+                    channel = FlutterMethodChannel(name: channelName, binaryMessenger: messenger, codec: codec)
                     handler = LoggingCallHandler()
                 case FlutterPluginChannels.messagingChannel:
+                    channel = FlutterMethodChannel(name: channelName, binaryMessenger: messenger, codec: codec)
                     handler = MessagingCallHandler(messagingChannel: channel)
                 default:
                     return
