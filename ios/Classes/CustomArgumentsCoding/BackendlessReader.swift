@@ -6,6 +6,8 @@ import Backendless
 // MARK: - BackendlessReader
 class BackendlessReader: FlutterStandardReader {
     
+    // MARK: -
+    // MARK: - Read Value
     override func readValue(ofType type: UInt8) -> Any? {
         print("~~~> type: \(type) <~~~")
         let code = FlutterTypeCode(rawValue: type)
@@ -13,8 +15,10 @@ class BackendlessReader: FlutterStandardReader {
         return code != nil ? readCustomValue(byCode: code!) : readValue(ofType: type)
     }
     
+    // MARK: -
+    // MARK: - Read Custom Value
     private func readCustomValue(byCode code: FlutterTypeCode) -> Any? {
-        let value: Any?
+        var value: Any?
         
         switch code {
         case .dateTime:
@@ -69,8 +73,6 @@ class BackendlessReader: FlutterStandardReader {
             value = readUserProperty()
         case .bulkEvent:
             value = readBulkEvent()
-        default:
-            value = nil
         }
         
         return value
