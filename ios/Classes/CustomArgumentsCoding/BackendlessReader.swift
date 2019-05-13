@@ -18,7 +18,7 @@ class BackendlessReader: FlutterStandardReader {
         
         switch code {
         case .dateTime:
-            value = readDateTime()
+            value = readDate()
         case .geoPoint:
             value = readGeoPoint()
         case .dataQueryBuilder:
@@ -39,6 +39,16 @@ class BackendlessReader: FlutterStandardReader {
             value = readGeoQuery()
         case .geoCluster:
             value = readGeoCluster()
+        case .searchMathesResult:
+            value = readSearchMathesResult()
+        case .messageStatus:
+            value = readMessageStatus()
+        case .deviceRegistration:
+            value = readDeviceRegistration()
+        case .message:
+            value = readMesage()
+        case .publishOptions:
+            value = readPublishOptions()
         default:
             value = nil
         }
@@ -48,7 +58,7 @@ class BackendlessReader: FlutterStandardReader {
     
     // MARK: -
     // MARK: - Read Date
-    private func readDateTime() -> Date? {
+    private func readDate() -> Date? {
         // TODO: - Choose type
         
         // TODO: -
@@ -176,6 +186,78 @@ class BackendlessReader: FlutterStandardReader {
         
         return geoCluster
     }
+    
+    // MARK: -
+    // MARK: - Read SearchMathesResult
+    private func readSearchMathesResult() -> Any? {
+        
+        // TODO: -
+        // TODO: - Return [GeoPoint] ? or some other Object?
+        
+        return nil
+    }
+    
+    // MARK: -
+    // MARK: - Read MessageStatus
+    private func readMessageStatus() -> MessageStatus? {
+        guard
+            let messageId: String? = readValue().flatMap(cast),
+            let status: String? = readValue().flatMap(cast),
+            let errorMesage: String? = readValue().flatMap(cast)
+        else {
+            return nil
+        }
+        
+        // TODO: -
+        // TODO: - Return Message Status
+        
+        return nil
+    }
+    
+    // MARK: -
+    // MARK: - Read DeviceRegistration
+    private func readDeviceRegistration() -> DeviceRegistration? {
+        
+        guard
+            let id: String? = readValue().flatMap(cast),
+            let diviceToken: String? = readValue().flatMap(cast),
+            let deviceId: String? = readValue().flatMap(cast),
+            let os: String? = readValue().flatMap(cast),
+            let osVersion: String? = readValue().flatMap(cast),
+            let expiration = readDate(),
+            let channels: [String]? = readValue().flatMap(cast)
+        else {
+            return nil
+        }
+        
+        return nil
+    }
+    
+    // MARK: -
+    // MARK: - Read Message
+    private func readMesage() -> Any? {
+        
+        return nil
+    }
+    
+    // MARK: -
+    // MARK: - Read PublishOptions
+    private func readPublishOptions() -> PublishOptions {
+        let publishOptions = PublishOptions()
+        
+        readValue().flatMap(cast).map { publishOptions.publisherId = $0 }
+        readValue().flatMap(cast).map { (headers: [String: Any]) in
+            headers.forEach {
+                publishOptions.addHeader(name: $0.key, value: $0.value)
+            }
+        }
+        
+        return publishOptions
+    }
+    
+    
+    
+    
     
     
     

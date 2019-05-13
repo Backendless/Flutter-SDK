@@ -16,7 +16,7 @@ enum FlutterTypeCode: UInt8 {
     case searchMathesResult
     case messageStatus
     case deviceRegistration
-    case mesage
+    case message
     case publishOptions
     case deliveryOptions
     case publishMessageInfo
