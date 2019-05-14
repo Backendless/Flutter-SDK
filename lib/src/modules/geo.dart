@@ -1,7 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:backendless_sdk/src/utils/utils.dart';
 import 'package:collection/collection.dart';
-import 'package:quiver/core.dart' show hashObjects;
 
 import 'dart:ui' show hashValues;
 import 'dart:core';
@@ -224,11 +223,10 @@ class EntityDescription {
       MapEquality().equals(o.fields, fields);
 
   @override
-  int get hashCode => hashObjects([fields]);
+  int get hashCode => fields.hashCode;
 }
 
 class BaseGeoPoint extends EntityDescription {
-  static final int _serialVersionUID = 3703240008778337528;
   String objectId;
   double latitude;
   double longitude;
@@ -385,7 +383,7 @@ class GeoPoint extends BaseGeoPoint {
 }
 
 class BaseGeoCategory {
-  static final String DEFAULT = "Default";
+  static final String defaultCategory = "Default";
   String objectId;
   String name;
   int size;

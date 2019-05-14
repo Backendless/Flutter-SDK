@@ -1,4 +1,4 @@
-import 'package:collection/equality.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/services.dart';
 import 'package:backendless_sdk/src/modules/data.dart';
 import 'package:backendless_sdk/src/utils/message_codec.dart';
