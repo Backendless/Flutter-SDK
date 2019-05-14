@@ -36,6 +36,14 @@ class BackendlessWtiter: FlutterStandardWriter {
 //            writeSearchMatchesResult(value as! SearchMatchesResult)
         case is MessageStatus:
             writeMessageStatus(value as! MessageStatus)
+        case is DeviceRegistration:
+            writeDeviceRegistration(value as! DeviceRegistration)
+//        case is Message:
+//            writeMessage(value as! Message)
+        case is PublishOptions:
+            writePublishOptions(value as! PublishOptions)
+        case is DeliveryOptions:
+            writeDeliveryOptions(value as! DeliveryOptions)
             
         default:
             super.writeValue(value)
@@ -212,9 +220,83 @@ class BackendlessWtiter: FlutterStandardWriter {
 //    }
     
     // MARK: -
-    // MARK: -
+    // MARK: - Write MessageStatus
     private func writeMessageStatus(_ messageStatus: MessageStatus) {
+        writeValue(FlutterTypeCode.messageStatus.rawValue)
         
+//        open var messageId: String?
+//        open var status: String?
+//        open var errorMessage: String?
+        
+        messageStatus.messageId.map { [weak self] in self?.writeValue($0) }
+        messageStatus.errorMessage.map { [weak self] in self?.writeValue($0) }
+        
+        // TODO: -
+        // TODO: - Convert String to PublishStatusEnum Int value
+        writeValue(0) // PublishStatusEnum
+    }
+    
+    // MARK: -
+    // MARK: - Write DeviceRegistration
+    private func writeDeviceRegistration(_ deviceRegistration: DeviceRegistration) {
+        writeValue(FlutterTypeCode.deviceRegistration.rawValue)
+        
+        deviceRegistration.id.map { [weak self] in self?.writeValue($0) }
+        deviceRegistration.deviceToken.map { [weak self] in self?.writeValue($0) }
+        deviceRegistration.deviceId.map { [weak self] in self?.writeValue($0) }
+        deviceRegistration.os.map { [weak self] in self?.writeValue($0) }
+        deviceRegistration.osVersion.map { [weak self] in self?.writeValue($0) }
+        deviceRegistration.expiration.map { [weak self] in self?.writeDate($0) }
+        deviceRegistration.channels.map { [weak self] in self?.writeValue($0) }
+    }
+    
+    // MARK:
+    // MARK: - Write Message
+//    private func writeMessage(_ deviceRegistration: Message) {
+//        writeValue(FlutterTypeCode.message.rawValue)
+//
+//    }
+    
+    
+    // MARK: -
+    // MARK: - Write PublishOptions
+    private func writePublishOptions(_ publishOptions: PublishOptions) {
+        writeValue(FlutterTypeCode.publishOptions.rawValue)
+        
+        publishOptions.publisherId.map { [weak self] in self?.writeValue($0) }
+        writeValue(publishOptions.headers)
+        
+        // TODO: -
+        // TODO: - No subtopic in PublishOptions Swift Class
+        
+        writeValue("") // subtopic
+    }
+    
+    // MARK: -
+    // MARK: - Write DeliveryOptions
+    private func writeDeliveryOptions(_ deliveryOptions: DeliveryOptions) {
+        writeValue(FlutterTypeCode.deliveryOptions.rawValue)
+        
+        writeValue(deliveryOptions.getPushBroadcast())
+        writeValue(deliveryOptions.getPushSinglecast())
+        
+        // TODO: -
+        // TODO: - No segmentQuery in Swift DeliveryOptions
+        writeValue("") // segmentQuery
+        
+        let publishPolicy = deliveryOptions.getPublishPolicy()
+        switch publishPolicy {
+        case "PUSH":
+            writeValue(0)
+        case "PUBSUB":
+            writeValue(1)
+        default:
+            writeValue(2)
+        }
+        
+        deliveryOptions.publishAt.map { [weak self] in self?.writeDate($0) }
+        deliveryOptions.repeatEvery.map { [weak self] in self?.writeValue($0) }
+        deliveryOptions.repeatExpiresAt.map { [weak self] in self?.writeDate($0) }
     }
     
     
