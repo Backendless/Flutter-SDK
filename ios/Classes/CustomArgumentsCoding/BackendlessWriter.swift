@@ -44,6 +44,8 @@ class BackendlessWtiter: FlutterStandardWriter {
             writePublishOptions(value as! PublishOptions)
         case is DeliveryOptions:
             writeDeliveryOptions(value as! DeliveryOptions)
+        case is PublishMessageInfo:
+            writePublishMessageInfo(value as! PublishMessageInfo)
             
         default:
             super.writeValue(value)
@@ -104,8 +106,6 @@ class BackendlessWtiter: FlutterStandardWriter {
     private func writeObjectProperty(_ objectProperty: ObjectProperty) {
         writeValue(FlutterTypeCode.objectProperty.rawValue)
         
-        //        objectProperty.setType(DateTypeEnum.values()[(int) readValue(buffer)]);
-        
         objectProperty.relatedTable.map { [weak self] in self?.writeValue($0) }
         objectProperty.defaultValue.map { [weak self] in self?.writeValue($0) }
         writeValue(objectProperty.name)
@@ -139,7 +139,7 @@ class BackendlessWtiter: FlutterStandardWriter {
         writeValue(FlutterTypeCode.fileInfo.rawValue)
         
         fileInfo.name.map { [weak self] in self?.writeValue($0) }
-        fileInfo.createdOn.map { [weak self] in self?.writeValue($0) }
+        fileInfo.createdOn.map { [weak self] in self?.writeValue(Int(truncating: $0)) }
         fileInfo.url.map { [weak self] in self?.writeValue($0) }
         writeValue(fileInfo.size)
     }
@@ -151,7 +151,7 @@ class BackendlessWtiter: FlutterStandardWriter {
         
         geoCategory.objectId.map { [weak self] in self?.writeValue($0) }
         geoCategory.name.map { [weak self] in self?.writeValue($0) }
-        geoCategory.size.map { [weak self] in self?.writeValue($0) }
+        geoCategory.size.map { [weak self] in self?.writeValue(Int(truncating: $0)) }
     }
     
     // MARK: -
@@ -161,7 +161,7 @@ class BackendlessWtiter: FlutterStandardWriter {
         
         geoQuery.geoPoint.map { [weak self] in self?.writeValue($0.latitude) }
         geoQuery.geoPoint.map { [weak self] in self?.writeValue($0.longitude) }
-        geoQuery.radius.map { [weak self] in self?.writeValue($0) }
+        geoQuery.radius.map { [weak self] in self?.writeValue(Int(truncating: $0)) }
         geoQuery.categories.map { [weak self] in self?.writeValue($0) }
         geoQuery.metadata.map { [weak self] in self?.writeValue($0) }
         
@@ -223,10 +223,6 @@ class BackendlessWtiter: FlutterStandardWriter {
     // MARK: - Write MessageStatus
     private func writeMessageStatus(_ messageStatus: MessageStatus) {
         writeValue(FlutterTypeCode.messageStatus.rawValue)
-        
-//        open var messageId: String?
-//        open var status: String?
-//        open var errorMessage: String?
         
         messageStatus.messageId.map { [weak self] in self?.writeValue($0) }
         messageStatus.errorMessage.map { [weak self] in self?.writeValue($0) }
@@ -297,6 +293,31 @@ class BackendlessWtiter: FlutterStandardWriter {
         deliveryOptions.publishAt.map { [weak self] in self?.writeDate($0) }
         deliveryOptions.repeatEvery.map { [weak self] in self?.writeValue($0) }
         deliveryOptions.repeatExpiresAt.map { [weak self] in self?.writeDate($0) }
+    }
+    
+    // MARK: -
+    // MARK: -
+    private func writePublishMessageInfo(_ publishMessageInfo: PublishMessageInfo) {
+        writeValue(FlutterTypeCode.publishMessageInfo.rawValue)
+        
+//        open var messageId: String?
+//        open var timestamp: NSNumber?
+//        open var message: Any?
+//        open var publisherId: String?
+//        open var subtopic: String?
+//        open var pushSinglecast: [Any]?
+//        open var pushBroadcast: NSNumber?
+//        open var publishPolicy: String?
+//        open var query: String?
+//        open var publishAt: NSNumber?
+//        open var repeatEvery: NSNumber?
+//        open var headers: [String : Any]?
+        
+        publishMessageInfo.messageId.map { [weak self] in self?.writeValue($0) }
+        publishMessageInfo.timestamp.map { [weak self] in self?.writeValue(Int(truncating: $0)) }
+        
+        // In progress
+        
     }
     
     
