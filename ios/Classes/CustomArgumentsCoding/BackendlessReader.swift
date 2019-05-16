@@ -405,10 +405,3 @@ class BackendlessReader: FlutterStandardReader {
         return bulkEvent
     }
 }
-
-enum NewEnum {
-    
-    func newMethod() {
-        
-    }
-}

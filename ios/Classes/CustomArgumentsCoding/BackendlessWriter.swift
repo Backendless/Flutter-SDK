@@ -46,9 +46,24 @@ class BackendlessWtiter: FlutterStandardWriter {
             writeDeliveryOptions(value as! DeliveryOptions)
         case is PublishMessageInfo:
             writePublishMessageInfo(value as! PublishMessageInfo)
-            
+//        case is DevideRegistrationResult:
+//            writeDevideRegistrationResult(value as! DevideRegistrationResult)
+//        case is Command:
+//            writeCommand(value as! Command)
+        case is UserInfo:
+            writeUserInfo(value as! UserInfo)
+//        case is UserStatusResponse:
+//            writeUserStatusResponse(value as! UserStatusResponse)
+        case is ReconnectAttemptObject:
+            writeReconnectAttempt(value as! ReconnectAttemptObject)
+        case is BackendlessUser:
+            writeBackendlessUser(value as! BackendlessUser)
+        case is UserProperty:
+            writeUserProperty(value as! UserProperty)
+        case is BulkEvent:
+            writeBulkEvent(value as! BulkEvent)
         default:
-            super.writeValue(value)
+            break
         }
     }
     
@@ -296,29 +311,119 @@ class BackendlessWtiter: FlutterStandardWriter {
     }
     
     // MARK: -
-    // MARK: -
+    // MARK: - Write PublishMessageInfo
     private func writePublishMessageInfo(_ publishMessageInfo: PublishMessageInfo) {
         writeValue(FlutterTypeCode.publishMessageInfo.rawValue)
         
-//        open var messageId: String?
-//        open var timestamp: NSNumber?
-//        open var message: Any?
-//        open var publisherId: String?
-//        open var subtopic: String?
-//        open var pushSinglecast: [Any]?
-//        open var pushBroadcast: NSNumber?
-//        open var publishPolicy: String?
-//        open var query: String?
-//        open var publishAt: NSNumber?
-//        open var repeatEvery: NSNumber?
-//        open var headers: [String : Any]?
-        
         publishMessageInfo.messageId.map { [weak self] in self?.writeValue($0) }
         publishMessageInfo.timestamp.map { [weak self] in self?.writeValue(Int(truncating: $0)) }
+        publishMessageInfo.message.map { [weak self] in self?.writeValue($0) }
+        publishMessageInfo.publisherId.map { [weak self] in self?.writeValue($0) }
+        publishMessageInfo.subtopic.map { [weak self] in self?.writeValue($0) }
+        publishMessageInfo.pushSinglecast.map { [weak self] in self?.writeValue($0) }
+        publishMessageInfo.pushBroadcast.map { [weak self] in self?.writeValue(Int(truncating: $0)) }
+        publishMessageInfo.publishPolicy.map { [weak self] in self?.writeValue($0) }
+        publishMessageInfo.query.map { [weak self] in self?.writeValue($0) }
+        publishMessageInfo.publishAt.map { [weak self] in self?.writeValue(Int(truncating: $0)) }
+        publishMessageInfo.repeatEvery.map { [weak self] in self?.writeValue(Int(truncating: $0)) }
         
-        // In progress
+        // TODO: -
+        // TODO: - No repeatExpiresAt: Date property in PublishMessageInfo Class
+        writeDate(Date()) // Need to fix with correct Date
         
+        publishMessageInfo.headers.map { [weak self] in self?.writeValue($0) }
     }
     
+    // MARK: -
+    // MARK: - Write DevideRegistrationResult
+//    private func writeDevideRegistrationResult(_ deviceRegistationResult: DevideRegistrationResult) {
+//        writeValue(FlutterTypeCode.deviceRegistrationResult.rawValue)
+//
+//    }
+    
+    // MARK: -
+    // MARK: - Write Command
+//    private func writeCommand(_ command: Command) {
+//        writeValue(FlutterTypeCode.command.rawValue)
+//
+//    }
+    
+    // MARK: -
+    // MARK: - Write UserInfo
+    private func writeUserInfo(_ userInfo: UserInfo) {
+        writeValue(FlutterTypeCode.userInfo.rawValue)
+        
+        userInfo.connectionId.map { [weak self] in self?.writeValue($0) }
+        userInfo.userId.map { [weak self] in self?.writeValue($0) }
+    }
+    
+    // MARK: -
+    // MARK: - Write UserStatusResponse
+//    private func writeUserStatusResponse(_ userStatusResponse: UserStatusResponse) {
+//        writeValue(FlutterTypeCode.userStatusResponse.rawValue)
+//
+//    }
+    
+    // MARK: -
+    // MARK: - Write ReconnectAttempt
+    private func writeReconnectAttempt(_ reconnectAttempt: ReconnectAttemptObject) {
+        writeValue(FlutterTypeCode.reconnectAttempt.rawValue)
+        
+        reconnectAttempt.timeout.map { [weak self] in self?.writeValue(Int(truncating: $0)) }
+        reconnectAttempt.attempt.map { [weak self] in self?.writeValue(Int(truncating: $0)) }
+    }
+    
+    // MARK: -
+    // MARK: - Write BackendlessUser
+    private func writeBackendlessUser(_ user: BackendlessUser) {
+        writeValue(FlutterTypeCode.backendlessUser.rawValue)
+        
+        writeValue(user.getProperties())
+    }
+    
+    // MARK: -
+    // MARK: - WriteUserProperty
+    private func writeUserProperty(_ userProperty: UserProperty) {
+        writeValue(FlutterTypeCode.userProperty.rawValue)
+        
+        writeValue(userProperty.name)
+        writeValue(userProperty.required)
+        
+        switch userProperty.type {
+        case .UNKNOWN:
+            writeValue(0)
+        case .INT:
+            writeValue(1)
+        case .STRING:
+            writeValue(2)
+        case .BOOLEAN:
+            writeValue(3)
+        case .DATETIME:
+            writeValue(4)
+        case .DOUBLE:
+            writeValue(5)
+        case .RELATION:
+            writeValue(6)
+        case .COLLECTION:
+            writeValue(7)
+        case .RELATION_LIST:
+            writeValue(8)
+        case .STRING_ID:
+            writeValue(9)
+        case .TEXT:
+            writeValue(10)
+        }
+        
+        writeValue(userProperty.identity)
+    }
+    
+    // MARK: -
+    // MARK: - Write BulkEvent
+    private func writeBulkEvent(_ bulkEvent: BulkEvent) {
+        writeValue(FlutterTypeCode.bulkEvent.rawValue)
+        
+        bulkEvent.whereClause.map { [weak self] in self?.writeValue($0) }
+        bulkEvent.count.map { [weak self] in self?.writeValue(Int(truncating: $0)) }
+    }
     
 }
