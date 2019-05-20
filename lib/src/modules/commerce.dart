@@ -44,11 +44,21 @@ class GooglePlaySubscriptionStatus {
   String kind;
   int expiryTimeMillis;
 
-  GooglePlaySubscriptionStatus(
-      {this.autoRenewing,
-      this.startTimeMillis,
-      this.kind,
-      this.expiryTimeMillis});
+  GooglePlaySubscriptionStatus();
+
+  GooglePlaySubscriptionStatus.fromJson(Map json) : 
+    autoRenewing = json['autoRenewing'],
+    startTimeMillis = json['startTimeMillis'],
+    kind = json['kind'],
+    expiryTimeMillis = json['expiryTimeMillis'];
+
+  Map toJson() =>
+    {
+      'autoRenewing': autoRenewing,
+      'startTimeMillis': startTimeMillis,
+      'kind': kind,
+      'expiryTimeMillis': expiryTimeMillis,
+    };
 }
 
 class GooglePlayPurchaseStatus {
@@ -58,10 +68,21 @@ class GooglePlayPurchaseStatus {
   int consumptionState;
   String developerPayload;
 
-  GooglePlayPurchaseStatus(
-      {this.kind,
-      this.purchaseTimeMillis,
-      this.purchaseState,
-      this.consumptionState,
-      this.developerPayload});
+  GooglePlayPurchaseStatus();
+
+  GooglePlayPurchaseStatus.fromJson(Map json) : 
+    kind = json['kind'],
+    purchaseTimeMillis = json['purchaseTimeMillis'],
+    purchaseState = json['purchaseState'],
+    consumptionState = json['consumptionState'],
+    developerPayload = json['developerPayload'];
+
+  Map toJson() =>
+    {
+      'kind': kind,
+      'purchaseTimeMillis': purchaseTimeMillis,
+      'purchaseState': purchaseState,
+      'consumptionState': consumptionState,
+      'developerPayload': developerPayload,
+    };
 }

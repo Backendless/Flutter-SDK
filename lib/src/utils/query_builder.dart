@@ -60,12 +60,35 @@ class DataQueryBuilder {
   DataQueryBuilder() {
     _pagedQueryBuilder = new PagedQueryBuilder();
     properties = new List();
+    whereClause = "";
     groupByList = new List();
     havingClause = "";
     sortByList = new List();
     relatedList = new List();
     relationsDepth = DEFAULT_RELATIONS_DEPTH;
   }
+
+  DataQueryBuilder.fromJson(Map json) : 
+    _pagedQueryBuilder = json['pagedQueryBuilder'],
+    properties = json['properties'],
+    whereClause = json['whereClause'],
+    groupByList = json['groupByList'],
+    havingClause = json['havingClause'],
+    sortByList = json['sortByList'],
+    relatedList = json['relatedList'],
+    relationsDepth = json['relationsDepth'];
+
+  Map toJson() =>
+    {
+      'pagedQueryBuilder': _pagedQueryBuilder,
+      'properties': properties,
+      'whereClause': whereClause,
+      'groupByList': groupByList,
+      'havingClause': havingClause,
+      'sortByList': sortByList,
+      'relatedList': relatedList,
+      'relationsDepth': relationsDepth,
+    };
 
   set pageSize(int pageSize) => _pagedQueryBuilder.pageSize = pageSize;
 
@@ -84,23 +107,23 @@ class DataQueryBuilder {
 class LoadRelationsQueryBuilder<R> {
   PagedQueryBuilder pagedQueryBuilder;
   String relationName;
-  Type relationType;
 
-  /// Currently supports only Map relation type
-  LoadRelationsQueryBuilder._(Type relationType) {
-    pagedQueryBuilder = new PagedQueryBuilder();
-    this.relationType = relationType;
+  LoadRelationsQueryBuilder.ofMap() {
+    pagedQueryBuilder = new PagedQueryBuilder();    
   }
 
-  LoadRelationsQueryBuilder.ofMap() : this._(Map);
-
-  LoadRelationsQueryBuilder.of(Type relationType) {
-    throw new UnimplementedError();
+  LoadRelationsQueryBuilder.fromJson(Map json) {
+    relationName = json['relationName'];
+    pageSize = json['pageSize'];
+    offset = json['offset'];
   }
 
-  Type getRelationType() {
-    return relationType;
-  }
+  Map toJson() =>
+    {
+      'relationName': relationName,
+      'pageSize': pageSize,
+      'offset': offset,
+    };
 
   set pageSize(int pageSize) => pagedQueryBuilder.pageSize = pageSize;
 
@@ -153,40 +176,44 @@ class BackendlessGeoQuery extends AbstractBackendlessGeoQuery {
 
   BackendlessGeoQuery();
 
-  BackendlessGeoQuery.of(
-      double latitude,
-      double longitude,
-      double radius,
-      HashSet<String> _categories,
-      Map<String, Object> metadata,
-      Map<String, String> relativeFindMetadata,
-      double relativeFindPercentThreshold,
-      String whereClause,
-      Iterable<String> sortBy,
-      double dpp,
-      int clusterGridSize,
-      int pageSize,
-      int offset,
-      Units units,
-      bool includeMeta,
-      Float64List searchRectangle) {
-    this.latitude = latitude;
-    this.longitude = longitude;
-    this.radius = radius;
-    this.categories = categories;
-    this.metadata = metadata;
-    this.relativeFindMetadata = relativeFindMetadata;
-    this.relativeFindPercentThreshold = relativeFindPercentThreshold;
-    this.whereClause = whereClause;
-    this.sortBy = sortBy;
-    this.dpp = dpp;
-    this.clusterGridSize = clusterGridSize;
-    this.pageSize = pageSize;
-    this.offset = offset;
-    this.units = units;
-    this.includeMeta = includeMeta;
-    this.searchRectangle = searchRectangle;
+  BackendlessGeoQuery.fromJson(Map json) {
+    latitude = json['latitude'];
+    longitude = json['longitude'];
+    radius = json['radius'];
+    _categories = json['categories'];
+    metadata = json['metadata'];
+    relativeFindMetadata = json['relativeFindMetadata'];
+    relativeFindPercentThreshold = json['relativeFindPercentThreshold'];
+    whereClause = json['whereClause'];
+    sortBy = json['sortBy'];
+    dpp = json['dpp'];
+    clusterGridSize = json['clusterGridSize'];
+    pageSize = json['pageSize'];
+    offset = json['offset'];
+    units = json['units'];
+    includeMeta = json['includeMeta'];
+    searchRectangle = json['searchRectangle'];
   }
+
+  Map toJson() =>
+    {
+      'latitude': latitude,
+      'longitude': longitude,
+      'radius': radius,
+      'categories': _categories,
+      'metadata': metadata,
+      'relativeFindMetadata': relativeFindMetadata,
+      'relativeFindPercentThreshold': relativeFindPercentThreshold,
+      'whereClause': whereClause,
+      'sortBy': sortBy,
+      'dpp': dpp,
+      'clusterGridSize': clusterGridSize,
+      'pageSize': pageSize,
+      'offset': offset,
+      'units': units,
+      'includeMeta': includeMeta,
+      'searchRectangle': searchRectangle,
+    };
 
   BackendlessGeoQuery.byLatLon(double latitude, double longitude,
       [double radius,

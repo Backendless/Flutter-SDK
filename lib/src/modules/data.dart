@@ -417,20 +417,41 @@ class ObjectProperty extends AbstractProperty {
   String relatedTable;
   Object defaultValue;
 
-  ObjectProperty(
-      {this.relatedTable,
-      this.defaultValue,
-      String name,
-      bool required,
-      DateTypeEnum type})
-      : super(name: name, required: required, type: type);
+  ObjectProperty();
+
+  ObjectProperty.fromJson(Map json) {
+    relatedTable = json['relatedTable'];
+    defaultValue = json['defaultValue'];
+    name = json['name'];
+    required = json['required'];
+    type = json['type'];
+  }
+
+  Map toJson() =>
+    {
+      'relatedTable': relatedTable,
+      'defaultValue': defaultValue,
+      'name': name,
+      'required': required,
+      'type': type,
+    };
 }
 
 class BulkEvent {
   String whereClause;
   int count;
 
-  BulkEvent(this.whereClause, this.count);
+  BulkEvent();
+
+  BulkEvent.fromJson(Map json) : 
+    whereClause = json['whereClause'],
+    count = json['count'];
+
+  Map toJson() =>
+    {
+      'whereClause': whereClause,
+      'count': count,
+    };
 
   @override
   String toString() => "BulkEvent{whereClause='$whereClause', count=$count}";
