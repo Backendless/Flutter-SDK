@@ -74,8 +74,5 @@ class EventsCallHandler: FlutterCallHandlerProtocol {
             errorHandler: {
                 result(FlutterError($0))
             })
-        
-        // TODO: Dispatch with execution type
-        fatalError("Check what is execution type for event")
     }
 }

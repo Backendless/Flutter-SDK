@@ -6,64 +6,30 @@ import Backendless
 // MARK: - BackendlessWriter
 class BackendlessWtiter: FlutterStandardWriter {
     
+    
     // MARK: -
     // MARK: - Write Value
     override func writeValue(_ value: Any) {
         switch value {
         case is Date:
             writeDate(value as! Date)
-        case is GeoPoint:
-            writeGeoPoint(value as! GeoPoint)
-        case is DataQueryBuilder:
-            writeDataQueryBuilder(value as! DataQueryBuilder)
-        case is LoadRelationsQueryBuilder:
-            writeLoadRelationsQueryBuilder(value as! LoadRelationsQueryBuilder)
-        case is ObjectProperty:
-            writeObjectProperty(value as! ObjectProperty)
-//        case is GooglePlaySubscriptionStatus:
-//            writeGooglePlaySubscriptionStatus(value as! GooglePlaySubscriptionStatus)
-//        case is GooglePlayPurchaseStatus:
-//            writeGooglePlayPurchaseStatus(value as! GooglePlayPurchaseStatus)
-        case is BackendlessFileInfo:
-            writeFileInfo(value as! BackendlessFileInfo)
-        case is GeoCategory:
-            writeGeoCategory(value as! GeoCategory)
-        case is BackendlessGeoQuery:
-            writeGeoQuery(value as! BackendlessGeoQuery)
-        case is GeoCluster:
-            writeGeoCluster(value as! GeoCluster)
-//        case is MatchesResult:
-//            writeSearchMatchesResult(value as! SearchMatchesResult)
-        case is MessageStatus:
-            writeMessageStatus(value as! MessageStatus)
-        case is DeviceRegistration:
-            writeDeviceRegistration(value as! DeviceRegistration)
-//        case is Message:
-//            writeMessage(value as! Message)
-        case is PublishOptions:
-            writePublishOptions(value as! PublishOptions)
-        case is DeliveryOptions:
-            writeDeliveryOptions(value as! DeliveryOptions)
-        case is PublishMessageInfo:
-            writePublishMessageInfo(value as! PublishMessageInfo)
-//        case is DevideRegistrationResult:
-//            writeDevideRegistrationResult(value as! DevideRegistrationResult)
-//        case is Command:
-//            writeCommand(value as! Command)
-        case is UserInfo:
-            writeUserInfo(value as! UserInfo)
-//        case is UserStatusResponse:
-//            writeUserStatusResponse(value as! UserStatusResponse)
-        case is ReconnectAttemptObject:
-            writeReconnectAttempt(value as! ReconnectAttemptObject)
-        case is BackendlessUser:
-            writeBackendlessUser(value as! BackendlessUser)
-        case is UserProperty:
-            writeUserProperty(value as! UserProperty)
-        case is BulkEvent:
-            writeBulkEvent(value as! BulkEvent)
+        case is GeoPoint, is DataQueryBuilder, is LoadRelationsQueryBuilder, is ObjectProperty,
+             is BackendlessFileInfo, is GeoCategory, is BackendlessGeoQuery, is GeoCluster,
+//             is MatchesResult,
+             is MessageStatus, is DeviceRegistration,
+//             is Message
+             is PublishOptions, is DeliveryOptions, is PublishMessageInfo,
+//             is DeviceRegistrationResult
+//             is Command
+             is UserInfo,
+//             is UserStatusResponse
+             is ReconnectAttemptObject, is BackendlessUser, is UserProperty, is BulkEvent:
+            guard let jsonData = dataFromValue(value) else { return }
+            guard let json = try? JSONSerialization.jsonObject(with: jsonData, options: []) else { return }
+            writeCodeForValue(value)
+            writeValue(json)
         default:
-            break
+            writeValue(value)
         }
     }
     
@@ -75,355 +41,141 @@ class BackendlessWtiter: FlutterStandardWriter {
     }
     
     // MARK: -
-    // MARK: - Write GeoPoint
-    private func writeGeoPoint(_ geoPoint: GeoPoint) {
-        writeValue(FlutterTypeCode.geoPoint.rawValue)
-        
-        geoPoint.objectId.map { [weak self] in self?.writeValue($0) }
-        writeValue(geoPoint.latitude)
-        writeValue(geoPoint.longitude)
-        writeValue(geoPoint.categories)
-        geoPoint.metadata.map { [weak self] in self?.writeValue($0) }
-        
-        // TODO: -
-        // TODO: - How to get distance?
-        writeValue(Double(0)) // distance
-    }
-    
-    // MARK: -
-    // MARK: - Write DataQueryBuilder
-    private func writeDataQueryBuilder(_ dataQueryBuilder: DataQueryBuilder) {
-        writeValue(FlutterTypeCode.dataQueryBuilder.rawValue)
-        
-        dataQueryBuilder.getProperties().map { [weak self] in self?.writeValue($0) }
-        dataQueryBuilder.getWhereClause().map { [weak self] in self?.writeValue($0) }
-        dataQueryBuilder.getGroupBy().map { [weak self] in self?.writeValue($0) }
-        dataQueryBuilder.getHavingClause().map { [weak self] in self?.writeValue($0) }
-        writeValue(dataQueryBuilder.getPageSize())
-        writeValue(dataQueryBuilder.getOffset())
-        dataQueryBuilder.getSortBy().map { [weak self] in self?.writeValue($0) }
-        dataQueryBuilder.getRelated().map { [weak self] in self?.writeValue($0) }
-        writeValue(dataQueryBuilder.getRelationsDepth())
-    }
-    
-    // MARK: -
-    // MARK: - Write LoadRelationsQueryBuilder
-    private func writeLoadRelationsQueryBuilder(_ loadRelationsQueryBuilder: LoadRelationsQueryBuilder) {
-        writeValue(FlutterTypeCode.loadRelationsQueryBuilder.rawValue)
-        
-        loadRelationsQueryBuilder.getRelationName().map { [weak self] in self?.writeValue($0) }
-        writeValue(loadRelationsQueryBuilder.getPageSize())
-        writeValue(loadRelationsQueryBuilder.getOffset())
-    }
-    
-    // MARK: -
-    // MARK: - Write ObjectProperty
-    private func writeObjectProperty(_ objectProperty: ObjectProperty) {
-        writeValue(FlutterTypeCode.objectProperty.rawValue)
-        
-        objectProperty.relatedTable.map { [weak self] in self?.writeValue($0) }
-        objectProperty.defaultValue.map { [weak self] in self?.writeValue($0) }
-        writeValue(objectProperty.name)
-        writeValue(objectProperty.required)
-        
-        // TODO: -
-        // TODO: - How to get Int value of DataTypeEnum?
-        
-        writeValue(Int(0)) // DateTypeEnum
-    }
-    
-    // MARK: -
-    // MARK: - Write GooglePlaySubscriptionStatus
-    private func writeGooglePlaySubscriptionStatus(_ value: Any) {
-        writeValue(FlutterTypeCode.googlePlaySubscriptionStatus.rawValue)
-        
-        // No realization of module in iOS SDK
-    }
-    
-    // MARK: -
-    // MARK: - Write GooglePlayPurchaseStatus
-    private func writeGooglePlayPurchaseStatus(_ value: Any) {
-        writeValue(FlutterTypeCode.googlePlayPurchaseStatus.rawValue)
-        
-        // No realization of module in iOS SDK
-    }
-    
-    // MARK: -
-    // MARK: - Write FileInfo
-    private func writeFileInfo(_ fileInfo: BackendlessFileInfo) {
-        writeValue(FlutterTypeCode.fileInfo.rawValue)
-        
-        fileInfo.name.map { [weak self] in self?.writeValue($0) }
-        fileInfo.createdOn.map { [weak self] in self?.writeValue(Int(truncating: $0)) }
-        fileInfo.url.map { [weak self] in self?.writeValue($0) }
-        writeValue(fileInfo.size)
-    }
-    
-    // MARK: -
-    // MARK: - Write GeoCategory
-    private func writeGeoCategory(_ geoCategory: GeoCategory) {
-        writeValue(FlutterTypeCode.geoCategory.rawValue)
-        
-        geoCategory.objectId.map { [weak self] in self?.writeValue($0) }
-        geoCategory.name.map { [weak self] in self?.writeValue($0) }
-        geoCategory.size.map { [weak self] in self?.writeValue(Int(truncating: $0)) }
-    }
-    
-    // MARK: -
-    // MARK: - Write GeoQuery
-    private func writeGeoQuery(_ geoQuery: BackendlessGeoQuery) {
-        writeValue(FlutterTypeCode.geoQuery.rawValue)
-        
-        geoQuery.geoPoint.map { [weak self] in self?.writeValue($0.latitude) }
-        geoQuery.geoPoint.map { [weak self] in self?.writeValue($0.longitude) }
-        geoQuery.radius.map { [weak self] in self?.writeValue(Int(truncating: $0)) }
-        geoQuery.categories.map { [weak self] in self?.writeValue($0) }
-        geoQuery.metadata.map { [weak self] in self?.writeValue($0) }
-        
-        // TODO: -
-        // TODO: - How to get RelativeFindMetadata?
-        writeValue([String: String]()) // RelativeFindMetadata
-        
-        // TODO: -
-        // TODO: - How to get RelativeFindPercentThreshold?
-        writeValue(Double(0)) // RelativeFindPercentThreshold
-        
-        geoQuery.whereClause.map { [weak self] in self?.writeValue($0) }
-        
-        // TODO: -
-        // TODO: - How to get SortBy?
-        // TODO: - How to send data with Collection type in Java?
-        writeValue(0) // SortBy
-        
-        writeValue(geoQuery.degreePerPixel)
-        writeValue(geoQuery.clusterGridSize)
-        writeValue(geoQuery.pageSize)
-        writeValue(geoQuery.offset)
-        writeValue(geoQuery.getUnits()) // Need to check if Data Type is correctly readed on Flutter side
-        writeValue(geoQuery.includemetadata)
-        
-        // TODO: -
-        // TODO: - How is SearchRectangle described in iOS SDK?
-        writeValue([Double(0), Double(0)]) // SearchRectangle
-    }
-    
-    // MARK: -
-    // MARK: - Write GeoCluster
-    private func writeGeoCluster(_ geoCluster: GeoCluster) {
-        writeValue(FlutterTypeCode.geoCluster.rawValue)
-        
-        geoCluster.objectId.map { [weak self] in self?.writeValue($0) }
-        writeValue(geoCluster.latitude)
-        writeValue(geoCluster.longitude)
-        
-        // TODO: -
-        // TODO: - How to send data with Collection type in Java?
-        writeValue(geoCluster.categories)
-        geoCluster.metadata.map { [weak self] in self?.writeValue($0) }
-        
-        // TODO: -
-        // TODO: - How to get distance?
-        writeValue(Double(0)) // distance
-        writeValue(geoCluster.totalPoints)
-        geoCluster.geoQuery.map { [weak self] in self?.writeGeoQuery($0) }
-    }
-    
-    // MARK: -
-    // MARK: - Write SearchMathesResult
-//    private func writeSearchMathesResult(_ searchMathesResult: SearchMathesResult) {
-//        writeValue(FlutterTypeCode.searchMathesResult.rawValue)
-//    }
-    
-    // MARK: -
-    // MARK: - Write MessageStatus
-    private func writeMessageStatus(_ messageStatus: MessageStatus) {
-        writeValue(FlutterTypeCode.messageStatus.rawValue)
-        
-        messageStatus.messageId.map { [weak self] in self?.writeValue($0) }
-        messageStatus.errorMessage.map { [weak self] in self?.writeValue($0) }
-        
-        // TODO: -
-        // TODO: - Convert String to PublishStatusEnum Int value
-        writeValue(0) // PublishStatusEnum
-    }
-    
-    // MARK: -
-    // MARK: - Write DeviceRegistration
-    private func writeDeviceRegistration(_ deviceRegistration: DeviceRegistration) {
-        writeValue(FlutterTypeCode.deviceRegistration.rawValue)
-        
-        deviceRegistration.id.map { [weak self] in self?.writeValue($0) }
-        deviceRegistration.deviceToken.map { [weak self] in self?.writeValue($0) }
-        deviceRegistration.deviceId.map { [weak self] in self?.writeValue($0) }
-        deviceRegistration.os.map { [weak self] in self?.writeValue($0) }
-        deviceRegistration.osVersion.map { [weak self] in self?.writeValue($0) }
-        deviceRegistration.expiration.map { [weak self] in self?.writeDate($0) }
-        deviceRegistration.channels.map { [weak self] in self?.writeValue($0) }
-    }
-    
-    // MARK:
-    // MARK: - Write Message
-//    private func writeMessage(_ deviceRegistration: Message) {
-//        writeValue(FlutterTypeCode.message.rawValue)
-//
-//    }
-    
-    
-    // MARK: -
-    // MARK: - Write PublishOptions
-    private func writePublishOptions(_ publishOptions: PublishOptions) {
-        writeValue(FlutterTypeCode.publishOptions.rawValue)
-        
-        publishOptions.publisherId.map { [weak self] in self?.writeValue($0) }
-        writeValue(publishOptions.headers)
-        
-        // TODO: -
-        // TODO: - No subtopic in PublishOptions Swift Class
-        
-        writeValue("") // subtopic
-    }
-    
-    // MARK: -
-    // MARK: - Write DeliveryOptions
-    private func writeDeliveryOptions(_ deliveryOptions: DeliveryOptions) {
-        writeValue(FlutterTypeCode.deliveryOptions.rawValue)
-        
-        writeValue(deliveryOptions.getPushBroadcast())
-        writeValue(deliveryOptions.getPushSinglecast())
-        
-        // TODO: -
-        // TODO: - No segmentQuery in Swift DeliveryOptions
-        writeValue("") // segmentQuery
-        
-        let publishPolicy = deliveryOptions.getPublishPolicy()
-        switch publishPolicy {
-        case "PUSH":
-            writeValue(0)
-        case "PUBSUB":
-            writeValue(1)
+    // MARK: - DataFromValue
+    private func dataFromValue(_ value: Any) -> Data? {
+        switch value {
+        case is GeoPoint:
+            return try? JSONEncoder().encode(value as! GeoPoint)
+        case is DataQueryBuilder:
+            return try? JSONEncoder().encode(value as! DataQueryBuilder)
+        case is LoadRelationsQueryBuilder:
+            return try? JSONEncoder().encode(value as! LoadRelationsQueryBuilder)
+        case is ObjectProperty:
+            return try? JSONEncoder().encode(value as! ObjectProperty)
+        case is BackendlessFileInfo:
+            return try? JSONEncoder().encode(value as! BackendlessFileInfo)
+        case is GeoCategory:
+            return try? JSONEncoder().encode(value as! GeoCategory)
+        case is BackendlessGeoQuery:
+            return try? JSONEncoder().encode(value as! BackendlessGeoQuery)
+        case is GeoCluster:
+            return try? JSONEncoder().encode(value as! GeoCluster)
+            //        case is MatchesResult:
+        //            return try? JSONEncoder().encode(value as! MatchesResult)
+        case is MessageStatus:
+            return try? JSONEncoder().encode(value as! MessageStatus)
+        case is DeviceRegistration:
+            return try? JSONEncoder().encode(value as! DeviceRegistration)
+            //        case is Message:
+        //            return try? JSONEncoder().encode(value as! Message)
+        case is PublishOptions:
+            return try? JSONEncoder().encode(value as! PublishOptions)
+        case is DeliveryOptions:
+            return try? JSONEncoder().encode(value as! DeliveryOptions)
+        case is PublishMessageInfo:
+            return try? JSONEncoder().encode(value as! PublishMessageInfo)
+            //        case is DeviceRegistrationResult:
+            //            return try? JSONEncoder().encode(value as! DeviceRegistrationResult)
+            //        case is Command:
+        //            return try? JSONEncoder().encode(value as! Command)
+        case is UserInfo:
+            return try? JSONEncoder().encode(value as! UserInfo)
+            //        case is UserStatusResponse:
+        //            return try? JSONEncoder().encode(value as! UserStatusResponse)
+        case is ReconnectAttemptObject:
+            return try? JSONEncoder().encode(value as! ReconnectAttemptObject)
+        case is BackendlessUser:
+            return try? JSONEncoder().encode(value as! BackendlessUser)
+        case is UserProperty:
+            return try? JSONEncoder().encode(value as! UserProperty)
+        case is BulkEvent:
+            return try? JSONEncoder().encode(value as! BulkEvent)
         default:
-            writeValue(2)
+            return nil
         }
-        
-        deliveryOptions.publishAt.map { [weak self] in self?.writeDate($0) }
-        deliveryOptions.repeatEvery.map { [weak self] in self?.writeValue($0) }
-        deliveryOptions.repeatExpiresAt.map { [weak self] in self?.writeDate($0) }
     }
     
     // MARK: -
-    // MARK: - Write PublishMessageInfo
-    private func writePublishMessageInfo(_ publishMessageInfo: PublishMessageInfo) {
-        writeValue(FlutterTypeCode.publishMessageInfo.rawValue)
-        
-        publishMessageInfo.messageId.map { [weak self] in self?.writeValue($0) }
-        publishMessageInfo.timestamp.map { [weak self] in self?.writeValue(Int(truncating: $0)) }
-        publishMessageInfo.message.map { [weak self] in self?.writeValue($0) }
-        publishMessageInfo.publisherId.map { [weak self] in self?.writeValue($0) }
-        publishMessageInfo.subtopic.map { [weak self] in self?.writeValue($0) }
-        publishMessageInfo.pushSinglecast.map { [weak self] in self?.writeValue($0) }
-        publishMessageInfo.pushBroadcast.map { [weak self] in self?.writeValue(Int(truncating: $0)) }
-        publishMessageInfo.publishPolicy.map { [weak self] in self?.writeValue($0) }
-        publishMessageInfo.query.map { [weak self] in self?.writeValue($0) }
-        publishMessageInfo.publishAt.map { [weak self] in self?.writeValue(Int(truncating: $0)) }
-        publishMessageInfo.repeatEvery.map { [weak self] in self?.writeValue(Int(truncating: $0)) }
-        
-        // TODO: -
-        // TODO: - No repeatExpiresAt: Date property in PublishMessageInfo Class
-        writeDate(Date()) // Need to fix with correct Date
-        
-        publishMessageInfo.headers.map { [weak self] in self?.writeValue($0) }
-    }
-    
-    // MARK: -
-    // MARK: - Write DevideRegistrationResult
-//    private func writeDevideRegistrationResult(_ deviceRegistationResult: DevideRegistrationResult) {
-//        writeValue(FlutterTypeCode.deviceRegistrationResult.rawValue)
-//
-//    }
-    
-    // MARK: -
-    // MARK: - Write Command
-//    private func writeCommand(_ command: Command) {
-//        writeValue(FlutterTypeCode.command.rawValue)
-//
-//    }
-    
-    // MARK: -
-    // MARK: - Write UserInfo
-    private func writeUserInfo(_ userInfo: UserInfo) {
-        writeValue(FlutterTypeCode.userInfo.rawValue)
-        
-        userInfo.connectionId.map { [weak self] in self?.writeValue($0) }
-        userInfo.userId.map { [weak self] in self?.writeValue($0) }
-    }
-    
-    // MARK: -
-    // MARK: - Write UserStatusResponse
-//    private func writeUserStatusResponse(_ userStatusResponse: UserStatusResponse) {
-//        writeValue(FlutterTypeCode.userStatusResponse.rawValue)
-//
-//    }
-    
-    // MARK: -
-    // MARK: - Write ReconnectAttempt
-    private func writeReconnectAttempt(_ reconnectAttempt: ReconnectAttemptObject) {
-        writeValue(FlutterTypeCode.reconnectAttempt.rawValue)
-        
-        reconnectAttempt.timeout.map { [weak self] in self?.writeValue(Int(truncating: $0)) }
-        reconnectAttempt.attempt.map { [weak self] in self?.writeValue(Int(truncating: $0)) }
-    }
-    
-    // MARK: -
-    // MARK: - Write BackendlessUser
-    private func writeBackendlessUser(_ user: BackendlessUser) {
-        writeValue(FlutterTypeCode.backendlessUser.rawValue)
-        
-        writeValue(user.getProperties())
-    }
-    
-    // MARK: -
-    // MARK: - WriteUserProperty
-    private func writeUserProperty(_ userProperty: UserProperty) {
-        writeValue(FlutterTypeCode.userProperty.rawValue)
-        
-        writeValue(userProperty.name)
-        writeValue(userProperty.required)
-        
-        switch userProperty.type {
-        case .UNKNOWN:
-            writeValue(0)
-        case .INT:
-            writeValue(1)
-        case .STRING:
-            writeValue(2)
-        case .BOOLEAN:
-            writeValue(3)
-        case .DATETIME:
-            writeValue(4)
-        case .DOUBLE:
-            writeValue(5)
-        case .RELATION:
-            writeValue(6)
-        case .COLLECTION:
-            writeValue(7)
-        case .RELATION_LIST:
-            writeValue(8)
-        case .STRING_ID:
-            writeValue(9)
-        case .TEXT:
-            writeValue(10)
+    // MARK: - WriteCodeForValue
+    private func writeCodeForValue(_ value: Any) {
+        switch value {
+        case is GeoPoint:
+            writeValue(FlutterTypeCode.geoPoint.rawValue)
+        case is DataQueryBuilder:
+            writeValue(FlutterTypeCode.dataQueryBuilder.rawValue)
+        case is LoadRelationsQueryBuilder:
+            writeValue(FlutterTypeCode.loadRelationsQueryBuilder.rawValue)
+        case is ObjectProperty:
+            writeValue(FlutterTypeCode.objectProperty.rawValue)
+        case is BackendlessFileInfo:
+            writeValue(FlutterTypeCode.fileInfo.rawValue)
+        case is GeoCategory:
+            writeValue(FlutterTypeCode.geoCategory.rawValue)
+        case is BackendlessGeoQuery:
+            writeValue(FlutterTypeCode.geoQuery.rawValue)
+        case is GeoCluster:
+            writeValue(FlutterTypeCode.geoCluster.rawValue)
+            //        case is MatchesResult:
+        //            writeValue(FlutterTypeCode.searchMathesResult.rawValue)
+        case is MessageStatus:
+            writeValue(FlutterTypeCode.messageStatus.rawValue)
+        case is DeviceRegistration:
+            writeValue(FlutterTypeCode.deviceRegistration.rawValue)
+            //        case is Message:
+        //            writeValue(FlutterTypeCode.message.rawValue)
+        case is PublishOptions:
+            writeValue(FlutterTypeCode.publishOptions.rawValue)
+        case is DeliveryOptions:
+            writeValue(FlutterTypeCode.deliveryOptions.rawValue)
+        case is PublishMessageInfo:
+            writeValue(FlutterTypeCode.publishMessageInfo.rawValue)
+            //        case is DeviceRegistrationResult:
+            //            writeValue(FlutterTypeCode.deviceRegistrationResult.rawValue)
+            //        case is Command:
+        //            writeValue(FlutterTypeCode.command.rawValue)
+        case is UserInfo:
+            writeValue(FlutterTypeCode.userInfo.rawValue)
+            //        case is UserStatusResponse:
+        //            writeValue(FlutterTypeCode.userStatusResponse.rawValue)
+        case is ReconnectAttemptObject:
+            writeValue(FlutterTypeCode.reconnectAttempt.rawValue)
+        case is BackendlessUser:
+            writeValue(FlutterTypeCode.backendlessUser.rawValue)
+        case is UserProperty:
+            writeValue(FlutterTypeCode.userProperty.rawValue)
+        case is BulkEvent:
+            writeValue(FlutterTypeCode.bulkEvent.rawValue)
+        default:
+            break
         }
-        
-        writeValue(userProperty.identity)
     }
     
-    // MARK: -
-    // MARK: - Write BulkEvent
-    private func writeBulkEvent(_ bulkEvent: BulkEvent) {
-        writeValue(FlutterTypeCode.bulkEvent.rawValue)
-        
-        bulkEvent.whereClause.map { [weak self] in self?.writeValue($0) }
-        bulkEvent.count.map { [weak self] in self?.writeValue(Int(truncating: $0)) }
-    }
+    // TODO: - GeoPoint
+    // TODO: - How to get distance?
     
+    // TODO: - ObjectProperty
+    // TODO: - How to get Int value of DataTypeEnum?
+    
+    // TODO: - BackendlessGeoQuery
+    // TODO: - How to get RelativeFindMetadata?
+    // TODO: - How to get RelativeFindPercentThreshold?
+    // TODO: - How to get SortBy?
+    // TODO: - How to send data with Collection type in Java?
+    // TODO: - How is SearchRectangle described in iOS SDK?
+    
+    // TODO: - BackendlessGeoCluster
+    // TODO: - How to send data with Collection type in Java?
+    // TODO: - How to get distance?
+    
+    // TODO: - MessageStatus
+    // TODO: - Convert String to PublishStatusEnum Int value
+    
+    // TODO: - PublishOptions
+    // TODO: - No subtopic in PublishOptions Swift Class
+    
+    // TODO: - DeliveryOptions
+    // TODO: - No segmentQuery in Swift DeliveryOptions
+    
+    // TODO: - PublishMessageInfo
+    // TODO: - No repeatExpiresAt: Date property in PublishMessageInfo Class
 }

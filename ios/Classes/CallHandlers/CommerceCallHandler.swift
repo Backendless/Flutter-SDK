@@ -61,18 +61,18 @@ class CommerceCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - CancelPlaySubscription
     private func cancelPlaySubscription(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        fatalError("Commerce not implemented in iOS SDK")
+        result(FlutterMethodNotImplemented)
     }
     
     // MARK: -
     // MARK: - GetPlaySubscriptionsStatus
     private func getPlaySubscriptionsStatus(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        fatalError("Commerce not implemented in iOS SDK")
+        result(FlutterMethodNotImplemented)
     }
     
     // MARK: -
     // MARK: - CalidatePlayPurchase
     private func validatePlayPurchase(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        fatalError("Commerce not implemented in iOS SDK")
+        result(FlutterMethodNotImplemented)
     }
 }

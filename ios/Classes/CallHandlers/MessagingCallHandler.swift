@@ -18,7 +18,6 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
         static let cancel = "Backendless.Messaging.cancel"
         static let getDeviceRegistration = "Backendless.Messaging.getDeviceRegistration"
         static let getMessageStatus = "Backendless.Messaging.getMessageStatus"
-        static let pollMessages = "Backendless.Messaging.pollMessages"
         static let publish = "Backendless.Messaging.publish"
         static let pushWithTemplate = "Backendless.Messaging.pushWithTemplate"
         static let refreshDeviceToken = "Backendless.Messaging.refreshDeviceToken"
@@ -92,8 +91,6 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
                 self.getDeviceRegistration(arguments, result)
             case Methods.getMessageStatus:
                 self.getMessageStatus(arguments, result)
-            case Methods.pollMessages:
-                self.pollMessages(arguments, result)
             case Methods.publish:
                 self.publish(arguments, result)
             case Methods.pushWithTemplate:
@@ -135,8 +132,6 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
             return
         }
         
-        // TODO: -
-        // TODO: - MessageStatus
         messaging.cancelScheduledMessage(messageId: messageId,
             responseHandler: {
                 result($0)
@@ -151,8 +146,6 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
     private func getDeviceRegistration(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
         print("~~~> Hello in Get Device Registration")
         
-        // TODO: -
-        // TODO: - DeviceRegistration
         messaging.getDeviceRegistrations(responseHandler: {
             result($0)
         }, errorHandler: {
@@ -171,8 +164,6 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
             return
         }
         
-        // TODO: -
-        // TODO: - MessageStatus
         messaging.getMessageStatus(messageId: messageId,
             responseHandler: {
                 result($0)
@@ -180,16 +171,6 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
             errorHandler: {
                 result(FlutterError($0))
             })
-    }
-    
-    // MARK: -
-    // MARK: - PollMessages
-    private func pollMessages(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Poll Messages")
-        
-        // TODO: -
-        // TODO: - PollMessages not implemented in iOS SDK
-        fatalError("PollMessages not implemented in iOS SDK")
     }
     
     // MARK: -
@@ -208,9 +189,6 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
         
         let publishOptions: PublishOptions? = arguments[Args.publishOptions].flatMap(cast)
         let deliveryOptions: DeliveryOptions? = arguments[Args.deliveryOptions].flatMap(cast)
-        
-        // TODO: -
-        // TODO: - MessageStatus
         
         if let publishOptions = publishOptions {
             if let deliveryOptions = deliveryOptions {
@@ -262,8 +240,6 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
             return
         }
         
-        // TODO: -
-        // TODO: - MessageStatus
         messaging.pushWithTemplate(templateName: template,
             responseHandler: {
                 result($0)

@@ -39,6 +39,7 @@ class GeoCallHandler: FlutterCallHandlerProtocol {
         static let longitude = "longitude"
         static let categories = "categories"
         static let metadata = "metadata"
+        static let geoCluster = "geoCluster"
     }
     
     // MARK: -
@@ -152,13 +153,17 @@ class GeoCallHandler: FlutterCallHandlerProtocol {
     private func getGeopointCount(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
         print("~~~> Hello in Get Geopoint Count")
         
-        // TODO: - BackendlessGeoQuery is used in this method. Need time to research
-        fatalError("BackendlessGeoQuery is used in this method")
+        guard
+            let geoQuery: BackendlessGeoQuery? = arguments[Args.query].flatMap(cast),
+            let geofenceName: String? = arguments[Args.geoFenceName].flatMap(cast)
+        else {
+            result(FlutterError.noRequiredArguments)
+            
+            return
+        }
         
-        let geoQuery: BackendlessGeoQuery? = arguments[Args.query].flatMap(cast)
-        
-        if let query = geoQuery {
-            geo.getPointsCount(geoQuery: query,
+        if let geoQuery = geoQuery {
+            geo.getPointsCount(geoQuery: geoQuery,
                 responseHandler: {
                     result($0)
                 },
@@ -172,6 +177,10 @@ class GeoCallHandler: FlutterCallHandlerProtocol {
                 result(FlutterError($0))
             })
         }
+        
+        // TODO: -
+        // TODO: - GeofenceName
+        fatalError("How to use geofenceName: \(geofenceName)")
     }
     
     // MARK: -
@@ -179,10 +188,16 @@ class GeoCallHandler: FlutterCallHandlerProtocol {
     private func getPoints(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
         print("~~~> Hello in Get Points")
         
-        // TODO: - BackendlessGeoQuery is used in this method. Need time to research
-        fatalError("BackendlessGeoQuery is used in this method")
         
-        let geoQuery: BackendlessGeoQuery? = arguments[Args.query].flatMap(cast)
+        guard
+            let geoQuery: BackendlessGeoQuery? = arguments[Args.query].flatMap(cast),
+            let geofenceName: String? = arguments[Args.geoFenceName].flatMap(cast),
+            let geoCluster: GeoCluster? = arguments[Args.geoCluster].flatMap(cast)
+        else {
+            result(FlutterError.noRequiredArguments)
+            
+            return
+        }
         
         if let query = geoQuery {
             geo.getPoints(geoQuery: query,
@@ -199,15 +214,16 @@ class GeoCallHandler: FlutterCallHandlerProtocol {
                 result(FlutterError($0))
             })
         }
+        
+        // TODO: -
+        // TODO: - GeofenceName & GeoCluster
+        fatalError("How to use geofenceName: \(geofenceName) and geoCluster: \(geoCluster)")
     }
     
     // MARK: -
     // MARK: - Load Metadata
     private func loadMetadata(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
         print("~~~> Hello in Load Metadata")
-        
-        // TODO: - GeoPoint is used in this method. Need time to research
-        fatalError("GeoPoint is used in this method")
         
         guard let geoPoint: GeoPoint = arguments[Args.geoPoint].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
@@ -229,9 +245,6 @@ class GeoCallHandler: FlutterCallHandlerProtocol {
     private func relativeFind(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
         print("~~~> Hello in Relative Find")
         
-        // TODO: - BackendlessGeoQuery is used in this method. Need time to research
-        fatalError("BackendlessGeoQuery is used in this method")
-        
         guard let geoQuery: BackendlessGeoQuery = arguments[Args.query].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             
@@ -251,9 +264,6 @@ class GeoCallHandler: FlutterCallHandlerProtocol {
     // MARK: - RemovePoint
     private func removePoint(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
         print("~~~> Hello in Remove Point")
-        
-        // TODO: - GeoPoint is used in this method. Need time to research
-        fatalError("GeoPoint is used in this method")
         
         guard let geoPoint: GeoPoint = arguments[Args.geoPoint].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
@@ -275,16 +285,14 @@ class GeoCallHandler: FlutterCallHandlerProtocol {
     private func runOnEnterAction(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
         print("~~~> Hello in Run On Enter Action")
         
-        // TODO: - GeoPoint is used in this method. Need time to research
-        fatalError("GeoPoint is used in this method")
-        
-        guard let geoFenceName: String = arguments[Args.geoFenceName].flatMap(cast) else {
+        guard
+            let geoFenceName: String = arguments[Args.geoFenceName].flatMap(cast),
+            let geoPoint: GeoPoint? = arguments[Args.geoPoint].flatMap(cast)
+        else {
             result(FlutterError.noRequiredArguments)
             
             return
         }
-        
-        let geoPoint: GeoPoint? = arguments[Args.geoPoint].flatMap(cast)
         
         if let geoPoint = geoPoint {
             geo.runOnEnterAction(geoFenceName: geoFenceName, geoPoint: geoPoint,
@@ -310,16 +318,14 @@ class GeoCallHandler: FlutterCallHandlerProtocol {
     private func runOnExitAction(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
         print("~~~> Hello in Run On Exit Action")
         
-        // TODO: - GeoPoint is used in this method. Need time to research
-        fatalError("GeoPoint is used in this method")
-        
-        guard let geoFenceName: String = arguments[Args.geoFenceName].flatMap(cast) else {
+        guard
+            let geoFenceName: String = arguments[Args.geoFenceName].flatMap(cast),
+            let geoPoint: GeoPoint? = arguments[Args.geoPoint].flatMap(cast)
+        else {
             result(FlutterError.noRequiredArguments)
             
             return
         }
-        
-        let geoPoint: GeoPoint? = arguments[Args.geoPoint].flatMap(cast)
         
         if let geoPoint = geoPoint {
             geo.runOnExitAction(geoFenceName: geoFenceName, geoPoint: geoPoint,
@@ -345,16 +351,14 @@ class GeoCallHandler: FlutterCallHandlerProtocol {
     private func runOnStayAction(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
         print("~~~> Hello in Run On Stay Action")
         
-        // TODO: - GeoPoint is used in this method. Need time to research
-        fatalError("GeoPoint is used in this method")
-        
-        guard let geoFenceName: String = arguments[Args.geoFenceName].flatMap(cast) else {
+        guard
+            let geoFenceName: String = arguments[Args.geoFenceName].flatMap(cast),
+            let geoPoint: GeoPoint? = arguments[Args.geoPoint].flatMap(cast)
+        else {
             result(FlutterError.noRequiredArguments)
             
             return
         }
-        
-        let geoPoint: GeoPoint? = arguments[Args.geoPoint].flatMap(cast)
         
         if let geoPoint = geoPoint {
             geo.runOnStayAction(geoFenceName: geoFenceName, geoPoint: geoPoint,
@@ -380,35 +384,47 @@ class GeoCallHandler: FlutterCallHandlerProtocol {
     private func savePoint(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
         print("~~~> Hello in Save Point")
         
-        guard let geoPoint: GeoPoint = arguments[Args.geoPoint].flatMap(cast) else {
+        guard let geoPoint: GeoPoint? = arguments[Args.geoPoint].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             
             return
         }
         
-        arguments[Args.latitude]
-            .flatMap(cast)
-            .flatMap { geoPoint.latitude = $0 }
-        
-        arguments[Args.longitude]
-            .flatMap(cast)
-            .flatMap { geoPoint.longitude = $0 }
-        
-        arguments[Args.categories]
-            .flatMap(cast)
-            .flatMap { geoPoint.categories = $0 }
-        
-        arguments[Args.metadata]
-            .flatMap(cast)
-            .flatMap { geoPoint.metadata = $0 }
-        
-        geo.saveGeoPoint(geoPoint: geoPoint,
-            responseHandler: {
-                result($0)
-            },
-            errorHandler: {
-                result(FlutterError($0))
-            })
+        if let geoPoint = geoPoint {
+            geo.saveGeoPoint(geoPoint: geoPoint,
+                responseHandler: {
+                    result($0)
+                },
+                errorHandler: {
+                    result(FlutterError($0))
+                })
+        } else {
+            let newGeoPoint = GeoPoint()
+            
+            arguments[Args.latitude]
+                .flatMap(cast)
+                .flatMap { newGeoPoint.latitude = $0 }
+            
+            arguments[Args.longitude]
+                .flatMap(cast)
+                .flatMap { newGeoPoint.longitude = $0 }
+            
+            arguments[Args.categories]
+                .flatMap(cast)
+                .flatMap { newGeoPoint.categories = $0 }
+            
+            arguments[Args.metadata]
+                .flatMap(cast)
+                .flatMap { newGeoPoint.metadata = $0 }
+            
+            geo.saveGeoPoint(geoPoint: newGeoPoint,
+                responseHandler: {
+                    result($0)
+                },
+                errorHandler: {
+                    result(FlutterError($0))
+                })
+        }
     }
     
     // MARK: -
@@ -416,6 +432,7 @@ class GeoCallHandler: FlutterCallHandlerProtocol {
     private func setLocationTrackerParameters(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
         print("~~~> Hello in Set Location Tracker Parameters")
         
-        fatalError("Commerce not implemented in iOS SDK")
+        
+        result(FlutterMethodNotImplemented)
     }
 }

@@ -25,6 +25,7 @@ class CacheCallHandler: FlutterCallHandlerProtocol {
     
     private enum Args {
         static let key = "key"
+        static let date = "date"
         static let timestamp = "timestamp"
         static let seconds = "seconds"
         static let object = "object"
@@ -58,13 +59,11 @@ class CacheCallHandler: FlutterCallHandlerProtocol {
             case Methods.delete:
                 self.delete(arguments, result)
             case Methods.expireAt:
-                guard let expireArgs: [String: Any] = call.arguments.flatMap(cast) else { return }
-                self.expireAt(expireArgs, result)
+                self.expireAt(arguments, result)
             case Methods.get:
                 self.get(arguments, result)
             case Methods.put:
-                guard let putArgs: [String: Any] = call.arguments.flatMap(cast) else { return }
-                self.put(putArgs, result)
+                self.put(arguments, result)
             default:
                 result(FlutterMethodNotImplemented)
             }
@@ -117,23 +116,39 @@ class CacheCallHandler: FlutterCallHandlerProtocol {
     private func expireAt(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
         print("~~~> Hello, expireAt")
         
-        guard let key: String = arguments[Args.key].flatMap(cast) else {
+        guard
+            let key: String = arguments[Args.key].flatMap(cast),
+            let date: Date? = arguments[Args.date].flatMap(cast),
+            let timestamp: Double? = arguments[Args.timestamp].flatMap(cast)
+        else {
             result(FlutterError.noRequiredArguments)
             
             return
         }
         
-        // TODO: - Check Date raw data coming from Flutter
-            fatalError("Process Date from Flutter!")
-        //
+        if let date = date {
+            cache.expireAt(key: key, date: date,
+                responseHandler: {
+                    result(nil)
+                },
+                errorHandler: {
+                    result(FlutterError($0))
+                })
+        }
         
-        cache.expireAt(key: key, date: Date(),
-            responseHandler: {
-                result(nil)
-            },
-            errorHandler: {
-                result(FlutterError($0))
-            })
+        if let timestamp = timestamp {
+            let date = Date(timeIntervalSince1970: timestamp)
+            cache.expireAt(key: key, date: date,
+                responseHandler: {
+                    result(nil)
+                },
+                errorHandler: {
+                    result(FlutterError($0))
+                })
+        }
+        
+        
+        
     }
     
     // MARK: -

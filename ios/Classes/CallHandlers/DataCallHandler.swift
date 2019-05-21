@@ -44,6 +44,7 @@ class DataCallHandler: FlutterCallHandlerProtocol {
         static let relationsDepth = "relationsDepth"
         static let objectId = "objectId"
         static let entity = "entity"
+        static let queryBuilder = "queryBuilder"
     }
     
     // MARK: -
@@ -203,18 +204,26 @@ class DataCallHandler: FlutterCallHandlerProtocol {
     private func find(_ tableName: String, _ arguments: [String: Any], _ result: @escaping FlutterResult) {
         print("~~~> Hello in find")
         
-        // TODO: - QueryBuilder
-            fatalError("QueryBuilder is using in this method. Need time for researching")
-        //
+        let queryBuilder: DataQueryBuilder? = arguments[Args.queryBuilder].flatMap(cast)
         
-        data.ofTable(tableName)
-            .find(queryBuilder: DataQueryBuilder(),
-                responseHandler: {
+        if let queryBuilder = queryBuilder {
+            data.ofTable(tableName)
+                .find(queryBuilder: queryBuilder,
+                    responseHandler: {
+                        result($0)
+                    },
+                    errorHandler: {
+                        result(FlutterError($0))
+                    })
+        } else {
+            data.ofTable(tableName)
+                .find(responseHandler: {
                     result($0)
-                },
-                errorHandler: {
+                }, errorHandler: {
                     result(FlutterError($0))
                 })
+        }
+        
     }
     
     // MARK: -
@@ -224,35 +233,52 @@ class DataCallHandler: FlutterCallHandlerProtocol {
         
         guard
             let id: String = arguments[Args.id].flatMap(cast),
-            let relations: [String] = arguments[Args.relations].flatMap(cast),
-            let relationsDepth: Int = arguments[Args.relationsDepth].flatMap(cast)
+            let queryBuilder: DataQueryBuilder? = arguments[Args.queryBuilder].flatMap(cast),
+            let relations: [String]? = arguments[Args.relations].flatMap(cast),
+            let relationsDepth: Int? = arguments[Args.relationsDepth].flatMap(cast)
         else {
             result(FlutterError.noRequiredArguments)
             
             return
         }
         
-        data.ofTable(tableName)
-            .findById(objectId: id,
-                responseHandler: {
-                    result($0)
-                },
-                errorHandler: {
-                    result(FlutterError($0))
-                })
-        
-        // TODO: - QueryBuilder
-        fatalError("QueryBuilder is using in this method. Need time for researching")
-        //
-        
-        data.ofTable(tableName)
-            .findById(objectId: id, queryBuilder: DataQueryBuilder(),
-                responseHandler: {
-                    result($0)
-                },
-                errorHandler: {
-                    result(FlutterError($0))
-                })
+        if let queryBuilder = queryBuilder {
+            relations.map { queryBuilder.setRelated(related: $0) }
+            relationsDepth.map { queryBuilder.setRelationsDepth(relationsDepth: $0) }
+            
+            data.ofTable(tableName)
+                .findById(objectId: id, queryBuilder: queryBuilder,
+                    responseHandler: {
+                        result($0)
+                    },
+                    errorHandler: {
+                        result(FlutterError($0))
+                    })
+        } else {
+            if relations != nil || relationsDepth != nil {
+                let newQueryBuilder = DataQueryBuilder()
+                relations.map { newQueryBuilder.setRelated(related: $0) }
+                relationsDepth.map { newQueryBuilder.setRelationsDepth(relationsDepth: $0) }
+                
+                data.ofTable(tableName)
+                    .findById(objectId: id, queryBuilder: newQueryBuilder,
+                        responseHandler: {
+                            result($0)
+                        },
+                        errorHandler: {
+                            result(FlutterError($0))
+                        })
+            } else {
+                data.ofTable(tableName)
+                    .findById(objectId: id,
+                        responseHandler: {
+                            result($0)
+                        },
+                        errorHandler: {
+                            result(FlutterError($0))
+                        })
+            }
+        }
     }
     
     // MARK: -
@@ -260,25 +286,36 @@ class DataCallHandler: FlutterCallHandlerProtocol {
     private func findFirst(_ tableName: String, arguments: [String: Any], _ result: @escaping FlutterResult) {
         print("~~~> Hello in Find First")
         
-        data.ofTable(tableName)
-            .findFirst(responseHandler: {
+        guard
+            let relations: [String]? = arguments[Args.relations].flatMap(cast),
+            let relationsDepth: Int? = arguments[Args.relationsDepth].flatMap(cast)
+        else {
+            result(FlutterError.noRequiredArguments)
+            
+            return
+        }
+        
+        if relations != nil || relationsDepth != nil {
+            let queryBuilder = DataQueryBuilder()
+            relations.map { queryBuilder.setRelated(related: $0) }
+            relationsDepth.map { queryBuilder.setRelationsDepth(relationsDepth: $0) }
+            
+            data.ofTable(tableName)
+                .findFirst(queryBuilder: queryBuilder,
+                    responseHandler: {
+                        result($0)
+                    },
+                    errorHandler: {
+                        result(FlutterError($0))
+                    })
+        } else {
+            data.ofTable(tableName)
+                .findFirst(responseHandler: {
                     result($0)
                 }, errorHandler: {
                     result(FlutterError($0))
                 })
-        
-        // TODO: - QueryBuilder
-        fatalError("QueryBuilder is using in this method. Need time for researching")
-        //
-        
-        data.ofTable(tableName)
-            .findFirst(queryBuilder: DataQueryBuilder(),
-                responseHandler: {
-                    result($0)
-                },
-                errorHandler: {
-                    result(FlutterError($0))
-                })
+        }
     }
     
     // MARK: -
@@ -286,25 +323,36 @@ class DataCallHandler: FlutterCallHandlerProtocol {
     private func findLast(_ tableName: String, arguments: [String: Any], _ result: @escaping FlutterResult) {
         print("~~~> Hello in Find Last")
         
-        data.ofTable(tableName)
-            .findLast(responseHandler: {
-                result($0)
-            }, errorHandler: {
-                result(FlutterError($0))
-            })
+        guard
+            let relations: [String]? = arguments[Args.relations].flatMap(cast),
+            let relationsDepth: Int? = arguments[Args.relationsDepth].flatMap(cast)
+            else {
+                result(FlutterError.noRequiredArguments)
+                
+                return
+        }
         
-        // TODO: - QueryBuilder
-        fatalError("QueryBuilder is using in this method. Need time for researching")
-        //
-        
-        data.ofTable(tableName)
-            .findLast(queryBuilder: DataQueryBuilder(),
-                responseHandler: {
+        if relations != nil || relationsDepth != nil {
+            let queryBuilder = DataQueryBuilder()
+            relations.map { queryBuilder.setRelated(related: $0) }
+            relationsDepth.map { queryBuilder.setRelationsDepth(relationsDepth: $0) }
+            
+            data.ofTable(tableName)
+                .findLast(queryBuilder: queryBuilder,
+                    responseHandler: {
+                        result($0)
+                    },
+                    errorHandler: {
+                        result(FlutterError($0))
+                    })
+        } else {
+            data.ofTable(tableName)
+                .findLast(responseHandler: {
                     result($0)
-                },
-                errorHandler: {
+                }, errorHandler: {
                     result(FlutterError($0))
                 })
+        }
     }
     
     // MARK: -
@@ -312,26 +360,25 @@ class DataCallHandler: FlutterCallHandlerProtocol {
     private func getObjectCount(_ tableName: String, _ arguments: [String: Any], _ result: @escaping FlutterResult) {
         print("~~~> Hello in Get Object Count")
         
-        data.ofTable(tableName)
-            .getObjectCount(responseHandler: {
-                result($0)
-            },
-            errorHandler: {
-                result(FlutterError($0))
-            })
+        let queryBuilder: DataQueryBuilder? = arguments[Args.queryBuilder].flatMap(cast)
         
-        // TODO: - QueryBuilder
-        fatalError("QueryBuilder is using in this method. Need time for researching")
-        //
-        
-        data.ofTable(tableName)
-            .getObjectCount(queryBuilder: DataQueryBuilder(),
-                responseHandler: {
+        if let queryBuilder = queryBuilder {
+            data.ofTable(tableName)
+                .getObjectCount(queryBuilder: queryBuilder,
+                    responseHandler: {
+                        result($0)
+                    },
+                    errorHandler: {
+                        result(FlutterError($0))
+                    })
+        } else {
+            data.ofTable(tableName)
+                .getObjectCount(responseHandler: {
                     result($0)
-                },
-                errorHandler: {
+                }, errorHandler: {
                     result(FlutterError($0))
                 })
+        }
     }
     
     // MARK: -
@@ -339,24 +386,23 @@ class DataCallHandler: FlutterCallHandlerProtocol {
     private func loadRelations(_ tableName: String, _ arguments: [String: Any], _ result: @escaping FlutterResult) {
         print("~~~> Hello in Load Relations")
         
-        guard let objectId: String = arguments[Args.objectId].flatMap(cast) else {
+        guard
+            let objectId: String = arguments[Args.objectId].flatMap(cast),
+            let queryBuilder: LoadRelationsQueryBuilder = arguments[Args.queryBuilder].flatMap(cast)
+        else {
             result(FlutterError.noRequiredArguments)
             
             return
         }
         
-        // TODO: - LoadRelationsQueryBuilder
-        fatalError("LoadRelationsQueryBuilder is using in this method. Need time for researching")
-        //
-        
         data.ofTable(tableName)
-            .loadRelations(objectId: objectId, queryBuilder: LoadRelationsQueryBuilder(tableName: tableName),
+            .loadRelations(objectId: objectId, queryBuilder: queryBuilder,
                 responseHandler: {
                     result($0)
                 },
                 errorHandler: {
                     result(FlutterError($0))
-                })
+            })
     }
     
     // MARK: -
@@ -462,9 +508,7 @@ class DataCallHandler: FlutterCallHandlerProtocol {
     private func callStoredProcedure(_ tableName: String, _ arguments: [String: Any], _ result: @escaping FlutterResult) {
         print("~~~> Hello in Call Stored Procedure")
         
-        // TODO: - СallStoredProcedure
-        fatalError("СallStoredProcedure is not implemented in iOS SDK")
-        //
+        result(FlutterMethodNotImplemented)
     }
     
     // MARK: -
@@ -486,9 +530,7 @@ class DataCallHandler: FlutterCallHandlerProtocol {
     private func getView(_ tableName: String, _ arguments: [String: Any], _ result: @escaping FlutterResult) {
         print("~~~> Hello in Get View")
         
-        // TODO: - GetView
-        fatalError("GetView is not implemented in iOS SDK")
-        //
+        result(FlutterMethodNotImplemented)
     }
     
     

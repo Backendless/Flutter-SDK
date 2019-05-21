@@ -307,30 +307,27 @@ class FilesCallHandler: FlutterCallHandlerProtocol {
         guard
             let path: String = arguments[Args.path].flatMap(cast),
             let fileName: String = arguments[Args.fileName].flatMap(cast),
-            // TODO: - Check data type from Flutter.
-            // TODO: - Convert to Base64 String
-            let fileContent: String = arguments[Args.fileContent].flatMap(cast)
+            let fileContent: Data = arguments[Args.fileContent].flatMap(cast),
+            let overWrite: Bool? = arguments[Args.overwrite].flatMap(cast)
         else {
             result(FlutterError.noRequiredArguments)
             
             return
         }
         
-        if let overwrite: Bool = arguments[Args.overwrite].flatMap(cast) {
-            fileService.saveFile(fileName: fileName, filePath: path, base64Content: fileContent, overwrite: overwrite,
+        let base64Content = fileContent.base64EncodedString()
+        
+        if let overWrite = overWrite {
+            fileService.saveFile(fileName: fileName, filePath: path, base64Content: base64Content, overwrite: overWrite,
                 responseHandler: {
-                    // TODO: - Check data type from Flutter.
-                    // TODO: - Convert from Base64 String to BackendlessFile
                     result($0)
                 },
                 errorHandler: {
                     result(FlutterError($0))
                 })
         } else {
-            fileService.saveFile(fileName: fileName, filePath: path, base64Content: fileContent,
+            fileService.saveFile(fileName: fileName, filePath: path, base64Content: base64Content,
                 responseHandler: {
-                    // TODO: - Check data type from Flutter.
-                    // TODO: - Convert from Base64 String to BackendlessFile
                     result($0)
                 },
                 errorHandler: {
