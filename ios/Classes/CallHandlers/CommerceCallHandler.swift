@@ -25,10 +25,6 @@ class CommerceCallHandler: FlutterCallHandlerProtocol {
     }
     
     // MARK: -
-    // MARK: - Commerce Reference (Not Implemented)
-//    private let commerce = SwiftBackendlessSdkPlugin.backendless.commerce
-    
-    // MARK: -
     // MARK: - Router
     var callRouter: FlutterMethodCallHandler?
     
