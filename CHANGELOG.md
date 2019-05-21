@@ -1,3 +1,7 @@
+## 0.0.2
+
+* Fix all analyzer hints.
+
 ## 0.0.1
 
-* TODO: Describe initial release.
+* Initial version for Android.

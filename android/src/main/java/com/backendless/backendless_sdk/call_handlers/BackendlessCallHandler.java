@@ -21,22 +21,22 @@ public class BackendlessCallHandler implements MethodChannel.MethodCallHandler {
                 initApp(call, result);
                 break;
             case "Backendless.getApiKey":
-                getApiKey(call, result);
+                getApiKey(result);
                 break;
             case "Backendless.getApplicationId":
-                getApplicationId(call, result);
+                getApplicationId(result);
                 break;
             case "Backendless.getNotificationIdGeneratorInitValue":
-                getNotificationIdGeneratorInitValue(call, result);
+                getNotificationIdGeneratorInitValue(result);
                 break;
             case "Backendless.getPushTemplatesAsJson":
-                getPushTemplatesAsJson(call, result);
+                getPushTemplatesAsJson(result);
                 break;
             case "Backendless.getUrl":
-                getUrl(call, result);
+                getUrl(result);
                 break;
             case "Backendless.isInitialized":
-                isInitialized(call, result);
+                isInitialized(result);
                 break;
             case "Backendless.saveNotificationIdGeneratorState":
                 saveNotificationIdGeneratorState(call, result);
@@ -63,27 +63,27 @@ public class BackendlessCallHandler implements MethodChannel.MethodCallHandler {
         result.success(null);
     }
 
-    private void getApiKey(MethodCall call, MethodChannel.Result result) {
+    private void getApiKey(MethodChannel.Result result) {
         result.success(Backendless.getApiKey());
     }
 
-    private void getApplicationId(MethodCall call, MethodChannel.Result result) {
+    private void getApplicationId(MethodChannel.Result result) {
         result.success(Backendless.getApplicationId());
     }
 
-    private void getNotificationIdGeneratorInitValue(MethodCall call, MethodChannel.Result result) {
+    private void getNotificationIdGeneratorInitValue(MethodChannel.Result result) {
         result.success(Backendless.getNotificationIdGeneratorInitValue());
     }
 
-    private void getPushTemplatesAsJson(MethodCall call, MethodChannel.Result result) {
+    private void getPushTemplatesAsJson(MethodChannel.Result result) {
         result.success(Backendless.getPushTemplatesAsJson());
     }
 
-    private void getUrl(MethodCall call, MethodChannel.Result result) {
+    private void getUrl(MethodChannel.Result result) {
         result.success(Backendless.getUrl());
     }
 
-    private void isInitialized(MethodCall call, MethodChannel.Result result) {
+    private void isInitialized(MethodChannel.Result result) {
         result.success(Backendless.isInitialized());
     }
 
@@ -110,5 +110,4 @@ public class BackendlessCallHandler implements MethodChannel.MethodCallHandler {
         Backendless.setUrl(url);
         result.success(null);
     }
-
 }

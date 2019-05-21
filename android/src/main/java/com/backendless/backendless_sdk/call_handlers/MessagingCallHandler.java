@@ -81,13 +81,13 @@ public class MessagingCallHandler implements MethodChannel.MethodCallHandler {
                 unregisterDevice(call, result);
                 break;
             case "Backendless.Messaging.subscribe":
-                subscribe(call);
+                subscribe(call, result);
                 break;
             case "Backendless.Messaging.Channel.join":
-                join(call);
+                join(call, result);
                 break;
             case "Backendless.Messaging.Channel.leave":
-                leave(call);
+                leave(call, result);
                 break;
             case "Backendless.Messaging.Channel.isJoined":
                 isJoined(call, result);
@@ -114,7 +114,7 @@ public class MessagingCallHandler implements MethodChannel.MethodCallHandler {
                 removeCommandListener(call);
                 break;
             case "Backendless.Messaging.Channel.sendCommand":
-                sendCommand(call);
+                sendCommand(call, result);
                 break;
             case "Backendless.Messaging.Channel.addUserStatusListener":
                 addUserStatusListener(call, result);
@@ -245,21 +245,24 @@ public class MessagingCallHandler implements MethodChannel.MethodCallHandler {
         }
     }
 
-    private void subscribe(MethodCall call) {
+    private void subscribe(MethodCall call, MethodChannel.Result result) {
         String channelName = call.argument("channelName");
         int channelHandle = call.argument("channelHandle");
         Channel channel = Backendless.Messaging.subscribe(channelName);
         channels.put(channelHandle, channel);
+        result.success(null);
     }
 
-    private void join(MethodCall call) {
+    private void join(MethodCall call, MethodChannel.Result result) {
         int channelHandle = call.argument("channelHandle");
         getChannel(channelHandle).join();
+        result.success(null);
     }
 
-    private void leave(MethodCall call) {
+    private void leave(MethodCall call, MethodChannel.Result result) {
         int channelHandle = call.argument("channelHandle");
         getChannel(channelHandle).leave();
+        result.success(null);
     }
 
     private void isJoined(MethodCall call, MethodChannel.Result result) {
@@ -355,13 +358,13 @@ public class MessagingCallHandler implements MethodChannel.MethodCallHandler {
         commandCallbacks.remove(handle);
     }
 
-    private void sendCommand(MethodCall call) {
+    private void sendCommand(MethodCall call, MethodChannel.Result result) {
         int channelHandle = call.argument("channelHandle");
         String type = call.argument("type");
         Object data = call.argument("data");
 
         Channel channel = getChannel(channelHandle);
-        channel.sendCommand(type, data, new FlutterCallback<Void>(null));
+        channel.sendCommand(type, data, new FlutterCallback<Void>(result));
     }
 
     private void addUserStatusListener(MethodCall call, MethodChannel.Result result) {

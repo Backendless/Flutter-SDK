@@ -3,7 +3,7 @@ import 'dart:collection';
 import 'dart:typed_data';
 import 'dart:ui' show hashValues;
 
-import 'package:collection/equality.dart';
+import 'package:collection/collection.dart';
 import 'package:backendless_sdk/src/modules/geo.dart';
 
 class PagedQueryBuilder {
@@ -48,7 +48,7 @@ class PagedQueryBuilder {
 
 class DataQueryBuilder {
   static const int DEFAULT_RELATIONS_DEPTH = 0;
-  PagedQueryBuilder pagedQueryBuilder;
+  PagedQueryBuilder _pagedQueryBuilder;
   List<String> properties;
   String whereClause;
   List<String> groupByList;
@@ -58,8 +58,9 @@ class DataQueryBuilder {
   int relationsDepth;
 
   DataQueryBuilder() {
-    pagedQueryBuilder = new PagedQueryBuilder();
+    _pagedQueryBuilder = new PagedQueryBuilder();
     properties = new List();
+    whereClause = "";
     groupByList = new List();
     havingClause = "";
     sortByList = new List();
@@ -67,41 +68,63 @@ class DataQueryBuilder {
     relationsDepth = DEFAULT_RELATIONS_DEPTH;
   }
 
-  set pageSize(int pageSize) => pagedQueryBuilder.pageSize = pageSize;
+  DataQueryBuilder.fromJson(Map json) : 
+    _pagedQueryBuilder = json['pagedQueryBuilder'],
+    properties = json['properties'],
+    whereClause = json['whereClause'],
+    groupByList = json['groupByList'],
+    havingClause = json['havingClause'],
+    sortByList = json['sortByList'],
+    relatedList = json['relatedList'],
+    relationsDepth = json['relationsDepth'];
 
-  get pageSize => pagedQueryBuilder.pageSize;
+  Map toJson() =>
+    {
+      'pagedQueryBuilder': _pagedQueryBuilder,
+      'properties': properties,
+      'whereClause': whereClause,
+      'groupByList': groupByList,
+      'havingClause': havingClause,
+      'sortByList': sortByList,
+      'relatedList': relatedList,
+      'relationsDepth': relationsDepth,
+    };
 
-  set offset(int offset) => pagedQueryBuilder.offset = offset;
+  set pageSize(int pageSize) => _pagedQueryBuilder.pageSize = pageSize;
 
-  get offset => pagedQueryBuilder.offset;
+  get pageSize => _pagedQueryBuilder.pageSize;
 
-  void prepareNextPage() => pagedQueryBuilder.prepareNextPage();
+  set offset(int offset) => _pagedQueryBuilder.offset = offset;
 
-  void preparePreviousPage() => pagedQueryBuilder.preparePreviousPage();
+  get offset => _pagedQueryBuilder.offset;
+
+  void prepareNextPage() => _pagedQueryBuilder.prepareNextPage();
+
+  void preparePreviousPage() => _pagedQueryBuilder.preparePreviousPage();
 }
 
 /// This class does not support relation types other than Map for now.
 class LoadRelationsQueryBuilder<R> {
   PagedQueryBuilder pagedQueryBuilder;
   String relationName;
-  Type relationType;
 
-  /// Currently supports only Map relation type
-  LoadRelationsQueryBuilder._(Type relationType) {
-    pagedQueryBuilder = new PagedQueryBuilder();
-    this.relationType = relationType;
+  LoadRelationsQueryBuilder.ofMap() {
+    pagedQueryBuilder = new PagedQueryBuilder();    
   }
 
-  LoadRelationsQueryBuilder.ofMap() : this._(Map);
-
-  LoadRelationsQueryBuilder.of(Type relationType) {
-    throw new UnimplementedError();
+  LoadRelationsQueryBuilder.fromJson(Map json) {
+    relationName = json['relationName'];
+    pageSize = json['pageSize'];
+    offset = json['offset'];
   }
 
-  Type getRelationType() {
-    return relationType;
-  }
-  
+  Map toJson() =>
+    {
+      'relationName': relationName,
+      'pageSize': pageSize,
+      'offset': offset,
+    };
+
   set pageSize(int pageSize) => pagedQueryBuilder.pageSize = pageSize;
 
   get pageSize => pagedQueryBuilder.pageSize;
@@ -131,7 +154,8 @@ class AbstractBackendlessGeoQuery {
 
   AbstractBackendlessGeoQuery();
 
-  set categories(Iterable<String> categories) => _categories = new HashSet.of(categories);
+  set categories(Iterable<String> categories) =>
+      _categories = new HashSet.of(categories);
 
   Iterable<String> get categories => _categories;
 
@@ -139,45 +163,66 @@ class AbstractBackendlessGeoQuery {
     this.dpp = degreePerPixel;
     this.clusterGridSize = clusterSize;
   }
-  
 }
 
 class BackendlessGeoQuery extends AbstractBackendlessGeoQuery {
   static const int DEFAULT_PAGE_SIZE = 100;
   static const int DEFAULT_OFFSET = 0;
-  PagedQueryBuilder pagedQueryBuilder = PagedQueryBuilder.of(DEFAULT_PAGE_SIZE, DEFAULT_OFFSET);
+  PagedQueryBuilder pagedQueryBuilder =
+      PagedQueryBuilder.of(DEFAULT_PAGE_SIZE, DEFAULT_OFFSET);
   Units units;
   bool includeMeta;
   Float64List searchRectangle;
 
   BackendlessGeoQuery();
 
-  BackendlessGeoQuery.of(double latitude, double longitude, double radius, HashSet<String> _categories, 
-    Map<String, Object> metadata, Map<String, String> relativeFindMetadata, double relativeFindPercentThreshold,
-    String whereClause, Iterable<String> sortBy, double dpp, int clusterGridSize, int pageSize, int offset, 
-    Units units, bool includeMeta, Float64List searchRectangle) {
-      this.latitude = latitude;
-      this.longitude = longitude;
-      this.radius = radius;
-      this.categories = categories;
-      this.metadata = metadata;
-      this.relativeFindMetadata = relativeFindMetadata;
-      this.relativeFindPercentThreshold = relativeFindPercentThreshold;
-      this.whereClause = whereClause;
-      this.sortBy = sortBy;
-      this.dpp = dpp;
-      this.clusterGridSize = clusterGridSize;
-      this.pageSize = pageSize;
-      this.offset = offset;
-      this.units = units;
-      this.includeMeta = includeMeta;
-      this.searchRectangle = searchRectangle;
+  BackendlessGeoQuery.fromJson(Map json) {
+    latitude = json['latitude'];
+    longitude = json['longitude'];
+    radius = json['radius'];
+    _categories = json['categories'];
+    metadata = json['metadata'];
+    relativeFindMetadata = json['relativeFindMetadata'];
+    relativeFindPercentThreshold = json['relativeFindPercentThreshold'];
+    whereClause = json['whereClause'];
+    sortBy = json['sortBy'];
+    dpp = json['dpp'];
+    clusterGridSize = json['clusterGridSize'];
+    pageSize = json['pageSize'];
+    offset = json['offset'];
+    units = json['units'];
+    includeMeta = json['includeMeta'];
+    searchRectangle = json['searchRectangle'];
   }
 
-  BackendlessGeoQuery.byLatLon(double latitude, double longitude, [double radius, Units units, 
-                                    List<String> categories, Map<String, Object> metadata]) {
+  Map toJson() =>
+    {
+      'latitude': latitude,
+      'longitude': longitude,
+      'radius': radius,
+      'categories': _categories,
+      'metadata': metadata,
+      'relativeFindMetadata': relativeFindMetadata,
+      'relativeFindPercentThreshold': relativeFindPercentThreshold,
+      'whereClause': whereClause,
+      'sortBy': sortBy,
+      'dpp': dpp,
+      'clusterGridSize': clusterGridSize,
+      'pageSize': pageSize,
+      'offset': offset,
+      'units': units,
+      'includeMeta': includeMeta,
+      'searchRectangle': searchRectangle,
+    };
+
+  BackendlessGeoQuery.byLatLon(double latitude, double longitude,
+      [double radius,
+      Units units,
+      List<String> categories,
+      Map<String, Object> metadata]) {
     if (radius != null && units == null)
-      throw new ArgumentError("Parameter 'radius' should be daclared with parameter 'units'");
+      throw new ArgumentError(
+          "Parameter 'radius' should be daclared with parameter 'units'");
     this.latitude = latitude;
     this.longitude = longitude;
     this.radius = radius;
@@ -185,26 +230,34 @@ class BackendlessGeoQuery extends AbstractBackendlessGeoQuery {
     this.categories = categories;
     this.metadata = metadata;
 
-    if (metadata != null)
-      includeMeta = true;
+    if (metadata != null) includeMeta = true;
   }
 
   BackendlessGeoQuery.byCategories(List<String> categories) {
     this.categories = categories;
   }
 
-  BackendlessGeoQuery.relative(Map<String, String> relativeFindMetadata, double relativeFindPercentThreshold) {
+  BackendlessGeoQuery.relative(Map<String, String> relativeFindMetadata,
+      double relativeFindPercentThreshold) {
     this.relativeFindMetadata = relativeFindMetadata;
     this.relativeFindPercentThreshold = relativeFindPercentThreshold;
   }
 
   BackendlessGeoQuery.rectangle(GeoPoint topLeft, GeoPoint bottomRight) {
-    this.searchRectangle = Float64List.fromList([topLeft.latitude, topLeft.longitude, bottomRight.latitude, bottomRight.longitude]);
+    this.searchRectangle = Float64List.fromList([
+      topLeft.latitude,
+      topLeft.longitude,
+      bottomRight.latitude,
+      bottomRight.longitude
+    ]);
   }
 
-  BackendlessGeoQuery.neswRectangle(double nwLat, double nwLon, double seLat, double seLon, [Units units, List<String> categories]) {
+  BackendlessGeoQuery.neswRectangle(
+      double nwLat, double nwLon, double seLat, double seLon,
+      [Units units, List<String> categories]) {
     if (units != null && categories == null)
-      throw new ArgumentError("Parameter 'units' should be declared with parameter 'categories'");
+      throw new ArgumentError(
+          "Parameter 'units' should be declared with parameter 'categories'");
     this.searchRectangle = Float64List.fromList([nwLat, nwLon, seLat, seLon]);
     this.units = units;
     this.categories = categories;
@@ -212,8 +265,7 @@ class BackendlessGeoQuery extends AbstractBackendlessGeoQuery {
 
   BackendlessGeoQuery.byMetadata(Map<String, Object> metadata) {
     this.metadata = metadata;
-    if( metadata != null )
-      includeMeta = true;
+    if (metadata != null) includeMeta = true;
   }
 
   set pageSize(int pageSize) => pagedQueryBuilder.pageSize = pageSize;
@@ -236,34 +288,38 @@ class BackendlessGeoQuery extends AbstractBackendlessGeoQuery {
   }
 
   void addCategory(String category) {
-    if(category == null || category == "")
-      return;
-    if(_categories == null)
-        _categories = new HashSet<String>();
+    if (category == null || category == "") return;
+    if (_categories == null) _categories = new HashSet<String>();
     _categories.add(category);
   }
 
   void putMetadata(String metadataKey, Object metadataValue) {
     if (metadataKey == null || metadataKey == "" || metadataValue == null)
       return;
-    if (metadata == null)
-      metadata = new HashMap<String, Object>();
+    if (metadata == null) metadata = new HashMap<String, Object>();
     metadata[metadataKey] = metadataValue;
   }
 
   void setSearchRectangle(GeoPoint topLeft, GeoPoint bottomRight) {
-    searchRectangle = Float64List.fromList([topLeft.latitude, topLeft.longitude, bottomRight.latitude, bottomRight.longitude]);
+    searchRectangle = Float64List.fromList([
+      topLeft.latitude,
+      topLeft.longitude,
+      bottomRight.latitude,
+      bottomRight.longitude
+    ]);
   }
 
   void putRelativeFindMetadata(String key, String value) {
-    if (key == null || key == "" || value == null)
-      return;
+    if (key == null || key == "" || value == null) return;
     if (relativeFindMetadata == null)
       relativeFindMetadata = new HashMap<String, String>();
     relativeFindMetadata[key] = value;
   }
 
-  void setClusteringParams(double westLongitude, double eastLongitude, int mapWidth, [int clusterGridSize = AbstractBackendlessGeoQuery.CLUSTER_SIZE_DEFAULT_VALUE]) {
+  void setClusteringParams(
+      double westLongitude, double eastLongitude, int mapWidth,
+      [int clusterGridSize =
+          AbstractBackendlessGeoQuery.CLUSTER_SIZE_DEFAULT_VALUE]) {
     double longDiff = eastLongitude - westLongitude;
     if (longDiff < 0) {
       longDiff += 360;
@@ -272,29 +328,39 @@ class BackendlessGeoQuery extends AbstractBackendlessGeoQuery {
     setClusteringParamsFromDpp(degreePerPixel, clusterGridSize);
   }
 
+  @override
+  bool operator ==(other) =>
+      identical(this, other) ||
+      other is BackendlessGeoQuery &&
+          runtimeType == other.runtimeType &&
+          SetEquality().equals(_categories, other._categories) &&
+          MapEquality().equals(metadata, other.metadata) &&
+          latitude == other.latitude &&
+          longitude == other.longitude &&
+          radius == other.radius &&
+          ListEquality().equals(searchRectangle, other.searchRectangle) &&
+          units == other.units &&
+          relativeFindPercentThreshold == other.relativeFindPercentThreshold &&
+          MapEquality()
+              .equals(relativeFindMetadata, other.relativeFindMetadata) &&
+          whereClause == other.whereClause &&
+          clusterGridSize == other.clusterGridSize &&
+          dpp == other.dpp;
 
   @override
-  bool operator ==(other) => 
-    identical(this, other) || 
-    other is BackendlessGeoQuery &&
-    runtimeType == other.runtimeType &&
-    SetEquality().equals(_categories, other._categories) &&
-    MapEquality().equals(metadata, other.metadata) &&
-    latitude == other.latitude &&
-    longitude == other.longitude &&
-    radius == other.radius &&
-    ListEquality().equals(searchRectangle, other.searchRectangle) &&
-    units == other.units &&
-    relativeFindPercentThreshold == other.relativeFindPercentThreshold &&
-    MapEquality().equals(relativeFindMetadata, other.relativeFindMetadata) &&
-    whereClause == other.whereClause &&
-    clusterGridSize == other.clusterGridSize &&
-    dpp == other.dpp;
-
-  @override
-  int get hashCode => hashValues(_categories, metadata, latitude, longitude, 
-    radius, searchRectangle, units, relativeFindMetadata, 
-    relativeFindPercentThreshold, whereClause, dpp, clusterGridSize);
+  int get hashCode => hashValues(
+      _categories,
+      metadata,
+      latitude,
+      longitude,
+      radius,
+      searchRectangle,
+      units,
+      relativeFindMetadata,
+      relativeFindPercentThreshold,
+      whereClause,
+      dpp,
+      clusterGridSize);
 }
 
 void _validateOffset(int offset) {
@@ -307,6 +373,4 @@ void _validatePageSize(int pageSize) {
     throw new ArgumentError("Page size cannot have a negative value.");
 }
 
-enum Units {
-  METERS, MILES, YARDS, KILOMETERS, FEET
-}
+enum Units { METERS, MILES, YARDS, KILOMETERS, FEET }
