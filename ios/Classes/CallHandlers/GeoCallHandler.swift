@@ -47,52 +47,39 @@ class GeoCallHandler: FlutterCallHandlerProtocol {
     private let geo = SwiftBackendlessSdkPlugin.backendless.geo
     
     // MARK: -
-    // MARK: - Router
-    var callRouter: FlutterMethodCallHandler?
-    
-    // MARK: -
-    // MARK: - Init
-    init() {
-        setupRouter()
-    }
-    
-    private func setupRouter() {
-        callRouter = { [weak self] (call, result) in
-            guard
-                let self = self,
-                let arguments: [String: Any] = call.arguments.flatMap(cast)
-            else { return }
-            
-            switch call.method {
-            case Methods.addCategory:
-                self.addCategory(arguments, result)
-            case Methods.deleteCategory:
-                self.deleteCategory(arguments, result)
-            case Methods.getCategories:
-                self.getCategories(arguments, result)
-            case Methods.getGeopointCount:
-                self.getGeopointCount(arguments, result)
-            case Methods.getPoints:
-                self.getPoints(arguments, result)
-            case Methods.loadMetadata:
-                self.loadMetadata(arguments, result)
-            case Methods.relativeFind:
-                self.relativeFind(arguments, result)
-            case Methods.removePoint:
-                self.removePoint(arguments, result)
-            case Methods.runOnEnterAction:
-                self.runOnEnterAction(arguments, result)
-            case Methods.runOnExitAction:
-                self.runOnExitAction(arguments, result)
-            case Methods.runOnStayAction:
-                self.runOnStayAction(arguments, result)
-            case Methods.savePoint:
-                self.savePoint(arguments, result)
-            case Methods.setLocationTrackerParameters:
-                self.setLocationTrackerParameters(arguments, result)
-            default:
-                result(FlutterMethodNotImplemented)
-            }
+    // MARK: - Route Flutter Call
+    func routeFlutterCall(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        let arguments: [String: Any] = call.arguments.flatMap(cast) ?? [:]
+        
+        switch call.method {
+        case Methods.addCategory:
+            self.addCategory(arguments, result)
+        case Methods.deleteCategory:
+            self.deleteCategory(arguments, result)
+        case Methods.getCategories:
+            self.getCategories(arguments, result)
+        case Methods.getGeopointCount:
+            self.getGeopointCount(arguments, result)
+        case Methods.getPoints:
+            self.getPoints(arguments, result)
+        case Methods.loadMetadata:
+            self.loadMetadata(arguments, result)
+        case Methods.relativeFind:
+            self.relativeFind(arguments, result)
+        case Methods.removePoint:
+            self.removePoint(arguments, result)
+        case Methods.runOnEnterAction:
+            self.runOnEnterAction(arguments, result)
+        case Methods.runOnExitAction:
+            self.runOnExitAction(arguments, result)
+        case Methods.runOnStayAction:
+            self.runOnStayAction(arguments, result)
+        case Methods.savePoint:
+            self.savePoint(arguments, result)
+        case Methods.setLocationTrackerParameters:
+            self.setLocationTrackerParameters(arguments, result)
+        default:
+            result(FlutterMethodNotImplemented)
         }
     }
     

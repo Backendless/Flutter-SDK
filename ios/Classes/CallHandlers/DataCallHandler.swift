@@ -64,10 +64,6 @@ class DataCallHandler: FlutterCallHandlerProtocol {
     private let data = SwiftBackendlessSdkPlugin.backendless.data
     
     // MARK: -
-    // MARK: - Router
-    var callRouter: FlutterMethodCallHandler?
-    
-    // MARK: -
     // MARK: - MethodChannel
     let methodChannel: FlutterMethodChannel
     
@@ -83,55 +79,57 @@ class DataCallHandler: FlutterCallHandlerProtocol {
     // MARK: - Init
     init(methodChannel: FlutterMethodChannel) {
         self.methodChannel = methodChannel
-        setupRouter()
     }
     
-    private func setupRouter() {
-        callRouter = { [weak self] (call, result) in
-            guard
-                let self = self,
-                let arguments: [String: Any] = call.arguments.flatMap(cast),
-                let tableName: String = arguments[Args.tableName].flatMap(cast)
-            else { return }
+    // MARK: -
+    // MARK: - Route Flutter Call
+    func routeFlutterCall(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        guard
+            let arguments: [String: Any] = call.arguments.flatMap(cast),
+            let tableName: String = arguments[Args.tableName].flatMap(cast)
+        else {
+            result(FlutterError.noRequiredArguments)
             
-            switch call.method {
-            case Methods.addRelation:
-                self.addRelation(tableName, arguments, result)
-            case Methods.create:
-                self.create(tableName, arguments, result)
-            case Methods.deleteRelation:
-                self.addRelation(tableName, arguments, result)
-            case Methods.find:
-                self.find(tableName, arguments, result)
-            case Methods.findById:
-                self.findById(tableName, arguments, result)
-            case Methods.findFirst:
-                self.findFirst(tableName, arguments: arguments, result)
-            case Methods.findLast:
-                self.findLast(tableName, arguments: arguments, result)
-            case Methods.getObjectCount:
-                self.getObjectCount(tableName, arguments, result)
-            case Methods.loadRelations:
-                self.loadRelations(tableName, arguments, result)
-            case Methods.remove:
-                self.remove(tableName, arguments, result)
-            case Methods.save:
-                self.save(tableName, arguments, result)
-            case Methods.setRelation:
-                self.setRelation(tableName, arguments, result)
-            case Methods.update:
-                self.update(tableName, arguments, result)
-            case Methods.callStoredProcedure:
-                self.callStoredProcedure(tableName, arguments, result)
-            case Methods.describe:
-                self.describe(tableName, result)
-            case Methods.addListener:
-                self.addListener(tableName, arguments, result)
-            case Methods.removeListener:
-                self.removeListener(tableName, arguments, result)
-            default:
-                result(FlutterMethodNotImplemented)
-            }
+            return
+        }
+        
+        switch call.method {
+        case Methods.addRelation:
+            self.addRelation(tableName, arguments, result)
+        case Methods.create:
+            self.create(tableName, arguments, result)
+        case Methods.deleteRelation:
+            self.addRelation(tableName, arguments, result)
+        case Methods.find:
+            self.find(tableName, arguments, result)
+        case Methods.findById:
+            self.findById(tableName, arguments, result)
+        case Methods.findFirst:
+            self.findFirst(tableName, arguments: arguments, result)
+        case Methods.findLast:
+            self.findLast(tableName, arguments: arguments, result)
+        case Methods.getObjectCount:
+            self.getObjectCount(tableName, arguments, result)
+        case Methods.loadRelations:
+            self.loadRelations(tableName, arguments, result)
+        case Methods.remove:
+            self.remove(tableName, arguments, result)
+        case Methods.save:
+            self.save(tableName, arguments, result)
+        case Methods.setRelation:
+            self.setRelation(tableName, arguments, result)
+        case Methods.update:
+            self.update(tableName, arguments, result)
+        case Methods.callStoredProcedure:
+            self.callStoredProcedure(tableName, arguments, result)
+        case Methods.describe:
+            self.describe(tableName, result)
+        case Methods.addListener:
+            self.addListener(tableName, arguments, result)
+        case Methods.removeListener:
+            self.removeListener(tableName, arguments, result)
+        default:
+            result(FlutterMethodNotImplemented)
         }
     }
     

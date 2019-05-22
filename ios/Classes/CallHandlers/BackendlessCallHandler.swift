@@ -41,47 +41,35 @@ class BackendlessCallHandler: FlutterCallHandlerProtocol {
     private let backendless = SwiftBackendlessSdkPlugin.backendless
     
     // MARK: -
-    // MARK: - Router
-    var callRouter: FlutterMethodCallHandler?
-    
-    // MARK: -
-    // MARK: - Init
-    init() {
-        setupRouter()
-    }
-    
-    private func setupRouter() {
-        callRouter = { [weak self] (call, result) in
-            guard let self = self else { return }
-            
-            let arguments: [String: Any] = call.arguments.flatMap(cast) ?? [:]
-            
-            switch call.method {
-            case Methods.initApp:
-                self.initApp(arguments, result)
-            case Methods.getApiKey:
-                self.getApiKey(arguments, result)
-            case Methods.getApplicationId:
-                self.getApplicationId(arguments, result)
-            case Methods.getNotificationIdGeneratorInitValue:
-                self.getNotificationIdGeneratorInitValue(arguments, result)
-            case Methods.getPushTemplatesAsJson:
-                self.getPushTemplatesAsJson(arguments, result)
-            case Methods.getUrl:
-                self.getUrl(arguments, result)
-            case Methods.isInitialized:
-                self.isInitialized(arguments, result)
-            case Methods.saveNotificationIdGeneratorState:
-                self.saveNotificationIdGeneratorState(arguments, result)
-            case Methods.savePushTemplates:
-                self.savePushTemplates(arguments, result)
-            case Methods.setUIState:
-                self.setUIState(arguments, result)
-            case Methods.setUrl:
-                self.setUrl(arguments, result)
-            default:
-                result(FlutterMethodNotImplemented)
-            }
+    // MARK: - Route Flutter Call
+    func routeFlutterCall(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        let arguments: [String: Any] = call.arguments.flatMap(cast) ?? [:]
+        
+        switch call.method {
+        case Methods.initApp:
+            self.initApp(arguments, result)
+        case Methods.getApiKey:
+            self.getApiKey(arguments, result)
+        case Methods.getApplicationId:
+            self.getApplicationId(arguments, result)
+        case Methods.getNotificationIdGeneratorInitValue:
+            self.getNotificationIdGeneratorInitValue(arguments, result)
+        case Methods.getPushTemplatesAsJson:
+            self.getPushTemplatesAsJson(arguments, result)
+        case Methods.getUrl:
+            self.getUrl(arguments, result)
+        case Methods.isInitialized:
+            self.isInitialized(arguments, result)
+        case Methods.saveNotificationIdGeneratorState:
+            self.saveNotificationIdGeneratorState(arguments, result)
+        case Methods.savePushTemplates:
+            self.savePushTemplates(arguments, result)
+        case Methods.setUIState:
+            self.setUIState(arguments, result)
+        case Methods.setUrl:
+            self.setUrl(arguments, result)
+        default:
+            result(FlutterMethodNotImplemented)
         }
     }
     

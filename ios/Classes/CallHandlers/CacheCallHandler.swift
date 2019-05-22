@@ -37,36 +37,23 @@ class CacheCallHandler: FlutterCallHandlerProtocol {
     private let cache = SwiftBackendlessSdkPlugin.backendless.cache
     
     // MARK: -
-    // MARK: - Router
-    var callRouter: FlutterMethodCallHandler?
-    
-    // MARK: -
-    // MARK: - Init
-    init() {
-        setupRouter()
-    }
-    
-    private func setupRouter() {
-        callRouter = { [weak self] (call, result) in
-            guard
-                let self = self,
-                let arguments: [String: Any] = call.arguments.flatMap(cast)
-            else { return }
-            
-            switch call.method {
-            case Methods.contains:
-                self.contains(arguments, result)
-            case Methods.delete:
-                self.delete(arguments, result)
-            case Methods.expireAt:
-                self.expireAt(arguments, result)
-            case Methods.get:
-                self.get(arguments, result)
-            case Methods.put:
-                self.put(arguments, result)
-            default:
-                result(FlutterMethodNotImplemented)
-            }
+    // MARK: - Route Flutter Call
+    func routeFlutterCall(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        let arguments: [String: Any] = call.arguments.flatMap(cast) ?? [:]
+        
+        switch call.method {
+        case Methods.contains:
+            self.contains(arguments, result)
+        case Methods.delete:
+            self.delete(arguments, result)
+        case Methods.expireAt:
+            self.expireAt(arguments, result)
+        case Methods.get:
+            self.get(arguments, result)
+        case Methods.put:
+            self.put(arguments, result)
+        default:
+            result(FlutterMethodNotImplemented)
         }
     }
     

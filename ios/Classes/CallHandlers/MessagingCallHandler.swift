@@ -66,58 +66,49 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
     private let messagingChannel: FlutterMethodChannel
     
     // MARK: -
-    // MARK: - Router
-    var callRouter: FlutterMethodCallHandler?
-    
-    // MARK: -
     // MARK: - Init
     init(messagingChannel: FlutterMethodChannel) {
         self.messagingChannel = messagingChannel
-        
-        setupRouter()
     }
     
-    private func setupRouter() {
-        callRouter = { [weak self] (call, result) in
-            guard
-                let self = self,
-                let arguments: [String: Any] = call.arguments.flatMap(cast)
-            else { return }
-            
-            switch call.method {
-            case Methods.cancel:
-                self.cancel(arguments, result)
-            case Methods.getDeviceRegistration:
-                self.getDeviceRegistration(arguments, result)
-            case Methods.getMessageStatus:
-                self.getMessageStatus(arguments, result)
-            case Methods.publish:
-                self.publish(arguments, result)
-            case Methods.pushWithTemplate:
-                self.pushWithTemplate(arguments, result)
-            case Methods.refreshDeviceToken:
-                self.refreshDeviceToken(arguments, result)
-            case Methods.registerDevice:
-                self.registerDevice(arguments, result)
-            case Methods.sendEmail:
-                self.sendEmail(arguments, result)
-            case Methods.sendHTMLEmail:
-                self.sendHTMLEmail(arguments, result)
-            case Methods.sendTextEmail:
-                self.sendTextEmail(arguments, result)
-            case Methods.unregisterDevice:
-                self.unregisterDevice(arguments, result)
-            case Methods.join:
-                self.join(arguments, result)
-            case Methods.leave:
-                self.leave(arguments, result)
-            case Methods.isJoined:
-                self.isJoined(arguments, result)
-            case Methods.addMessageListener:
-                self.addMessageListener(arguments, result)
-            default:
-                result(FlutterMethodNotImplemented)
-            }
+    // MARK: -
+    // MARK: - Route Flutter Call
+    func routeFlutterCall(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        let arguments: [String: Any] = call.arguments.flatMap(cast) ?? [:]
+        
+        switch call.method {
+        case Methods.cancel:
+            self.cancel(arguments, result)
+        case Methods.getDeviceRegistration:
+            self.getDeviceRegistration(arguments, result)
+        case Methods.getMessageStatus:
+            self.getMessageStatus(arguments, result)
+        case Methods.publish:
+            self.publish(arguments, result)
+        case Methods.pushWithTemplate:
+            self.pushWithTemplate(arguments, result)
+        case Methods.refreshDeviceToken:
+            self.refreshDeviceToken(arguments, result)
+        case Methods.registerDevice:
+            self.registerDevice(arguments, result)
+        case Methods.sendEmail:
+            self.sendEmail(arguments, result)
+        case Methods.sendHTMLEmail:
+            self.sendHTMLEmail(arguments, result)
+        case Methods.sendTextEmail:
+            self.sendTextEmail(arguments, result)
+        case Methods.unregisterDevice:
+            self.unregisterDevice(arguments, result)
+        case Methods.join:
+            self.join(arguments, result)
+        case Methods.leave:
+            self.leave(arguments, result)
+        case Methods.isJoined:
+            self.isJoined(arguments, result)
+        case Methods.addMessageListener:
+            self.addMessageListener(arguments, result)
+        default:
+            result(FlutterMethodNotImplemented)
         }
     }
     

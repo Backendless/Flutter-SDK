@@ -25,32 +25,19 @@ class CommerceCallHandler: FlutterCallHandlerProtocol {
     }
     
     // MARK: -
-    // MARK: - Router
-    var callRouter: FlutterMethodCallHandler?
-    
-    // MARK: -
-    // MARK: - Init
-    init() {
-        setupRouter()
-    }
-    
-    private func setupRouter() {
-        callRouter = { [weak self] (call, result) in
-            guard
-                let self = self,
-                let arguments: [String: Any] = call.arguments.flatMap(cast)
-            else { return }
-            
-            switch call.method {
-            case Methods.cancelPlaySubscription:
-                self.cancelPlaySubscription(arguments, result)
-            case Methods.getPlaySubscriptionsStatus:
-                self.getPlaySubscriptionsStatus(arguments, result)
-            case Methods.validatePlayPurchase:
-                self.validatePlayPurchase(arguments, result)
-            default:
-                result(FlutterMethodNotImplemented)
-            }
+    // MARK: - Route Flutter Call
+    func routeFlutterCall(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        let arguments: [String: Any] = call.arguments.flatMap(cast) ?? [:]
+        
+        switch call.method {
+        case Methods.cancelPlaySubscription:
+            self.cancelPlaySubscription(arguments, result)
+        case Methods.getPlaySubscriptionsStatus:
+            self.getPlaySubscriptionsStatus(arguments, result)
+        case Methods.validatePlayPurchase:
+            self.validatePlayPurchase(arguments, result)
+        default:
+            result(FlutterMethodNotImplemented)
         }
     }
     

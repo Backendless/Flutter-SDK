@@ -28,28 +28,15 @@ class EventsCallHandler: FlutterCallHandlerProtocol {
     private let events = SwiftBackendlessSdkPlugin.backendless.events
     
     // MARK: -
-    // MARK: - Router
-    var callRouter: FlutterMethodCallHandler?
-    
-    // MARK: -
-    // MARK: - Init
-    init() {
-        setupRouter()
-    }
-    
-    private func setupRouter() {
-        callRouter = { [weak self] (call, result) in
-            guard
-                let self = self,
-                let arguments: [String: Any] = call.arguments.flatMap(cast)
-            else { return }
-            
-            switch call.method {
-            case Methods.dispatch:
-                self.dispatch(arguments, result)
-            default:
-                result(FlutterMethodNotImplemented)
-            }
+    // MARK: - Route Flutter Call
+    func routeFlutterCall(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        let arguments: [String: Any] = call.arguments.flatMap(cast) ?? [:]
+        
+        switch call.method {
+        case Methods.dispatch:
+            self.dispatch(arguments, result)
+        default:
+            result(FlutterMethodNotImplemented)
         }
     }
     

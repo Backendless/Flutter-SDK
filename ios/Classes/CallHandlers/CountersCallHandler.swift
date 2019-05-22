@@ -38,45 +38,38 @@ class CountersCallHandler: FlutterCallHandlerProtocol {
     private let counters = SwiftBackendlessSdkPlugin.backendless.counters
     
     // MARK: -
-    // MARK: - Router
-    var callRouter: FlutterMethodCallHandler?
-    
-    // MARK: -
-    // MARK: - Init
-    init() {
-        setupRouter()
-    }
-    
-    private func setupRouter() {
-        callRouter = { [weak self] (call, result) in
-            guard
-                let self = self,
-                let arguments: [String: Any] = call.arguments.flatMap(cast),
-                let counterName: String = arguments[Args.counterName].flatMap(cast)
-            else { return }
+    // MARK: - Route Flutter Call
+    func routeFlutterCall(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        guard
+            let arguments: [String: Any] = call.arguments.flatMap(cast),
+            let counterName: String = arguments[Args.counterName].flatMap(cast)
+        else {
+            result(FlutterError.noRequiredArguments)
             
-            switch call.method {
-            case Methods.addAndGet:
-                self.addAndGet(counterName, arguments, result)
-            case Methods.compareAndSet:
-                self.compareAndSet(counterName, arguments, result)
-            case Methods.decrementAndGet:
-                self.decrementAndGet(counterName, result)
-            case Methods.get:
-                self.get(counterName, result)
-            case Methods.getAndAdd:
-                self.getAndAdd(counterName, arguments, result)
-            case Methods.getAndDecrement:
-                self.getAndDecrement(counterName, result)
-            case Methods.getAndIncrement:
-                self.getAndIncrement(counterName, result)
-            case Methods.incrementAndGet:
-                self.incrementAndGet(counterName, result)
-            case Methods.reset:
-                self.reset(counterName, result)
-            default:
-                result(FlutterMethodNotImplemented)
-            }
+            return
+        }
+        
+        switch call.method {
+        case Methods.addAndGet:
+            self.addAndGet(counterName, arguments, result)
+        case Methods.compareAndSet:
+            self.compareAndSet(counterName, arguments, result)
+        case Methods.decrementAndGet:
+            self.decrementAndGet(counterName, result)
+        case Methods.get:
+            self.get(counterName, result)
+        case Methods.getAndAdd:
+            self.getAndAdd(counterName, arguments, result)
+        case Methods.getAndDecrement:
+            self.getAndDecrement(counterName, result)
+        case Methods.getAndIncrement:
+            self.getAndIncrement(counterName, result)
+        case Methods.incrementAndGet:
+            self.incrementAndGet(counterName, result)
+        case Methods.reset:
+            self.reset(counterName, result)
+        default:
+            result(FlutterMethodNotImplemented)
         }
     }
     

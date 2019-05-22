@@ -49,47 +49,35 @@ class FilesCallHandler: FlutterCallHandlerProtocol {
     private let fileService = SwiftBackendlessSdkPlugin.backendless.fileService
     
     // MARK: -
-    // MARK: - Router
-    var callRouter: FlutterMethodCallHandler?
-    
-    // MARK: -
-    // MARK: - Init
-    init() {
-        setupRouter()
-    }
-    
-    private func setupRouter() {
-        callRouter = { [weak self] (call, result) in
-            guard
-                let self = self,
-                let arguments: [String: Any] = call.arguments.flatMap(cast)
-            else { return }
-            
-            switch call.method {
-            case Methods.copyFile:
-                self.copyFile(arguments, result)
-            case Methods.exists:
-                self.exists(arguments, result)
-            case Methods.getFileCount:
-                self.getFileCount(arguments, result)
-            case Methods.listing:
-                self.listing(arguments, result)
-            case Methods.moveFile:
-                self.moveFile(arguments, result)
-            case Methods.remove:
-                self.remove(arguments, result)
-            case Methods.removeDirectory:
-                self.removeDirectory(arguments, result)
-            case Methods.renameFile:
-                self.renameFile(arguments, result)
-            case Methods.saveFile:
-                self.saveFile(arguments, result)
-            case Methods.upload:
-                self.upload(arguments, result)
-            default:
-                result(FlutterMethodNotImplemented)
-            }
+    // MARK: - Route Flutter Call
+    func routeFlutterCall(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
+        let arguments: [String: Any] = call.arguments.flatMap(cast) ?? [:]
+        
+        switch call.method {
+        case Methods.copyFile:
+            self.copyFile(arguments, result)
+        case Methods.exists:
+            self.exists(arguments, result)
+        case Methods.getFileCount:
+            self.getFileCount(arguments, result)
+        case Methods.listing:
+            self.listing(arguments, result)
+        case Methods.moveFile:
+            self.moveFile(arguments, result)
+        case Methods.remove:
+            self.remove(arguments, result)
+        case Methods.removeDirectory:
+            self.removeDirectory(arguments, result)
+        case Methods.renameFile:
+            self.renameFile(arguments, result)
+        case Methods.saveFile:
+            self.saveFile(arguments, result)
+        case Methods.upload:
+            self.upload(arguments, result)
+        default:
+            result(FlutterMethodNotImplemented)
         }
+        
     }
     
     // MARK: -

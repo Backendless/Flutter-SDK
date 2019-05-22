@@ -77,7 +77,7 @@ public class SwiftBackendlessSdkPlugin: NSObject, FlutterPlugin {
                 
                 handlers.append(handler)
                 
-                channel.setMethodCallHandler(handler.callRouter)
+                channel.setMethodCallHandler(handler.routeFlutterCall)
         }
     }
     

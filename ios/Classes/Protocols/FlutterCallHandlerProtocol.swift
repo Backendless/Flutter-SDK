@@ -3,5 +3,5 @@
 // MARK: -
 // MARK: - FlutterCallHandlerProtocol
 protocol FlutterCallHandlerProtocol: AnyObject {
-    var callRouter: FlutterMethodCallHandler? { get }
+    func routeFlutterCall(_ call: FlutterMethodCall, _ result: @escaping FlutterResult)
 }
