@@ -49,7 +49,7 @@ public class SwiftBackendlessSdkPlugin: NSObject, FlutterPlugin {
                     handler = CacheCallHandler()
                 case FlutterPluginChannels.dataChannel:
                     channel = FlutterMethodChannel(name: channelName, binaryMessenger: messenger, codec: codec)
-                    handler = DataCallHandler()
+                    handler = DataCallHandler(methodChannel: channel)
                 case FlutterPluginChannels.commerceChannel:
                     channel = FlutterMethodChannel(name: channelName, binaryMessenger: messenger, codec: codec)
                     handler = CommerceCallHandler()

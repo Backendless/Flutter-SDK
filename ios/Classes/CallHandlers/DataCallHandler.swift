@@ -30,6 +30,8 @@ class DataCallHandler: FlutterCallHandlerProtocol {
         static let update = "Backendless.Data.of.update"
         static let callStoredProcedure = "Backendless.Data.callStoredProcedure"
         static let describe = "Backendless.Data.describe"
+        static let addListener = "Backendless.Data.RT.addListener"
+        static let removeListener = "Backendless.Data.RT.removeListener"
     }
     
     private enum Args {
@@ -45,6 +47,15 @@ class DataCallHandler: FlutterCallHandlerProtocol {
         static let objectId = "objectId"
         static let entity = "entity"
         static let queryBuilder = "queryBuilder"
+        static let event = "event"
+    }
+    
+    private enum DataRTEvents {
+        static let bulkUpdated = "RTDataEvent.BULK_UPDATED"
+        static let bulkDeleted = "RTDataEvent.BULK_DELETED"
+        static let created = "RTDataEvent.CREATED"
+        static let updated = "RTDataEvent.UPDATED"
+        static let deleted = "RTDataEvent.DELETED"
     }
     
     // MARK: -
@@ -56,8 +67,21 @@ class DataCallHandler: FlutterCallHandlerProtocol {
     var callRouter: FlutterMethodCallHandler?
     
     // MARK: -
+    // MARK: - MethodChannel
+    let methodChannel: FlutterMethodChannel
+    
+    // MARK: -
+    // MARK: - NextHandle
+    private var nextHandle: Int = 0
+    
+    // MARK: -
+    // MARK: - Handlers
+    private var subscriptions: [Int: RTSubscription?] = [:]
+    
+    // MARK: -
     // MARK: - Init
-    init() {
+    init(methodChannel: FlutterMethodChannel) {
+        self.methodChannel = methodChannel
         setupRouter()
     }
     
@@ -100,6 +124,10 @@ class DataCallHandler: FlutterCallHandlerProtocol {
                 self.callStoredProcedure(tableName, arguments, result)
             case Methods.describe:
                 self.describe(tableName, result)
+            case Methods.addListener:
+                self.addListener(tableName, arguments, result)
+            case Methods.removeListener:
+                self.removeListener(tableName, arguments, result)
             default:
                 result(FlutterMethodNotImplemented)
             }
@@ -526,6 +554,7 @@ class DataCallHandler: FlutterCallHandlerProtocol {
             })
     }
     
+    // MARK: -
     // MARK: - Get View
     private func getView(_ tableName: String, _ arguments: [String: Any], _ result: @escaping FlutterResult) {
         print("~~~> Hello in Get View")
@@ -533,5 +562,92 @@ class DataCallHandler: FlutterCallHandlerProtocol {
         result(FlutterMethodNotImplemented)
     }
     
-    
+    // MARK: -
+    // MARK: - Add Listener
+    private func addListener(_ tableName: String, _ arguments: [String: Any], _ result: @escaping FlutterResult) {
+        print("~~~> Hello in Add Listener")
+        
+        guard
+            let event: String = arguments[Args.event].flatMap(cast),
+            let whereClause: String? = arguments[Args.whereClause].flatMap(cast)
+        else {
+            result(FlutterError.noRequiredArguments)
+            
+            return
+        }
+        
+        let currentHandle = nextHandle
+        nextHandle += 1
+        
+        var subscription: RTSubscription?
+        
+        let errorHandler: (Fault) -> Void = { [weak self] in
+            var args: [String: Any] = [:]
+            args["handle"] = currentHandle
+            args["fault"] = $0.message ?? ""
+            
+            self?.methodChannel.invokeMethod("Backendless.Data.RT.EventFault", arguments: args);
+            
+        }
+        
+        if event.contains("BULK") {
+            
+            let bulkEventHandler: (BulkEvent) -> Void = { [weak self] in
+                var args: [String: Any] = [:]
+                args["hanlde"] = currentHandle
+                args["response"] = $0
+                
+                self?.methodChannel.invokeMethod("Backendless.Data.RT.EventResponse", arguments: args)
+            }
+            
+            switch event {
+            case DataRTEvents.bulkUpdated:
+                if let whereClause = whereClause {
+                    subscription = data.ofTable(tableName).rt.addBulkUpdateListener(whereClause: whereClause, responseHandler: bulkEventHandler, errorHandler: errorHandler)
+                } else {
+                    subscription = data.ofTable(tableName).rt.addBulkUpdateListener(responseHandler: bulkEventHandler, errorHandler: errorHandler)
+                }
+            case DataRTEvents.bulkDeleted:
+                if let whereClause = whereClause {
+                    subscription = data.ofTable(tableName).rt.addBulkDeleteListener(whereClause: whereClause, responseHandler: bulkEventHandler, errorHandler: errorHandler)
+                } else {
+                    subscription = data.ofTable(tableName).rt.addBulkDeleteListener(responseHandler: bulkEventHandler, errorHandler: errorHandler)
+                }
+            default:
+                result(FlutterMethodNotImplemented)
+                
+                return
+            }
+        } else {
+            
+            let dataEventHandler: ([String: Any]) -> Void = { [weak self] in
+                var args: [String: Any] = [:]
+                args["handle"] = currentHandle
+                args["response"] = $0
+                
+                self?.methodChannel.invokeMethod("Backendless.Data.RT.EventResponse", arguments: args)
+            }
+            
+            switch event {
+            case DataRTEvents.created:
+                if let whereClause = whereClause {
+                    subscription = data.ofTable(tableName).rt.addCreateListener(whereClause: whereClause, responseHandler: dataEventHandler, errorHandler: errorHandler)
+                } else {
+                    subscription = data.ofTable(tableName).rt.addCreateListener(responseHandler: dataEventHandler, errorHandler: errorHandler)
+                }
+            case DataRTEvents.updated:
+                if let whereClause = whereClause {
+                    subscription = data.ofTable(tableName).rt.addUpdateListener(whereClause: whereClause, responseHandler: dataEventHandler, errorHandler: errorHandler)
+                } else {
+                    subscription = data.ofTable(tableName).rt.addUpdateListener(responseHandler: dataEventHandler, errorHandler: errorHandler)
+                }
+            default:
+                result(FlutterMethodNotImplemented)
+                
+                return
+            }
+        }
+        
+        subscriptions[currentHandle] = subscription
+    }
 }
