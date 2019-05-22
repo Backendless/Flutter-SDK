@@ -48,6 +48,7 @@ class DataCallHandler: FlutterCallHandlerProtocol {
         static let entity = "entity"
         static let queryBuilder = "queryBuilder"
         static let event = "event"
+        static let handle = "handle"
     }
     
     private enum DataRTEvents {
@@ -587,7 +588,6 @@ class DataCallHandler: FlutterCallHandlerProtocol {
             args["fault"] = $0.message ?? ""
             
             self?.methodChannel.invokeMethod("Backendless.Data.RT.EventFault", arguments: args);
-            
         }
         
         if event.contains("BULK") {
@@ -649,5 +649,23 @@ class DataCallHandler: FlutterCallHandlerProtocol {
         }
         
         subscriptions[currentHandle] = subscription
+    }
+    
+    // MARK: -
+    // MARK: - Remove Listener
+    private func removeListener(_ tableName: String, _ arguments: [String: Any], _ result: @escaping FlutterResult) {
+        guard let handle: Int = arguments[Args.handle].flatMap(cast) else {
+            result(FlutterError.noRequiredArguments)
+            
+            return
+        }
+        
+        let subscription: RTSubscription? = subscriptions[handle].flatMap(cast)
+        subscription?.stop()
+        
+        var args: [String: Any] = [:]
+        args["handle"] = handle
+        methodChannel.invokeMethod("Backendless.Data.RT.EventResponse", arguments: args)
+
     }
 }
