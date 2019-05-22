@@ -9,6 +9,9 @@
 import Foundation
 import Flutter
 
+// MARK: -
+// MARK: - BackendlessCallHandler
+// MARK: - Methods are called correctly ++
 class BackendlessCallHandler: FlutterCallHandlerProtocol {
     
     // MARK: -
@@ -49,10 +52,9 @@ class BackendlessCallHandler: FlutterCallHandlerProtocol {
     
     private func setupRouter() {
         callRouter = { [weak self] (call, result) in
-            guard
-                let self = self,
-                let arguments: [String: Any] = call.arguments.flatMap(cast)
-            else { return }
+            guard let self = self else { return }
+            
+            let arguments: [String: Any] = call.arguments.flatMap(cast) ?? [:]
             
             switch call.method {
             case Methods.initApp:
@@ -208,6 +210,4 @@ class BackendlessCallHandler: FlutterCallHandlerProtocol {
         backendless.hostUrl = url
         result(nil)
     }
-    
-    
 }
