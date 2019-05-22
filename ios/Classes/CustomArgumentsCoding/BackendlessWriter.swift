@@ -27,9 +27,9 @@ class BackendlessWtiter: FlutterStandardWriter {
             guard let jsonData = dataFromValue(value) else { return }
             guard let json = try? JSONSerialization.jsonObject(with: jsonData, options: []) else { return }
             writeCodeForValue(value)
-            writeValue(json)
+            super.writeValue(json)
         default:
-            writeValue(value)
+            super.writeValue(value)
         }
     }
     

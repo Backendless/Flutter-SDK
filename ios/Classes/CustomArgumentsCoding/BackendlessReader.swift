@@ -12,7 +12,7 @@ class BackendlessReader: FlutterStandardReader {
         print("~~~> type: \(type) <~~~")
         let code = FlutterTypeCode(rawValue: type)
         
-        return code != nil ? readCustomValue(byCode: code!) : readValue(ofType: type)
+        return code != nil ? readCustomValue(byCode: code!) : super.readValue(ofType: type)
     }
     
     // MARK: -
