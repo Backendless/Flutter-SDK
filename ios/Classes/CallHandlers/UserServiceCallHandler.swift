@@ -27,6 +27,8 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
         static let resendEmailConfirmation = "Backendless.UserService.resendEmailConfirmation"
         static let restorePassword = "Backendless.UserService.restorePassword"
         static let setCurrentUser = "Backendless.UserService.setCurrentUser"
+        static let unassignRole = "Backendless.UserService.unassignRole"
+        static let update = "Backendless.UserService.update"
     }
     
     private enum Args {
@@ -76,6 +78,10 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
             restorePassword(arguments, result)
         case Methods.setCurrentUser:
             setCurrentUser(arguments, result)
+        case Methods.unassignRole:
+            unassignRole(arguments, result)
+        case Methods.update:
+            update(arguments, result)
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -283,8 +289,49 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
         }
         
         // TODO: -
-        // TODO: - Implement
+        // TODO: - No such method in SDK
         
+        result(FlutterMethodNotImplemented)
+    }
+    
+    // MARK: -
+    // MARK: - Unassign Role
+    private func unassignRole(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
+        print("~~~> Hello in Unassign Role")
+        
+        guard
+            let identity: String = arguments[Args.identity].flatMap(cast),
+            let roleName: String = arguments[Args.roleName].flatMap(cast)
+        else {
+            result(FlutterError.noRequiredArguments)
+            
+            return
+        }
+        
+        // TODO: -
+        // TODO: - No such method in SDK
+        
+        result(FlutterMethodNotImplemented)
+    }
+    
+    // MARK: -
+    // MARK: - Update
+    private func update(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
+        print("~~~> Hello in Register")
+        
+        guard let user: BackendlessUser = arguments[Args.user].flatMap(cast) else {
+            result(FlutterError.noRequiredArguments)
+            
+            return
+        }
+        
+        userService.update(user: user,
+            responseHandler: {
+                result($0)
+            },
+            errorHandler: {
+                result(FlutterError($0))
+            })
     }
     
     
