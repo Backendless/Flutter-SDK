@@ -62,10 +62,6 @@ class BackendlessUserService {
       "Backendless.UserService.restorePassword",
       <String, dynamic>{"identity": identity});
 
-  Future<void> setCurrentUser(BackendlessUser user) => _channel.invokeMethod(
-      "Backendless.UserService.setCurrentUser",
-      <String, dynamic>{"user": user});
-
   Future<void> unassignRole(String identity, String roleName) =>
       _channel.invokeMethod(
           "Backendless.UserService.unassignRole", <String, dynamic>{

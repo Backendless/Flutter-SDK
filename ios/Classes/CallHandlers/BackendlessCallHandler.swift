@@ -145,10 +145,11 @@ class BackendlessCallHandler: FlutterCallHandlerProtocol {
     private func isInitialized(_ arguments: [String: Any], _ result: FlutterResult) {
         print("~~~> Hello, Is Initialized")
         
-        // TODO: -
-        // TODO: - No such method in iOS SDK
+        let appId = backendless.getApplictionId()
+        let apiKey = backendless.getApiKey()
+        let isInitialized = appId != "AppId" && apiKey != "APIKey"
         
-        result(FlutterMethodNotImplemented)
+        result(isInitialized)
     }
     
     // MARK: -

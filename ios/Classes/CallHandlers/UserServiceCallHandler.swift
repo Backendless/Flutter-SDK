@@ -26,7 +26,6 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
         static let register = "Backendless.UserService.register"
         static let resendEmailConfirmation = "Backendless.UserService.resendEmailConfirmation"
         static let restorePassword = "Backendless.UserService.restorePassword"
-        static let setCurrentUser = "Backendless.UserService.setCurrentUser"
         static let unassignRole = "Backendless.UserService.unassignRole"
         static let update = "Backendless.UserService.update"
     }
@@ -76,8 +75,6 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
             resendEmailConfirmation(arguments, result)
         case Methods.restorePassword:
             restorePassword(arguments, result)
-        case Methods.setCurrentUser:
-            setCurrentUser(arguments, result)
         case Methods.unassignRole:
             unassignRole(arguments, result)
         case Methods.update:
@@ -140,10 +137,18 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
             return
         }
         
-        // TODO: -
-        // TODO: - No such method in SDK
-        
-        result(FlutterMethodNotImplemented)
+        Backendless.shared.data.of(BackendlessUser.self).findById(objectId: id,
+            responseHandler: { response in
+                guard let user = response as? BackendlessUser else {
+                    result(FlutterError(code: "", message: "Incorrect Data Type from API", details: nil))
+                    
+                    return
+                }
+                result(user)
+            },
+            errorHandler: {
+                result(FlutterError($0))
+            })
     }
     
     // MARK: -
@@ -275,23 +280,6 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
         }, errorHandler: {
             result(FlutterError($0))
         })
-    }
-    
-    // MARK: -
-    // MARK: - Set Current User
-    private func setCurrentUser(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Set Current User")
-        
-        guard let user: BackendlessUser = arguments[Args.user].flatMap(cast) else {
-            result(FlutterError.noRequiredArguments)
-            
-            return
-        }
-        
-        // TODO: -
-        // TODO: - No such method in SDK
-        
-        result(FlutterMethodNotImplemented)
     }
     
     // MARK: -
