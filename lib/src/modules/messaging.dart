@@ -96,10 +96,6 @@ class BackendlessMessaging {
       _channel.invokeMethod("Backendless.Messaging.pushWithTemplate",
           <String, dynamic>{"templateName": templateName});
 
-  Future<bool> refreshDeviceToken(String newDeviceToken) =>
-      _channel.invokeMethod("Backendless.Messaging.refreshDeviceToken",
-          <String, dynamic>{"newDeviceToken": newDeviceToken});
-
   Future<DeviceRegistrationResult> registerDevice(
           [List<String> channels, DateTime expiration]) =>
       _channel.invokeMethod("Backendless.Messaging.registerDevice",

@@ -62,9 +62,6 @@ public class MessagingCallHandler implements MethodChannel.MethodCallHandler {
             case "Backendless.Messaging.pushWithTemplate":
                 pushWithTemplate(call, result);
                 break;
-            case "Backendless.Messaging.refreshDeviceToken":
-                refreshDeviceToken(call, result);
-                break;
             case "Backendless.Messaging.registerDevice":
                 registerDevice(call, result);
                 break;
@@ -178,11 +175,6 @@ public class MessagingCallHandler implements MethodChannel.MethodCallHandler {
     private void pushWithTemplate(MethodCall call, MethodChannel.Result result) {
         String templateName = call.argument("templateName");
         Backendless.Messaging.pushWithTemplate(templateName, new FlutterCallback<MessageStatus>(result));
-    }
-
-    private void refreshDeviceToken(MethodCall call, MethodChannel.Result result) {
-        String newDeviceToken = call.argument("newDeviceToken");
-        Backendless.Messaging.refreshDeviceToken(newDeviceToken, new FlutterCallback<Boolean>(result));
     }
 
     private void registerDevice(MethodCall call, MethodChannel.Result result) {

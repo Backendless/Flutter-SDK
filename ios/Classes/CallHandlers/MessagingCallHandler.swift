@@ -20,7 +20,6 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
         static let getMessageStatus = "Backendless.Messaging.getMessageStatus"
         static let publish = "Backendless.Messaging.publish"
         static let pushWithTemplate = "Backendless.Messaging.pushWithTemplate"
-        static let refreshDeviceToken = "Backendless.Messaging.refreshDeviceToken"
         static let registerDevice = "Backendless.Messaging.registerDevice"
         static let sendEmail = "Backendless.Messaging.sendEmail"
         static let sendHTMLEmail = "Backendless.Messaging.sendHTMLEmail"
@@ -87,8 +86,6 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
             self.publish(arguments, result)
         case Methods.pushWithTemplate:
             self.pushWithTemplate(arguments, result)
-        case Methods.refreshDeviceToken:
-            self.refreshDeviceToken(arguments, result)
         case Methods.registerDevice:
             self.registerDevice(arguments, result)
         case Methods.sendEmail:
@@ -238,16 +235,6 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
             errorHandler: {
                 result(FlutterError($0))
             })
-    }
-    
-    // MARK: -
-    // MARK: - RefreshDeviceToken
-    private func refreshDeviceToken(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Refresh Device Token")
-        
-        // TODO: -
-        // TODO: - RefreshDeviceToken not implemented in iOS SDK
-        fatalError("RefreshDeviceToken not implemented in iOS SDK")
     }
     
     // MARK: -
