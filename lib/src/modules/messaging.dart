@@ -428,7 +428,6 @@ class Message {
 class PublishOptions {
   String publisherId;
   Map<String, String> headers = new Map();
-  String subtopic;
   static const String TEMPLATE_NAME = "template_name";
   static const String ANDROID_IMMEDIATE_PUSH = "android_immediate_push";
   static const String IOS_IMMEDIATE_PUSH = "ios_immediate_push";
@@ -464,13 +463,11 @@ class PublishOptions {
 
   PublishOptions.fromJson(Map json) : 
     publisherId = json['publisherId'],
-    subtopic = json['subtopic'],
     headers = json['headers'];
 
   Map toJson() =>
     {
       'publisherId': publisherId,
-      'subtopic': subtopic,
       'headers': headers,
     };
 
@@ -479,7 +476,6 @@ class PublishOptions {
     if (info.headers != null) {
       this.headers.addAll(info.headers);
     }
-    this.subtopic = info.subtopic;
   }
 }
 

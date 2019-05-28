@@ -396,9 +396,13 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
         let channels: [String]? = arguments[Args.channels].flatMap(cast)
         
         if let channels = channels {
-            // TODO: -
-            // TODO: - No such method in iOS SDK
-            fatalError("No such method in iOS ")
+            messaging.unregisterDevice(channels: channels,
+                responseHandler: {
+                    result($0)
+                },
+                errorHandler: {
+                    result(FlutterError($0))
+                })
         } else {
             messaging.unregisterDevice(responseHandler: {
                 result($0)
