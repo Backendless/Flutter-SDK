@@ -20,9 +20,7 @@ class CommerceCallHandler: FlutterCallHandlerProtocol {
         static let validatePlayPurchase = "Backendless.Commerce.validatePlayPurchase"
     }
     
-    private enum Args {
-        
-    }
+    private enum Args { }
     
     // MARK: -
     // MARK: - Route Flutter Call

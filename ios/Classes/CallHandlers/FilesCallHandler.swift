@@ -42,6 +42,7 @@ class FilesCallHandler: FlutterCallHandlerProtocol {
         static let fileName = "fileName"
         static let fileContent = "fileContent"
         static let overwrite = "overwrite"
+        static let directoryPath = "directoryPath"
     }
     
     // MARK: -
@@ -114,9 +115,13 @@ class FilesCallHandler: FlutterCallHandlerProtocol {
             return
         }
         
-        // TODO: - Not implemented is iOS
-        fatalError("Commerce not implemented in iOS SDK")
-        //
+        fileService.exists(path: path,
+            responseHandler: {
+                result($0)
+            },
+            errorHandler: {
+                result(FlutterError($0))
+            })
     }
     
     // MARK: -
@@ -208,9 +213,14 @@ class FilesCallHandler: FlutterCallHandlerProtocol {
                     })
             }
         } else {
-            // TODO: - How to route method call with 1 parameter "path"?
-            fatalError("How to route method call with 1 parameter \"path\"?")
-        }
+            fileService.listing(path: path,
+                responseHandler: {
+                    result($0)
+                },
+                errorHandler: {
+                    result(FlutterError($0))
+                })
+            }
     }
     
     // MARK: -
@@ -261,7 +271,33 @@ class FilesCallHandler: FlutterCallHandlerProtocol {
     private func removeDirectory(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
         print("~~~> Hello in Remove Directory")
         
-        fatalError("ComRemove Directory not implemented in iOS SDK")
+        guard
+            let directoryPath: String = arguments[Args.directoryPath].flatMap(cast),
+            let pattern: String? = arguments[Args.pattern].flatMap(cast),
+            let recursive: Bool? = arguments[Args.recursive].flatMap(cast)
+        else {
+            result(FlutterError.noRequiredArguments)
+            
+            return
+        }
+        
+        if let pattern = pattern, let recursive = recursive {
+            fileService.remove(path: directoryPath, pattern: pattern, recursive: recursive,
+                responseHandler: {
+                    result(nil)
+                },
+                errorHandler: {
+                    result(FlutterError($0))
+                })
+        } else {
+            fileService.remove(path: directoryPath, pattern: "*", recursive: true,
+                responseHandler: {
+                    result(nil)
+                },
+                    errorHandler: {
+                result(FlutterError($0))
+                })
+        }
     }
     
     // MARK: -
