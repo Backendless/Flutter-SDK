@@ -246,57 +246,22 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
         // TODO: - Method without deviceToken in arguments will be added to SwiftSDK
         fatalError("Method without deviceToken in arguments will be added to SwiftSDK")
         
-        let channels: [String]? = arguments[Args.channels].flatMap(cast)
-        let expiration: Date? = arguments[Args.expiration].flatMap(cast)
-        
-        if let channels = channels {
-            if let expiration = expiration {
-                messaging.registerDevice(channels: channels, expiration: expiration,
-                    responseHandler: {
-                        // TODO: - Get string from SDK
-                        // TODO: - Have to send DeviceRegistrationResult to Flutter
-                        result($0)
-                    },
-                    errorHandler: {
-                        result(FlutterError($0))
-                    })
-            } else {
-                messaging.registerDevice(channels: channels, responseHandler: {
-                    
-                    result($0)
-                }, errorHandler: {
-                    result(FlutterError($0))
-                })
-            }
-        } else {
-            if let expiration = expiration {
-                messaging.registerDevice(expiration: expiration,
-                    responseHandler: {
-                        // TODO: - Get string from SDK
-                        // TODO: - Have to send DeviceRegistrationResult to Flutter
-                        result($0)
-                    },
-                    errorHandler: {
-                        result(FlutterError($0))
-                    })
-            } else {
-                messaging.registerDevice(responseHandler: {
-                    // TODO: - Get string from SDK
-                    // TODO: - Have to send DeviceRegistrationResult to Flutter
-                    result($0)
-                }, errorHandler: {
-                    result(FlutterError($0))
-                })
-            }
-        }
-        
-        
-        
-        
-        
-        
-        
-        
+//        let channels: [String]? = arguments[Args.channels].flatMap(cast)
+//        let expiration: Date? = arguments[Args.expiration].flatMap(cast)
+//        
+//        if let channels = channels {
+//            if let expiration = expiration {
+//                
+//            } else {
+//                
+//            }
+//        } else {
+//            if let expiration = expiration {
+//                
+//            } else {
+//                
+//            }
+//        }
     }
     
     // MARK: -

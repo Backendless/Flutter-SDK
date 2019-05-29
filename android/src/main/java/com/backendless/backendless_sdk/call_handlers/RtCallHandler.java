@@ -108,6 +108,7 @@ public class RtCallHandler implements MethodChannel.MethodCallHandler {
     private void removeConnectionListeners() {
         Backendless.RT.removeConnectionListeners();
         connectCallbacks.clear();
+        result.success(null);
     }
 
     private void removeListener(MethodCall call) {
