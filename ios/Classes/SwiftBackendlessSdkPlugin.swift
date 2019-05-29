@@ -16,10 +16,12 @@ fileprivate enum FlutterPluginChannels {
     static let geoChannel = "backendless/geo"
     static let loggingChannel = "backendless/logging"
     static let messagingChannel = "backendless/messaging"
+    static let userServiceChannel = "backendless/user_service"
+    static let rtChannel = "backendless/rt"
     
     static let allChannels = [backendlessChannel, cacheChannel, dataChannel, commerceChannel,
                               countersChannel, eventsChannel, filesChannel, geoChannel,
-                              loggingChannel, messagingChannel]
+                              loggingChannel, messagingChannel, userServiceChannel, rtChannel]
 }
 
 public class SwiftBackendlessSdkPlugin: NSObject, FlutterPlugin {
@@ -54,7 +56,7 @@ public class SwiftBackendlessSdkPlugin: NSObject, FlutterPlugin {
                     channel = FlutterMethodChannel(name: channelName, binaryMessenger: messenger, codec: codec)
                     handler = CommerceCallHandler()
                 case FlutterPluginChannels.countersChannel:
-                    channel = FlutterMethodChannel(name: channelName, binaryMessenger: registrar.messenger())
+                    channel = FlutterMethodChannel(name: channelName, binaryMessenger: messenger)
                     handler = CountersCallHandler()
                 case FlutterPluginChannels.eventsChannel:
                     channel = FlutterMethodChannel(name: channelName, binaryMessenger: messenger, codec: codec)
@@ -71,6 +73,12 @@ public class SwiftBackendlessSdkPlugin: NSObject, FlutterPlugin {
                 case FlutterPluginChannels.messagingChannel:
                     channel = FlutterMethodChannel(name: channelName, binaryMessenger: messenger, codec: codec)
                     handler = MessagingCallHandler(messagingChannel: channel)
+                case FlutterPluginChannels.userServiceChannel:
+                    channel = FlutterMethodChannel(name: channelName, binaryMessenger: messenger, codec: codec)
+                    handler = UserServiceCallHandler()
+                case FlutterPluginChannels.rtChannel:
+                    channel = FlutterMethodChannel(name: channelName, binaryMessenger: messenger, codec: codec)
+                    handler = RtCallHandler(messagingChannel: channel)
                 default:
                     return
                 }
