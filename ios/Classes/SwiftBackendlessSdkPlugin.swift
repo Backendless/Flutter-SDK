@@ -11,7 +11,7 @@ fileprivate enum FlutterPluginChannels {
     static let commerceChannel = "backendless/commerce"
     static let countersChannel = "backendless/counters"
     static let eventsChannel = "backendless/events"
-    // custom_service
+    static let customService = "backendless/custom_service"
     static let filesChannel = "backendless/files"
     static let geoChannel = "backendless/geo"
     static let loggingChannel = "backendless/logging"
@@ -20,7 +20,7 @@ fileprivate enum FlutterPluginChannels {
     static let rtChannel = "backendless/rt"
     
     static let allChannels = [backendlessChannel, cacheChannel, dataChannel, commerceChannel,
-                              countersChannel, eventsChannel, filesChannel, geoChannel,
+                              countersChannel, eventsChannel, customService, filesChannel, geoChannel,
                               loggingChannel, messagingChannel, userServiceChannel, rtChannel]
 }
 
@@ -61,6 +61,9 @@ public class SwiftBackendlessSdkPlugin: NSObject, FlutterPlugin {
                 case FlutterPluginChannels.eventsChannel:
                     channel = FlutterMethodChannel(name: channelName, binaryMessenger: messenger, codec: codec)
                     handler = EventsCallHandler()
+                case FlutterPluginChannels.customService:
+                    channel = FlutterMethodChannel(name: channelName, binaryMessenger: messenger, codec: codec)
+                    handler = CustomServiceCallHandler()
                 case FlutterPluginChannels.filesChannel:
                     channel = FlutterMethodChannel(name: channelName, binaryMessenger: messenger, codec: codec)
                     handler = FilesCallHandler()
