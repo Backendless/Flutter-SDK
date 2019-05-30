@@ -9,7 +9,6 @@ class BackendlessReader: FlutterStandardReader {
     // MARK: -
     // MARK: - Read Value
     override func readValue(ofType type: UInt8) -> Any? {
-        print("~~~> type: \(type) <~~~")
         let code = FlutterTypeCode(rawValue: type)
         
         return code != nil ? readCustomValue(byCode: code!) : super.readValue(ofType: type)

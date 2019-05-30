@@ -48,6 +48,8 @@ class CacheCallHandler: FlutterCallHandlerProtocol {
             self.delete(arguments, result)
         case Methods.expireAt:
             self.expireAt(arguments, result)
+        case Methods.expireIn:
+            expireIn(arguments, result);
         case Methods.get:
             self.get(arguments, result)
         case Methods.put:
@@ -103,15 +105,14 @@ class CacheCallHandler: FlutterCallHandlerProtocol {
     private func expireAt(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
         print("~~~> Hello, expireAt")
         
-        guard
-            let key: String = arguments[Args.key].flatMap(cast),
-            let date: Date? = arguments[Args.date].flatMap(cast),
-            let timestamp: Double? = arguments[Args.timestamp].flatMap(cast)
-        else {
+        guard let key: String = arguments[Args.key].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             
             return
         }
+        
+        let date: Date? = arguments[Args.date].flatMap(cast)
+        let timestamp: Double? = arguments[Args.timestamp].flatMap(cast)
         
         if let date = date {
             cache.expireAt(key: key, date: date,
