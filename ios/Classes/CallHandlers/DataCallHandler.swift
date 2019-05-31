@@ -49,6 +49,7 @@ class DataCallHandler: FlutterCallHandlerProtocol {
         static let queryBuilder = "queryBuilder"
         static let event = "event"
         static let handle = "handle"
+        static let changes = "changes"
     }
     
     private enum DataRTEvents {
@@ -137,6 +138,10 @@ class DataCallHandler: FlutterCallHandlerProtocol {
     // MARK: - AddRelation
     private func addRelation(_ tableName: String, _ arguments: [String: Any], _ result: @escaping FlutterResult) {
         print("~~~> Hello in addReliation")
+        
+        // TODO: -
+        // TODO: - In fact parent is getting as dictionary
+        // TODO: - Discuss about getting objectId from Flutter or parsing here
         
         guard
             let relationColumnName: String = arguments[Args.relationColumnName].flatMap(cast),
@@ -258,16 +263,15 @@ class DataCallHandler: FlutterCallHandlerProtocol {
     private func findById(_ tableName: String, _ arguments: [String: Any], _ result: @escaping FlutterResult) {
         print("~~~> Hello in find by id")
         
-        guard
-            let id: String = arguments[Args.id].flatMap(cast),
-            let queryBuilder: DataQueryBuilder? = arguments[Args.queryBuilder].flatMap(cast),
-            let relations: [String]? = arguments[Args.relations].flatMap(cast),
-            let relationsDepth: Int? = arguments[Args.relationsDepth].flatMap(cast)
-        else {
+        guard let id: String = arguments[Args.id].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             
             return
         }
+        
+        let queryBuilder: DataQueryBuilder? = arguments[Args.queryBuilder].flatMap(cast)
+        let relations: [String]? = arguments[Args.relations].flatMap(cast)
+        let relationsDepth: Int? = arguments[Args.relationsDepth].flatMap(cast)
         
         if let queryBuilder = queryBuilder {
             relations.map { queryBuilder.setRelated(related: $0) }
@@ -313,14 +317,8 @@ class DataCallHandler: FlutterCallHandlerProtocol {
     private func findFirst(_ tableName: String, arguments: [String: Any], _ result: @escaping FlutterResult) {
         print("~~~> Hello in Find First")
         
-        guard
-            let relations: [String]? = arguments[Args.relations].flatMap(cast),
-            let relationsDepth: Int? = arguments[Args.relationsDepth].flatMap(cast)
-        else {
-            result(FlutterError.noRequiredArguments)
-            
-            return
-        }
+        let relations: [String]? = arguments[Args.relations].flatMap(cast)
+        let relationsDepth: Int? = arguments[Args.relationsDepth].flatMap(cast)
         
         if relations != nil || relationsDepth != nil {
             let queryBuilder = DataQueryBuilder()
@@ -350,14 +348,8 @@ class DataCallHandler: FlutterCallHandlerProtocol {
     private func findLast(_ tableName: String, arguments: [String: Any], _ result: @escaping FlutterResult) {
         print("~~~> Hello in Find Last")
         
-        guard
-            let relations: [String]? = arguments[Args.relations].flatMap(cast),
-            let relationsDepth: Int? = arguments[Args.relationsDepth].flatMap(cast)
-            else {
-                result(FlutterError.noRequiredArguments)
-                
-                return
-        }
+        let relations: [String]? = arguments[Args.relations].flatMap(cast)
+        let relationsDepth: Int? = arguments[Args.relationsDepth].flatMap(cast)
         
         if relations != nil || relationsDepth != nil {
             let queryBuilder = DataQueryBuilder()
@@ -412,6 +404,9 @@ class DataCallHandler: FlutterCallHandlerProtocol {
     // MARK: - Load Relations
     private func loadRelations(_ tableName: String, _ arguments: [String: Any], _ result: @escaping FlutterResult) {
         print("~~~> Hello in Load Relations")
+        
+        // TODO: -
+        // TODO: - How to parse LoadRelationsQueryBuilder
         
         guard
             let objectId: String = arguments[Args.objectId].flatMap(cast),
@@ -479,6 +474,10 @@ class DataCallHandler: FlutterCallHandlerProtocol {
     private func setRelation(_ tableName: String, _ arguments: [String: Any], _ result: @escaping FlutterResult) {
         print("~~~> Hello in Set Relation")
         
+        // TODO: -
+        // TODO: - In fact parent is getting as dictionary
+        // TODO: - Discuss about getting objectId from Flutter or parsing here
+        
         guard
             let relationColumnName: String = arguments[Args.relationColumnName].flatMap(cast),
             let parent: String = arguments[Args.parent].flatMap(cast)
@@ -498,14 +497,14 @@ class DataCallHandler: FlutterCallHandlerProtocol {
             result(FlutterError(fault))
         }
         
-        children.flatMap { [weak self] in
-            self?.data.ofTable(tableName)
-                .setRelation(columnName: relationColumnName, parentObjectId: parent, childrenObjectIds: $0, responseHandler: successHander, errorHandler: errorHandler)
+        if let children = children {
+            data.ofTable(tableName)
+                .setRelation(columnName: relationColumnName, parentObjectId: parent, childrenObjectIds: children, responseHandler: successHander, errorHandler: errorHandler)
         }
         
-        whereClause.flatMap { [weak self] in
-            self?.data.ofTable(tableName)
-                .setRelation(columnName: relationColumnName, parentObjectId: parent, whereClause: $0, responseHandler: successHander, errorHandler: errorHandler)
+        if let whereClause = whereClause {
+            data.ofTable(tableName)
+                .setRelation(columnName: relationColumnName, parentObjectId: parent, whereClause: whereClause, responseHandler: successHander, errorHandler: errorHandler)
         }
     }
     
@@ -514,14 +513,14 @@ class DataCallHandler: FlutterCallHandlerProtocol {
     private func update(_ tableName: String, _ arguments: [String: Any], _ result: @escaping FlutterResult) {
         print("~~~> Hello in Update")
         
-        guard let entity: [String: Any] = arguments[Args.entity].flatMap(cast) else {
+        guard let changes: [String: Any] = arguments[Args.changes].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             
             return
         }
         
         data.ofTable(tableName)
-            .update(entity: entity,
+            .update(entity: changes,
                 responseHandler: {
                     result($0)
                 },
@@ -542,6 +541,9 @@ class DataCallHandler: FlutterCallHandlerProtocol {
     // MARK: - Describe
     private func describe(_ tableName: String, _ result: @escaping FlutterResult) {
         print("~~~> Hello in Describe")
+        
+        // TODO: -
+        // TODO: - Change "classSimpleName" in Dart code to "tableName"
         
         data.describe(tableName: tableName,
             responseHandler: { (properties: [ObjectProperty]) in
@@ -566,14 +568,17 @@ class DataCallHandler: FlutterCallHandlerProtocol {
     private func addListener(_ tableName: String, _ arguments: [String: Any], _ result: @escaping FlutterResult) {
         print("~~~> Hello in Add Listener")
         
-        guard
-            let event: String = arguments[Args.event].flatMap(cast),
-            let whereClause: String? = arguments[Args.whereClause].flatMap(cast)
-        else {
+        // TODO: -
+        // TODO: - Get events from Backendless
+        // TODO: - Can't see events in Flutter
+        
+        guard let event: String = arguments[Args.event].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             
             return
         }
+        
+        let whereClause: String? = arguments[Args.whereClause].flatMap(cast)
         
         let currentHandle = nextHandle
         nextHandle += 1
@@ -660,6 +665,7 @@ class DataCallHandler: FlutterCallHandlerProtocol {
         
         let subscription: RTSubscription? = subscriptions[handle].flatMap(cast)
         subscription?.stop()
+        subscriptions.removeValue(forKey: handle)
         
         var args: [String: Any] = [:]
         args["handle"] = handle
