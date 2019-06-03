@@ -97,6 +97,16 @@ class ReconnectAttempt {
 
   ReconnectAttempt(this.timeout, this.attempt);
 
+  ReconnectAttempt.fromJson(Map json) :
+    timeout = json['timeout'],
+    attempt = json['attempt'];
+
+  Map toJson() =>
+    {
+      'timeout': timeout,
+      'attempt': attempt,
+    };
+
   @override
   String toString() => "ReconnectAttempt{timeout=$timeout, attempt=$attempt}";
 }

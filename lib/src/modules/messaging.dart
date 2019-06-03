@@ -96,10 +96,6 @@ class BackendlessMessaging {
       _channel.invokeMethod("Backendless.Messaging.pushWithTemplate",
           <String, dynamic>{"templateName": templateName});
 
-  Future<bool> refreshDeviceToken(String newDeviceToken) =>
-      _channel.invokeMethod("Backendless.Messaging.refreshDeviceToken",
-          <String, dynamic>{"newDeviceToken": newDeviceToken});
-
   Future<DeviceRegistrationResult> registerDevice(
           [List<String> channels, DateTime expiration]) =>
       _channel.invokeMethod("Backendless.Messaging.registerDevice",
@@ -303,7 +299,19 @@ class MessageStatus implements Comparable<MessageStatus> {
   String errorMessage;
   PublishStatusEnum status;
 
-  MessageStatus(this.messageId, this.errorMessage, this.status);
+  MessageStatus();
+
+  MessageStatus.fromJson(Map json) : 
+    messageId = json['messageId'],
+    errorMessage = json['errorMessage'],
+    status = json['status'];
+
+  Map toJson() =>
+    {
+      'messageId': messageId,
+      'errorMessage': errorMessage,
+      'status': status,
+    };
 
   @override
   bool operator ==(other) =>
@@ -348,8 +356,27 @@ class DeviceRegistration {
   DateTime expiration;
   List<String> channels = new List<String>();
 
-  DeviceRegistration(this.id, this.deviceToken, this.deviceId, this.os,
-      this.osVersion, this.expiration, this.channels);
+  DeviceRegistration();
+
+  DeviceRegistration.fromJson(Map json) : 
+    id = json['id'],
+    deviceToken = json['deviceToken'],
+    deviceId = json['deviceId'],
+    os = json['os'],
+    osVersion = json['osVersion'],
+    expiration = json['expiration'],
+    channels = json['channels'];
+
+  Map toJson() =>
+    {
+      'id': id,
+      'deviceToken': deviceToken,
+      'deviceId': deviceId,
+      'os': os,
+      'osVersion': osVersion,
+      'expiration': expiration,
+      'channels': channels,
+    };
 }
 
 /// Message class does not support passing custom classes to 'data' for now
@@ -360,8 +387,23 @@ class Message {
   String publisherId;
   int timestamp;
 
-  Message(this.messageId, this.headers, this.data, this.publisherId,
-      this.timestamp);
+  Message();
+
+  Message.fromJson(Map json) : 
+    messageId = json['messageId'],
+    headers = json['headers'],
+    data = json['data'],
+    publisherId = json['publisherId'],
+    timestamp = json['timestamp'];
+
+  Map toJson() =>
+    {
+      'messageId': messageId,
+      'headers': headers,
+      'data': data,
+      'publisherId': publisherId,
+      'timestamp': timestamp,
+    };
 
   @override
   bool operator ==(other) =>
@@ -386,7 +428,6 @@ class Message {
 class PublishOptions {
   String publisherId;
   Map<String, String> headers = new Map();
-  String subtopic;
   static const String TEMPLATE_NAME = "template_name";
   static const String ANDROID_IMMEDIATE_PUSH = "android_immediate_push";
   static const String IOS_IMMEDIATE_PUSH = "ios_immediate_push";
@@ -418,14 +459,23 @@ class PublishOptions {
   static const String WP_CONTENT_TAG = "wp-content";
   static const String WP_BADGE_TAG = "wp-badge";
 
-  PublishOptions([this.publisherId, this.subtopic, this.headers]);
+  PublishOptions();
+
+  PublishOptions.fromJson(Map json) : 
+    publisherId = json['publisherId'],
+    headers = json['headers'];
+
+  Map toJson() =>
+    {
+      'publisherId': publisherId,
+      'headers': headers,
+    };
 
   PublishOptions.from(PublishMessageInfo info) {
     this.publisherId = info.publisherId;
     if (info.headers != null) {
       this.headers.addAll(info.headers);
     }
-    this.subtopic = info.subtopic;
   }
 }
 
@@ -433,23 +483,32 @@ class DeliveryOptions {
   int pushBroadcast;
   List<String> pushSinglecast = new List();
   String segmentQuery;
-  PublishPolicyEnum publishPolicy;
+  PublishPolicyEnum publishPolicy = PublishPolicyEnum.BOTH;
   DateTime publishAt;
   int repeatEvery;
   DateTime repeatExpiresAt;
 
-  DeliveryOptions() {
-    publishPolicy = PublishPolicyEnum.BOTH;
-  }
+  DeliveryOptions();
 
-  DeliveryOptions.of(
-      this.pushBroadcast,
-      this.pushSinglecast,
-      this.segmentQuery,
-      this.publishPolicy,
-      this.publishAt,
-      this.repeatEvery,
-      this.repeatExpiresAt);
+  DeliveryOptions.fromJson(Map json) : 
+    pushBroadcast = json['pushBroadcast'],
+    pushSinglecast = json['pushSinglecast'],
+    segmentQuery = json['segmentQuery'],
+    publishPolicy = json['publishPolicy'],
+    publishAt = json['publishAt'],
+    repeatEvery = json['repeatEvery'],
+    repeatExpiresAt = json['repeatExpiresAt'];
+
+  Map toJson() =>
+    {
+      'pushBroadcast': pushBroadcast,
+      'pushSinglecast': pushSinglecast,
+      'segmentQuery': segmentQuery,
+      'publishPolicy': publishPolicy,
+      'publishAt': publishAt,
+      'repeatEvery': repeatEvery,
+      'repeatExpiresAt': repeatExpiresAt,
+    };
 
   DeliveryOptions.from(PublishMessageInfo info) {
     this.publishPolicy = PublishPolicyEnum.BOTH;
@@ -496,20 +555,38 @@ class PublishMessageInfo {
 
   PublishMessageInfo();
 
-  PublishMessageInfo.of(
-      this._messageId,
-      this._timestamp,
-      this.message,
-      this.publisherId,
-      this.subtopic,
-      this.pushSinglecast,
-      this.pushBroadcast,
-      this.publishPolicy,
-      this.query,
-      this.publishAt,
-      this.repeatEvery,
-      this.repeatExpiresAt,
-      this.headers);
+  PublishMessageInfo.fromJson(Map json) {
+    _messageId = json['messageId'];
+    _timestamp = json['timestamp'];
+    message = json['message'];
+    publisherId = json['publisherId'];
+    subtopic = json['subtopic'];
+    pushSinglecast = json['pushSinglecast'];
+    pushBroadcast = json['pushBroadcast'];
+    publishPolicy = json['publishPolicy'];
+    query = json['query'];
+    publishAt = json['publishAt'];
+    repeatEvery = json['repeatEvery'];
+    repeatExpiresAt = json['repeatExpiresAt'];
+    headers = json['headers'];
+  }
+
+  Map toJson() =>
+    {
+      'messageId': _messageId,
+      'timestamp': _timestamp,
+      'message': message,
+      'publisherId': publisherId,
+      'subtopic': subtopic,
+      'pushSinglecast': pushSinglecast,
+      'pushBroadcast': pushBroadcast,
+      'publishPolicy': publishPolicy,
+      'query': query,
+      'publishAt': publishAt,
+      'repeatEvery': repeatEvery,
+      'repeatExpiresAt': repeatExpiresAt,
+      'headers': headers,
+    };
 
   get messageId => _messageId;
   get timestamp => _timestamp;
@@ -552,7 +629,18 @@ class DeviceRegistrationResult {
   String _deviceToken;
   Map<String, String> _channelRegistrations;
 
-  DeviceRegistrationResult(this._deviceToken, this._channelRegistrations);
+  DeviceRegistrationResult();
+
+  DeviceRegistrationResult.fromJson(Map json) {
+    _deviceToken = json['deviceToken'];
+    _channelRegistrations = json['channelRegistrations'];
+  }
+
+  Map toJson() =>
+    {
+      'deviceToken': _deviceToken,
+      'channelRegistrations': _channelRegistrations,
+    };
 
   get deviceToken => _deviceToken;
   get channelRegistrations => _channelRegistrations;
@@ -563,7 +651,7 @@ class DeviceRegistrationResult {
 }
 
 class Command<T> {
-  final Type dataType;
+  Type dataType;
   String type;
   T data;
   UserInfo userInfo;
@@ -574,6 +662,18 @@ class Command<T> {
 
   Command.map() : this._(Map);
 
+  Command.fromJson(Map json) : 
+    type = json['type'],
+    data = json['data'],
+    userInfo = json['userInfo'];
+
+  Map toJson() =>
+    {
+      'type': type,
+      'data': data,
+      'userInfo': userInfo,
+    };
+
   @override
   String toString() =>
       "RTCommand{dataType=$dataType, type='$type', data=$data, userInfo=$userInfo}";
@@ -583,7 +683,17 @@ class UserInfo {
   String connectionId;
   String userId;
 
-  UserInfo(this.connectionId, this.userId);
+  UserInfo();
+
+  UserInfo.fromJson(Map json) : 
+    connectionId = json['connectionId'],
+    userId = json['userId'];
+
+  Map toJson() =>
+    {
+      'connectionId': connectionId,
+      'userId': userId,
+    };
 
   @override
   String toString() =>
@@ -594,7 +704,18 @@ class UserStatusResponse {
   UserStatus status;
   List<UserInfo> data;
 
-  UserStatusResponse(this.status, this.data);
+  UserStatusResponse();
+
+  UserStatusResponse.fromJson(Map json) {
+    status = json['status'];
+    data = json['data'];
+  }
+
+  Map toJson() =>
+    {
+      'status': status,
+      'data': data,
+    };
 
   @override
   String toString() => "UserStatusResponse{status=$status, data=$data}";

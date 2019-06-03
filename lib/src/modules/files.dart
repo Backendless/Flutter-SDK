@@ -128,7 +128,23 @@ class FileInfo {
   String url;
   int size;
 
-  FileInfo({this.name, this.createdOn, this.publicUrl, this.url, this.size});
+  FileInfo();
+
+  FileInfo.fromJson(Map json) : 
+    name = json['name'],
+    createdOn = json['createdOn'],
+    publicUrl = json['publicUrl'],
+    url = json['url'],
+    size = json['size'];
+
+  Map toJson() =>
+    {
+      'name': name,
+      'createdOn': createdOn,
+      'publicUrl': publicUrl,
+      'url': url,
+      'size': size,
+    };
 }
 
 class UploadCallback {

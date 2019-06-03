@@ -62,10 +62,6 @@ class BackendlessUserService {
       "Backendless.UserService.restorePassword",
       <String, dynamic>{"identity": identity});
 
-  Future<void> setCurrentUser(BackendlessUser user) => _channel.invokeMethod(
-      "Backendless.UserService.setCurrentUser",
-      <String, dynamic>{"user": user});
-
   Future<void> unassignRole(String identity, String roleName) =>
       _channel.invokeMethod(
           "Backendless.UserService.unassignRole", <String, dynamic>{
@@ -84,6 +80,11 @@ class BackendlessUser {
   static const String ID_KEY = "objectId";
 
   BackendlessUser();
+
+  BackendlessUser.fromJson(Map json) : 
+    _properties = json;
+
+  Map toJson() => _properties;
 
   get properties => Map.from(_properties);
 
@@ -130,6 +131,20 @@ class BackendlessUser {
 class UserProperty extends AbstractProperty {
   bool identity;
 
-  UserProperty(String name, bool required, DateTypeEnum type, this.identity)
-      : super(name: name, required: required, type: type);
+  UserProperty();
+
+  UserProperty.fromJson(Map json) {
+    name = json['name'];
+    required = json['required'];
+    type = json['type'];
+    identity = json['identity'];
+  }
+
+  Map toJson() =>
+    {
+      'name': name,
+      'required': required,
+      'type': type,
+      'identity': identity,
+    };
 }

@@ -313,15 +313,24 @@ class GeoPoint extends BaseGeoPoint {
 
   GeoPoint();
 
-  GeoPoint.of(String objectId, double latitude, double longitude,
-      List<String> categories, Map<String, Object> metadata, double distance) {
-    this.objectId = objectId;
-    this.latitude = latitude;
-    this.longitude = longitude;
-    this.categories = categories;
-    this.metadata = metadata;
-    this.distance = distance;
+  GeoPoint.fromJson(Map json) {
+    objectId = json['objectId'];
+    latitude = json['latitude'];
+    longitude = json['longitude'];
+    categories = json['categories'].cast<String>();
+    metadata = json['metadata'].cast<String, Object>();
+    distance = json['distance'];
   }
+
+  Map toJson() =>
+    {
+      'objectId': objectId,
+      'latitude': latitude,
+      'longitude': longitude,
+      'categories': categories,
+      'metadata': metadata,
+      'distance': distance,
+    };    
 
   GeoPoint.fromLatLng(double latitude, double longitude,
       [List<String> categories, Map<String, Object> metadata]) {
@@ -392,7 +401,21 @@ class BaseGeoCategory {
 }
 
 class GeoCategory extends BaseGeoCategory implements Comparable<GeoCategory> {
-  GeoCategory({id, name, size}) : super(objectId: id, name: name, size: size);
+
+  GeoCategory();
+
+  GeoCategory.fromJson(Map json) {
+    objectId = json['objectId'];
+    name = json['name'];
+    size = json['size'];
+  }
+
+  Map toJson() =>
+    {
+      'objectId': objectId,
+      'name': name,
+      'size': size,
+    };
 
   String get id => objectId;
 
@@ -422,24 +445,30 @@ class GeoCluster extends GeoPoint {
   int totalPoints;
   BackendlessGeoQuery geoQuery;
 
-  GeoCluster.of(
-      String objectId,
-      double latitude,
-      double longitude,
-      List<String> categories,
-      Map<String, Object> metadata,
-      double distance,
-      int totalPoints,
-      BackendlessGeoQuery geoQuery) {
-    this.objectId = objectId;
-    this.latitude = latitude;
-    this.longitude = longitude;
-    this.categories = categories;
-    this.metadata = metadata;
-    this.distance = distance;
-    this.totalPoints = totalPoints;
-    this.geoQuery = geoQuery;
+  GeoCluster();
+
+  GeoCluster.fromJson(Map json) {
+    objectId = json['objectId'];
+    latitude = json['latitude'];
+    longitude = json['longitude'];
+    categories = json['categories'];
+    metadata = json['metadata'];
+    distance = json['distance'];
+    totalPoints = json['totalPoints'];
+    geoQuery = json['geoQuery'];
   }
+
+  Map toJson() =>
+    {
+      'objectId': objectId,
+      'latitude': latitude,
+      'longitude': longitude,
+      'categories': categories,
+      'metadata': metadata,
+      'distance': distance,
+      'totalPoints': totalPoints,
+      'geoQuery': geoQuery,
+    };
 
   @override
   bool operator ==(other) =>
@@ -466,5 +495,15 @@ class SearchMatchesResult {
   double matches;
   GeoPoint geoPoint;
 
-  SearchMatchesResult(this.matches, this.geoPoint);
+  SearchMatchesResult();
+
+  SearchMatchesResult.fromJson(Map json) : 
+    matches = json['matches'],
+    geoPoint = json['geoPoint'];
+
+  Map toJson() =>
+    {
+      'matches': matches,
+      'geoPoint': geoPoint,
+    };
 }
