@@ -83,9 +83,9 @@ class BackendlessRT {
     });
   }
 
-  void removeConnectionListeners() {
+  Future<void> removeConnectionListeners() {
     _connectCallbacks.clear();
-    _channel.invokeMethod("Backendless.RT.removeConnectionListeners");
+    return _channel.invokeMethod("Backendless.RT.removeConnectionListeners");
   }
 }
 
