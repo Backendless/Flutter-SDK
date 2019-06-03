@@ -230,12 +230,12 @@ class BaseGeoPoint extends EntityDescription {
   String objectId;
   double latitude;
   double longitude;
-  Set<String> _categories;
+  List<String> _categories;
   Map<String, Object> metadata;
   double distance;
 
   BaseGeoPoint() {
-    _categories = new Set();
+    _categories = new List();
     metadata = new Map();
   }
 
@@ -244,7 +244,7 @@ class BaseGeoPoint extends EntityDescription {
     List<String> data = line.split(",");
     geoPoint.latitude = double.parse(data[0]);
     geoPoint.longitude = double.parse(data[1]);
-    geoPoint._categories = new Set.from(data[2].split("\\|"));
+    geoPoint._categories = new List.from(data[2].split("\\|"));
     Map<String, Object> metadata = new Map();
     List<String> var4 = data[3].split("\\|");
     int var5 = var4.length;
@@ -259,16 +259,16 @@ class BaseGeoPoint extends EntityDescription {
     return geoPoint;
   }
 
-  Set<String> get categories => (_categories != null && _categories.isNotEmpty)
+  List<String> get categories => (_categories != null && _categories.isNotEmpty)
       ? _categories
-      : new Set.from(["Default"]);
+      : new List.from(["Default"]);
 
   set categories(Iterable<String> categories) =>
-      _categories = (categories != null ? Set.from(categories) : new Set());
+      _categories = (categories != null ? List.from(categories) : new List());
 
   void addCategory(String category) {
     if (_categories == null) {
-      _categories = new Set();
+      _categories = new List();
     }
     _categories.add(category);
   }
@@ -336,7 +336,7 @@ class GeoPoint extends BaseGeoPoint {
       [List<String> categories, Map<String, Object> metadata]) {
     this.latitude = latitude;
     this.longitude = longitude;
-    if (categories != null) _categories = new Set.from(categories);
+    if (categories != null) _categories = new List.from(categories);
     this.metadata = metadata;
   }
 
@@ -344,7 +344,7 @@ class GeoPoint extends BaseGeoPoint {
       [List<String> categories, Map<String, Object> metadata]) {
     this.latitude = latitudeE6 / multiplier;
     this.longitude = longitudeE6 / multiplier;
-    if (categories != null) _categories = new Set.from(categories);
+    if (categories != null) _categories = new List.from(categories);
     this.metadata = metadata;
   }
 
@@ -357,7 +357,7 @@ class GeoPoint extends BaseGeoPoint {
   set longitudeE6(int longitudeE6) => this.longitude = longitudeE6 / multiplier;
 
   void addCategory(String category) {
-    if (_categories == null) _categories = new Set<String>();
+    if (_categories == null) _categories = new List<String>();
 
     _categories.add(category);
   }
@@ -383,7 +383,7 @@ class GeoPoint extends BaseGeoPoint {
   }
 
   void setCategories(List<String> categories) {
-    _categories = new Set<String>.from(categories);
+    _categories = new List<String>.from(categories);
   }
 
   @override
@@ -480,7 +480,7 @@ class GeoCluster extends GeoPoint {
           latitude == other.latitude &&
           longitude == other.longitude &&
           MapEquality().equals(metadata, other.metadata) &&
-          SetEquality().equals(_categories, other._categories);
+          ListEquality().equals(_categories, other._categories);
 
   @override
   int get hashCode => hashValues(
