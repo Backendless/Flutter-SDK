@@ -76,8 +76,6 @@ class CountersCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - AddAndGet
     private func addAndGet(_ counterName: String, _ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in AddAndGet")
-        
         guard let value: Int = arguments[Args.value].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             
@@ -96,8 +94,6 @@ class CountersCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - CompareAndSet
     private func compareAndSet(_ counterName: String, _ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in CompareAndSet")
-        
         guard
             let expected: Int = arguments[Args.expected].flatMap(cast),
             let updated: Int = arguments[Args.updated].flatMap(cast)
@@ -119,8 +115,6 @@ class CountersCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - DecrementAndGet
     func decrementAndGet(_ counterName: String, _ result: @escaping FlutterResult) {
-        print("~~~> Hello in DecrementAndGet")
-        
         counters.decrementAndGet(counterName: counterName,
             responseHandler: {
                 result($0)
@@ -133,8 +127,6 @@ class CountersCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Get
     private func get(_ counterName: String, _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Get")
-        
         counters.get(counterName: counterName,
             responseHandler: {
                 result($0)
@@ -147,8 +139,6 @@ class CountersCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - GetAndAdd
     private func getAndAdd(_ counterName: String, _ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in GetAndAdd")
-        
         guard let value: Int = arguments[Args.value].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             
@@ -167,8 +157,6 @@ class CountersCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - GetAndDecrement
     private func getAndDecrement(_ counterName: String, _ result: @escaping FlutterResult) {
-        print("~~~> Hello in GetAndDecrement")
-        
         counters.getAndDecrement(counterName: counterName,
             responseHandler: {
                 result($0)
@@ -181,8 +169,6 @@ class CountersCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - GetAndIncrement
     private func getAndIncrement(_ counterName: String, _ result: @escaping FlutterResult) {
-        print("~~~> Hello in GetAndIncrement")
-        
         counters.getAndIncrement(counterName: counterName,
             responseHandler: {
                 result($0)
@@ -195,8 +181,6 @@ class CountersCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - IncrementAndGet
     private func incrementAndGet(_ counterName: String, _ result: @escaping FlutterResult) {
-        print("~~~> Hello in IncrementAndGet")
-        
         counters.incrementAndGet(counterName: counterName,
             responseHandler: {
                 result($0)
@@ -209,8 +193,6 @@ class CountersCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Reset
     private func reset(_ counterName: String, _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Reset")
-        
         counters.reset(counterName: counterName,
             responseHandler: {
                 result(nil)

@@ -74,7 +74,7 @@ class DataCallHandler: FlutterCallHandlerProtocol {
     
     // MARK: -
     // MARK: - Handlers
-    private var subscriptions: [Int: RTSubscription?] = [:]
+    private var subscriptions: [Int: RTSubscription] = [:]
     
     // MARK: -
     // MARK: - Init
@@ -651,7 +651,9 @@ class DataCallHandler: FlutterCallHandlerProtocol {
             }
         }
         
-        subscriptions[currentHandle] = subscription
+        subscription.map { [weak self] in
+            self?.subscriptions[currentHandle] = $0
+        }
     }
     
     // MARK: -
@@ -663,13 +665,12 @@ class DataCallHandler: FlutterCallHandlerProtocol {
             return
         }
         
-        let subscription: RTSubscription? = subscriptions[handle].flatMap(cast)
+        let subscription = subscriptions[handle]
         subscription?.stop()
         subscriptions.removeValue(forKey: handle)
         
         var args: [String: Any] = [:]
         args["handle"] = handle
         methodChannel.invokeMethod("Backendless.Data.RT.EventResponse", arguments: args)
-
     }
 }

@@ -43,8 +43,6 @@ class EventsCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Dispatch
     private func dispatch(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Dispatch")
-        
         guard
             let eventName: String = arguments[Args.eventName].flatMap(cast),
             let parameters: [String: Any] = arguments[Args.eventArgs].flatMap(cast)

@@ -62,8 +62,6 @@ class CacheCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Contains
     private func contains(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello, contains")
-        
         guard let key: String = arguments[Args.key].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             
@@ -82,8 +80,6 @@ class CacheCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Delete
     private func delete(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello, delete")
-        
         guard let key: String = arguments[Args.key].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             
@@ -103,8 +99,6 @@ class CacheCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - ExpireAt
     private func expireAt(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello, expireAt")
-        
         guard let key: String = arguments[Args.key].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             
@@ -122,9 +116,7 @@ class CacheCallHandler: FlutterCallHandlerProtocol {
                 errorHandler: {
                     result(FlutterError($0))
                 })
-        }
-        
-        if let timestamp = timestamp {
+        } else if let timestamp = timestamp {
             let date = Date(timeIntervalSince1970: timestamp)
             cache.expireAt(key: key, date: date,
                 responseHandler: {
@@ -139,8 +131,6 @@ class CacheCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - ExpireIn
     private func expireIn(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello, expireIn")
-        
         guard
             let key: String = arguments[Args.key].flatMap(cast),
             let seconds: Int = arguments[Args.seconds].flatMap(cast)
@@ -162,8 +152,6 @@ class CacheCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Get
     private func get(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello, get")
-        
         guard let key: String = arguments[Args.key].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             
@@ -182,8 +170,6 @@ class CacheCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Put
     private func put(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello, put")
-        
         guard
             let key: String = arguments[Args.key].flatMap(cast),
             let object = arguments[Args.object]
@@ -195,12 +181,8 @@ class CacheCallHandler: FlutterCallHandlerProtocol {
         
         let timeToLive: Int? = arguments[Args.timeToLive].flatMap(cast)
         
-        let successHandler = {
-            result(nil)
-        }
-        let errorHandler = { (fault: Fault) in
-            result(FlutterError(fault))
-        }
+        let successHandler = { result(nil) }
+        let errorHandler = { (fault: Fault) in result(FlutterError(fault)) }
         
         timeToLive != nil
             ? cache.put(key: key, object: object, timeToLiveSec: timeToLive!, responseHandler: successHandler, errorHandler: errorHandler)

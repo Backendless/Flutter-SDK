@@ -76,8 +76,6 @@ class BackendlessCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - InitApp
     private func initApp(_ arguments: [String: Any], _ result: FlutterResult) {
-        print("~~~> Hello, init app")
-        
         guard
             let applicationId: String = arguments[Args.applicationId].flatMap(cast),
             let apiKey: String = arguments[Args.apiKey].flatMap(cast)
@@ -94,8 +92,6 @@ class BackendlessCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Get ApiKey
     private func getApiKey(_ arguments: [String: Any], _ result: FlutterResult) {
-        print("~~~> Hello, Get API Key")
-        
         let apiKey = backendless.getApiKey()
         result(apiKey)
     }
@@ -103,8 +99,6 @@ class BackendlessCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Get Application Id
     private func getApplicationId(_ arguments: [String: Any], _ result: FlutterResult) {
-        print("~~~> Hello, Get Application Id")
-        
         let id = backendless.getApplictionId()
         result(id)
     }
@@ -112,7 +106,6 @@ class BackendlessCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Get Notification Id Generator Init Value
     private func getNotificationIdGeneratorInitValue(_ arguments: [String: Any], _ result: FlutterResult) {
-        print("~~~> Hello, Get Notification Id Generator Init Value")
         
         // TODO: -
         // TODO: - No such method in iOS SDK
@@ -123,7 +116,6 @@ class BackendlessCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Get Push Templates As Json
     private func getPushTemplatesAsJson(_ arguments: [String: Any], _ result: FlutterResult) {
-        print("~~~> Hello, Get Push Templates As Json")
         
         // TODO: -
         // TODO: - No such method in iOS SDK
@@ -134,8 +126,6 @@ class BackendlessCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Get URL
     private func getUrl(_ arguments: [String: Any], _ result: FlutterResult) {
-        print("~~~> Hello, Get URL")
-        
         let url = backendless.hostUrl
         result(url)
     }
@@ -143,8 +133,6 @@ class BackendlessCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Is Initialized
     private func isInitialized(_ arguments: [String: Any], _ result: FlutterResult) {
-        print("~~~> Hello, Is Initialized")
-        
         let appId = backendless.getApplictionId()
         let apiKey = backendless.getApiKey()
         let isInitialized = appId != "AppId" && apiKey != "APIKey"
@@ -155,7 +143,6 @@ class BackendlessCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Save Notification Id Generator State
     private func saveNotificationIdGeneratorState(_ arguments: [String: Any], _ result: FlutterResult) {
-        print("~~~> Hello, saveNotificationIdGeneratorState")
         
         // TODO: -
         // TODO: - No such method in iOS SDK
@@ -166,7 +153,6 @@ class BackendlessCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Save Push Templates
     private func savePushTemplates(_ arguments: [String: Any], _ result: FlutterResult) {
-        print("~~~> Hello, Save Push Templates")
         
         // TODO: -
         // TODO: - No such method in iOS SDK
@@ -177,7 +163,6 @@ class BackendlessCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Set UI State
     private func setUIState(_ arguments: [String: Any], _ result: FlutterResult) {
-        print("~~~> Hello, Set UI State")
         
         // TODO: -
         // TODO: - No such method in iOS SDK
@@ -188,8 +173,6 @@ class BackendlessCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Set URL
     private func setUrl(_ arguments: [String: Any], _ result: FlutterResult) {
-        print("~~~> Hello, Set URL")
-        
         guard let url: String = arguments[Args.url].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             

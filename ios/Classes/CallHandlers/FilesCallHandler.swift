@@ -84,8 +84,6 @@ class FilesCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - CopyFile
     private func copyFile(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in CopyFile")
-        
         guard
             let sourcePath: String = arguments[Args.sourcePathName].flatMap(cast),
             let targetPath: String = arguments[Args.targetPath].flatMap(cast)
@@ -107,8 +105,6 @@ class FilesCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Exists
     private func exists(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Exists")
-        
         guard let path: String = arguments[Args.path].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             
@@ -127,8 +123,6 @@ class FilesCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - GetFileCount
     private func getFileCount(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Get File Count")
-        
         guard let path: String = arguments[Args.path].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             
@@ -181,8 +175,6 @@ class FilesCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Listing
     private func listing(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Listing")
-        
         guard let path: String = arguments[Args.path].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             
@@ -226,8 +218,6 @@ class FilesCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - MoveFile
     private func moveFile(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Move File")
-        
         guard
             let sourcePathName: String = arguments[Args.sourcePathName].flatMap(cast),
             let targetPath: String = arguments[Args.targetPath].flatMap(cast)
@@ -249,8 +239,6 @@ class FilesCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Remove
     private func remove(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Remove")
-        
         guard let fileUrl: String = arguments[Args.fileUrl].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             
@@ -269,17 +257,14 @@ class FilesCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - RemoveDirectory
     private func removeDirectory(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Remove Directory")
-        
-        guard
-            let directoryPath: String = arguments[Args.directoryPath].flatMap(cast),
-            let pattern: String? = arguments[Args.pattern].flatMap(cast),
-            let recursive: Bool? = arguments[Args.recursive].flatMap(cast)
-        else {
+        guard let directoryPath: String = arguments[Args.directoryPath].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             
             return
         }
+        
+        let pattern: String? = arguments[Args.pattern].flatMap(cast)
+        let recursive: Bool? = arguments[Args.recursive].flatMap(cast)
         
         if let pattern = pattern, let recursive = recursive {
             fileService.remove(path: directoryPath, pattern: pattern, recursive: recursive,
@@ -303,8 +288,6 @@ class FilesCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - RenameFile
     private func renameFile(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in RenameFile")
-        
         guard
             let path: String = arguments[Args.oldPathName].flatMap(cast),
             let newName: String = arguments[Args.newName].flatMap(cast)
@@ -326,18 +309,21 @@ class FilesCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - SaveFile
     private func saveFile(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Save File")
+        
+        // TODO: -
+        // TODO: - Create file in Flutter and test this method
         
         guard
             let path: String = arguments[Args.path].flatMap(cast),
             let fileName: String = arguments[Args.fileName].flatMap(cast),
-            let fileContent: Data = arguments[Args.fileContent].flatMap(cast),
-            let overWrite: Bool? = arguments[Args.overwrite].flatMap(cast)
+            let fileContent: Data = arguments[Args.fileContent].flatMap(cast)
         else {
             result(FlutterError.noRequiredArguments)
             
             return
         }
+        
+        let overWrite: Bool? = arguments[Args.overwrite].flatMap(cast)
         
         let base64Content = fileContent.base64EncodedString()
         
@@ -367,7 +353,6 @@ class FilesCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Upload
     private func upload(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Upload")
         
         // TODO: - Check parameters type
         fatalError("Check parameters type")

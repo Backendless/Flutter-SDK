@@ -86,8 +86,6 @@ class GeoCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - AddCategory
     private func addCategory(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Add Category")
-        
         guard let categoryName: String = arguments[Args.categoryName].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             
@@ -106,8 +104,6 @@ class GeoCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - DeleteCategory
     private func deleteCategory(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Delete Category")
-        
         guard let categoryName: String = arguments[Args.categoryName].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             
@@ -126,8 +122,6 @@ class GeoCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - GetCategories
     private func getCategories(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Get Categories")
-        
         geo.getCategories(responseHandler: {
             result($0)
         }, errorHandler: {
@@ -138,16 +132,8 @@ class GeoCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - GetGeopointCount
     private func getGeopointCount(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Get Geopoint Count")
-        
-        guard
-            let geoQuery: BackendlessGeoQuery? = arguments[Args.query].flatMap(cast),
-            let geofenceName: String? = arguments[Args.geoFenceName].flatMap(cast)
-        else {
-            result(FlutterError.noRequiredArguments)
-            
-            return
-        }
+        let geoQuery: BackendlessGeoQuery? = arguments[Args.query].flatMap(cast)
+        let geofenceName: String? = arguments[Args.geoFenceName].flatMap(cast)
         
         if let geoQuery = geoQuery {
             geo.getPointsCount(geoQuery: geoQuery,
@@ -166,25 +152,16 @@ class GeoCallHandler: FlutterCallHandlerProtocol {
         }
         
         // TODO: -
-        // TODO: - GeofenceName
-        fatalError("How to use geofenceName: \(geofenceName)")
+        // TODO: - How to use GeofenceName?
+        
     }
     
     // MARK: -
     // MARK: - GetPoints
     private func getPoints(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Get Points")
-        
-        
-        guard
-            let geoQuery: BackendlessGeoQuery? = arguments[Args.query].flatMap(cast),
-            let geofenceName: String? = arguments[Args.geoFenceName].flatMap(cast),
-            let geoCluster: GeoCluster? = arguments[Args.geoCluster].flatMap(cast)
-        else {
-            result(FlutterError.noRequiredArguments)
-            
-            return
-        }
+        let geoQuery: BackendlessGeoQuery? = arguments[Args.query].flatMap(cast)
+        let geofenceName: String? = arguments[Args.geoFenceName].flatMap(cast)
+        let geoCluster: GeoCluster? = arguments[Args.geoCluster].flatMap(cast)
         
         if let query = geoQuery {
             geo.getPoints(geoQuery: query,
@@ -203,15 +180,13 @@ class GeoCallHandler: FlutterCallHandlerProtocol {
         }
         
         // TODO: -
-        // TODO: - GeofenceName & GeoCluster
-        fatalError("How to use geofenceName: \(geofenceName) and geoCluster: \(geoCluster)")
+        // TODO: - How to use GeofenceName & GeoCluster?
+        
     }
     
     // MARK: -
     // MARK: - Load Metadata
     private func loadMetadata(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Load Metadata")
-        
         guard let geoPoint: GeoPoint = arguments[Args.geoPoint].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             
@@ -230,8 +205,6 @@ class GeoCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - RelativeFind
     private func relativeFind(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Relative Find")
-        
         guard let geoQuery: BackendlessGeoQuery = arguments[Args.query].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             
@@ -250,8 +223,6 @@ class GeoCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - RemovePoint
     private func removePoint(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Remove Point")
-        
         guard let geoPoint: GeoPoint = arguments[Args.geoPoint].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             
@@ -270,16 +241,13 @@ class GeoCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - RunOnEnterAction
     private func runOnEnterAction(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Run On Enter Action")
-        
-        guard
-            let geoFenceName: String = arguments[Args.geoFenceName].flatMap(cast),
-            let geoPoint: GeoPoint? = arguments[Args.geoPoint].flatMap(cast)
-        else {
+        guard let geoFenceName: String = arguments[Args.geoFenceName].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             
             return
         }
+        
+        let geoPoint: GeoPoint? = arguments[Args.geoPoint].flatMap(cast)
         
         if let geoPoint = geoPoint {
             geo.runOnEnterAction(geoFenceName: geoFenceName, geoPoint: geoPoint,
@@ -303,16 +271,13 @@ class GeoCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - RunOnExitAction
     private func runOnExitAction(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Run On Exit Action")
-        
-        guard
-            let geoFenceName: String = arguments[Args.geoFenceName].flatMap(cast),
-            let geoPoint: GeoPoint? = arguments[Args.geoPoint].flatMap(cast)
-        else {
+        guard let geoFenceName: String = arguments[Args.geoFenceName].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             
             return
         }
+        
+        let geoPoint: GeoPoint? = arguments[Args.geoPoint].flatMap(cast)
         
         if let geoPoint = geoPoint {
             geo.runOnExitAction(geoFenceName: geoFenceName, geoPoint: geoPoint,
@@ -336,16 +301,13 @@ class GeoCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - RunOnStayAction
     private func runOnStayAction(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Run On Stay Action")
-        
-        guard
-            let geoFenceName: String = arguments[Args.geoFenceName].flatMap(cast),
-            let geoPoint: GeoPoint? = arguments[Args.geoPoint].flatMap(cast)
-        else {
+        guard let geoFenceName: String = arguments[Args.geoFenceName].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             
             return
         }
+        
+        let geoPoint: GeoPoint? = arguments[Args.geoPoint].flatMap(cast)
         
         if let geoPoint = geoPoint {
             geo.runOnStayAction(geoFenceName: geoFenceName, geoPoint: geoPoint,
@@ -369,13 +331,7 @@ class GeoCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - SavePoint
     private func savePoint(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Save Point")
-        
-        guard let geoPoint: GeoPoint? = arguments[Args.geoPoint].flatMap(cast) else {
-            result(FlutterError.noRequiredArguments)
-            
-            return
-        }
+        let geoPoint: GeoPoint? = arguments[Args.geoPoint].flatMap(cast)
         
         if let geoPoint = geoPoint {
             geo.saveGeoPoint(geoPoint: geoPoint,

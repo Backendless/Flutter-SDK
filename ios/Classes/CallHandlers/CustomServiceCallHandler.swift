@@ -43,8 +43,6 @@ class CustomServiceCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Invoke
     private func invoke(arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Invoke")
-        
         guard
             let serviceName: String = arguments[Args.serviceName].flatMap(cast),
             let method: String = arguments[Args.method].flatMap(cast),
