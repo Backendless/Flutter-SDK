@@ -3,6 +3,7 @@ package com.backendless.backendless_sdk.utils.codec;
 import com.backendless.BackendlessUser;
 import com.backendless.DeviceRegistration;
 import com.backendless.backendless_sdk.utils.codec.mixins.DataQueryBuilderMixin;
+import com.backendless.backendless_sdk.utils.codec.mixins.LoadRelationsQueryBuilderMixin;
 import com.backendless.commerce.GooglePlayPurchaseStatus;
 import com.backendless.commerce.GooglePlaySubscriptionStatus;
 import com.backendless.files.FileInfo;
@@ -70,6 +71,7 @@ public final class BackendlessMessageCodec extends StandardMessageCodec {
 
     private BackendlessMessageCodec() {
         objectMapper.addMixIn(DataQueryBuilder.class, DataQueryBuilderMixin.class);
+        objectMapper.addMixIn(LoadRelationsQueryBuilder.class, LoadRelationsQueryBuilderMixin.class);
     }
 
     @Override
