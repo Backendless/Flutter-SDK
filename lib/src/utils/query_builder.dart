@@ -51,42 +51,45 @@ class DataQueryBuilder {
   PagedQueryBuilder _pagedQueryBuilder;
   List<String> properties;
   String whereClause;
-  List<String> groupByList;
+  List<String> groupBy;
   String havingClause;
-  List<String> sortByList;
-  List<String> relatedList;
+  List<String> sortBy;
+  List<String> related;
   int relationsDepth;
 
   DataQueryBuilder() {
     _pagedQueryBuilder = new PagedQueryBuilder();
     properties = new List();
     whereClause = "";
-    groupByList = new List();
+    groupBy = new List();
     havingClause = "";
-    sortByList = new List();
-    relatedList = new List();
+    sortBy = new List();
+    related = new List();
     relationsDepth = DEFAULT_RELATIONS_DEPTH;
   }
 
-  DataQueryBuilder.fromJson(Map json) : 
-    _pagedQueryBuilder = json['pagedQueryBuilder'],
-    properties = json['properties'],
-    whereClause = json['whereClause'],
-    groupByList = json['groupByList'],
-    havingClause = json['havingClause'],
-    sortByList = json['sortByList'],
-    relatedList = json['relatedList'],
+  DataQueryBuilder.fromJson(Map json) {
+    pageSize = json['pageSize'];
+    offset = json['offset'];
+    properties = json['properties'];
+    whereClause = json['whereClause'];
+    groupBy = json['groupBy'];
+    havingClause = json['havingClause'];
+    sortBy = json['sortBy'];
+    related = json['related'];
     relationsDepth = json['relationsDepth'];
+  }
 
   Map toJson() =>
     {
-      'pagedQueryBuilder': _pagedQueryBuilder,
+      'pageSize': pageSize,
+      'offset': offset,
       'properties': properties,
       'whereClause': whereClause,
-      'groupByList': groupByList,
+      'groupBy': groupBy,
       'havingClause': havingClause,
-      'sortByList': sortByList,
-      'relatedList': relatedList,
+      'sortBy': sortBy,
+      'related': related,
       'relationsDepth': relationsDepth,
     };
 

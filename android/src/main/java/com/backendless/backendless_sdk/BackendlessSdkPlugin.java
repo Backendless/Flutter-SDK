@@ -13,7 +13,7 @@ import com.backendless.backendless_sdk.call_handlers.LoggingCallHandler;
 import com.backendless.backendless_sdk.call_handlers.MessagingCallHandler;
 import com.backendless.backendless_sdk.call_handlers.RtCallHandler;
 import com.backendless.backendless_sdk.call_handlers.UserServiceCallHandler;
-import com.backendless.backendless_sdk.utils.BackendlessMessageCodec;
+import com.backendless.backendless_sdk.utils.codec.BackendlessMessageCodec;
 
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.PluginRegistry.Registrar;

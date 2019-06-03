@@ -1,7 +1,8 @@
-package com.backendless.backendless_sdk.utils;
+package com.backendless.backendless_sdk.utils.codec;
 
 import com.backendless.BackendlessUser;
 import com.backendless.DeviceRegistration;
+import com.backendless.backendless_sdk.utils.codec.mixins.DataQueryBuilderMixin;
 import com.backendless.commerce.GooglePlayPurchaseStatus;
 import com.backendless.commerce.GooglePlaySubscriptionStatus;
 import com.backendless.files.FileInfo;
@@ -10,17 +11,13 @@ import com.backendless.geo.GeoCategory;
 import com.backendless.geo.GeoCluster;
 import com.backendless.geo.GeoPoint;
 import com.backendless.geo.SearchMatchesResult;
-import com.backendless.geo.Units;
 import com.backendless.messaging.DeliveryOptions;
 import com.backendless.messaging.Message;
 import com.backendless.messaging.MessageStatus;
 import com.backendless.messaging.PublishMessageInfo;
 import com.backendless.messaging.PublishOptions;
-import com.backendless.messaging.PublishPolicyEnum;
-import com.backendless.messaging.PublishStatusEnum;
 import com.backendless.persistence.DataQueryBuilder;
 import com.backendless.persistence.LoadRelationsQueryBuilder;
-import com.backendless.property.DateTypeEnum;
 import com.backendless.property.ObjectProperty;
 import com.backendless.property.UserProperty;
 import com.backendless.push.DeviceRegistrationResult;
@@ -34,7 +31,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -71,6 +67,10 @@ public final class BackendlessMessageCodec extends StandardMessageCodec {
     private static final byte BACKENDLESS_USER = (byte) 151;
     private static final byte USER_PROPERTY = (byte) 152;
     private static final byte BULK_EVENT = (byte) 153;
+
+    private BackendlessMessageCodec() {
+        objectMapper.addMixIn(DataQueryBuilder.class, DataQueryBuilderMixin.class);
+    }
 
     @Override
     protected void writeValue(ByteArrayOutputStream stream, Object value) {
