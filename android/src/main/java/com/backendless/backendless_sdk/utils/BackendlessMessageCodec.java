@@ -160,7 +160,7 @@ public final class BackendlessMessageCodec extends StandardMessageCodec {
     protected Object readValueOfType(byte type, ByteBuffer buffer) {
         switch (type) {
             case DATE_TIME:
-                return new Date(buffer.getLong());
+                return new Date((Long) readValue(buffer));
             case GEO_POINT:
                 return objectMapper.convertValue(readValue(buffer), GeoPoint.class);
             case DATA_QUERY_BUILDER:

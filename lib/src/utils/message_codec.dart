@@ -37,7 +37,7 @@ class BackendlessMessageCodec extends StandardMessageCodec {
   void writeValue(WriteBuffer buffer, dynamic value) {
     if (value is DateTime) {
       buffer.putUint8(_kDateTime);
-          writeValue(buffer, value.millisecondsSinceEpoch);
+      writeValue(buffer, value.millisecondsSinceEpoch);
     } else if (value is GeoPoint) {
       buffer.putUint8(_kGeoPoint);
       writeValue(buffer, value.toJson());
