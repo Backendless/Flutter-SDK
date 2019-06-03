@@ -1,12 +1,19 @@
 package com.backendless.backendless_sdk.call_handlers;
 
+import android.util.Log;
+
 import com.backendless.Backendless;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.async.callback.BackendlessCallback;
 import com.backendless.exceptions.BackendlessFault;
 import com.backendless.backendless_sdk.utils.FlutterCallback;
+import com.backendless.geo.GeoPoint;
+import com.backendless.persistence.DataQueryBuilder;
+import com.backendless.persistence.LoadRelationsQueryBuilder;
+import com.backendless.property.ObjectProperty;
 
 import java.util.Date;
+import java.util.List;
 
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -88,15 +95,21 @@ public class CacheCallHandler implements MethodChannel.MethodCallHandler {
     }
 
     private void put(MethodCall call, MethodChannel.Result result) {
-        String key = call.argument("key");
-        Object object = call.argument("object");
-        Integer timeToLive = call.argument("timeToLive");
+//        String key = call.argument("key");
+//        Object object = call.argument("object");
+//        Integer timeToLive = call.argument("timeToLive");
+//
+//        FlutterCallback<Object> callback = new FlutterCallback<>(result);
+//        if (timeToLive != null) {
+//            Backendless.Cache.put(key, object, timeToLive, callback);
+//        } else {
+//            Backendless.Cache.put(key, object, callback);
+//        }
 
-        FlutterCallback<Object> callback = new FlutterCallback<>(result);
-        if (timeToLive != null) {
-            Backendless.Cache.put(key, object, timeToLive, callback);
-        } else {
-            Backendless.Cache.put(key, object, callback);
-        }
+//        result.success("HELLO");
+
+        ObjectProperty objectProperty = call.argument("object");
+        Log.e("REQ", String.valueOf(objectProperty.isRequired()));
+
     }
 }
