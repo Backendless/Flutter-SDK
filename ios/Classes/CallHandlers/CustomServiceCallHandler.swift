@@ -34,7 +34,7 @@ class CustomServiceCallHandler: FlutterCallHandlerProtocol {
         
         switch call.method {
         case Methods.invoke:
-            self.invoke(arguments: arguments, result)
+            invoke(arguments: arguments, result)
         default:
             result(FlutterMethodNotImplemented)
         }

@@ -29,11 +29,11 @@ class CommerceCallHandler: FlutterCallHandlerProtocol {
         
         switch call.method {
         case Methods.cancelPlaySubscription:
-            self.cancelPlaySubscription(arguments, result)
+            cancelPlaySubscription(arguments, result)
         case Methods.getPlaySubscriptionsStatus:
-            self.getPlaySubscriptionsStatus(arguments, result)
+            getPlaySubscriptionsStatus(arguments, result)
         case Methods.validatePlayPurchase:
-            self.validatePlayPurchase(arguments, result)
+            validatePlayPurchase(arguments, result)
         default:
             result(FlutterMethodNotImplemented)
         }

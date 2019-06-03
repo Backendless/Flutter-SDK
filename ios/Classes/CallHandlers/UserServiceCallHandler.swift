@@ -87,8 +87,6 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Assign Role
     private func assignRole(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Assign Role")
-        
         guard
             let identity: String = arguments[Args.identity].flatMap(cast),
             let roleName: String = arguments[Args.roleName].flatMap(cast)
@@ -107,7 +105,10 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Current user
     private func currentUser(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Current User")
+        
+        // TODO: -
+        // TODO: - Need to test with real user
+        // TODO: - Problem with sending object to Flutter
         
         let currentUser = userService.getCurrentUser()
         
@@ -117,7 +118,9 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Describe User Class
     private func describeUserClass(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Describe User Class")
+        
+        // TODO: -
+        // TODO: - Problem with sending object to Flutter
         
         userService.describeUserClass(responseHandler: {
             result($0)
@@ -129,33 +132,31 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Find By ID
     private func findById(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Find By ID")
-        
         guard let id: String = arguments[Args.id].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             
             return
         }
         
-        Backendless.shared.data.of(BackendlessUser.self).findById(objectId: id,
-            responseHandler: { response in
-                guard let user = response as? BackendlessUser else {
-                    result(FlutterError(code: "", message: "Incorrect Data Type from API", details: nil))
+        Backendless.shared.data.of(BackendlessUser.self)
+            .findById(objectId: id,
+                responseHandler: { response in
+                    guard let user = response as? BackendlessUser else {
+                        result(FlutterError(code: "", message: "Incorrect Data Type from API", details: nil))
+                
+                        return
+                    }
                     
-                    return
-                }
-                result(user)
-            },
-            errorHandler: {
-                result(FlutterError($0))
-            })
+                    result(user)
+                },
+                errorHandler: {
+                    result(FlutterError($0))
+                })
     }
     
     // MARK: -
     // MARK: - Get User Roles
     private func getUserRoles(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Get User Roles")
-        
         userService.getUserRoles(responseHandler: {
             result($0)
         }, errorHandler: {
@@ -166,8 +167,6 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Is Valid Login
     private func isValidLogin(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Is Valid Login")
-        
         userService.isValidUserToken(responseHandler: {
             result($0)
         }, errorHandler: {
@@ -178,8 +177,6 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Logged In User
     private func loggedInUser(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Logged In User")
-        
         guard let user = userService.getCurrentUser() else {
             result("")
             
@@ -192,17 +189,17 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Login
     private func login(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Login")
-        
         guard
             let login: String = arguments[Args.login].flatMap(cast),
-            let password: String = arguments[Args.password].flatMap(cast),
-            let stayLoggedIn: Bool? = arguments[Args.stayLoggedIn].flatMap(cast)
+            let password: String = arguments[Args.password].flatMap(cast)
         else {
             result(FlutterError.noRequiredArguments)
             
             return
         }
+        
+        let stayLoggedIn: Bool? = arguments[Args.stayLoggedIn].flatMap(cast)
+        stayLoggedIn.map { userService.stayLoggedIn = $0 }
         
         userService.login(identity: login, password: password,
             responseHandler: {
@@ -211,15 +208,11 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
             errorHandler: {
                 result(FlutterError($0))
             })
-        
-        stayLoggedIn.map { userService.stayLoggedIn = $0 }
     }
     
     // MARK: -
     // MARK: - Logout
     private func logout(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Logout")
-        
         userService.logout(responseHandler: {
             result(nil)
         }, errorHandler: {
@@ -230,7 +223,9 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Register
     private func register(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Register")
+        
+        // TODO: -
+        // TODO: - Test after fixes in iOS SDK
         
         guard let user: BackendlessUser = arguments[Args.user].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
@@ -267,8 +262,6 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Restore Password
     private func restorePassword(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Restore Password")
-        
         guard let identity: String = arguments[Args.identity].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             
@@ -305,7 +298,9 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Update
     private func update(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Register")
+        
+        // TODO: -
+        // TODO: - Test after fixes in iOS SDK
         
         guard let user: BackendlessUser = arguments[Args.user].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
@@ -321,6 +316,4 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
                 result(FlutterError($0))
             })
     }
-    
-    
 }

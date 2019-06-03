@@ -11,7 +11,6 @@ import Flutter
 
 // MARK: -
 // MARK: - BackendlessCallHandler
-// MARK: - Methods are called correctly ++
 class BackendlessCallHandler: FlutterCallHandlerProtocol {
     
     // MARK: -
@@ -47,27 +46,27 @@ class BackendlessCallHandler: FlutterCallHandlerProtocol {
         
         switch call.method {
         case Methods.initApp:
-            self.initApp(arguments, result)
+            initApp(arguments, result)
         case Methods.getApiKey:
-            self.getApiKey(arguments, result)
+            getApiKey(arguments, result)
         case Methods.getApplicationId:
-            self.getApplicationId(arguments, result)
+            getApplicationId(arguments, result)
         case Methods.getNotificationIdGeneratorInitValue:
-            self.getNotificationIdGeneratorInitValue(arguments, result)
+            getNotificationIdGeneratorInitValue(arguments, result)
         case Methods.getPushTemplatesAsJson:
-            self.getPushTemplatesAsJson(arguments, result)
+            getPushTemplatesAsJson(arguments, result)
         case Methods.getUrl:
-            self.getUrl(arguments, result)
+            getUrl(arguments, result)
         case Methods.isInitialized:
-            self.isInitialized(arguments, result)
+            isInitialized(arguments, result)
         case Methods.saveNotificationIdGeneratorState:
-            self.saveNotificationIdGeneratorState(arguments, result)
+            saveNotificationIdGeneratorState(arguments, result)
         case Methods.savePushTemplates:
-            self.savePushTemplates(arguments, result)
+            savePushTemplates(arguments, result)
         case Methods.setUIState:
-            self.setUIState(arguments, result)
+            setUIState(arguments, result)
         case Methods.setUrl:
-            self.setUrl(arguments, result)
+            setUrl(arguments, result)
         default:
             result(FlutterMethodNotImplemented)
         }

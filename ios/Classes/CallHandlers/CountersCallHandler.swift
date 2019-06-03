@@ -51,23 +51,23 @@ class CountersCallHandler: FlutterCallHandlerProtocol {
         
         switch call.method {
         case Methods.addAndGet:
-            self.addAndGet(counterName, arguments, result)
+            addAndGet(counterName, arguments, result)
         case Methods.compareAndSet:
-            self.compareAndSet(counterName, arguments, result)
+            compareAndSet(counterName, arguments, result)
         case Methods.decrementAndGet:
-            self.decrementAndGet(counterName, result)
+            decrementAndGet(counterName, result)
         case Methods.get:
-            self.get(counterName, result)
+            get(counterName, result)
         case Methods.getAndAdd:
-            self.getAndAdd(counterName, arguments, result)
+            getAndAdd(counterName, arguments, result)
         case Methods.getAndDecrement:
-            self.getAndDecrement(counterName, result)
+            getAndDecrement(counterName, result)
         case Methods.getAndIncrement:
-            self.getAndIncrement(counterName, result)
+            getAndIncrement(counterName, result)
         case Methods.incrementAndGet:
-            self.incrementAndGet(counterName, result)
+            incrementAndGet(counterName, result)
         case Methods.reset:
-            self.reset(counterName, result)
+            reset(counterName, result)
         default:
             result(FlutterMethodNotImplemented)
         }

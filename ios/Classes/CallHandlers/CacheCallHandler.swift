@@ -43,17 +43,17 @@ class CacheCallHandler: FlutterCallHandlerProtocol {
         
         switch call.method {
         case Methods.contains:
-            self.contains(arguments, result)
+            contains(arguments, result)
         case Methods.delete:
-            self.delete(arguments, result)
+            delete(arguments, result)
         case Methods.expireAt:
-            self.expireAt(arguments, result)
+            expireAt(arguments, result)
         case Methods.expireIn:
             expireIn(arguments, result);
         case Methods.get:
-            self.get(arguments, result)
+            get(arguments, result)
         case Methods.put:
-            self.put(arguments, result)
+            put(arguments, result)
         default:
             result(FlutterMethodNotImplemented)
         }

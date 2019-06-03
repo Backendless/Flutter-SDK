@@ -34,7 +34,7 @@ class EventsCallHandler: FlutterCallHandlerProtocol {
         
         switch call.method {
         case Methods.dispatch:
-            self.dispatch(arguments, result)
+            dispatch(arguments, result)
         default:
             result(FlutterMethodNotImplemented)
         }

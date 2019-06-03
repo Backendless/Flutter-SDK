@@ -50,11 +50,11 @@ class LoggingCallHandler: FlutterCallHandlerProtocol {
         
         switch call.method {
         case Methods.flush:
-            self.flush()
+            flush(arguments, result)
         case Methods.setLogReportingPolicy:
-            self.setLogReportingPolicy(arguments, result)
+            setLogReportingPolicy(arguments, result)
         case Methods.invokeLoggerMethod:
-            self.invokeLoggerMethod(arguments, result)
+            invokeLoggerMethod(arguments, result)
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -62,17 +62,15 @@ class LoggingCallHandler: FlutterCallHandlerProtocol {
     
     // MARK: -
     // MARK: - Flush
-    private func flush() {
-        print("~~~> Hello in Flush")
-        
+    private func flush(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
         logging.flush()
+        
+        result(nil)
     }
     
     // MARK: -
     // MARK: - SetLogReportingPolicy
     private func setLogReportingPolicy(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Set Log Reporting Policy")
-        
         guard
             let numOfMessages: Int = arguments[Args.numOfMessages].flatMap(cast),
             let timeFrequencyInSeconds: Int = arguments[Args.timeFrequencyInSeconds].flatMap(cast)
@@ -83,13 +81,13 @@ class LoggingCallHandler: FlutterCallHandlerProtocol {
         }
         
         logging.setLogReportingPolicy(numberOfMessages: numOfMessages, timeFrequencySec: timeFrequencyInSeconds)
+        
+        result(nil)
     }
     
     // MARK: -
     // MARK: - InvokeLoggerMethod
     private func invokeLoggerMethod(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Invoke Logger Method")
-        
         guard
             let loggerName: String = arguments[Args.loggerName].flatMap(cast),
             let methodName: String = arguments[Args.methodName].flatMap(cast),
@@ -123,6 +121,8 @@ class LoggingCallHandler: FlutterCallHandlerProtocol {
         case .trace:
             logger.trace(message: message)
         }
+        
+        result(nil)
     }
     
 }

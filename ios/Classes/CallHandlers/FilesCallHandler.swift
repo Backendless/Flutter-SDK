@@ -56,25 +56,25 @@ class FilesCallHandler: FlutterCallHandlerProtocol {
         
         switch call.method {
         case Methods.copyFile:
-            self.copyFile(arguments, result)
+            copyFile(arguments, result)
         case Methods.exists:
-            self.exists(arguments, result)
+            exists(arguments, result)
         case Methods.getFileCount:
-            self.getFileCount(arguments, result)
+            getFileCount(arguments, result)
         case Methods.listing:
-            self.listing(arguments, result)
+            listing(arguments, result)
         case Methods.moveFile:
-            self.moveFile(arguments, result)
+            moveFile(arguments, result)
         case Methods.remove:
-            self.remove(arguments, result)
+            remove(arguments, result)
         case Methods.removeDirectory:
-            self.removeDirectory(arguments, result)
+            removeDirectory(arguments, result)
         case Methods.renameFile:
-            self.renameFile(arguments, result)
+            renameFile(arguments, result)
         case Methods.saveFile:
-            self.saveFile(arguments, result)
+            saveFile(arguments, result)
         case Methods.upload:
-            self.upload(arguments, result)
+            upload(arguments, result)
         default:
             result(FlutterMethodNotImplemented)
         }

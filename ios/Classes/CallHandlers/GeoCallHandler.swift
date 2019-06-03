@@ -28,12 +28,15 @@ class GeoCallHandler: FlutterCallHandlerProtocol {
         static let runOnStayAction = "Backendless.Geo.runOnStayAction"
         static let savePoint = "Backendless.Geo.savePoint"
         static let setLocationTrackerParameters = "Backendless.Geo.setLocationTrackerParameters"
+        static let startClientGeofenceMonitoring = "Backendless.Geo.startClientGeofenceMonitoring"
+        static let startServerGeofenceMonitoring = "Backendless.Geo.startServerGeofenceMonitoring"
+        static let stopGeofenceMonitoring = "Backendless.Geo.stopGeofenceMonitoring"
     }
     
     private enum Args {
         static let categoryName = "categoryName"
         static let query = "query"
-        static let geoFenceName = "geoFenceName"
+        static let geofenceName = "geoFenceName"
         static let geoPoint = "geoPoint"
         static let latitude = "latitude"
         static let longitude = "longitude"
@@ -53,31 +56,37 @@ class GeoCallHandler: FlutterCallHandlerProtocol {
         
         switch call.method {
         case Methods.addCategory:
-            self.addCategory(arguments, result)
+            addCategory(arguments, result)
         case Methods.deleteCategory:
-            self.deleteCategory(arguments, result)
+            deleteCategory(arguments, result)
         case Methods.getCategories:
-            self.getCategories(arguments, result)
+            getCategories(arguments, result)
         case Methods.getGeopointCount:
-            self.getGeopointCount(arguments, result)
+            getGeopointCount(arguments, result)
         case Methods.getPoints:
-            self.getPoints(arguments, result)
+            getPoints(arguments, result)
         case Methods.loadMetadata:
-            self.loadMetadata(arguments, result)
+            loadMetadata(arguments, result)
         case Methods.relativeFind:
-            self.relativeFind(arguments, result)
+            relativeFind(arguments, result)
         case Methods.removePoint:
-            self.removePoint(arguments, result)
+            removePoint(arguments, result)
         case Methods.runOnEnterAction:
-            self.runOnEnterAction(arguments, result)
+            runOnEnterAction(arguments, result)
         case Methods.runOnExitAction:
-            self.runOnExitAction(arguments, result)
+            runOnExitAction(arguments, result)
         case Methods.runOnStayAction:
-            self.runOnStayAction(arguments, result)
+            runOnStayAction(arguments, result)
         case Methods.savePoint:
-            self.savePoint(arguments, result)
+            savePoint(arguments, result)
         case Methods.setLocationTrackerParameters:
-            self.setLocationTrackerParameters(arguments, result)
+            setLocationTrackerParameters(arguments, result)
+        case Methods.startClientGeofenceMonitoring:
+            startClientGeofenceMonitoring(arguments, result)
+        case Methods.startServerGeofenceMonitoring:
+            startServerGeofenceMonitoring(arguments, result)
+        case Methods.stopGeofenceMonitoring:
+            stopGeofenceMonitoring(arguments, result)
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -132,8 +141,12 @@ class GeoCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - GetGeopointCount
     private func getGeopointCount(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
+        
+        // TODO: -
+        // TODO: - Need to test: problem with getting BackendlessGeoQuery object from Flutter
+        
         let geoQuery: BackendlessGeoQuery? = arguments[Args.query].flatMap(cast)
-        let geofenceName: String? = arguments[Args.geoFenceName].flatMap(cast)
+        let geofenceName: String? = arguments[Args.geofenceName].flatMap(cast)
         
         if let geoQuery = geoQuery {
             geo.getPointsCount(geoQuery: geoQuery,
@@ -157,10 +170,10 @@ class GeoCallHandler: FlutterCallHandlerProtocol {
     }
     
     // MARK: -
-    // MARK: - GetPoints
+    // MARK: - GetPoints +-
     private func getPoints(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
         let geoQuery: BackendlessGeoQuery? = arguments[Args.query].flatMap(cast)
-        let geofenceName: String? = arguments[Args.geoFenceName].flatMap(cast)
+        let geofenceName: String? = arguments[Args.geofenceName].flatMap(cast)
         let geoCluster: GeoCluster? = arguments[Args.geoCluster].flatMap(cast)
         
         if let query = geoQuery {
@@ -187,6 +200,10 @@ class GeoCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Load Metadata
     private func loadMetadata(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
+        
+        // TODO: -
+        // TODO: - Need to test. Problems with getting GeoPoint from Flutter
+        
         guard let geoPoint: GeoPoint = arguments[Args.geoPoint].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             
@@ -205,6 +222,10 @@ class GeoCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - RelativeFind
     private func relativeFind(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
+        
+        // TODO: -
+        // TODO: - Need to test. Problems with getting BackendlessGeoQuery from Flutter
+        
         guard let geoQuery: BackendlessGeoQuery = arguments[Args.query].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             
@@ -223,6 +244,10 @@ class GeoCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - RemovePoint
     private func removePoint(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
+        
+        // TODO: -
+        // TODO: - Need to test. Problems with getting GeoPoint from Flutter
+        
         guard let geoPoint: GeoPoint = arguments[Args.geoPoint].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             
@@ -241,7 +266,7 @@ class GeoCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - RunOnEnterAction
     private func runOnEnterAction(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        guard let geoFenceName: String = arguments[Args.geoFenceName].flatMap(cast) else {
+        guard let geofenceName: String = arguments[Args.geofenceName].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             
             return
@@ -250,7 +275,7 @@ class GeoCallHandler: FlutterCallHandlerProtocol {
         let geoPoint: GeoPoint? = arguments[Args.geoPoint].flatMap(cast)
         
         if let geoPoint = geoPoint {
-            geo.runOnEnterAction(geoFenceName: geoFenceName, geoPoint: geoPoint,
+            geo.runOnEnterAction(geoFenceName: geofenceName, geoPoint: geoPoint,
                 responseHandler: {
                     result($0)
                 },
@@ -258,7 +283,7 @@ class GeoCallHandler: FlutterCallHandlerProtocol {
                     result(FlutterError($0))
                 })
         } else {
-            geo.runOnEnterAction(geoFenceName: geoFenceName,
+            geo.runOnEnterAction(geoFenceName: geofenceName,
                 responseHandler: {
                     result($0)
                 },
@@ -271,7 +296,7 @@ class GeoCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - RunOnExitAction
     private func runOnExitAction(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        guard let geoFenceName: String = arguments[Args.geoFenceName].flatMap(cast) else {
+        guard let geofenceName: String = arguments[Args.geofenceName].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             
             return
@@ -280,7 +305,7 @@ class GeoCallHandler: FlutterCallHandlerProtocol {
         let geoPoint: GeoPoint? = arguments[Args.geoPoint].flatMap(cast)
         
         if let geoPoint = geoPoint {
-            geo.runOnExitAction(geoFenceName: geoFenceName, geoPoint: geoPoint,
+            geo.runOnExitAction(geoFenceName: geofenceName, geoPoint: geoPoint,
                 responseHandler: {
                     result($0)
                 },
@@ -288,7 +313,7 @@ class GeoCallHandler: FlutterCallHandlerProtocol {
                     result(FlutterError($0))
                 })
         } else {
-            geo.runOnExitAction(geoFenceName: geoFenceName,
+            geo.runOnExitAction(geoFenceName: geofenceName,
                 responseHandler: {
                     result($0)
                 },
@@ -301,7 +326,7 @@ class GeoCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - RunOnStayAction
     private func runOnStayAction(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        guard let geoFenceName: String = arguments[Args.geoFenceName].flatMap(cast) else {
+        guard let geofenceName: String = arguments[Args.geofenceName].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             
             return
@@ -310,7 +335,7 @@ class GeoCallHandler: FlutterCallHandlerProtocol {
         let geoPoint: GeoPoint? = arguments[Args.geoPoint].flatMap(cast)
         
         if let geoPoint = geoPoint {
-            geo.runOnStayAction(geoFenceName: geoFenceName, geoPoint: geoPoint,
+            geo.runOnStayAction(geoFenceName: geofenceName, geoPoint: geoPoint,
                 responseHandler: {
                     result($0)
                 },
@@ -318,7 +343,7 @@ class GeoCallHandler: FlutterCallHandlerProtocol {
                     result(FlutterError($0))
                 })
         } else {
-            geo.runOnStayAction(geoFenceName: geoFenceName,
+            geo.runOnStayAction(geoFenceName: geofenceName,
                 responseHandler: {
                     result($0)
                 },
@@ -373,9 +398,65 @@ class GeoCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - SetLocationTrackerParameters
     private func setLocationTrackerParameters(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Set Location Tracker Parameters")
         
+        // TODO: -
+        // TODO: - No such method in iOS SDK
         
         result(FlutterMethodNotImplemented)
     }
+    
+    // MARK: -
+    // MARK: - StartClientGeofenceMonitoring
+    private func startClientGeofenceMonitoring(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
+        
+        // TODO: -
+        // TODO: - Using IGeofenceCallback
+        
+    }
+    
+    // MARK: -
+    // MARK: - StartServerGeofenceMonitoring
+    private func startServerGeofenceMonitoring(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
+        guard let geoPoint: GeoPoint = arguments[Args.geoPoint].flatMap(cast) else {
+            result(FlutterError.noRequiredArguments)
+            
+            return
+        }
+        
+        let geofenceName: String? = arguments[Args.geofenceName].flatMap(cast)
+        
+        if let geofenceName = geofenceName {
+            geo.startGeoFenceMonitoring(geoFenceName: geofenceName, geoPoint: geoPoint,
+                responseHandler: {
+                    result(nil)
+                },
+                errorHandler: {
+                    result(FlutterError($0))
+                })
+        } else {
+            geo.startGeoFenceMonitoring(geoPoint: geoPoint,
+                responseHandler: {
+                    result(nil)
+                },
+                errorHandler: {
+                    result(FlutterError($0))
+                })
+        }
+    }
+    
+    // MARK: -
+    // MARK: - StopGeofenceMonitoring
+    private func stopGeofenceMonitoring(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
+        let geofenceName: String? = arguments[Args.geofenceName].flatMap(cast)
+        
+        if let geofenceName = geofenceName {
+            geo.stopGeoFenceMonitoring(geoFenceName: geofenceName)
+        } else {
+            geo.stopGeoFenceMonitoring()
+        }
+        
+        result(nil)
+    }
+    
+    
 }

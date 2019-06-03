@@ -96,39 +96,39 @@ class DataCallHandler: FlutterCallHandlerProtocol {
         
         switch call.method {
         case Methods.addRelation:
-            self.addRelation(tableName, arguments, result)
+            addRelation(tableName, arguments, result)
         case Methods.create:
-            self.create(tableName, arguments, result)
+            create(tableName, arguments, result)
         case Methods.deleteRelation:
-            self.addRelation(tableName, arguments, result)
+            addRelation(tableName, arguments, result)
         case Methods.find:
-            self.find(tableName, arguments, result)
+            find(tableName, arguments, result)
         case Methods.findById:
-            self.findById(tableName, arguments, result)
+            findById(tableName, arguments, result)
         case Methods.findFirst:
-            self.findFirst(tableName, arguments: arguments, result)
+            findFirst(tableName, arguments: arguments, result)
         case Methods.findLast:
-            self.findLast(tableName, arguments: arguments, result)
+            findLast(tableName, arguments: arguments, result)
         case Methods.getObjectCount:
-            self.getObjectCount(tableName, arguments, result)
+            getObjectCount(tableName, arguments, result)
         case Methods.loadRelations:
-            self.loadRelations(tableName, arguments, result)
+            loadRelations(tableName, arguments, result)
         case Methods.remove:
-            self.remove(tableName, arguments, result)
+            remove(tableName, arguments, result)
         case Methods.save:
-            self.save(tableName, arguments, result)
+            save(tableName, arguments, result)
         case Methods.setRelation:
-            self.setRelation(tableName, arguments, result)
+            setRelation(tableName, arguments, result)
         case Methods.update:
-            self.update(tableName, arguments, result)
+            update(tableName, arguments, result)
         case Methods.callStoredProcedure:
-            self.callStoredProcedure(tableName, arguments, result)
+            callStoredProcedure(tableName, arguments, result)
         case Methods.describe:
-            self.describe(tableName, result)
+            describe(tableName, result)
         case Methods.addListener:
-            self.addListener(tableName, arguments, result)
+            addListener(tableName, arguments, result)
         case Methods.removeListener:
-            self.removeListener(tableName, arguments, result)
+            removeListener(tableName, arguments, result)
         default:
             result(FlutterMethodNotImplemented)
         }
