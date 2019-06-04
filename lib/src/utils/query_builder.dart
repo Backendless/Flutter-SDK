@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'dart:typed_data';
 import 'dart:ui' show hashValues;
 
@@ -146,9 +144,9 @@ class AbstractBackendlessGeoQuery {
   double latitude;
   double longitude;
   double radius;
-  HashSet<String> _categories = new HashSet();
-  Map<String, Object> metadata = new HashMap();
-  Map<String, String> relativeFindMetadata = new HashMap();
+  List<String> _categories = new List();
+  Map<String, Object> metadata = new Map();
+  Map<String, String> relativeFindMetadata = new Map();
   double relativeFindPercentThreshold = 0.0;
   String whereClause;
   Iterable<String> sortBy = new List();
@@ -158,7 +156,7 @@ class AbstractBackendlessGeoQuery {
   AbstractBackendlessGeoQuery();
 
   set categories(Iterable<String> categories) =>
-      _categories = new HashSet.of(categories);
+      _categories = new List.of(categories);
 
   Iterable<String> get categories => _categories;
 
@@ -285,21 +283,21 @@ class BackendlessGeoQuery extends AbstractBackendlessGeoQuery {
 
   List<String> get categories {
     if (_categories == null) {
-      _categories = new HashSet<String>();
+      _categories = new List<String>();
     }
-    return List.of(_categories);
+    return _categories;
   }
 
   void addCategory(String category) {
     if (category == null || category == "") return;
-    if (_categories == null) _categories = new HashSet<String>();
+    if (_categories == null) _categories = new List<String>();
     _categories.add(category);
   }
 
   void putMetadata(String metadataKey, Object metadataValue) {
     if (metadataKey == null || metadataKey == "" || metadataValue == null)
       return;
-    if (metadata == null) metadata = new HashMap<String, Object>();
+    if (metadata == null) metadata = new Map<String, Object>();
     metadata[metadataKey] = metadataValue;
   }
 
@@ -315,7 +313,7 @@ class BackendlessGeoQuery extends AbstractBackendlessGeoQuery {
   void putRelativeFindMetadata(String key, String value) {
     if (key == null || key == "" || value == null) return;
     if (relativeFindMetadata == null)
-      relativeFindMetadata = new HashMap<String, String>();
+      relativeFindMetadata = new Map<String, String>();
     relativeFindMetadata[key] = value;
   }
 
@@ -336,7 +334,7 @@ class BackendlessGeoQuery extends AbstractBackendlessGeoQuery {
       identical(this, other) ||
       other is BackendlessGeoQuery &&
           runtimeType == other.runtimeType &&
-          SetEquality().equals(_categories, other._categories) &&
+          ListEquality().equals(_categories, other._categories) &&
           MapEquality().equals(metadata, other.metadata) &&
           latitude == other.latitude &&
           longitude == other.longitude &&

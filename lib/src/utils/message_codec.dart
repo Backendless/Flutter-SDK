@@ -38,7 +38,7 @@ class BackendlessMessageCodec extends StandardMessageCodec {
     if (value is DateTime) {
       buffer.putUint8(_kDateTime);
       writeValue(buffer, value.millisecondsSinceEpoch);
-    } else if (value is GeoPoint) {
+    } else if (value is GeoPoint && !(value is GeoCluster)) {
       buffer.putUint8(_kGeoPoint);
       writeValue(buffer, value.toJson());
     } else if (value is DataQueryBuilder) {

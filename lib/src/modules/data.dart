@@ -410,7 +410,7 @@ abstract class AbstractProperty {
   bool required;
   DateTypeEnum type;
 
-  AbstractProperty({this.name, this.required, this.type});
+  AbstractProperty({this.name, this.required = false, this.type});
 }
 
 class ObjectProperty extends AbstractProperty {

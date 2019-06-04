@@ -455,7 +455,7 @@ class GeoCluster extends GeoPoint {
     metadata = json['metadata'];
     distance = json['distance'];
     totalPoints = json['totalPoints'];
-    geoQuery = json['geoQuery'];
+    geoQuery = BackendlessGeoQuery.fromJson(json['geoQuery']);
   }
 
   Map toJson() =>
@@ -467,7 +467,7 @@ class GeoCluster extends GeoPoint {
       'metadata': metadata,
       'distance': distance,
       'totalPoints': totalPoints,
-      'geoQuery': geoQuery,
+      'geoQuery': geoQuery?.toJson(),
     };
 
   @override
