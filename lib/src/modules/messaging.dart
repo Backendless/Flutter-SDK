@@ -304,13 +304,13 @@ class MessageStatus implements Comparable<MessageStatus> {
   MessageStatus.fromJson(Map json) : 
     messageId = json['messageId'],
     errorMessage = json['errorMessage'],
-    status = json['status'];
+    status = PublishStatusEnum.values[json['status']];
 
   Map toJson() =>
     {
       'messageId': messageId,
       'errorMessage': errorMessage,
-      'status': status,
+      'status': status.index,
     };
 
   @override
@@ -494,7 +494,7 @@ class DeliveryOptions {
     pushBroadcast = json['pushBroadcast'],
     pushSinglecast = json['pushSinglecast'],
     segmentQuery = json['segmentQuery'],
-    publishPolicy = json['publishPolicy'],
+    publishPolicy = PublishPolicyEnum.values[json['publishPolicy']],
     publishAt = json['publishAt'],
     repeatEvery = json['repeatEvery'],
     repeatExpiresAt = json['repeatExpiresAt'];
@@ -504,7 +504,7 @@ class DeliveryOptions {
       'pushBroadcast': pushBroadcast,
       'pushSinglecast': pushSinglecast,
       'segmentQuery': segmentQuery,
-      'publishPolicy': publishPolicy,
+      'publishPolicy': publishPolicy.index,
       'publishAt': publishAt,
       'repeatEvery': repeatEvery,
       'repeatExpiresAt': repeatExpiresAt,
@@ -524,7 +524,7 @@ class DeliveryOptions {
       this.pushSinglecast = info.pushSinglecast;
     if (info.publishPolicy != null) {
       try {
-        this.publishPolicy = getEnumFromString(
+        this.publishPolicy = stringToEnum(
             PublishPolicyEnum.values, info.publishPolicy.toUpperCase());
       } catch (e) {
         this.publishPolicy = PublishPolicyEnum.BOTH;
@@ -707,13 +707,13 @@ class UserStatusResponse {
   UserStatusResponse();
 
   UserStatusResponse.fromJson(Map json) {
-    status = json['status'];
+    status = UserStatus.values[json['status']];
     data = json['data'];
   }
 
   Map toJson() =>
     {
-      'status': status,
+      'status': status.index,
       'data': data,
     };
 

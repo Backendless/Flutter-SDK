@@ -424,7 +424,7 @@ class ObjectProperty extends AbstractProperty {
     defaultValue = json['defaultValue'];
     name = json['name'];
     required = json['required'];
-    type = json['type'];
+    type = DateTypeEnum.values[json['type']];
   }
 
   Map toJson() =>
@@ -433,7 +433,7 @@ class ObjectProperty extends AbstractProperty {
       'defaultValue': defaultValue,
       'name': name,
       'required': required,
-      'type': type,
+      'type': type.index,
     };
 }
 

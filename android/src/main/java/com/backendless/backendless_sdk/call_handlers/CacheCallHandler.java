@@ -7,7 +7,12 @@ import com.backendless.async.callback.AsyncCallback;
 import com.backendless.async.callback.BackendlessCallback;
 import com.backendless.exceptions.BackendlessFault;
 import com.backendless.backendless_sdk.utils.FlutterCallback;
+import com.backendless.files.FileInfo;
+import com.backendless.geo.GeoCluster;
 import com.backendless.geo.GeoPoint;
+import com.backendless.geo.SearchMatchesResult;
+import com.backendless.messaging.MessageStatus;
+import com.backendless.messaging.PublishStatusEnum;
 import com.backendless.persistence.DataQueryBuilder;
 import com.backendless.persistence.LoadRelationsQueryBuilder;
 import com.backendless.property.ObjectProperty;
@@ -108,8 +113,9 @@ public class CacheCallHandler implements MethodChannel.MethodCallHandler {
 
 //        result.success("HELLO");
 
-        ObjectProperty objectProperty = call.argument("object");
-        Log.e("REQ", String.valueOf(objectProperty.isRequired()));
+        MessageStatus object = call.argument("object");
+        Log.e("REQ", String.valueOf(object.getStatus()));
+
 
     }
 }

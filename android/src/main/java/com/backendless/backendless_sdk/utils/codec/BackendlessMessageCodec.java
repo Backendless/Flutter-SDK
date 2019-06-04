@@ -141,8 +141,7 @@ public final class BackendlessMessageCodec extends StandardMessageCodec {
             writeValue(stream, objectMapper.convertValue(value, Map.class));
         } else if (value instanceof BackendlessUser) {
             stream.write(BACKENDLESS_USER);
-            BackendlessUser user = (BackendlessUser) value;
-            writeValue(stream, user.getProperties());
+            writeValue(stream, ((BackendlessUser) value).getProperties());
         } else if (value instanceof UserProperty) {
             stream.write(USER_PROPERTY);
             writeValue(stream, objectMapper.convertValue(value, Map.class));

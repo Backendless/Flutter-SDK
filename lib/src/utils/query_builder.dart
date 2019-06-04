@@ -191,7 +191,7 @@ class BackendlessGeoQuery extends AbstractBackendlessGeoQuery {
     clusterGridSize = json['clusterGridSize'];
     pageSize = json['pageSize'];
     offset = json['offset'];
-    units = json['units'];
+    units = Units.values[json['units']];
     includeMeta = json['includeMeta'];
     searchRectangle = json['searchRectangle'];
   }
@@ -211,7 +211,7 @@ class BackendlessGeoQuery extends AbstractBackendlessGeoQuery {
       'clusterGridSize': clusterGridSize,
       'pageSize': pageSize,
       'offset': offset,
-      'units': units,
+      'units': units.index,
       'includeMeta': includeMeta,
       'searchRectangle': searchRectangle,
     };
