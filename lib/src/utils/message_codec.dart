@@ -89,6 +89,9 @@ class BackendlessMessageCodec extends StandardMessageCodec {
     } else if (value is PublishMessageInfo) {
       buffer.putUint8(_kPublishMessageInfo);
       writeValue(buffer, value.toJson());
+    } else if (value is DeviceRegistrationResult) {
+      buffer.putUint8(_kDeviceRegistrationResult);
+      writeValue(buffer, value.toJson());
     } else if (value is Command) {
       buffer.putUint8(_kCommand);
       writeValue(buffer, value.toJson());
