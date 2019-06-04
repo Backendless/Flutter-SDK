@@ -26,7 +26,7 @@ class BackendlessWtiter: FlutterStandardWriter {
              is ReconnectAttemptObject, is BackendlessUser, is UserProperty, is BulkEvent:
             guard let jsonData = dataFromValue(value) else { return }
             guard let json = try? JSONSerialization.jsonObject(with: jsonData, options: []) else { return }
-            writeCodeForValue(value)
+            writeCode(for: value)
             super.writeValue(json)
         default:
             super.writeValue(value)
@@ -97,54 +97,54 @@ class BackendlessWtiter: FlutterStandardWriter {
     
     // MARK: -
     // MARK: - WriteCodeForValue
-    private func writeCodeForValue(_ value: Any) {
+    private func writeCode(for value: Any) {
         switch value {
         case is GeoPoint:
-            writeValue(FlutterTypeCode.geoPoint.rawValue)
+            writeByte(FlutterTypeCode.geoPoint.rawValue)
         case is DataQueryBuilder:
-            writeValue(FlutterTypeCode.dataQueryBuilder.rawValue)
+            writeByte(FlutterTypeCode.dataQueryBuilder.rawValue)
         case is LoadRelationsQueryBuilder:
-            writeValue(FlutterTypeCode.loadRelationsQueryBuilder.rawValue)
+            writeByte(FlutterTypeCode.loadRelationsQueryBuilder.rawValue)
         case is ObjectProperty:
-            writeValue(FlutterTypeCode.objectProperty.rawValue)
+            writeByte(FlutterTypeCode.objectProperty.rawValue)
         case is BackendlessFileInfo:
-            writeValue(FlutterTypeCode.fileInfo.rawValue)
+            writeByte(FlutterTypeCode.fileInfo.rawValue)
         case is GeoCategory:
-            writeValue(FlutterTypeCode.geoCategory.rawValue)
+            writeByte(FlutterTypeCode.geoCategory.rawValue)
         case is BackendlessGeoQuery:
-            writeValue(FlutterTypeCode.geoQuery.rawValue)
+            writeByte(FlutterTypeCode.geoQuery.rawValue)
         case is GeoCluster:
-            writeValue(FlutterTypeCode.geoCluster.rawValue)
+            writeByte(FlutterTypeCode.geoCluster.rawValue)
             //        case is MatchesResult:
         //            writeValue(FlutterTypeCode.searchMathesResult.rawValue)
         case is MessageStatus:
-            writeValue(FlutterTypeCode.messageStatus.rawValue)
+            writeByte(FlutterTypeCode.messageStatus.rawValue)
         case is DeviceRegistration:
-            writeValue(FlutterTypeCode.deviceRegistration.rawValue)
+            writeByte(FlutterTypeCode.deviceRegistration.rawValue)
             //        case is Message:
         //            writeValue(FlutterTypeCode.message.rawValue)
         case is PublishOptions:
-            writeValue(FlutterTypeCode.publishOptions.rawValue)
+            writeByte(FlutterTypeCode.publishOptions.rawValue)
         case is DeliveryOptions:
-            writeValue(FlutterTypeCode.deliveryOptions.rawValue)
+            writeByte(FlutterTypeCode.deliveryOptions.rawValue)
         case is PublishMessageInfo:
-            writeValue(FlutterTypeCode.publishMessageInfo.rawValue)
+            writeByte(FlutterTypeCode.publishMessageInfo.rawValue)
             //        case is DeviceRegistrationResult:
             //            writeValue(FlutterTypeCode.deviceRegistrationResult.rawValue)
             //        case is Command:
         //            writeValue(FlutterTypeCode.command.rawValue)
         case is UserInfo:
-            writeValue(FlutterTypeCode.userInfo.rawValue)
+            writeByte(FlutterTypeCode.userInfo.rawValue)
             //        case is UserStatusResponse:
         //            writeValue(FlutterTypeCode.userStatusResponse.rawValue)
         case is ReconnectAttemptObject:
-            writeValue(FlutterTypeCode.reconnectAttempt.rawValue)
+            writeByte(FlutterTypeCode.reconnectAttempt.rawValue)
         case is BackendlessUser:
-            writeValue(FlutterTypeCode.backendlessUser.rawValue)
+            writeByte(FlutterTypeCode.backendlessUser.rawValue)
         case is UserProperty:
-            writeValue(FlutterTypeCode.userProperty.rawValue)
+            writeByte(FlutterTypeCode.userProperty.rawValue)
         case is BulkEvent:
-            writeValue(FlutterTypeCode.bulkEvent.rawValue)
+            writeByte(FlutterTypeCode.bulkEvent.rawValue)
         default:
             break
         }
