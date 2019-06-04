@@ -211,7 +211,7 @@ class BackendlessGeoQuery extends AbstractBackendlessGeoQuery {
       'clusterGridSize': clusterGridSize,
       'pageSize': pageSize,
       'offset': offset,
-      'units': units.index,
+      'units': units?.index,
       'includeMeta': includeMeta,
       'searchRectangle': searchRectangle,
     };

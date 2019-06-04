@@ -310,7 +310,7 @@ class MessageStatus implements Comparable<MessageStatus> {
     {
       'messageId': messageId,
       'errorMessage': errorMessage,
-      'status': status.index,
+      'status': status?.index,
     };
 
   @override
@@ -504,7 +504,7 @@ class DeliveryOptions {
       'pushBroadcast': pushBroadcast,
       'pushSinglecast': pushSinglecast,
       'segmentQuery': segmentQuery,
-      'publishPolicy': publishPolicy.index,
+      'publishPolicy': publishPolicy?.index,
       'publishAt': publishAt,
       'repeatEvery': repeatEvery,
       'repeatExpiresAt': repeatExpiresAt,
@@ -713,7 +713,7 @@ class UserStatusResponse {
 
   Map toJson() =>
     {
-      'status': status.index,
+      'status': status?.index,
       'data': data,
     };
 

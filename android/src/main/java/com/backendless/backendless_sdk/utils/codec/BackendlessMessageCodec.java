@@ -204,6 +204,8 @@ public final class BackendlessMessageCodec extends StandardMessageCodec {
                 return objectMapper.convertValue(readValue(buffer), Command.class);
             case USER_INFO:
                 return objectMapper.convertValue(readValue(buffer), UserInfo.class);
+                case USER_STATUS_RESPONSE:
+                return objectMapper.convertValue(readValue(buffer), UserStatusResponse.class);
             case BACKENDLESS_USER:
                 return objectMapper.convertValue(readValue(buffer), BackendlessUser.class);
             case USER_PROPERTY:

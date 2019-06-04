@@ -433,7 +433,7 @@ class ObjectProperty extends AbstractProperty {
       'defaultValue': defaultValue,
       'name': name,
       'required': required,
-      'type': type.index,
+      'type': type?.index,
     };
 }
 
