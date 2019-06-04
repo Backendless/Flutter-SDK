@@ -100,22 +100,15 @@ public class CacheCallHandler implements MethodChannel.MethodCallHandler {
     }
 
     private void put(MethodCall call, MethodChannel.Result result) {
-//        String key = call.argument("key");
-//        Object object = call.argument("object");
-//        Integer timeToLive = call.argument("timeToLive");
-//
-//        FlutterCallback<Object> callback = new FlutterCallback<>(result);
-//        if (timeToLive != null) {
-//            Backendless.Cache.put(key, object, timeToLive, callback);
-//        } else {
-//            Backendless.Cache.put(key, object, callback);
-//        }
+        String key = call.argument("key");
+        Object object = call.argument("object");
+        Integer timeToLive = call.argument("timeToLive");
 
-//        result.success("HELLO");
-
-        MessageStatus object = call.argument("object");
-        Log.e("REQ", String.valueOf(object.getStatus()));
-
-
+        FlutterCallback<Object> callback = new FlutterCallback<>(result);
+        if (timeToLive != null) {
+            Backendless.Cache.put(key, object, timeToLive, callback);
+        } else {
+            Backendless.Cache.put(key, object, callback);
+        }
     }
 }
