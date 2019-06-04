@@ -136,7 +136,7 @@ class UserProperty extends AbstractProperty {
   UserProperty.fromJson(Map json) {
     name = json['name'];
     required = json['required'];
-    type = json['type'];
+    type = DateTypeEnum.values[json['type']];
     identity = json['identity'];
   }
 
@@ -144,7 +144,7 @@ class UserProperty extends AbstractProperty {
     {
       'name': name,
       'required': required,
-      'type': type,
+      'type': type?.index,
       'identity': identity,
     };
 }
