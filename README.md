@@ -8,7 +8,7 @@ A Flutter plugin enabling integration with [Backendless](https://backendless.com
 We will be updating the release history of the plugin and as soon as it reaches the general availability (GA) state, 
 the APIs will be consistent for backward-compatibility.
 
-[Feedback](https://github.com/4lfant/Flutter-SDK/issues) and [Pull Requests](https://github.com/4lfant/Flutter-SDK/pulls) are most welcome!
+[Feedback](https://github.com/Backendless/Flutter-SDK/issues) and [Pull Requests](https://github.com/Backendless/Flutter-SDK/pulls) are most welcome!
 
 ## Getting Started
 

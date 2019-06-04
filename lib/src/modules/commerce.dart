@@ -46,7 +46,7 @@ class GooglePlaySubscriptionStatus {
 
   GooglePlaySubscriptionStatus();
 
-  GooglePlaySubscriptionStatus.fromJson(Map json) : 
+  GooglePlaySubscriptionStatus.fromJson(Map json) :
     autoRenewing = json['autoRenewing'],
     startTimeMillis = json['startTimeMillis'],
     kind = json['kind'],
@@ -70,7 +70,7 @@ class GooglePlayPurchaseStatus {
 
   GooglePlayPurchaseStatus();
 
-  GooglePlayPurchaseStatus.fromJson(Map json) : 
+  GooglePlayPurchaseStatus.fromJson(Map json) :
     kind = json['kind'],
     purchaseTimeMillis = json['purchaseTimeMillis'],
     purchaseState = json['purchaseState'],
