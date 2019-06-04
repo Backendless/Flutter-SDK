@@ -5,6 +5,7 @@ import com.backendless.DeviceRegistration;
 import com.backendless.backendless_sdk.utils.codec.mixins.CommandMixin;
 import com.backendless.backendless_sdk.utils.codec.mixins.DataQueryBuilderMixin;
 import com.backendless.backendless_sdk.utils.codec.mixins.LoadRelationsQueryBuilderMixin;
+import com.backendless.backendless_sdk.utils.codec.mixins.ReconnectAttemptMixin;
 import com.backendless.commerce.GooglePlayPurchaseStatus;
 import com.backendless.commerce.GooglePlaySubscriptionStatus;
 import com.backendless.files.FileInfo;
@@ -74,6 +75,7 @@ public final class BackendlessMessageCodec extends StandardMessageCodec {
         objectMapper.addMixIn(DataQueryBuilder.class, DataQueryBuilderMixin.class);
         objectMapper.addMixIn(LoadRelationsQueryBuilder.class, LoadRelationsQueryBuilderMixin.class);
         objectMapper.addMixIn(Command.class, CommandMixin.class);
+        objectMapper.addMixIn(ReconnectAttempt.class, ReconnectAttemptMixin.class);
     }
 
     @Override
@@ -204,8 +206,10 @@ public final class BackendlessMessageCodec extends StandardMessageCodec {
                 return objectMapper.convertValue(readValue(buffer), Command.class);
             case USER_INFO:
                 return objectMapper.convertValue(readValue(buffer), UserInfo.class);
-                case USER_STATUS_RESPONSE:
+            case USER_STATUS_RESPONSE:
                 return objectMapper.convertValue(readValue(buffer), UserStatusResponse.class);
+            case RECONNECT_ATTEMPT:
+                return objectMapper.convertValue(readValue(buffer), ReconnectAttempt.class);
             case BACKENDLESS_USER:
                 return objectMapper.convertValue(readValue(buffer), BackendlessUser.class);
             case USER_PROPERTY:

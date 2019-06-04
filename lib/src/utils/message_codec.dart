@@ -101,6 +101,9 @@ class BackendlessMessageCodec extends StandardMessageCodec {
     } else if (value is UserStatusResponse) {
       buffer.putUint8(_kUserStatusResponse);
       writeValue(buffer, value.toJson());
+    } else if (value is ReconnectAttempt) {
+      buffer.putUint8(_kReconnectAttempt);
+      writeValue(buffer, value.toJson());
     } else if (value is BackendlessUser) {
       buffer.putUint8(_kBackendlessUser);
       writeValue(buffer, value.toJson());
