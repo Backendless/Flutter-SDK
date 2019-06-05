@@ -137,15 +137,10 @@ class DataCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - AddRelation
     private func addRelation(_ tableName: String, _ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in addReliation")
-        
-        // TODO: -
-        // TODO: - In fact parent is getting as dictionary
-        // TODO: - Discuss about getting objectId from Flutter or parsing here
-        
         guard
             let relationColumnName: String = arguments[Args.relationColumnName].flatMap(cast),
-            let parent: String = arguments[Args.parent].flatMap(cast)
+            let parent: [String: Any] = arguments[Args.parent].flatMap(cast),
+            let parentId: String = parent[Args.objectId].flatMap(cast)
         else {
             result(FlutterError.noRequiredArguments)
             
@@ -162,14 +157,12 @@ class DataCallHandler: FlutterCallHandlerProtocol {
             result(FlutterError(fault))
         }
         
-        children.flatMap { [weak self] in
-            self?.data.ofTable(tableName)
-                .addRelation(columnName: relationColumnName, parentObjectId: parent, childrenObjectIds: $0, responseHandler: successHander, errorHandler: errorHandler)
-        }
-        
-        whereClause.flatMap { [weak self] in
-            self?.data.ofTable(tableName)
-                .addRelation(columnName: relationColumnName, parentObjectId: parent, whereClause: $0, responseHandler: successHander, errorHandler: errorHandler)
+        if let whereClause = whereClause {
+            data.ofTable(tableName)
+                .addRelation(columnName: relationColumnName, parentObjectId: parentId, whereClause: whereClause, responseHandler: successHander, errorHandler: errorHandler)
+        } else if let children = children {
+            data.ofTable(tableName)
+                .addRelation(columnName: relationColumnName, parentObjectId: parentId, childrenObjectIds: children, responseHandler: successHander, errorHandler: errorHandler)
         }
     }
     

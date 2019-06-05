@@ -175,7 +175,7 @@ class RtCallHandler: FlutterCallHandlerProtocol {
         let currentDisconnectSubscription = nextDisconnectSubscription
         nextDisconnectSubscription += 1
         
-        let newDisconnectSubscription = realTime.addDisonnectEventListener { [weak self] _ in
+        let newDisconnectSubscription = realTime.addDisсonnectEventListener { [weak self] _ in
             let callbackArgs: [String: Any] = [
                 "handle": currentDisconnectSubscription,
                 "result": true
