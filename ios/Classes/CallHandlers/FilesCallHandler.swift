@@ -43,6 +43,7 @@ class FilesCallHandler: FlutterCallHandlerProtocol {
         static let fileContent = "fileContent"
         static let overwrite = "overwrite"
         static let directoryPath = "directoryPath"
+        static let filePath = "filePath"
     }
     
     // MARK: -
@@ -78,7 +79,6 @@ class FilesCallHandler: FlutterCallHandlerProtocol {
         default:
             result(FlutterMethodNotImplemented)
         }
-        
     }
     
     // MARK: -
@@ -311,12 +311,12 @@ class FilesCallHandler: FlutterCallHandlerProtocol {
     private func saveFile(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
         
         // TODO: -
-        // TODO: - Create file in Flutter and test this method
+        // TODO: - Parse filePathName to folderName and fileName
         
         guard
             let path: String = arguments[Args.path].flatMap(cast),
             let fileName: String = arguments[Args.fileName].flatMap(cast),
-            let fileContent: Data = arguments[Args.fileContent].flatMap(cast)
+            let flutterData: FlutterStandardTypedData = arguments[Args.fileContent].flatMap(cast)
         else {
             result(FlutterError.noRequiredArguments)
             
@@ -325,12 +325,12 @@ class FilesCallHandler: FlutterCallHandlerProtocol {
         
         let overWrite: Bool? = arguments[Args.overwrite].flatMap(cast)
         
-        let base64Content = fileContent.base64EncodedString()
+        let base64Content = flutterData.data.base64EncodedString()
         
         if let overWrite = overWrite {
             fileService.saveFile(fileName: fileName, filePath: path, base64Content: base64Content, overwrite: overWrite,
-                responseHandler: {
-                    result($0)
+                responseHandler: { (file: BackendlessFile) in
+                    file.fileUrl.map { result($0) }
                 },
                 errorHandler: {
                     result(FlutterError($0))
@@ -344,18 +344,46 @@ class FilesCallHandler: FlutterCallHandlerProtocol {
                     result(FlutterError($0))
                 })
         }
-        
-        // TODO: - No method to handle "filePathName"
-        fatalError("No method to handle \"filePathName\"")
-        //
     }
     
     // MARK: -
     // MARK: - Upload
     private func upload(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
         
-        // TODO: - Check parameters type
-        fatalError("Check parameters type")
+        // TODO: -
+        // TODO: - Parse path to folderName and fileName
+        
+        guard
+            let filePath: String = arguments[Args.filePath].flatMap(cast),
+            let fileUrl: URL = URL(string: filePath),
+            let path: String = arguments[Args.path].flatMap(cast)
+        else {
+            result(FlutterError.noRequiredArguments)
+            
+            return
+        }
+        
+        let overwrite: Bool? = arguments[Args.overwrite].flatMap(cast)
+        
+        guard let fileContent = try? Data(contentsOf: fileUrl, options: []) else { return }
+        
+        if let overwrite = overwrite {
+            fileService.uploadFile(fileName: "", filePath: path, content: fileContent, overwrite: overwrite,
+                responseHandler: { (file: BackendlessFile) in
+                    file.fileUrl.map { result($0) }
+                },
+                errorHandler: {
+                    result(FlutterError($0))
+                })
+        } else {
+            fileService.uploadFile(fileName: "", filePath: path, content: fileContent,
+                responseHandler: { (file: BackendlessFile) in
+                    file.fileUrl.map { result($0) }
+                },
+                errorHandler: {
+                    result(FlutterError($0))
+                })
+        }
     }
     
     
