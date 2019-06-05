@@ -245,8 +245,6 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Resend Email Confirmation
     private func resendEmailConfirmation(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Resend Email Confirmation")
-        
         guard let email: String = arguments[Args.email].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             
@@ -278,8 +276,6 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Unassign Role
     private func unassignRole(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Unassign Role")
-        
         guard
             let identity: String = arguments[Args.identity].flatMap(cast),
             let roleName: String = arguments[Args.roleName].flatMap(cast)

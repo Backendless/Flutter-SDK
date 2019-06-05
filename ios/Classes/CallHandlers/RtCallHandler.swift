@@ -94,24 +94,18 @@ class RtCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Connect
     private func connect(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Connect")
-        
         result(nil)
     }
     
     // MARK: -
     // MARK: - Disconnect
     private func disconnect(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Disconnect")
-        
         result(nil)
     }
     
     // MARK: -
     // MARK: - Add Connect Listener
     private func addConnectListener(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Add Connect Listener")
-        
         let currentConnectSubscription = nextConnectSubscription
         nextConnectSubscription += 1
         
@@ -128,8 +122,6 @@ class RtCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Add Reconnect Attempt Listener
     private func addReconnectAttemptListener(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Add Reconnect Attempt Listener")
-        
         let currentReconnectAttemptSubscription = nextReconnectAttemptSubscription
         nextReconnectAttemptSubscription += 1
         
@@ -149,8 +141,6 @@ class RtCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Add Connect Error Listener
     private func addConnectErrorListener(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Add Connect Error Listener")
-        
         let currentConnectErrorSubscription = nextConnectErrorSubscription
         nextConnectErrorSubscription += 1
         
@@ -170,8 +160,6 @@ class RtCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Add Disconnect Listener
     private func addDisconnectListener(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Add Disconnect Listener")
-        
         let currentDisconnectSubscription = nextDisconnectSubscription
         nextDisconnectSubscription += 1
         
@@ -191,8 +179,6 @@ class RtCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Remove Connection Listeners
     private func removeConnectionListeners(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Remove Connection Listeners")
-        
         realTime.removeConnectEventListeners()
         connectSubscriptions.removeAll()
         
@@ -202,8 +188,6 @@ class RtCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Remove Listener
     private func removeListener(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Remove Listener")
-        
         guard
             let handle: Int = arguments[Args.handle].flatMap(cast),
             let callbacksName: String = arguments[Args.callbacksName].flatMap(cast)

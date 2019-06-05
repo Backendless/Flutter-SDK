@@ -112,8 +112,6 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Cancel
     private func cancel(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Cancel")
-        
         guard let messageId: String = arguments[Args.messageId].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             
@@ -132,8 +130,6 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - GetDeviceRegistration
     private func getDeviceRegistration(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Get Device Registration")
-        
         messaging.getDeviceRegistrations(responseHandler: {
             result($0)
         }, errorHandler: {
@@ -144,8 +140,6 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - GetMessageStatus
     private func getMessageStatus(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Get Message Status")
-        
         guard let messageId: String = arguments[Args.messageId].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             
@@ -164,8 +158,6 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Publish
     private func publish(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Publish")
-        
         guard
             let channelName: String = arguments[Args.channelName].flatMap(cast),
             let message = arguments[Args.message]
@@ -220,8 +212,6 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - PushWithTemplate
     private func pushWithTemplate(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Push With Template")
-        
         guard let template: String = arguments[Args.templateName].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             
@@ -240,8 +230,7 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - RegisterDevice
     private func registerDevice(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Register Device")
-        
+
         // TODO: -
         // TODO: - Method without deviceToken in arguments will be added to SwiftSDK
         fatalError("Method without deviceToken in arguments will be added to SwiftSDK")
@@ -267,8 +256,6 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - SendEmail
     private func sendEmail(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Send Email")
-        
         guard
             let recipients: [String] = arguments[Args.recipients].flatMap(cast),
             let subject: String = arguments[Args.subject].flatMap(cast)
@@ -298,8 +285,6 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - SendHTMLEmail
     private func sendHTMLEmail(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Send HTML Email")
-        
         guard
             let recipients: [String] = arguments[Args.recipients].flatMap(cast),
             let subject: String = arguments[Args.subject].flatMap(cast),
@@ -327,8 +312,6 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - SendTextEmail
     private func sendTextEmail(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Send Text Email")
-        
         guard
             let recipients: [String] = arguments[Args.recipients].flatMap(cast),
             let subject: String = arguments[Args.subject].flatMap(cast),
@@ -356,8 +339,6 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - UnregisterDevice
     private func unregisterDevice(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Unregister Device")
-        
         let channels: [String]? = arguments[Args.channels].flatMap(cast)
         
         if let channels = channels {
@@ -380,8 +361,6 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Join
     private func join(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Join")
-        
         guard let channelName: String = arguments[Args.channelName].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             
@@ -401,8 +380,6 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Leave
     private func leave(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Leave")
-        
         guard let channelName: String = arguments[Args.channelName].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             
@@ -417,8 +394,6 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - IsJoined
     private func isJoined(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Is Joined")
-        
         guard let channelName: String = arguments[Args.channelName].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             
@@ -436,8 +411,6 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - AddMessageListener
     private func addMessageListener(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Add Message Listener")
-        
         guard let channelName: String = arguments[Args.channelName].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             

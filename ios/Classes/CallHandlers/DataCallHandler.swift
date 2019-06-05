@@ -169,8 +169,6 @@ class DataCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Create
     private func create(_ tableName: String, _ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in create")
-        
         guard let entities: [[String: Any]] = arguments[Args.objects].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             
@@ -190,8 +188,6 @@ class DataCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - DeleteRelation
     private func deleteRelation(_ tableName: String, _ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in deleteReliation")
-        
         guard
             let relationColumnName: String = arguments[Args.relationColumnName].flatMap(cast),
             let parent: String = arguments[Args.parent].flatMap(cast)
@@ -227,8 +223,6 @@ class DataCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Find
     private func find(_ tableName: String, _ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in find")
-        
         let queryBuilder: DataQueryBuilder? = arguments[Args.queryBuilder].flatMap(cast)
         
         if let queryBuilder = queryBuilder {
@@ -254,8 +248,6 @@ class DataCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - FindById
     private func findById(_ tableName: String, _ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in find by id")
-        
         guard let id: String = arguments[Args.id].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             
@@ -308,8 +300,6 @@ class DataCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - FindFirst
     private func findFirst(_ tableName: String, arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Find First")
-        
         let relations: [String]? = arguments[Args.relations].flatMap(cast)
         let relationsDepth: Int? = arguments[Args.relationsDepth].flatMap(cast)
         
@@ -339,8 +329,6 @@ class DataCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - FindLast
     private func findLast(_ tableName: String, arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Find Last")
-        
         let relations: [String]? = arguments[Args.relations].flatMap(cast)
         let relationsDepth: Int? = arguments[Args.relationsDepth].flatMap(cast)
         
@@ -370,8 +358,6 @@ class DataCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Get Object Count
     private func getObjectCount(_ tableName: String, _ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Get Object Count")
-        
         let queryBuilder: DataQueryBuilder? = arguments[Args.queryBuilder].flatMap(cast)
         
         if let queryBuilder = queryBuilder {
@@ -396,8 +382,7 @@ class DataCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Load Relations
     private func loadRelations(_ tableName: String, _ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Load Relations")
-        
+
         // TODO: -
         // TODO: - How to parse LoadRelationsQueryBuilder
         
@@ -423,8 +408,6 @@ class DataCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Remove
     private func remove(_ tableName: String, _ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Remove")
-        
         guard let entity: [String: Any] = arguments[Args.entity].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             
@@ -444,8 +427,6 @@ class DataCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Save
     private func save(_ tableName: String, _ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("Hello in save")
-        
         guard let entity: [String: Any] = arguments[Args.entity].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             
@@ -465,7 +446,6 @@ class DataCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Set Relation
     private func setRelation(_ tableName: String, _ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Set Relation")
         
         // TODO: -
         // TODO: - In fact parent is getting as dictionary
@@ -504,8 +484,6 @@ class DataCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Update
     private func update(_ tableName: String, _ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Update")
-        
         guard let changes: [String: Any] = arguments[Args.changes].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             
@@ -525,19 +503,12 @@ class DataCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Call Stored Procedure
     private func callStoredProcedure(_ tableName: String, _ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Call Stored Procedure")
-        
         result(FlutterMethodNotImplemented)
     }
     
     // MARK: -
     // MARK: - Describe
     private func describe(_ tableName: String, _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Describe")
-        
-        // TODO: -
-        // TODO: - Change "classSimpleName" in Dart code to "tableName"
-        
         data.describe(tableName: tableName,
             responseHandler: { (properties: [ObjectProperty]) in
                 // TODO: - Need to check if it works correctly
@@ -551,15 +522,12 @@ class DataCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Get View
     private func getView(_ tableName: String, _ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Get View")
-        
         result(FlutterMethodNotImplemented)
     }
     
     // MARK: -
     // MARK: - Add Listener
     private func addListener(_ tableName: String, _ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        print("~~~> Hello in Add Listener")
         
         // TODO: -
         // TODO: - Get events from Backendless

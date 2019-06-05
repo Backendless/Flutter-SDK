@@ -52,9 +52,9 @@ class BackendlessData {
     }
   }
 
-  Future<List<ObjectProperty>> describe(String classSimpleName) async =>
+  Future<List<ObjectProperty>> describe(String tableName) async =>
       (await _channel.invokeMethod("Backendless.Data.describe",
-              <String, dynamic>{'classSimpleName': classSimpleName}))
+              <String, dynamic>{'tableName': tableName}))
           .cast<ObjectProperty>();
 
   Future<List<Object>> find(Type entity, DataQueryBuilder queryBuilder) =>
