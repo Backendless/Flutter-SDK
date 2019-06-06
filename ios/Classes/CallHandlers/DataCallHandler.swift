@@ -525,11 +525,6 @@ class DataCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Add Listener
     private func addListener(_ tableName: String, _ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        
-        // TODO: -
-        // TODO: - Get events from Backendless
-        // TODO: - Can't see events in Flutter
-        
         guard let event: String = arguments[Args.event].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             
@@ -609,8 +604,11 @@ class DataCallHandler: FlutterCallHandlerProtocol {
             }
         }
         
-        subscription.map { [weak self] in
-            self?.subscriptions[currentHandle] = $0
+        if let newSubscription = subscription {
+            subscriptions[currentHandle] = newSubscription
+            result(currentHandle)
+        } else {
+            result(nil)
         }
     }
     

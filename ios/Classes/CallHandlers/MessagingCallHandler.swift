@@ -107,8 +107,8 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
             leave(arguments, result)
         case Methods.isJoined:
             isJoined(arguments, result)
-        case Methods.addJoinListener:
-            addJoinListener(arguments, result)
+//        case Methods.addJoinListener:
+//            addJoinListener(arguments, result)
         
         default:
             result(FlutterMethodNotImplemented)
