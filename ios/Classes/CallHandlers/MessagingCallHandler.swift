@@ -29,6 +29,9 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
         static let join = "Backendless.Messaging.Channel.join"
         static let leave = "Backendless.Messaging.Channel.leave"
         static let isJoined = "Backendless.Messaging.Channel.isJoined"
+        static let addJoinListener = "Backendless.Messaging.Channel.addJoinListener"
+        static let removeJoinListener = "Backendless.Messaging.Channel.removeMessageListener"
+        static let addMessageListener = "Backendless.Messaging.Channel.addMessageListener"
         
         static let eventResponse = "Backendless.Messaging.Channel.EventResponse"
     }
@@ -51,6 +54,13 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
         static let response = "response"
         static let expiration = "expiration"
         static let channelHandle = "channelHandle"
+        static let selector = "selector"
+        static let messageType = "messageType"
+    }
+    
+    private enum MessageTypes {
+        static let string = "String"
+        static let info = "PublishMessageInfo"
     }
     
     // MARK: -
@@ -64,6 +74,14 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - FlutterMessagingChannel
     private let messagingChannel: FlutterMethodChannel
+    
+    // MARK: -
+    // MARK: -
+    private var nextJoinHandle = 0
+    private var joinSubscriptions: [Int: RTSubscription] = [:]
+    
+    private var nextMessageHandle = 0
+    private var messageSubscriptions: [Int: RTSubscription] = [:]
     
     // MARK: -
     // MARK: - Init
@@ -99,16 +117,18 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
             unregisterDevice(arguments, result)
         case Methods.subscribe:
             subscribe(arguments, result)
-            
-            
         case Methods.join:
             join(arguments, result)
         case Methods.leave:
             leave(arguments, result)
         case Methods.isJoined:
             isJoined(arguments, result)
-//        case Methods.addJoinListener:
-//            addJoinListener(arguments, result)
+        case Methods.addJoinListener:
+            addJoinListener(arguments, result)
+        case Methods.removeJoinListener:
+            removeJoinListener(arguments, result)
+        case Methods.addMessageListener:
+            addMessageListener(arguments, result)
         
         default:
             result(FlutterMethodNotImplemented)
@@ -418,6 +438,110 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
         }
         
         result(false)
+    }
+    
+    // MARK: -
+    // MARK: - AddJoinListener
+    private func addJoinListener(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
+        guard let channelHandle: Int = arguments[Args.channelHandle].flatMap(cast) else {
+            result(FlutterError.noRequiredArguments)
+            
+            return
+        }
+        
+        let currentJoinHandle = nextJoinHandle
+        nextJoinHandle += 1
+        
+        let subscription = channels[channelHandle]?.addConnectListener(responseHandler: { [weak self] in
+            var callbackArgs: [String: Any] = [:]
+            callbackArgs["handle"] = currentJoinHandle
+            self?.messagingChannel.invokeMethod("Backendless.Messaging.Channel.Join.EventResponse", arguments: callbackArgs)
+        }, errorHandler: {
+            result(FlutterError($0))
+        })
+        
+        if let newSubscription = subscription {
+            joinSubscriptions[currentJoinHandle] = newSubscription
+            result(currentJoinHandle)
+        } else {
+            result(nil)
+        }
+    }
+    
+    
+    // MARK: -
+    // MARK: - RemoveJoinListener
+    private func removeJoinListener(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
+        guard let channelHandle: Int = arguments[Args.channelHandle].flatMap(cast) else {
+            result(FlutterError.noRequiredArguments)
+            
+            return
+        }
+        
+        joinSubscriptions[channelHandle]?.stop()
+        joinSubscriptions.removeValue(forKey: channelHandle)
+    }
+    
+    // MARK: -
+    // MARK: - AddMessageListener
+    private func addMessageListener(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
+        guard
+            let channelHandle: Int = arguments[Args.channelHandle].flatMap(cast),
+            let messageType: String = arguments[Args.messageType].flatMap(cast)
+        else {
+            result(FlutterError.noRequiredArguments)
+            
+            return
+        }
+        
+        let selector: String? = arguments[Args.selector].flatMap(cast)
+        
+        let currentMessageHandle = nextMessageHandle
+        nextMessageHandle += 1
+        
+        var subscription: RTSubscription?
+        
+        let successHandler: (Any) -> Void = { [weak self] (response) in
+            let callbackArgs: [String: Any] = [
+                "handle": currentMessageHandle,
+                "response": response
+            ]
+            
+            self?.messagingChannel.invokeMethod("Backendless.Messaging.Channel.Message.EventResponse", arguments: callbackArgs)
+        }
+        
+        let errorHandler: (Fault) -> Void = { [weak self] (fault) in
+            let callbackArgs: [String: Any] = [
+                "handle": currentMessageHandle,
+                "fault": fault.message ?? ""
+            ]
+            self?.messagingChannel.invokeMethod("Backendless.Messaging.Channel.Message.EventFault", arguments: callbackArgs)
+        }
+        
+        switch messageType {
+        case MessageTypes.string:
+            if let selector = selector {
+                subscription = channels[channelHandle]?.addStringMessageListener(selector: selector, responseHandler: successHandler, errorHandler: errorHandler)
+            } else {
+                subscription = channels[channelHandle]?.addStringMessageListener(responseHandler: successHandler, errorHandler: errorHandler)
+            }
+        case MessageTypes.info:
+            if let selector = selector {
+                subscription = channels[channelHandle]?.addMessageListener(selector: selector, responseHandler: successHandler, errorHandler: errorHandler)
+            } else {
+                subscription = channels[channelHandle]?.addMessageListener(responseHandler: successHandler, errorHandler: errorHandler)
+            }
+        default:
+            result(nil)
+            return
+        }
+        
+        if let newSubscription = subscription {
+            messageSubscriptions[currentMessageHandle] = newSubscription
+            result(currentMessageHandle)
+        } else {
+            result(nil)
+        }
     }
    
 }
