@@ -32,6 +32,14 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
         static let addJoinListener = "Backendless.Messaging.Channel.addJoinListener"
         static let removeJoinListener = "Backendless.Messaging.Channel.removeMessageListener"
         static let addMessageListener = "Backendless.Messaging.Channel.addMessageListener"
+        static let removeMessageListener = "Backendless.Messaging.Channel.removeMessageListener"
+        static let removeAllMessageListeners = "Backendless.Messaging.Channel.removeAllMessageListeners"
+        static let addCommandListener = "Backendless.Messaging.Channel.addCommandListener"
+        static let removeCommandListener = "Backendless.Messaging.Channel.removeCommandListener"
+        static let sendCommand = "Backendless.Messaging.Channel.sendCommand"
+        static let addUserStatusListener = "Backendless.Messaging.Channel.addUserStatusListener"
+        static let removeUserStatusListener = "Backendless.Messaging.Channel.removeUserStatusListener"
+        static let removeUserStatusListeners = "Backendless.Messaging.Channel.removeUserStatusListeners"
         
         static let eventResponse = "Backendless.Messaging.Channel.EventResponse"
     }
@@ -83,6 +91,12 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
     private var nextMessageHandle = 0
     private var messageSubscriptions: [Int: RTSubscription] = [:]
     
+    private var nextCommandHandle = 0
+    private var commandSubscriptions: [Int: RTSubscription] = [:]
+    
+    private var nextUserStatusHandle = 0
+    private var userStatusSubscriptions: [Int: RTSubscription] = [:]
+    
     // MARK: -
     // MARK: - Init
     init(messagingChannel: FlutterMethodChannel) {
@@ -129,6 +143,22 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
             removeJoinListener(arguments, result)
         case Methods.addMessageListener:
             addMessageListener(arguments, result)
+        case Methods.removeMessageListener:
+            removeMessageListener(arguments, result)
+        case Methods.removeAllMessageListeners:
+            removeAllMessageListeners(arguments, result)
+        case Methods.addCommandListener:
+            addCommandListener(arguments, result)
+        case Methods.removeCommandListener:
+            removeCommandListener(arguments, result)
+        case Methods.sendCommand:
+            sendCommand(arguments, result)
+        case Methods.addUserStatusListener:
+            addUserStatusListener(arguments, result)
+        case Methods.removeUserStatusListener:
+            removeUserStatusListener(arguments, result)
+        case Methods.removeUserStatusListeners:
+            removeUserStatusListeners(arguments, result)
         
         default:
             result(FlutterMethodNotImplemented)
@@ -261,22 +291,6 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
         // TODO: - Method without deviceToken in arguments will be added to SwiftSDK
         fatalError("Method without deviceToken in arguments will be added to SwiftSDK")
         
-//        let channels: [String]? = arguments[Args.channels].flatMap(cast)
-//        let expiration: Date? = arguments[Args.expiration].flatMap(cast)
-//        
-//        if let channels = channels {
-//            if let expiration = expiration {
-//                
-//            } else {
-//                
-//            }
-//        } else {
-//            if let expiration = expiration {
-//                
-//            } else {
-//                
-//            }
-//        }
     }
     
     // MARK: -
@@ -543,6 +557,151 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
             result(nil)
         }
     }
+    
+    // MARK: -
+    // MARK: - RemoveMessageListener
+    private func removeMessageListener(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
+        guard let channelHandle: Int = arguments[Args.channelHandle].flatMap(cast) else {
+            result(FlutterError.noRequiredArguments)
+            
+            return
+        }
+        
+        messageSubscriptions[channelHandle]?.stop()
+        messageSubscriptions.removeValue(forKey: channelHandle)
+    }
+    
+    // MARK: -
+    // MARK: - RemoveAllMessageListeners
+    private func removeAllMessageListeners(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
+        
+        // TODO: -
+        // TODO: - Updated Flutter implementation will handle listener filtering
+        result(FlutterMethodNotImplemented)
+    }
+    
+    // MARK: -
+    // MARK: - AddCommandListener
+    private func addCommandListener(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
+        guard let channelHandle: Int = arguments[Args.channelHandle].flatMap(cast) else {
+            result(FlutterError.noRequiredArguments)
+            
+            return
+        }
+        
+        let currentCommandHandle = nextCommandHandle
+        nextCommandHandle += 1
+        
+        let successHandler: (CommandObject) -> Void = { [weak self] (command) in
+            let callbackArgs: [String: Any] = [
+                "handle": currentCommandHandle,
+                "response": command
+            ]
+            self?.messagingChannel.invokeMethod("Backendless.Messaging.Channel.Command.EventResponse", arguments: callbackArgs)
+        }
+        
+        let errorHandler: (Fault) -> Void = { [weak self] (fault) in
+            let callbackArgs: [String: Any] = [
+                "handle": currentCommandHandle,
+                "fault": fault.message ?? ""
+            ]
+            self?.messagingChannel.invokeMethod("Backendless.Messaging.Channel.Command.EventFault", arguments: callbackArgs)
+        }
+        
+        let subscription = channels[channelHandle]?.addCommandListener(responseHandler: successHandler, errorHandler: errorHandler)
+        
+        if let newSubscription = subscription {
+            commandSubscriptions[currentCommandHandle] = newSubscription
+            result(currentCommandHandle)
+        } else {
+            result(nil)
+        }
+    }
+    
+    // MARK: -
+    // MARK: - RemoveCommandListener
+    private func removeCommandListener(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
+        guard let channelHandle: Int = arguments[Args.channelHandle].flatMap(cast) else {
+            result(FlutterError.noRequiredArguments)
+            
+            return
+        }
+        
+        commandSubscriptions[channelHandle]?.stop()
+        commandSubscriptions.removeValue(forKey: channelHandle)
+    }
+    
+    // MARK: -
+    // MARK: - SendCommand
+    private func sendCommand(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
+        
+        // MARK: -
+        // MARK: - No such method in iOS SDK
+        
+        result(FlutterMethodNotImplemented)
+    }
+    
+    // MARK: -
+    // MARK: - AddUserStatusListener
+    private func addUserStatusListener(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
+        guard let channelHandle: Int = arguments[Args.channelHandle].flatMap(cast) else {
+            result(FlutterError.noRequiredArguments)
+            
+            return
+        }
+        
+        let currentUserStatusHandle = nextUserStatusHandle
+        nextUserStatusHandle += 1
+        
+        let successHandler: (UserStatus) -> Void = { [weak self] (status) in
+            let callbackArgs: [String: Any] = [
+                "handle": currentUserStatusHandle,
+                "response": status
+            ]
+            self?.messagingChannel.invokeMethod("Backendless.Messaging.Channel.UserStatus.EventResponse", arguments: callbackArgs)
+        }
+        
+        let errorHandler: (Fault) -> Void = { [weak self] (fault) in
+            let callbackArgs: [String: Any] = [
+                "handle": currentUserStatusHandle,
+                "fault": fault.message ?? ""
+            ]
+            self?.messagingChannel.invokeMethod("Backendless.Messaging.Channel.UserStatus.EventFault", arguments: callbackArgs)
+        }
+        
+        let subscription = channels[channelHandle]?.addUserStatusListener(responseHandler: successHandler, errorHandler: errorHandler)
+        
+        if let newSubscription = subscription {
+            userStatusSubscriptions[currentUserStatusHandle] = newSubscription
+            result(currentUserStatusHandle)
+        } else {
+            result(nil)
+        }
+    }
+    
+    // MARK: -
+    // MARK: - RemoveUserStatusListener
+    private func removeUserStatusListener(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
+        guard let channelHandle: Int = arguments[Args.channelHandle].flatMap(cast) else {
+            result(FlutterError.noRequiredArguments)
+            
+            return
+        }
+        
+        userStatusSubscriptions[channelHandle]?.stop()
+        userStatusSubscriptions.removeValue(forKey: channelHandle)
+    }
+    
+    // MARK: -
+    // MARK: - RemoveUserStatusListeners
+    private func removeUserStatusListeners(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
+        
+        // TODO: -
+        // TODO: - Updated Flutter implementation will handle listener filtering
+        result(FlutterMethodNotImplemented)
+    }
+    
+    
    
 }
 
