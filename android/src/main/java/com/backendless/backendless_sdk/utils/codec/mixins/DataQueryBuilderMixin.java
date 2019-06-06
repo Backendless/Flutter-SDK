@@ -1,0 +1,18 @@
+package com.backendless.backendless_sdk.utils.codec.mixins;
+
+import com.backendless.persistence.DataQueryBuilder;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.util.List;
+
+public abstract class DataQueryBuilderMixin {
+
+    @JsonProperty("properties")
+    public abstract DataQueryBuilder setProperties(List<String> properties);
+
+    @JsonProperty("sortBy")
+    public abstract DataQueryBuilder setSortBy(List<String> sortBy);
+
+    @JsonProperty("related")
+    public abstract DataQueryBuilder setRelated(List<String> related);
+}

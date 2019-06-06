@@ -37,8 +37,8 @@ class BackendlessMessageCodec extends StandardMessageCodec {
   void writeValue(WriteBuffer buffer, dynamic value) {
     if (value is DateTime) {
       buffer.putUint8(_kDateTime);
-          writeValue(buffer, value.millisecondsSinceEpoch);
-    } else if (value is GeoPoint) {
+      writeValue(buffer, value.millisecondsSinceEpoch);
+    } else if (value is GeoPoint && !(value is GeoCluster)) {
       buffer.putUint8(_kGeoPoint);
       writeValue(buffer, value.toJson());
     } else if (value is DataQueryBuilder) {
@@ -86,11 +86,23 @@ class BackendlessMessageCodec extends StandardMessageCodec {
     } else if (value is DeliveryOptions) {
       buffer.putUint8(_kDeliveryOptions);
       writeValue(buffer, value.toJson());
+    } else if (value is PublishMessageInfo) {
+      buffer.putUint8(_kPublishMessageInfo);
+      writeValue(buffer, value.toJson());
+    } else if (value is DeviceRegistrationResult) {
+      buffer.putUint8(_kDeviceRegistrationResult);
+      writeValue(buffer, value.toJson());
     } else if (value is Command) {
       buffer.putUint8(_kCommand);
       writeValue(buffer, value.toJson());
     } else if (value is UserInfo) {
       buffer.putUint8(_kUserInfo);
+      writeValue(buffer, value.toJson());
+    } else if (value is UserStatusResponse) {
+      buffer.putUint8(_kUserStatusResponse);
+      writeValue(buffer, value.toJson());
+    } else if (value is ReconnectAttempt) {
+      buffer.putUint8(_kReconnectAttempt);
       writeValue(buffer, value.toJson());
     } else if (value is BackendlessUser) {
       buffer.putUint8(_kBackendlessUser);

@@ -410,7 +410,7 @@ abstract class AbstractProperty {
   bool required;
   DateTypeEnum type;
 
-  AbstractProperty({this.name, this.required, this.type});
+  AbstractProperty({this.name, this.required = false, this.type});
 }
 
 class ObjectProperty extends AbstractProperty {
@@ -424,7 +424,7 @@ class ObjectProperty extends AbstractProperty {
     defaultValue = json['defaultValue'];
     name = json['name'];
     required = json['required'];
-    type = json['type'];
+    type = DateTypeEnum.values[json['type']];
   }
 
   Map toJson() =>
@@ -433,7 +433,7 @@ class ObjectProperty extends AbstractProperty {
       'defaultValue': defaultValue,
       'name': name,
       'required': required,
-      'type': type,
+      'type': type?.index,
     };
 }
 

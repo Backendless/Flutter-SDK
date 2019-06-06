@@ -22,8 +22,8 @@ void checkArguments(
   }
 }
 
-T getEnumFromString<T>(Iterable<T> values, String value) {
-  return values.firstWhere((type) => type.toString().split(".").last == value,
+T stringToEnum<T>(Iterable<T> enumValues, String stringValue) {
+  return enumValues.firstWhere((type) => type.toString().split(".").last == stringValue,
       orElse: () => null);
 }
 

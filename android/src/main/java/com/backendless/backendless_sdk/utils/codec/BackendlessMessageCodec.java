@@ -1,7 +1,11 @@
-package com.backendless.backendless_sdk.utils;
+package com.backendless.backendless_sdk.utils.codec;
 
 import com.backendless.BackendlessUser;
 import com.backendless.DeviceRegistration;
+import com.backendless.backendless_sdk.utils.codec.mixins.CommandMixin;
+import com.backendless.backendless_sdk.utils.codec.mixins.DataQueryBuilderMixin;
+import com.backendless.backendless_sdk.utils.codec.mixins.LoadRelationsQueryBuilderMixin;
+import com.backendless.backendless_sdk.utils.codec.mixins.ReconnectAttemptMixin;
 import com.backendless.commerce.GooglePlayPurchaseStatus;
 import com.backendless.commerce.GooglePlaySubscriptionStatus;
 import com.backendless.files.FileInfo;
@@ -10,17 +14,13 @@ import com.backendless.geo.GeoCategory;
 import com.backendless.geo.GeoCluster;
 import com.backendless.geo.GeoPoint;
 import com.backendless.geo.SearchMatchesResult;
-import com.backendless.geo.Units;
 import com.backendless.messaging.DeliveryOptions;
 import com.backendless.messaging.Message;
 import com.backendless.messaging.MessageStatus;
 import com.backendless.messaging.PublishMessageInfo;
 import com.backendless.messaging.PublishOptions;
-import com.backendless.messaging.PublishPolicyEnum;
-import com.backendless.messaging.PublishStatusEnum;
 import com.backendless.persistence.DataQueryBuilder;
 import com.backendless.persistence.LoadRelationsQueryBuilder;
-import com.backendless.property.DateTypeEnum;
 import com.backendless.property.ObjectProperty;
 import com.backendless.property.UserProperty;
 import com.backendless.push.DeviceRegistrationResult;
@@ -34,7 +34,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -71,6 +70,13 @@ public final class BackendlessMessageCodec extends StandardMessageCodec {
     private static final byte BACKENDLESS_USER = (byte) 151;
     private static final byte USER_PROPERTY = (byte) 152;
     private static final byte BULK_EVENT = (byte) 153;
+
+    private BackendlessMessageCodec() {
+        objectMapper.addMixIn(DataQueryBuilder.class, DataQueryBuilderMixin.class);
+        objectMapper.addMixIn(LoadRelationsQueryBuilder.class, LoadRelationsQueryBuilderMixin.class);
+        objectMapper.addMixIn(Command.class, CommandMixin.class);
+        objectMapper.addMixIn(ReconnectAttempt.class, ReconnectAttemptMixin.class);
+    }
 
     @Override
     protected void writeValue(ByteArrayOutputStream stream, Object value) {
@@ -139,8 +145,7 @@ public final class BackendlessMessageCodec extends StandardMessageCodec {
             writeValue(stream, objectMapper.convertValue(value, Map.class));
         } else if (value instanceof BackendlessUser) {
             stream.write(BACKENDLESS_USER);
-            BackendlessUser user = (BackendlessUser) value;
-            writeValue(stream, user.getProperties());
+            writeValue(stream, ((BackendlessUser) value).getProperties());
         } else if (value instanceof UserProperty) {
             stream.write(USER_PROPERTY);
             writeValue(stream, objectMapper.convertValue(value, Map.class));
@@ -160,7 +165,7 @@ public final class BackendlessMessageCodec extends StandardMessageCodec {
     protected Object readValueOfType(byte type, ByteBuffer buffer) {
         switch (type) {
             case DATE_TIME:
-                return new Date(buffer.getLong());
+                return new Date((Long) readValue(buffer));
             case GEO_POINT:
                 return objectMapper.convertValue(readValue(buffer), GeoPoint.class);
             case DATA_QUERY_BUILDER:
@@ -193,10 +198,18 @@ public final class BackendlessMessageCodec extends StandardMessageCodec {
                 return objectMapper.convertValue(readValue(buffer), PublishOptions.class);
             case DELIVERY_OPTIONS:
                 return objectMapper.convertValue(readValue(buffer), DeliveryOptions.class);
+            case PUBLISH_MESSAGE_INFO:
+                return objectMapper.convertValue(readValue(buffer), PublishMessageInfo.class);
+            case DEVICE_REGISTRATION_RESULT:
+                return objectMapper.convertValue(readValue(buffer), DeviceRegistrationResult.class);
             case COMMAND:
                 return objectMapper.convertValue(readValue(buffer), Command.class);
             case USER_INFO:
                 return objectMapper.convertValue(readValue(buffer), UserInfo.class);
+            case USER_STATUS_RESPONSE:
+                return objectMapper.convertValue(readValue(buffer), UserStatusResponse.class);
+            case RECONNECT_ATTEMPT:
+                return objectMapper.convertValue(readValue(buffer), ReconnectAttempt.class);
             case BACKENDLESS_USER:
                 return objectMapper.convertValue(readValue(buffer), BackendlessUser.class);
             case USER_PROPERTY:
