@@ -145,6 +145,9 @@ class GeoCallHandler: FlutterCallHandlerProtocol {
         // TODO: -
         // TODO: - Need to test: problem with getting BackendlessGeoQuery object from Flutter
         
+        // TODO: -
+        // TODO: - How to use GeofenceName?
+        
         let geoQuery: BackendlessGeoQuery? = arguments[Args.query].flatMap(cast)
         let geofenceName: String? = arguments[Args.geofenceName].flatMap(cast)
         
@@ -163,15 +166,15 @@ class GeoCallHandler: FlutterCallHandlerProtocol {
                 result(FlutterError($0))
             })
         }
-        
-        // TODO: -
-        // TODO: - How to use GeofenceName?
-        
     }
     
     // MARK: -
     // MARK: - GetPoints +-
     private func getPoints(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
+        
+        // TODO: -
+        // TODO: - How to use GeofenceName & GeoCluster?
+        
         let geoQuery: BackendlessGeoQuery? = arguments[Args.query].flatMap(cast)
         let geofenceName: String? = arguments[Args.geofenceName].flatMap(cast)
         let geoCluster: GeoCluster? = arguments[Args.geoCluster].flatMap(cast)
@@ -191,10 +194,6 @@ class GeoCallHandler: FlutterCallHandlerProtocol {
                 result(FlutterError($0))
             })
         }
-        
-        // TODO: -
-        // TODO: - How to use GeofenceName & GeoCluster?
-        
     }
     
     // MARK: -

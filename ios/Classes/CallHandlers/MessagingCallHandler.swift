@@ -25,10 +25,10 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
         static let sendHTMLEmail = "Backendless.Messaging.sendHTMLEmail"
         static let sendTextEmail = "Backendless.Messaging.sendTextEmail"
         static let unregisterDevice = "Backendless.Messaging.unregisterDevice"
+        static let subscribe = "Backendless.Messaging.subscribe"
         static let join = "Backendless.Messaging.Channel.join"
         static let leave = "Backendless.Messaging.Channel.leave"
         static let isJoined = "Backendless.Messaging.Channel.isJoined"
-        static let addMessageListener = "Backendless.Messaging.Channel.addMessageListener"
         
         static let eventResponse = "Backendless.Messaging.Channel.EventResponse"
     }
@@ -50,6 +50,7 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
         static let handle = "handle"
         static let response = "response"
         static let expiration = "expiration"
+        static let channelHandle = "channelHandle"
     }
     
     // MARK: -
@@ -58,7 +59,7 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
     
     // MARK: -
     // MARK: - Channels
-    private var channels: [String: Channel] = [:]
+    private var channels: [Int: Channel] = [:]
     
     // MARK: -
     // MARK: - FlutterMessagingChannel
@@ -77,33 +78,38 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
         
         switch call.method {
         case Methods.cancel:
-            self.cancel(arguments, result)
+            cancel(arguments, result)
         case Methods.getDeviceRegistration:
-            self.getDeviceRegistration(arguments, result)
+            getDeviceRegistration(arguments, result)
         case Methods.getMessageStatus:
-            self.getMessageStatus(arguments, result)
+            getMessageStatus(arguments, result)
         case Methods.publish:
-            self.publish(arguments, result)
+            publish(arguments, result)
         case Methods.pushWithTemplate:
-            self.pushWithTemplate(arguments, result)
+            pushWithTemplate(arguments, result)
         case Methods.registerDevice:
-            self.registerDevice(arguments, result)
+            registerDevice(arguments, result)
         case Methods.sendEmail:
-            self.sendEmail(arguments, result)
+            sendEmail(arguments, result)
         case Methods.sendHTMLEmail:
-            self.sendHTMLEmail(arguments, result)
+            sendHTMLEmail(arguments, result)
         case Methods.sendTextEmail:
-            self.sendTextEmail(arguments, result)
+            sendTextEmail(arguments, result)
         case Methods.unregisterDevice:
-            self.unregisterDevice(arguments, result)
+            unregisterDevice(arguments, result)
+        case Methods.subscribe:
+            subscribe(arguments, result)
+            
+            
         case Methods.join:
-            self.join(arguments, result)
+            join(arguments, result)
         case Methods.leave:
-            self.leave(arguments, result)
+            leave(arguments, result)
         case Methods.isJoined:
-            self.isJoined(arguments, result)
-        case Methods.addMessageListener:
-            self.addMessageListener(arguments, result)
+            isJoined(arguments, result)
+        case Methods.addJoinListener:
+            addJoinListener(arguments, result)
+        
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -271,8 +277,6 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
         
         let attachments: [String]? = arguments[Args.attachments].flatMap(cast)
         
-        // TODO: -
-        // TODO: - MessageStatus
         messaging.sendEmail(subject: subject, bodyparts: bodyParts, recipients: recipients, attachments: attachments,
             responseHandler: {
                 result($0)
@@ -298,8 +302,6 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
         let bodyParts = EmailBodyparts()
         bodyParts.htmlMessage = messageBody
         
-        // TODO: -
-        // TODO: - MessageStatus
         messaging.sendEmail(subject: subject, bodyparts: bodyParts, recipients: recipients, attachments: nil,
             responseHandler: {
                 result($0)
@@ -325,8 +327,6 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
         let bodyParts = EmailBodyparts()
         bodyParts.textMessage = messageBody
         
-        // TODO: -
-        // TODO: - MessageStatus
         messaging.sendEmail(subject: subject, bodyparts: bodyParts, recipients: recipients, attachments: nil,
             responseHandler: {
                 result($0)
@@ -359,20 +359,33 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
     }
     
     // MARK: -
-    // MARK: - Join
-    private func join(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        guard let channelName: String = arguments[Args.channelName].flatMap(cast) else {
+    // MARK: - Subscribe
+    private func subscribe(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
+        guard
+            let channelName: String = arguments[Args.channelName].flatMap(cast),
+            let channelHandle: Int = arguments[Args.channelHandle].flatMap(cast)
+        else {
             result(FlutterError.noRequiredArguments)
             
             return
         }
         
-        if let existChannel = channels[channelName] {
-            existChannel.join()
-        } else {
-            let newChannel = messaging.subscribe(channelName: channelName)
-            channels[channelName] = newChannel
+        let channel = messaging.subscribe(channelName: channelName)
+        channels[channelHandle] = channel
+        
+        result(nil)
+    }
+    
+    // MARK: -
+    // MARK: - Join
+    private func join(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
+        guard let channelHandle: Int = arguments[Args.channelHandle].flatMap(cast) else {
+            result(FlutterError.noRequiredArguments)
+            
+            return
         }
+        
+        channels[channelHandle]?.join()
         
         result(nil)
     }
@@ -380,13 +393,13 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Leave
     private func leave(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        guard let channelName: String = arguments[Args.channelName].flatMap(cast) else {
+        guard let channelHandle: Int = arguments[Args.channelHandle].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             
             return
         }
         
-        channels[channelName]?.leave()
+        channels[channelHandle]?.leave()
         
         result(nil)
     }
@@ -394,43 +407,17 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - IsJoined
     private func isJoined(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        guard let channelName: String = arguments[Args.channelName].flatMap(cast) else {
+        guard let channelHandle: Int = arguments[Args.channelHandle].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             
             return
         }
         
-        if let channel = channels[channelName] {
+        if let channel = channels[channelHandle] {
             result(channel.isJoined)
-        } else {
-            let error = FlutterError(code: "", message: "No such channel", details: nil)
-            result(error)
-        }
-    }
-    
-    // MARK: -
-    // MARK: - AddMessageListener
-    private func addMessageListener(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        guard let channelName: String = arguments[Args.channelName].flatMap(cast) else {
-            result(FlutterError.noRequiredArguments)
-            
-            return
         }
         
-        if let channel = channels[channelName] {
-            
-            let responseHandler: (String) -> Void = { [weak self] (response) in
-                guard let self = self else { return }
-                
-                var arguments: [String: Any] = [:]
-                arguments[Args.handle] = 0
-                arguments[Args.response] = response
-                
-                self.messagingChannel.invokeMethod(Methods.eventResponse, arguments: arguments)
-            }
-            
-            // TODO: - Add listener
-        }
+        result(false)
     }
    
 }

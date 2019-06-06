@@ -507,7 +507,8 @@ class DataCallHandler: FlutterCallHandlerProtocol {
     private func describe(_ tableName: String, _ result: @escaping FlutterResult) {
         data.describe(tableName: tableName,
             responseHandler: { (properties: [ObjectProperty]) in
-                // TODO: - Need to check if it works correctly
+                // TODO: -
+                // TODO: - Problem on Flutter side
                 result(properties)
             },
             errorHandler: {
