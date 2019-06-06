@@ -317,8 +317,8 @@ class GeoPoint extends BaseGeoPoint {
     objectId = json['objectId'];
     latitude = json['latitude'];
     longitude = json['longitude'];
-    categories = json['categories'].cast<String>();
-    metadata = json['metadata'].cast<String, Object>();
+    categories = json['categories']?.cast<String>();
+    metadata = json['metadata']?.cast<String, Object>();
     distance = json['distance'];
   }
 

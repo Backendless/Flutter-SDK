@@ -82,9 +82,15 @@ public final class BackendlessMessageCodec extends StandardMessageCodec {
     protected void writeValue(ByteArrayOutputStream stream, Object value) {
         if (value instanceof Date) {
             stream.write(DATE_TIME);
-            writeLong(stream, ((Date) value).getTime());
+            writeValue(stream, ((Date) value).getTime());
         } else if (value instanceof GeoPoint && !(value instanceof GeoCluster)) {
             stream.write(GEO_POINT);
+            writeValue(stream, objectMapper.convertValue(value, Map.class));
+        } else if (value instanceof DataQueryBuilder) {
+            stream.write(DATA_QUERY_BUILDER);
+            writeValue(stream, objectMapper.convertValue(value, Map.class));
+        } else if (value instanceof LoadRelationsQueryBuilder) {
+            stream.write(LOAD_RELATIONS_QUERY_BUILDER);
             writeValue(stream, objectMapper.convertValue(value, Map.class));
         } else if (value instanceof ObjectProperty) {
             stream.write(OBJECT_PROPERTY);

@@ -10,23 +10,24 @@ class PagedQueryBuilder {
   int _pageSize;
   int _offset;
 
-  PagedQueryBuilder() {
-    _pageSize = DEFAULT_PAGE_SIZE;
-    _offset = DEFAULT_OFFSET;
-  }
-
-  PagedQueryBuilder.of(this._pageSize, this._offset);
+  PagedQueryBuilder([this._pageSize = DEFAULT_PAGE_SIZE, this._offset = DEFAULT_OFFSET]);
 
   set pageSize(int pageSize) {
     _validatePageSize(pageSize);
-    _pageSize = pageSize;
+    if (pageSize != null)
+      _pageSize = pageSize;
+    else
+      _pageSize = DEFAULT_PAGE_SIZE;
   }
 
   get pageSize => _pageSize;
 
   set offset(int offset) {
     _validateOffset(offset);
-    _offset = offset;
+    if (offset != null)
+      _offset = offset;
+    else
+      _offset = DEFAULT_OFFSET;
   }
 
   get offset => _offset;
@@ -46,7 +47,7 @@ class PagedQueryBuilder {
 
 class DataQueryBuilder {
   static const int DEFAULT_RELATIONS_DEPTH = 0;
-  PagedQueryBuilder _pagedQueryBuilder;
+  PagedQueryBuilder _pagedQueryBuilder = new PagedQueryBuilder();
   List<String> properties;
   String whereClause;
   List<String> groupBy;
@@ -56,7 +57,6 @@ class DataQueryBuilder {
   int relationsDepth;
 
   DataQueryBuilder() {
-    _pagedQueryBuilder = new PagedQueryBuilder();
     properties = new List();
     whereClause = "";
     groupBy = new List();
@@ -69,13 +69,16 @@ class DataQueryBuilder {
   DataQueryBuilder.fromJson(Map json) {
     pageSize = json['pageSize'];
     offset = json['offset'];
-    properties = json['properties'];
+    properties = json['properties']?.cast<String>();
     whereClause = json['whereClause'];
-    groupBy = json['groupBy'];
+    groupBy = json['groupBy']?.cast<String>();
     havingClause = json['havingClause'];
-    sortBy = json['sortBy'];
-    related = json['related'];
-    relationsDepth = json['relationsDepth'];
+    sortBy = json['sortBy']?.cast<String>();
+    related = json['related']?.cast<String>();
+    if (json['relationsDepth'] != null)
+      relationsDepth = json['relationsDepth'];
+    else
+      relationsDepth = DEFAULT_RELATIONS_DEPTH;
   }
 
   Map toJson() =>
@@ -170,7 +173,7 @@ class BackendlessGeoQuery extends AbstractBackendlessGeoQuery {
   static const int DEFAULT_PAGE_SIZE = 100;
   static const int DEFAULT_OFFSET = 0;
   PagedQueryBuilder pagedQueryBuilder =
-      PagedQueryBuilder.of(DEFAULT_PAGE_SIZE, DEFAULT_OFFSET);
+      PagedQueryBuilder(DEFAULT_PAGE_SIZE, DEFAULT_OFFSET);
   Units units;
   bool includeMeta;
   Float64List searchRectangle;
@@ -269,11 +272,21 @@ class BackendlessGeoQuery extends AbstractBackendlessGeoQuery {
     if (metadata != null) includeMeta = true;
   }
 
-  set pageSize(int pageSize) => pagedQueryBuilder.pageSize = pageSize;
+  set pageSize(int pageSize) {
+    if (pageSize != null)
+      pagedQueryBuilder.pageSize = pageSize;
+    else 
+      pagedQueryBuilder.pageSize = DEFAULT_PAGE_SIZE;
+  }
 
   get pageSize => pagedQueryBuilder.pageSize;
 
-  set offset(int offset) => pagedQueryBuilder.offset = offset;
+  set offset(int offset) {
+    if (offset != null)
+      pagedQueryBuilder.offset = offset;
+    else
+      pagedQueryBuilder.offset = DEFAULT_OFFSET;
+    }
 
   get offset => pagedQueryBuilder.offset;
 
@@ -365,12 +378,12 @@ class BackendlessGeoQuery extends AbstractBackendlessGeoQuery {
 }
 
 void _validateOffset(int offset) {
-  if (offset < 0)
+  if (offset != null && offset < 0)
     throw new ArgumentError("Offset cannot have a negative value.");
 }
 
 void _validatePageSize(int pageSize) {
-  if (pageSize <= 0)
+  if (pageSize != null && pageSize <= 0)
     throw new ArgumentError("Page size cannot have a negative value.");
 }
 
