@@ -199,10 +199,6 @@ class GeoCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Load Metadata
     private func loadMetadata(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        
-        // TODO: -
-        // TODO: - Need to test. Problems with getting GeoPoint from Flutter
-        
         guard let geoPoint: GeoPoint = arguments[Args.geoPoint].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             
@@ -243,10 +239,6 @@ class GeoCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - RemovePoint
     private func removePoint(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        
-        // TODO: -
-        // TODO: - Need to test. Problems with getting GeoPoint from Flutter
-        
         guard let geoPoint: GeoPoint = arguments[Args.geoPoint].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             

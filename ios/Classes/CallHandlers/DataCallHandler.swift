@@ -60,6 +60,11 @@ class DataCallHandler: FlutterCallHandlerProtocol {
         static let deleted = "RTDataEvent.DELETED"
     }
     
+    private enum CallbackEvents {
+        static let eventResponse = "Backendless.Data.RT.EventResponse"
+        static let eventFault = "Backendless.Data.RT.EventFault"
+    }
+    
     // MARK: -
     // MARK: - Cache Reference
     private let data = SwiftBackendlessSdkPlugin.backendless.data
@@ -543,7 +548,7 @@ class DataCallHandler: FlutterCallHandlerProtocol {
             args["handle"] = currentHandle
             args["fault"] = $0.message ?? ""
             
-            self?.methodChannel.invokeMethod("Backendless.Data.RT.EventFault", arguments: args);
+            self?.methodChannel.invokeMethod(CallbackEvents.eventFault, arguments: args);
         }
         
         if event.contains("BULK") {
@@ -553,7 +558,7 @@ class DataCallHandler: FlutterCallHandlerProtocol {
                 args["hanlde"] = currentHandle
                 args["response"] = $0
                 
-                self?.methodChannel.invokeMethod("Backendless.Data.RT.EventResponse", arguments: args)
+                self?.methodChannel.invokeMethod(CallbackEvents.eventResponse, arguments: args)
             }
             
             switch event {
