@@ -109,12 +109,10 @@ class DataQueryBuilder {
 
 /// This class does not support relation types other than Map for now.
 class LoadRelationsQueryBuilder<R> {
-  PagedQueryBuilder pagedQueryBuilder;
+  PagedQueryBuilder pagedQueryBuilder = new PagedQueryBuilder();
   String relationName;
 
-  LoadRelationsQueryBuilder.ofMap() {
-    pagedQueryBuilder = new PagedQueryBuilder();    
-  }
+  LoadRelationsQueryBuilder.ofMap();
 
   LoadRelationsQueryBuilder.fromJson(Map json) {
     relationName = json['relationName'];
