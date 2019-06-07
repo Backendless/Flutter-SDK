@@ -111,7 +111,6 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
     private func currentUser(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
         
         // TODO: -
-        // TODO: - Need to test with real user
         // TODO: - Problem with sending object to Flutter
         
         let currentUser = userService.getCurrentUser()
@@ -229,7 +228,8 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
     private func register(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
         
         // TODO: -
-        // TODO: - Test after fixes in iOS SDK
+        // TODO: - Password is not parsed when getting object from Flutter
+        // TODO: - Created ticket in JIRA
         
         guard let user: BackendlessUser = arguments[Args.user].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
