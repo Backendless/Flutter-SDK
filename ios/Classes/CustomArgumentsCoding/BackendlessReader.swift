@@ -65,6 +65,9 @@ class BackendlessReader: FlutterStandardReader {
         case .geoCluster:
             return try? JSONDecoder().decode(GeoCluster.self, from: jsonData)
         case .searchMathesResult:
+            // TODO: -
+            // TODO: - Add creating of MathesResult object in iOS proxy
+            
 //            return try? JSONDecoder().decode(MathesResult.self, from: jsonData)
             return nil
         case .messageStatus:
@@ -81,6 +84,9 @@ class BackendlessReader: FlutterStandardReader {
         case .publishMessageInfo:
             return try? JSONDecoder().decode(PublishMessageInfo.self, from: jsonData)
         case .deviceRegistrationResult:
+            // TODO: -
+            // TODO: - Add creating of DeviceRegistrationResult object in iOS proxy
+            
 //            return try? JSONDecoder().decode(DeviceRegistrationResult.self, from: jsonData)
             return nil
         case .command:
