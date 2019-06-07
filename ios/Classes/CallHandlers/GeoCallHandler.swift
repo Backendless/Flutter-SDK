@@ -388,11 +388,8 @@ class GeoCallHandler: FlutterCallHandlerProtocol {
     
     // MARK: -
     // MARK: - SetLocationTrackerParameters
+    // MARK: - Not actual for iOS
     private func setLocationTrackerParameters(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        
-        // TODO: -
-        // TODO: - No such method in iOS SDK
-        
         result(FlutterMethodNotImplemented)
     }
     

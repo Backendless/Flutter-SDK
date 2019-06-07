@@ -104,21 +104,15 @@ class BackendlessCallHandler: FlutterCallHandlerProtocol {
     
     // MARK: -
     // MARK: - Get Notification Id Generator Init Value
+    // MARK: - Not actual for iOS
     private func getNotificationIdGeneratorInitValue(_ arguments: [String: Any], _ result: FlutterResult) {
-        
-        // TODO: -
-        // TODO: - No such method in iOS SDK
-        
         result(FlutterMethodNotImplemented)
     }
     
     // MARK: -
     // MARK: - Get Push Templates As Json
+    // MARK: - Not actual for iOS
     private func getPushTemplatesAsJson(_ arguments: [String: Any], _ result: FlutterResult) {
-        
-        // TODO: -
-        // TODO: - No such method in iOS SDK
-        
         result(FlutterMethodNotImplemented)
     }
     
@@ -141,31 +135,22 @@ class BackendlessCallHandler: FlutterCallHandlerProtocol {
     
     // MARK: -
     // MARK: - Save Notification Id Generator State
+    // MARK: - Not actual for iOS
     private func saveNotificationIdGeneratorState(_ arguments: [String: Any], _ result: FlutterResult) {
-        
-        // TODO: -
-        // TODO: - No such method in iOS SDK
-        
         result(FlutterMethodNotImplemented)
     }
     
     // MARK: -
     // MARK: - Save Push Templates
+    // MARK: - Not actual for iOS
     private func savePushTemplates(_ arguments: [String: Any], _ result: FlutterResult) {
-        
-        // TODO: -
-        // TODO: - No such method in iOS SDK
-        
         result(FlutterMethodNotImplemented)
     }
     
     // MARK: -
     // MARK: - Set UI State
+    // MARK: - Not actual for iOS
     private func setUIState(_ arguments: [String: Any], _ result: FlutterResult) {
-        
-        // TODO: -
-        // TODO: - No such method in iOS SDK
-        
         result(FlutterMethodNotImplemented)
     }
     

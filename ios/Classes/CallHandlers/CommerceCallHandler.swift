@@ -41,18 +41,21 @@ class CommerceCallHandler: FlutterCallHandlerProtocol {
     
     // MARK: -
     // MARK: - CancelPlaySubscription
+    // MARK: - Not actual for iOS
     private func cancelPlaySubscription(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
         result(FlutterMethodNotImplemented)
     }
     
     // MARK: -
     // MARK: - GetPlaySubscriptionsStatus
+    // MARK: - Not actual for iOS
     private func getPlaySubscriptionsStatus(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
         result(FlutterMethodNotImplemented)
     }
     
     // MARK: -
     // MARK: - CalidatePlayPurchase
+    // MARK: - Not actual for iOS
     private func validatePlayPurchase(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
         result(FlutterMethodNotImplemented)
     }
