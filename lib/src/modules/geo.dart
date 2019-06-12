@@ -232,7 +232,6 @@ class BaseGeoPoint extends EntityDescription {
   double longitude;
   List<String> _categories;
   Map<String, Object> metadata;
-  double distance;
 
   BaseGeoPoint() {
     _categories = new List();
@@ -289,7 +288,6 @@ class BaseGeoPoint extends EntityDescription {
     map["metadata"] = metadata;
     map["objectId"] = objectId;
     map["categories"] = categories;
-    map["distance"] = distance;
     return map;
   }
 
@@ -299,12 +297,11 @@ class BaseGeoPoint extends EntityDescription {
       o.latitude == latitude &&
       o.longitude == longitude &&
       IterableEquality().equals(o._categories, _categories) &&
-      MapEquality().equals(o.metadata, metadata) &&
-      o.distance == distance;
+      MapEquality().equals(o.metadata, metadata);
 
   @override
   int get hashCode =>
-      hashValues(objectId, latitude, longitude, _categories, distance);
+      hashValues(objectId, latitude, longitude, _categories);
 }
 
 class GeoPoint extends BaseGeoPoint {
@@ -319,7 +316,6 @@ class GeoPoint extends BaseGeoPoint {
     longitude = json['longitude'];
     categories = json['categories']?.cast<String>();
     metadata = json['metadata']?.cast<String, Object>();
-    distance = json['distance'];
   }
 
   Map toJson() =>
@@ -329,7 +325,6 @@ class GeoPoint extends BaseGeoPoint {
       'longitude': longitude,
       'categories': categories,
       'metadata': metadata,
-      'distance': distance,
     };    
 
   GeoPoint.fromLatLng(double latitude, double longitude,
@@ -388,7 +383,7 @@ class GeoPoint extends BaseGeoPoint {
 
   @override
   String toString() =>
-      "GeoPoint{objectId='$objectId', latitute=$latitude, longitude=$longitude, categories=$_categories, metadata=$metadata, distance=$distance}";
+      "GeoPoint{objectId='$objectId', latitute=$latitude, longitude=$longitude, categories=$_categories, metadata=$metadata}";
 }
 
 class BaseGeoCategory {
@@ -453,7 +448,6 @@ class GeoCluster extends GeoPoint {
     longitude = json['longitude'];
     categories = json['categories'];
     metadata = json['metadata'];
-    distance = json['distance'];
     totalPoints = json['totalPoints'];
     geoQuery = BackendlessGeoQuery.fromJson(json['geoQuery']);
   }
@@ -465,7 +459,6 @@ class GeoCluster extends GeoPoint {
       'longitude': longitude,
       'categories': categories,
       'metadata': metadata,
-      'distance': distance,
       'totalPoints': totalPoints,
       'geoQuery': geoQuery?.toJson(),
     };
@@ -488,7 +481,7 @@ class GeoCluster extends GeoPoint {
 
   @override
   String toString() =>
-      "GeoCluster{objectId=\'$objectId\', latitute=$latitude, longitude=$longitude, categories=$_categories, metadata=$metadata, distance=$distance, totalPoints=$totalPoints}";
+      "GeoCluster{objectId=\'$objectId\', latitute=$latitude, longitude=$longitude, categories=$_categories, metadata=$metadata, totalPoints=$totalPoints}";
 }
 
 class SearchMatchesResult {

@@ -150,9 +150,6 @@ class BackendlessWtiter: FlutterStandardWriter {
         }
     }
     
-    // TODO: - GeoPoint
-    // TODO: - How to get distance?
-    
     // TODO: - ObjectProperty
     // TODO: - How to get Int value of DataTypeEnum?
     
@@ -165,7 +162,6 @@ class BackendlessWtiter: FlutterStandardWriter {
     
     // TODO: - BackendlessGeoCluster
     // TODO: - How to send data with Collection type in Java?
-    // TODO: - How to get distance?
     
     // TODO: - MessageStatus
     // TODO: - Convert String to PublishStatusEnum Int value
