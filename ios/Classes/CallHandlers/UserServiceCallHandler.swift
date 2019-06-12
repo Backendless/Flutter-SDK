@@ -255,10 +255,13 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
             return
         }
         
-        // TODO: -
-        // TODO: - No such method in SDK
-        
-        result(FlutterMethodNotImplemented)
+        userService.resendEmailConfirmation(email: email,
+            responseHandler: {
+                result(nil)
+            },
+            errorHandler: {
+                result(FlutterError($0))
+            })
     }
     
     // MARK: -
