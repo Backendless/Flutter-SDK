@@ -169,18 +169,32 @@ class GeoCallHandler: FlutterCallHandlerProtocol {
     }
     
     // MARK: -
-    // MARK: - GetPoints +-
+    // MARK: - GetPoints
     private func getPoints(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        
-        // TODO: -
-        // TODO: - How to use GeofenceName & GeoCluster?
-        
         let geoQuery: BackendlessGeoQuery? = arguments[Args.query].flatMap(cast)
         let geofenceName: String? = arguments[Args.geofenceName].flatMap(cast)
         let geoCluster: GeoCluster? = arguments[Args.geoCluster].flatMap(cast)
         
         if let query = geoQuery {
-            geo.getPoints(geoQuery: query,
+            if let geofenceName = geofenceName {
+                geo.getFencePoints(geoFenceName: geofenceName, geoQuery: query,
+                    responseHandler: {
+                        result($0)
+                    },
+                    errorHandler: {
+                        result(FlutterError($0))
+                    })
+            } else {
+                geo.getPoints(geoQuery: query,
+                    responseHandler: {
+                        result($0)
+                    },
+                    errorHandler: {
+                        result(FlutterError($0))
+                    })
+            }
+        } else if let cluster = geoCluster {
+            geo.getClusterPoints(geoCluster: cluster,
                 responseHandler: {
                     result($0)
                 },
