@@ -365,13 +365,8 @@ class FilesCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Upload
     private func upload(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        
-        // TODO: -
-        // TODO: - Parse path to folderName and fileName
-        
         guard
             let filePath: String = arguments[Args.filePath].flatMap(cast),
-            let fileUrl: URL = URL(string: filePath),
             let path: String = arguments[Args.path].flatMap(cast)
         else {
             result(FlutterError.noRequiredArguments)
@@ -379,12 +374,31 @@ class FilesCallHandler: FlutterCallHandlerProtocol {
             return
         }
         
+        guard
+            let fileUrl: URL = URL(string: filePath),
+            let fileContent = try? Data(contentsOf: fileUrl, options: [])
+        else {
+            result(FlutterError(code: "", message: "No such file", details: nil))
+            
+            return
+        }
+        
         let overwrite: Bool? = arguments[Args.overwrite].flatMap(cast)
         
-        guard let fileContent = try? Data(contentsOf: fileUrl, options: []) else { return }
+        let pathToSend: String
+        let nameToSend: String
+        
+        if let lastSlashPos = path.lastIndex(of: "/") {
+            pathToSend = String(path[..<lastSlashPos])
+            nameToSend = String(path[lastSlashPos...])
+        } else {
+            pathToSend = ""
+            nameToSend = path
+        }
+        
         
         if let overwrite = overwrite {
-            fileService.uploadFile(fileName: "", filePath: path, content: fileContent, overwrite: overwrite,
+            fileService.uploadFile(fileName: nameToSend, filePath: pathToSend, content: fileContent, overwrite: overwrite,
                 responseHandler: { (file: BackendlessFile) in
                     file.fileUrl.map { result($0) }
                 },
@@ -392,7 +406,7 @@ class FilesCallHandler: FlutterCallHandlerProtocol {
                     result(FlutterError($0))
                 })
         } else {
-            fileService.uploadFile(fileName: "", filePath: path, content: fileContent,
+            fileService.uploadFile(fileName: nameToSend, filePath: pathToSend, content: fileContent,
                 responseHandler: { (file: BackendlessFile) in
                     file.fileUrl.map { result($0) }
                 },
@@ -401,6 +415,4 @@ class FilesCallHandler: FlutterCallHandlerProtocol {
                 })
         }
     }
-    
-    
 }
