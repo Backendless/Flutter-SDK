@@ -64,6 +64,8 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
         static let channelHandle = "channelHandle"
         static let selector = "selector"
         static let messageType = "messageType"
+        static let type = "type"
+        static let data = "data"
     }
     
     private enum MessageTypes {
@@ -634,11 +636,28 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - SendCommand
     private func sendCommand(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
+        guard
+            let channelHandle: Int = arguments[Args.channelHandle].flatMap(cast),
+            let commandType: String = arguments[Args.type].flatMap(cast)
+        else {
+            result(FlutterError.noRequiredArguments)
+            
+            return
+        }
         
-        // MARK: -
-        // MARK: - No such method in iOS SDK
+        guard let channelName = channels[channelHandle]?.channelName else {
+            result(FlutterError(code: "", message: "No such channeld", details: nil))
+            
+            return
+        }
         
-        result(FlutterMethodNotImplemented)
+        messaging.sendCommand(commandType: commandType, channelName: channelName, data: arguments[Args.data],
+            responseHandler: {
+                result(nil)
+            },
+            errorHandler: {
+                result(FlutterError($0))
+            })
     }
     
     // MARK: -
