@@ -44,6 +44,7 @@ class FilesCallHandler: FlutterCallHandlerProtocol {
         static let overwrite = "overwrite"
         static let directoryPath = "directoryPath"
         static let filePath = "filePath"
+        static let filePathName = "filePathName"
     }
     
     // MARK: -
@@ -309,34 +310,49 @@ class FilesCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - SaveFile
     private func saveFile(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        
-        // TODO: -
-        // TODO: - Parse filePathName to folderName and fileName
-        
-        guard
-            let path: String = arguments[Args.path].flatMap(cast),
-            let fileName: String = arguments[Args.fileName].flatMap(cast),
-            let flutterData: FlutterStandardTypedData = arguments[Args.fileContent].flatMap(cast)
-        else {
+        guard let flutterData: FlutterStandardTypedData = arguments[Args.fileContent].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             
             return
         }
         
-        let overWrite: Bool? = arguments[Args.overwrite].flatMap(cast)
+        let path: String? = arguments[Args.path].flatMap(cast)
+        let fileName: String? = arguments[Args.fileName].flatMap(cast)
+        let filePathName: String? = arguments[Args.filePathName].flatMap(cast)
+        let overwrite: Bool? = arguments[Args.overwrite].flatMap(cast)
         
         let base64Content = flutterData.data.base64EncodedString()
         
-        if let overWrite = overWrite {
-            fileService.saveFile(fileName: fileName, filePath: path, base64Content: base64Content, overwrite: overWrite,
-                responseHandler: { (file: BackendlessFile) in
-                    file.fileUrl.map { result($0) }
+        let pathToSend: String
+        let nameToSend: String
+        
+        if let path = path, let fileName = fileName {
+            pathToSend = path
+            nameToSend = fileName
+        } else if let filePathName = filePathName {
+            if let lastSlashPos = filePathName.lastIndex(of: "/") {
+                pathToSend = String(filePathName[..<lastSlashPos])
+                nameToSend = String(filePathName[lastSlashPos...])
+            } else {
+                pathToSend = ""
+                nameToSend = filePathName
+            }
+        } else {
+            result(FlutterError.noRequiredArguments)
+            
+            return
+        }
+        
+        if let overwrite = overwrite {
+            fileService.saveFile(fileName: nameToSend, filePath: pathToSend, base64Content: base64Content, overwrite: overwrite,
+                responseHandler: {
+                    result($0)
                 },
                 errorHandler: {
                     result(FlutterError($0))
                 })
         } else {
-            fileService.saveFile(fileName: fileName, filePath: path, base64Content: base64Content,
+            fileService.saveFile(fileName: nameToSend, filePath: pathToSend, base64Content: base64Content,
                 responseHandler: {
                     result($0)
                 },
