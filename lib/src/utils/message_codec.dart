@@ -122,9 +122,13 @@ class BackendlessMessageCodec extends StandardMessageCodec {
   dynamic readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
       case _kDateTime:
-        return DateTime.fromMillisecondsSinceEpoch(buffer.getInt64());
+        return DateTime.fromMillisecondsSinceEpoch(readValue(buffer));
       case _kGeoPoint:
         return GeoPoint.fromJson(readValue(buffer));
+      case _kDataQueryBuilder:
+        return DataQueryBuilder.fromJson(readValue(buffer));
+      case _kLoadRelationsQueryBuilder:
+        return LoadRelationsQueryBuilder.fromJson(readValue(buffer));
       case _kObjectProperty:
         return ObjectProperty.fromJson(readValue(buffer));
       case _kGooglePlaySubscriptionStatus:
