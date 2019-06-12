@@ -82,7 +82,7 @@ class BackendlessUser {
   BackendlessUser();
 
   BackendlessUser.fromJson(Map json) : 
-    _properties = json;
+    _properties = json.cast<String, Object>();
 
   Map toJson() => _properties;
 

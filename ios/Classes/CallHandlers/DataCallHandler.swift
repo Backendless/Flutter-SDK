@@ -523,6 +523,7 @@ class DataCallHandler: FlutterCallHandlerProtocol {
     
     // MARK: -
     // MARK: - Get View
+    // MARK: - Not actual for iOS
     private func getView(_ tableName: String, _ arguments: [String: Any], _ result: @escaping FlutterResult) {
         result(FlutterMethodNotImplemented)
     }
