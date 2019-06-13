@@ -38,6 +38,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.databind.SerializationFeature;
 import io.flutter.plugin.common.StandardMessageCodec;
 
 public final class BackendlessMessageCodec extends StandardMessageCodec {
@@ -72,6 +73,7 @@ public final class BackendlessMessageCodec extends StandardMessageCodec {
     private static final byte BULK_EVENT = (byte) 153;
 
     private BackendlessMessageCodec() {
+        objectMapper.enable(SerializationFeature.WRITE_ENUMS_USING_INDEX);
         objectMapper.addMixIn(DataQueryBuilder.class, DataQueryBuilderMixin.class);
         objectMapper.addMixIn(LoadRelationsQueryBuilder.class, LoadRelationsQueryBuilderMixin.class);
         objectMapper.addMixIn(Command.class, CommandMixin.class);
