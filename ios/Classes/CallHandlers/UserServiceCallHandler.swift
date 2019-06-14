@@ -109,10 +109,6 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Current user
     private func currentUser(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        
-        // TODO: -
-        // TODO: - Problem with sending object to Flutter
-        
         let currentUser = userService.getCurrentUser()
         
         result(currentUser)

@@ -69,7 +69,7 @@ public class SwiftBackendlessSdkPlugin: NSObject, FlutterPlugin {
                     handler = FilesCallHandler()
                 case FlutterPluginChannels.geoChannel:
                     channel = FlutterMethodChannel(name: channelName, binaryMessenger: messenger, codec: codec)
-                    handler = GeoCallHandler()
+                    handler = GeoCallHandler(methodChannel: channel)
                 case FlutterPluginChannels.loggingChannel:
                     channel = FlutterMethodChannel(name: channelName, binaryMessenger: messenger, codec: codec)
                     handler = LoggingCallHandler()

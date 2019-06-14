@@ -43,11 +43,26 @@ class GeoCallHandler: FlutterCallHandlerProtocol {
         static let categories = "categories"
         static let metadata = "metadata"
         static let geoCluster = "geoCluster"
+        static let handle = "handle"
     }
     
     // MARK: -
     // MARK: - Geo Reference
     private let geo = SwiftBackendlessSdkPlugin.backendless.geo
+    
+    // MARK: -
+    // MARK: - GeofenceCallbacks
+    private var callbacks: [Int: IGeofenceCallback] = [:]
+    
+    // MARK: -
+    // MARK: - FlutterMessagingChannel
+    private let methodChannel: FlutterMethodChannel
+    
+    // MARK: -
+    // MARK: - Init
+    init(methodChannel: FlutterMethodChannel) {
+        self.methodChannel = methodChannel
+    }
     
     // MARK: -
     // MARK: - Route Flutter Call
@@ -411,9 +426,33 @@ class GeoCallHandler: FlutterCallHandlerProtocol {
     // MARK: - StartClientGeofenceMonitoring
     private func startClientGeofenceMonitoring(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
         
-        // TODO: -
-        // TODO: - Using IGeofenceCallback
+        guard let handle: Int = arguments[Args.handle].flatMap(cast) else {
+            result(FlutterError.noRequiredArguments)
+            
+            return
+        }
         
+        let geofenceName: String? = arguments[Args.geofenceName].flatMap(cast)
+        
+        let newCallback = FlutterGeofenceCallback(handle, methodChannel)
+        
+        if let geofenceName = geofenceName {
+            geo.startGeoFenceMonitoring(geoFenceName: geofenceName, geoFenceCallback: newCallback, responseHandler: {
+                result(nil)
+            }, errorHandler: {
+                result(FlutterError($0))
+            })
+        } else {
+            geo.startGeoFenceMonitoring(geoFenceCallback: newCallback,
+                responseHandler: {
+                    result(nil)
+                },
+                errorHandler: {
+                    result(FlutterError($0))
+                })
+        }
+        
+        callbacks[handle] = newCallback
     }
     
     // MARK: -
