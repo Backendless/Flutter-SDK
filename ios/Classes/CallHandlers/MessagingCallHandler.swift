@@ -200,7 +200,7 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
     }
     
     // MARK: -
-    // MARK: - GetMessageStatus
+    // MARK: - GetMessageStatus ++
     private func getMessageStatus(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
         guard let messageId: String = arguments[Args.messageId].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
@@ -304,7 +304,7 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
     }
     
     // MARK: -
-    // MARK: - SendEmail
+    // MARK: - SendEmail ++
     private func sendEmail(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
         guard
             let recipients: [String] = arguments[Args.recipients].flatMap(cast),
@@ -331,7 +331,7 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
     }
     
     // MARK: -
-    // MARK: - SendHTMLEmail
+    // MARK: - SendHTMLEmail ++
     private func sendHTMLEmail(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
         guard
             let recipients: [String] = arguments[Args.recipients].flatMap(cast),
@@ -356,7 +356,7 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
     }
     
     // MARK: -
-    // MARK: - SendTextEmail
+    // MARK: - SendTextEmail ++
     private func sendTextEmail(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
         guard
             let recipients: [String] = arguments[Args.recipients].flatMap(cast),
@@ -388,14 +388,14 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
         if let channels = channels {
             messaging.unregisterDevice(channels: channels,
                 responseHandler: {
-                    result($0)
+                    result($0 ? channels.count : 0)
                 },
                 errorHandler: {
                     result(FlutterError($0))
                 })
         } else {
             messaging.unregisterDevice(responseHandler: {
-                result($0)
+                result($0 ? 1 : 0)
             }, errorHandler: {
                 result(FlutterError($0))
             })
@@ -403,7 +403,7 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
     }
     
     // MARK: -
-    // MARK: - Subscribe
+    // MARK: - Subscribe ++
     private func subscribe(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
         guard
             let channelName: String = arguments[Args.channelName].flatMap(cast),
@@ -421,7 +421,7 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
     }
     
     // MARK: -
-    // MARK: - Join
+    // MARK: - Join ++
     private func join(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
         guard let channelHandle: Int = arguments[Args.channelHandle].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
@@ -435,7 +435,7 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
     }
     
     // MARK: -
-    // MARK: - Leave
+    // MARK: - Leave ++
     private func leave(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
         guard let channelHandle: Int = arguments[Args.channelHandle].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
@@ -449,7 +449,7 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
     }
     
     // MARK: -
-    // MARK: - IsJoined
+    // MARK: - IsJoined ++
     private func isJoined(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
         guard let channelHandle: Int = arguments[Args.channelHandle].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
