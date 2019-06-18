@@ -24,7 +24,8 @@ class BackendlessReader: FlutterStandardReader {
             value = readDate()
         default:
             guard let json: [String: Any] = readValue().flatMap(cast) else { return nil }
-            value = decode(from: json, code)
+            let jsonToParse = prepareJsonToParse(json)
+            value = decode(from: jsonToParse, code)
         }
 
         return value
@@ -38,6 +39,22 @@ class BackendlessReader: FlutterStandardReader {
             .map { Date(timeIntervalSince1970: $0) }
     }
     
+    // MARK: -
+    // MARK: - Prepare Json To Parse
+    private func prepareJsonToParse(_ json: [String: Any]) -> [String: Any] {
+        var result = json
+        
+        json.forEach {
+            if let date = $0.value as? Date {
+                result[$0.key] = date.timeIntervalSince1970
+            }
+        }
+        
+        return result
+    }
+    
+    // MARK: -
+    // MARK: - Decode
     private func decode(from json: [String: Any], _ code: FlutterTypeCode) -> Any? {
         guard let jsonData = try? JSONSerialization.data(withJSONObject: json, options: []) else { return nil }
         

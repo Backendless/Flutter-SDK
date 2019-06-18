@@ -168,8 +168,12 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
     }
     
     // MARK: -
-    // MARK: - Cancel
+    // MARK: - Cancel +-
     private func cancel(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
+        
+        // TODO: -
+        // TODO: - Problem with sending MessageStatus to Flutter
+        
         guard let messageId: String = arguments[Args.messageId].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             
@@ -186,7 +190,7 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
     }
     
     // MARK: -
-    // MARK: - GetDeviceRegistration
+    // MARK: - GetDeviceRegistration ++
     private func getDeviceRegistration(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
         messaging.getDeviceRegistrations(responseHandler: {
             result($0)
@@ -214,8 +218,12 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
     }
     
     // MARK: -
-    // MARK: - Publish
+    // MARK: - Publish +-
     private func publish(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
+        
+        // TODO: -
+        // TODO: - Problem with sending MessageStatus to Flutter
+        
         guard
             let channelName: String = arguments[Args.channelName].flatMap(cast),
             let message = arguments[Args.message]
