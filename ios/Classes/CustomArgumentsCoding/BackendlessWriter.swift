@@ -90,8 +90,6 @@ class BackendlessWtiter: FlutterStandardWriter {
             return try? JSONEncoder().encode(value as! PublishMessageInfo)
             //        case is DeviceRegistrationResult:
             //            return try? JSONEncoder().encode(value as! DeviceRegistrationResult)
-            //        case is Command:
-        //            return try? JSONEncoder().encode(value as! Command)
         case is UserInfo:
             return try? JSONEncoder().encode(value as! UserInfo)
             //        case is UserStatusResponse:
