@@ -117,10 +117,6 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Describe User Class
     private func describeUserClass(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        
-        // TODO: -
-        // TODO: - Problem with sending object to Flutter
-        
         userService.describeUserClass(responseHandler: {
             result($0)
         }, errorHandler: {

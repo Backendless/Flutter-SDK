@@ -35,7 +35,7 @@ class BackendlessWtiter: FlutterStandardWriter {
             if value is MessageStatus {
                 let jsonToWrite = prepareJsonForMessageStatus(json)
                 super.writeValue(jsonToWrite)
-            } else if value is ObjectProperty {
+            } else if value is ObjectProperty || value is UserProperty {
                 let jsonToWrite = prepareJsonForObjectProperty(json)
                 super.writeValue(jsonToWrite)
             } else {
@@ -194,19 +194,10 @@ class BackendlessWtiter: FlutterStandardWriter {
         return result
     }
     
-    // TODO: - ObjectProperty
-    // TODO: - How to get Int value of DataTypeEnum?
-    
     // TODO: - BackendlessGeoQuery
     // TODO: - How to get RelativeFindMetadata?
     // TODO: - How to get RelativeFindPercentThreshold?
     // TODO: - How to get SortBy?
-    
-    // TODO: - MessageStatus
-    // TODO: - Convert String to PublishStatusEnum Int value
-    
-    // TODO: - DeliveryOptions
-    // TODO: - No segmentQuery in Swift DeliveryOptions
     
     // TODO: - PublishMessageInfo
     // TODO: - No repeatExpiresAt: Date property in PublishMessageInfo Class

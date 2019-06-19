@@ -218,12 +218,8 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
     }
     
     // MARK: -
-    // MARK: - Publish +-
+    // MARK: - Publish
     private func publish(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        
-        // TODO: -
-        // TODO: - Problem with sending MessageStatus to Flutter
-        
         guard
             let channelName: String = arguments[Args.channelName].flatMap(cast),
             let message = arguments[Args.message]
