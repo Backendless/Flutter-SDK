@@ -10,6 +10,7 @@ class BackendlessWtiter: FlutterStandardWriter {
     // MARK: - Constants
     private struct Args {
         static let status = "status"
+        static let type = "type"
     }
     
     // MARK: -
@@ -33,6 +34,9 @@ class BackendlessWtiter: FlutterStandardWriter {
             writeCode(for: value)
             if value is MessageStatus {
                 let jsonToWrite = prepareJsonForMessageStatus(json)
+                super.writeValue(jsonToWrite)
+            } else if value is ObjectProperty {
+                let jsonToWrite = prepareJsonForObjectProperty(json)
                 super.writeValue(jsonToWrite)
             } else {
                 super.writeValue(json)
@@ -169,6 +173,20 @@ class BackendlessWtiter: FlutterStandardWriter {
         inputDict.forEach {
             if $0.key == Args.status, let stringValue = $0.value as? String {
                 let enumValue = PublishStatusEnum(rawValue: stringValue) ?? .unknown
+                result[$0.key] = enumValue.index
+            }
+        }
+        
+        return result
+    }
+    
+    private func prepareJsonForObjectProperty(_ json: Any) -> [String: Any] {
+        guard let inputDict = json as? [String: Any] else { return [:] }
+        var result = inputDict
+        
+        inputDict.forEach {
+            if $0.key == Args.type, let stringValue = $0.value as? String {
+                let enumValue = DataTypeEnum(rawValue: stringValue) ?? .UNKNOWN
                 result[$0.key] = enumValue.index
             }
         }
