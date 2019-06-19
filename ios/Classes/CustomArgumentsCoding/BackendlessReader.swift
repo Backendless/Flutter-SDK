@@ -107,8 +107,7 @@ class BackendlessReader: FlutterStandardReader {
 //            return try? JSONDecoder().decode(DeviceRegistrationResult.self, from: jsonData)
             return nil
         case .command:
-//            return try? JSONDecoder().decode(Command.self, from: jsonData)
-            return nil
+            return CommandObject.decodeFromJson(json)
         case .userInfo:
             return try? JSONDecoder().decode(UserInfo.self, from: jsonData)
         case .userStatusResponse:

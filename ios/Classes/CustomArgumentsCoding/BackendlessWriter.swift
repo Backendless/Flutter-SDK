@@ -25,7 +25,6 @@ class BackendlessWtiter: FlutterStandardWriter {
 //             is Message
              is PublishOptions, is DeliveryOptions, is PublishMessageInfo,
 //             is DeviceRegistrationResult
-//             is Command
              is UserInfo,
 //             is UserStatusResponse
              is ReconnectAttemptObject, is BackendlessUser, is UserProperty, is BulkEvent:
@@ -38,6 +37,11 @@ class BackendlessWtiter: FlutterStandardWriter {
             } else {
                 super.writeValue(json)
             }
+        case is CommandObject:
+            let commandObject = value as! CommandObject
+            let json = commandObject.encodeToJson()
+            writeCode(for: value)
+            super.writeValue(json)
         default:
             super.writeValue(value)
         }
