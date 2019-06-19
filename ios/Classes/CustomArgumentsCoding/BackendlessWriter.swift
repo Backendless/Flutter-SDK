@@ -6,6 +6,11 @@ import Backendless
 // MARK: - BackendlessWriter
 class BackendlessWtiter: FlutterStandardWriter {
     
+    // MARK: -
+    // MARK: - Constants
+    private struct Args {
+        static let status = "status"
+    }
     
     // MARK: -
     // MARK: - Write Value
@@ -27,7 +32,12 @@ class BackendlessWtiter: FlutterStandardWriter {
             guard let jsonData = dataFromValue(value) else { return }
             guard let json = try? JSONSerialization.jsonObject(with: jsonData, options: []) else { return }
             writeCode(for: value)
-            super.writeValue(json)
+            if value is MessageStatus {
+                let jsonToWrite = prepareJsonForMessageStatus(json)
+                super.writeValue(jsonToWrite)
+            } else {
+                super.writeValue(json)
+            }
         default:
             super.writeValue(value)
         }
@@ -150,6 +160,20 @@ class BackendlessWtiter: FlutterStandardWriter {
         }
     }
     
+    private func prepareJsonForMessageStatus(_ json: Any) -> [String: Any] {
+        guard let inputDict = json as? [String: Any] else { return [:] }
+        var result = inputDict
+        
+        inputDict.forEach {
+            if $0.key == Args.status, let stringValue = $0.value as? String {
+                let enumValue = PublishStatusEnum(rawValue: stringValue) ?? .unknown
+                result[$0.key] = enumValue.index
+            }
+        }
+        
+        return result
+    }
+    
     // TODO: - ObjectProperty
     // TODO: - How to get Int value of DataTypeEnum?
     
@@ -157,17 +181,9 @@ class BackendlessWtiter: FlutterStandardWriter {
     // TODO: - How to get RelativeFindMetadata?
     // TODO: - How to get RelativeFindPercentThreshold?
     // TODO: - How to get SortBy?
-    // TODO: - How to send data with Collection type in Java?
-    // TODO: - How is SearchRectangle described in iOS SDK?
-    
-    // TODO: - BackendlessGeoCluster
-    // TODO: - How to send data with Collection type in Java?
     
     // TODO: - MessageStatus
     // TODO: - Convert String to PublishStatusEnum Int value
-    
-    // TODO: - PublishOptions
-    // TODO: - No subtopic in PublishOptions Swift Class
     
     // TODO: - DeliveryOptions
     // TODO: - No segmentQuery in Swift DeliveryOptions

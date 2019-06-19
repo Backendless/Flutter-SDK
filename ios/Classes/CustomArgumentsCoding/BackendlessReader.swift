@@ -85,7 +85,7 @@ class BackendlessReader: FlutterStandardReader {
             // TODO: -
             // TODO: - Add creating of MathesResult object in iOS proxy
             
-//            return try? JSONDecoder().decode(MathesResult.self, from: jsonData)
+//            return try? JSONDecoder().decode(SearchMathesResult.self, from: jsonData)
             return nil
         case .messageStatus:
             return try? JSONDecoder().decode(MessageStatus.self, from: jsonData)
