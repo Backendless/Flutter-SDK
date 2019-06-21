@@ -4,6 +4,7 @@ import com.backendless.BackendlessUser;
 import com.backendless.DeviceRegistration;
 import com.backendless.backendless_sdk.utils.codec.mixins.CommandMixin;
 import com.backendless.backendless_sdk.utils.codec.mixins.DataQueryBuilderMixin;
+import com.backendless.backendless_sdk.utils.codec.mixins.GeoPointMixin;
 import com.backendless.backendless_sdk.utils.codec.mixins.LoadRelationsQueryBuilderMixin;
 import com.backendless.backendless_sdk.utils.codec.mixins.ReconnectAttemptMixin;
 import com.backendless.commerce.GooglePlayPurchaseStatus;
@@ -78,6 +79,7 @@ public final class BackendlessMessageCodec extends StandardMessageCodec {
         objectMapper.addMixIn(LoadRelationsQueryBuilder.class, LoadRelationsQueryBuilderMixin.class);
         objectMapper.addMixIn(Command.class, CommandMixin.class);
         objectMapper.addMixIn(ReconnectAttempt.class, ReconnectAttemptMixin.class);
+        objectMapper.addMixIn(GeoPoint.class, GeoPointMixin.class);
     }
 
     @Override
