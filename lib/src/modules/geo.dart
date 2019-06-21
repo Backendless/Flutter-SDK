@@ -494,7 +494,7 @@ class SearchMatchesResult {
 
   SearchMatchesResult.fromJson(Map json) : 
     matches = json['matches'],
-    geoPoint = json['geoPoint'];
+    geoPoint = GeoPoint.fromJson(json['geoPoint']);
 
   Map toJson() =>
     {
