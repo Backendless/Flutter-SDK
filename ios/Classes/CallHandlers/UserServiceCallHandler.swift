@@ -11,10 +11,6 @@ import Backendless
 
 class UserServiceCallHandler: FlutterCallHandlerProtocol {
     
-    // TODO: -
-    // TODO: - Add encoding/decoding of _password in BackendlessUser class
-    // TODO: - For sending/getting object between Flutter and iOS SDK
-    
     // MARK: -
     // MARK: - Constants
     private enum Methods {

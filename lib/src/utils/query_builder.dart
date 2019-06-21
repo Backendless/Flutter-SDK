@@ -179,16 +179,16 @@ class BackendlessGeoQuery extends AbstractBackendlessGeoQuery {
   BackendlessGeoQuery();
 
   BackendlessGeoQuery.fromJson(Map json) {
-    latitude = json['latitude'];
-    longitude = json['longitude'];
-    radius = json['radius'];
+    latitude = json['latitude'].toDouble();
+    longitude = json['longitude'].toDouble();
+    radius = json['radius'].toDouble();
     _categories = json['categories'].cast<String>();
     metadata = json['metadata'].cast<String, Object>();
     relativeFindMetadata = json['relativeFindMetadata'].cast<String, String>();
-    relativeFindPercentThreshold = json['relativeFindPercentThreshold'];
+    relativeFindPercentThreshold = json['relativeFindPercentThreshold'].toDouble();
     whereClause = json['whereClause'];
     sortBy = json['sortBy'].cast<String>();
-    dpp = json['dpp'];
+    dpp = json['dpp'].toDouble();
     clusterGridSize = json['clusterGridSize'];
     pageSize = json['pageSize'];
     offset = json['offset'];

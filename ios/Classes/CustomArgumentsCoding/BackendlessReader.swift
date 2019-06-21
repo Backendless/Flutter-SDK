@@ -82,11 +82,7 @@ class BackendlessReader: FlutterStandardReader {
         case .geoCluster:
             return try? JSONDecoder().decode(GeoCluster.self, from: jsonData)
         case .searchMathesResult:
-            // TODO: -
-            // TODO: - Add creating of MathesResult object in iOS proxy
-            
-//            return try? JSONDecoder().decode(SearchMathesResult.self, from: jsonData)
-            return nil
+            return try? JSONDecoder().decode(SearchMatchesResult.self, from: jsonData)
         case .messageStatus:
             return try? JSONDecoder().decode(MessageStatus.self, from: jsonData)
         case .deviceRegistration:

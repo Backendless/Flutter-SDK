@@ -312,8 +312,8 @@ class GeoPoint extends BaseGeoPoint {
 
   GeoPoint.fromJson(Map json) {
     objectId = json['objectId'];
-    latitude = json['latitude'];
-    longitude = json['longitude'];
+    latitude = json['latitude'].toDouble();
+    longitude = json['longitude'].toDouble();
     categories = json['categories']?.cast<String>();
     metadata = json['metadata']?.cast<String, Object>();
   }
@@ -487,7 +487,7 @@ class SearchMatchesResult {
   SearchMatchesResult();
 
   SearchMatchesResult.fromJson(Map json) : 
-    matches = json['matches'],
+    matches = json['matches'].toDouble(),
     geoPoint = GeoPoint.fromJson(json['geoPoint']);
 
   Map toJson() =>
