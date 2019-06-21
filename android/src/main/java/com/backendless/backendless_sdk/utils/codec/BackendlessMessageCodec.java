@@ -4,6 +4,7 @@ import com.backendless.BackendlessUser;
 import com.backendless.DeviceRegistration;
 import com.backendless.backendless_sdk.utils.codec.mixins.CommandMixin;
 import com.backendless.backendless_sdk.utils.codec.mixins.DataQueryBuilderMixin;
+import com.backendless.backendless_sdk.utils.codec.mixins.GeoPointMixin;
 import com.backendless.backendless_sdk.utils.codec.mixins.LoadRelationsQueryBuilderMixin;
 import com.backendless.backendless_sdk.utils.codec.mixins.ReconnectAttemptMixin;
 import com.backendless.commerce.GooglePlayPurchaseStatus;
@@ -38,6 +39,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.databind.SerializationFeature;
 import io.flutter.plugin.common.StandardMessageCodec;
 
 public final class BackendlessMessageCodec extends StandardMessageCodec {
@@ -72,10 +74,12 @@ public final class BackendlessMessageCodec extends StandardMessageCodec {
     private static final byte BULK_EVENT = (byte) 153;
 
     private BackendlessMessageCodec() {
+        objectMapper.enable(SerializationFeature.WRITE_ENUMS_USING_INDEX);
         objectMapper.addMixIn(DataQueryBuilder.class, DataQueryBuilderMixin.class);
         objectMapper.addMixIn(LoadRelationsQueryBuilder.class, LoadRelationsQueryBuilderMixin.class);
         objectMapper.addMixIn(Command.class, CommandMixin.class);
         objectMapper.addMixIn(ReconnectAttempt.class, ReconnectAttemptMixin.class);
+        objectMapper.addMixIn(GeoPoint.class, GeoPointMixin.class);
     }
 
     @Override

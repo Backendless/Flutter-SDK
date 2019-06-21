@@ -182,12 +182,12 @@ class BackendlessGeoQuery extends AbstractBackendlessGeoQuery {
     latitude = json['latitude'];
     longitude = json['longitude'];
     radius = json['radius'];
-    _categories = json['categories'];
-    metadata = json['metadata'];
-    relativeFindMetadata = json['relativeFindMetadata'];
+    _categories = json['categories'].cast<String>();
+    metadata = json['metadata'].cast<String, Object>();
+    relativeFindMetadata = json['relativeFindMetadata'].cast<String, String>();
     relativeFindPercentThreshold = json['relativeFindPercentThreshold'];
     whereClause = json['whereClause'];
-    sortBy = json['sortBy'];
+    sortBy = json['sortBy'].cast<String>();
     dpp = json['dpp'];
     clusterGridSize = json['clusterGridSize'];
     pageSize = json['pageSize'];
