@@ -447,16 +447,11 @@ class GeoCluster extends GeoPoint {
 
   GeoCluster();
 
-  GeoCluster.fromJson(Map json) {
-    objectId = json['objectId'];
-    latitude = json['latitude'];
-    longitude = json['longitude'];
-    categories = json['categories'];
-    metadata = json['metadata'];
-    distance = json['distance'];
-    totalPoints = json['totalPoints'];
-    geoQuery = BackendlessGeoQuery.fromJson(json['geoQuery']);
-  }
+  GeoCluster.fromJson(Map json) :
+    totalPoints = json['totalPoints'],
+    geoQuery = json['geoQuery'] == null ? null : BackendlessGeoQuery.fromJson(json['geoQuery']),
+    super.fromJson(json);
+  
 
   Map toJson() =>
     {
