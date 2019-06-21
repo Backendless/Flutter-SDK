@@ -218,11 +218,6 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Register
     private func register(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        
-        // TODO: -
-        // TODO: - Password is not parsed when getting object from Flutter
-        // TODO: - Created ticket in JIRA
-        
         guard let user: BackendlessUser = arguments[Args.user].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             
@@ -293,10 +288,6 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Update
     private func update(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        
-        // TODO: -
-        // TODO: - Test after fixes in iOS SDK
-        
         guard let user: BackendlessUser = arguments[Args.user].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             

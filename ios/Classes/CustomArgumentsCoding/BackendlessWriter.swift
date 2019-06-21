@@ -21,7 +21,7 @@ class BackendlessWtiter: FlutterStandardWriter {
             writeDate(value as! Date)
         case is GeoPoint, is DataQueryBuilder, is LoadRelationsQueryBuilder, is ObjectProperty,
              is BackendlessFileInfo, is GeoCategory, is BackendlessGeoQuery, is GeoCluster,
-//             is MatchesResult,
+             is SearchMatchesResult,
              is MessageStatus, is DeviceRegistration,
 //             is Message
              is PublishOptions, is DeliveryOptions, is PublishMessageInfo,
@@ -78,8 +78,8 @@ class BackendlessWtiter: FlutterStandardWriter {
             return try? JSONEncoder().encode(value as! BackendlessGeoQuery)
         case is GeoCluster:
             return try? JSONEncoder().encode(value as! GeoCluster)
-            //        case is MatchesResult:
-        //            return try? JSONEncoder().encode(value as! MatchesResult)
+        case is SearchMatchesResult:
+            return try? JSONEncoder().encode(value as! SearchMatchesResult)
         case is MessageStatus:
             return try? JSONEncoder().encode(value as! MessageStatus)
         case is DeviceRegistration:
@@ -131,8 +131,8 @@ class BackendlessWtiter: FlutterStandardWriter {
             writeByte(FlutterTypeCode.geoQuery.rawValue)
         case is GeoCluster:
             writeByte(FlutterTypeCode.geoCluster.rawValue)
-            //        case is MatchesResult:
-        //            writeValue(FlutterTypeCode.searchMathesResult.rawValue)
+        case is SearchMatchesResult:
+            writeByte(FlutterTypeCode.searchMathesResult.rawValue)
         case is MessageStatus:
             writeByte(FlutterTypeCode.messageStatus.rawValue)
         case is DeviceRegistration:
@@ -193,11 +193,6 @@ class BackendlessWtiter: FlutterStandardWriter {
         
         return result
     }
-    
-    // TODO: - BackendlessGeoQuery
-    // TODO: - How to get RelativeFindMetadata?
-    // TODO: - How to get RelativeFindPercentThreshold?
-    // TODO: - How to get SortBy?
     
     // TODO: - PublishMessageInfo
     // TODO: - No repeatExpiresAt: Date property in PublishMessageInfo Class
