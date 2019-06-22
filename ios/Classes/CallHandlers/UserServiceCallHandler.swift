@@ -189,8 +189,9 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
             return
         }
         
-        let stayLoggedIn: Bool? = arguments[Args.stayLoggedIn].flatMap(cast)
-        stayLoggedIn.map { userService.stayLoggedIn = $0 }
+        arguments[Args.stayLoggedIn]
+            .flatMap(cast)
+            .map { userService.stayLoggedIn = $0 }
         
         userService.login(identity: login, password: password,
             responseHandler: {
