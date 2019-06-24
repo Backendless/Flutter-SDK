@@ -365,7 +365,7 @@ class DeviceRegistration {
     os = json['os'],
     osVersion = json['osVersion'],
     expiration = json['expiration'],
-    channels = json['channels'];
+    channels = json['channels'].cast<String>();
 
   Map toJson() =>
     {
@@ -391,7 +391,7 @@ class Message {
 
   Message.fromJson(Map json) : 
     messageId = json['messageId'],
-    headers = json['headers'],
+    headers = json['headers'].cast<String, String>(),
     data = json['data'],
     publisherId = json['publisherId'],
     timestamp = json['timestamp'];
@@ -463,7 +463,7 @@ class PublishOptions {
 
   PublishOptions.fromJson(Map json) : 
     publisherId = json['publisherId'],
-    headers = json['headers'];
+    headers = json['headers'].cast<String, String>();
 
   Map toJson() =>
     {
@@ -492,7 +492,7 @@ class DeliveryOptions {
 
   DeliveryOptions.fromJson(Map json) : 
     pushBroadcast = json['pushBroadcast'],
-    pushSinglecast = json['pushSinglecast'],
+    pushSinglecast = json['pushSinglecast'].cast<String>(),
     segmentQuery = json['segmentQuery'],
     publishPolicy = PublishPolicyEnum.values[json['publishPolicy']],
     publishAt = json['publishAt'],
@@ -561,14 +561,14 @@ class PublishMessageInfo {
     message = json['message'];
     publisherId = json['publisherId'];
     subtopic = json['subtopic'];
-    pushSinglecast = json['pushSinglecast'];
+    pushSinglecast = json['pushSinglecast']?.cast<String>();
     pushBroadcast = json['pushBroadcast'];
     publishPolicy = json['publishPolicy'];
     query = json['query'];
     publishAt = json['publishAt'];
     repeatEvery = json['repeatEvery'];
     repeatExpiresAt = json['repeatExpiresAt'];
-    headers = json['headers'];
+    headers = json['headers'].cast<String, String>();
   }
 
   Map toJson() =>
@@ -633,7 +633,7 @@ class DeviceRegistrationResult {
 
   DeviceRegistrationResult.fromJson(Map json) {
     _deviceToken = json['deviceToken'];
-    _channelRegistrations = json['channelRegistrations'];
+    _channelRegistrations = json['channelRegistrations']?.cast<String, String>();
   }
 
   Map toJson() =>
@@ -665,7 +665,7 @@ class Command<T> {
   Command.fromJson(Map json) : 
     type = json['type'],
     data = json['data'],
-    userInfo = json['userInfo'];
+    userInfo = UserInfo.fromJson(json['userInfo']);
 
   Map toJson() =>
     {
@@ -708,7 +708,9 @@ class UserStatusResponse {
 
   UserStatusResponse.fromJson(Map json) {
     status = UserStatus.values[json['status']];
-    data = json['data'];
+    List<UserInfo> userInfos = List();
+    json['data'].forEach((json) => userInfos.add(UserInfo.fromJson(json)));
+    data = userInfos;
   }
 
   Map toJson() =>
