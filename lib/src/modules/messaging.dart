@@ -391,7 +391,7 @@ class Message {
 
   Message.fromJson(Map json) : 
     messageId = json['messageId'],
-    headers = json['headers'],
+    headers = json['headers'].cast<String, String>(),
     data = json['data'],
     publisherId = json['publisherId'],
     timestamp = json['timestamp'];
