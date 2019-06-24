@@ -313,8 +313,11 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
             let channels: [String]? = registerDeviceArgs[Args.channels].flatMap(cast)
             let expiration: Date? = registerDeviceArgs[Args.expiration].flatMap(cast)
             
+            let tokenString = deviceToken.map { String(format: "%02.2hhx", $0) }.joined()
+            
             let successHandler: (String) -> Void = { [weak self] in
-                self?.registerDeviceFinished?($0)
+                let registrationResult = DeviceRegistrationResult(token: tokenString, planeString: $0)
+                self?.registerDeviceFinished?(registrationResult)
                 self?.registerDeviceFinished = nil
             }
             

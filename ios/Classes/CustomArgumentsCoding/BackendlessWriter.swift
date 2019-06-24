@@ -24,8 +24,7 @@ class BackendlessWtiter: FlutterStandardWriter {
              is SearchMatchesResult,
              is MessageStatus, is DeviceRegistration,
 //             is Message
-             is PublishOptions, is DeliveryOptions, is PublishMessageInfo,
-//             is DeviceRegistrationResult
+             is PublishOptions, is DeliveryOptions, is PublishMessageInfo, is DeviceRegistrationResult,
              is UserInfo,
 //             is UserStatusResponse
              is ReconnectAttemptObject, is BackendlessUser, is UserProperty, is BulkEvent:
@@ -92,8 +91,8 @@ class BackendlessWtiter: FlutterStandardWriter {
             return try? JSONEncoder().encode(value as! DeliveryOptions)
         case is PublishMessageInfo:
             return try? JSONEncoder().encode(value as! PublishMessageInfo)
-            //        case is DeviceRegistrationResult:
-            //            return try? JSONEncoder().encode(value as! DeviceRegistrationResult)
+        case is DeviceRegistrationResult:
+            return try? JSONEncoder().encode(value as! DeviceRegistrationResult)
         case is UserInfo:
             return try? JSONEncoder().encode(value as! UserInfo)
             //        case is UserStatusResponse:
@@ -145,8 +144,8 @@ class BackendlessWtiter: FlutterStandardWriter {
             writeByte(FlutterTypeCode.deliveryOptions.rawValue)
         case is PublishMessageInfo:
             writeByte(FlutterTypeCode.publishMessageInfo.rawValue)
-            //        case is DeviceRegistrationResult:
-            //            writeValue(FlutterTypeCode.deviceRegistrationResult.rawValue)
+        case is DeviceRegistrationResult:
+            writeByte(FlutterTypeCode.deviceRegistrationResult.rawValue)
             //        case is Command:
         //            writeValue(FlutterTypeCode.command.rawValue)
         case is UserInfo:
