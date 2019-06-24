@@ -463,7 +463,7 @@ class PublishOptions {
 
   PublishOptions.fromJson(Map json) : 
     publisherId = json['publisherId'],
-    headers = json['headers'];
+    headers = json['headers'].cast<String, String>();
 
   Map toJson() =>
     {
