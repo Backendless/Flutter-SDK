@@ -561,14 +561,14 @@ class PublishMessageInfo {
     message = json['message'];
     publisherId = json['publisherId'];
     subtopic = json['subtopic'];
-    pushSinglecast = json['pushSinglecast'];
+    pushSinglecast = json['pushSinglecast']?.cast<String>();
     pushBroadcast = json['pushBroadcast'];
     publishPolicy = json['publishPolicy'];
     query = json['query'];
     publishAt = json['publishAt'];
     repeatEvery = json['repeatEvery'];
     repeatExpiresAt = json['repeatExpiresAt'];
-    headers = json['headers'];
+    headers = json['headers'].cast<String, String>();
   }
 
   Map toJson() =>
