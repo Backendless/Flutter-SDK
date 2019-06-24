@@ -633,7 +633,7 @@ class DeviceRegistrationResult {
 
   DeviceRegistrationResult.fromJson(Map json) {
     _deviceToken = json['deviceToken'];
-    _channelRegistrations = json['channelRegistrations'];
+    _channelRegistrations = json['channelRegistrations']?.cast<String, String>();
   }
 
   Map toJson() =>
