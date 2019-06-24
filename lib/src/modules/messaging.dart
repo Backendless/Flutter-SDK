@@ -708,7 +708,9 @@ class UserStatusResponse {
 
   UserStatusResponse.fromJson(Map json) {
     status = UserStatus.values[json['status']];
-    data = json['data'];
+    List<UserInfo> userInfos = List();
+    json['data'].forEach((json) => userInfos.add(UserInfo.fromJson(json)));
+    data = userInfos;
   }
 
   Map toJson() =>
