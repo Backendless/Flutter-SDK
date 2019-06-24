@@ -82,7 +82,7 @@ class BackendlessUser {
   BackendlessUser();
 
   BackendlessUser.fromJson(Map json) : 
-    _properties = json;
+    _properties = json.cast<String, dynamic>();
 
   Map toJson() => _properties;
 
@@ -125,7 +125,7 @@ class BackendlessUser {
   int get hashCode => MapEquality().hash(_properties);
 
   @override
-  String toString() => "BackendlessUser{${_properties.toString()}";
+  String toString() => "BackendlessUser{${_properties.toString()}}";
 }
 
 class UserProperty extends AbstractProperty {
