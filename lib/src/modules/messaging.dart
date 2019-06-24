@@ -365,7 +365,7 @@ class DeviceRegistration {
     os = json['os'],
     osVersion = json['osVersion'],
     expiration = json['expiration'],
-    channels = json['channels'];
+    channels = json['channels'].cast<String>();
 
   Map toJson() =>
     {
