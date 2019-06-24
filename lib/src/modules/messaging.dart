@@ -492,7 +492,7 @@ class DeliveryOptions {
 
   DeliveryOptions.fromJson(Map json) : 
     pushBroadcast = json['pushBroadcast'],
-    pushSinglecast = json['pushSinglecast'],
+    pushSinglecast = json['pushSinglecast'].cast<String>(),
     segmentQuery = json['segmentQuery'],
     publishPolicy = PublishPolicyEnum.values[json['publishPolicy']],
     publishAt = json['publishAt'],
