@@ -665,7 +665,7 @@ class Command<T> {
   Command.fromJson(Map json) : 
     type = json['type'],
     data = json['data'],
-    userInfo = json['userInfo'];
+    userInfo = UserInfo.fromJson(json['userInfo']);
 
   Map toJson() =>
     {
