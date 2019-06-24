@@ -100,6 +100,16 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
     private var userStatusSubscriptions: [Int: RTSubscription] = [:]
     
     // MARK: -
+    // MARK: - Register device args
+    private var registerDeviceArgs: [String: Any] = [:]
+    
+    // MARK: -
+    private var didAskRegistration = false
+    
+    // MARK: -
+    private var registerDeviceFinished: FlutterResult?
+    
+    // MARK: -
     // MARK: - Init
     init(messagingChannel: FlutterMethodChannel) {
         self.messagingChannel = messagingChannel
@@ -288,11 +298,48 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - RegisterDevice
     private func registerDevice(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-
-        // TODO: -
-        // TODO: - Method without deviceToken in arguments will be added to SwiftSDK
-        fatalError("Method without deviceToken in arguments will be added to SwiftSDK")
+        registerDeviceArgs[Args.channels] = arguments[Args.channels]
+        registerDeviceArgs[Args.expiration] = arguments[Args.expiration]
         
+        DispatchQueue.main.async { [weak self] in
+            UIApplication.shared.registerForRemoteNotifications()
+            self?.didAskRegistration = true
+            self?.registerDeviceFinished = result
+        }
+    }
+    
+    public func didRegisterForRemotePushNotifications(withToken deviceToken: Data) {
+        if didAskRegistration {
+            let channels: [String]? = registerDeviceArgs[Args.channels].flatMap(cast)
+            let expiration: Date? = registerDeviceArgs[Args.expiration].flatMap(cast)
+            
+            let successHandler: (String) -> Void = { [weak self] in
+                self?.registerDeviceFinished?($0)
+                self?.registerDeviceFinished = nil
+            }
+            
+            let errorHandler: (Fault) -> Void = { [weak self] in
+                self?.registerDeviceFinished?(FlutterError($0))
+                self?.registerDeviceFinished = nil
+            }
+            
+            if let channels = channels {
+                if let expiration = expiration {
+                    messaging.registerDevice(deviceToken: deviceToken, channels: channels, expiration: expiration, responseHandler: successHandler, errorHandler: errorHandler)
+                } else {
+                    messaging.registerDevice(deviceToken: deviceToken, channels: channels, responseHandler: successHandler, errorHandler: errorHandler)
+                }
+            } else {
+                if let expiration = expiration {
+                    messaging.registerDevice(deviceToken: deviceToken, expiration: expiration, responseHandler: successHandler, errorHandler: errorHandler)
+                } else {
+                    messaging.registerDevice(deviceToken: deviceToken, responseHandler: successHandler, errorHandler: errorHandler)
+                }
+            }
+            
+            didAskRegistration = false
+            registerDeviceArgs = [:]
+        }
     }
     
     // MARK: -
@@ -719,8 +766,5 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
         // TODO: - Updated Flutter implementation will handle listener filtering
         result(FlutterMethodNotImplemented)
     }
-    
-    
-   
 }
 

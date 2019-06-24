@@ -22,9 +22,15 @@ fileprivate enum FlutterPluginChannels: String, CaseIterable {
 
 public class SwiftBackendlessSdkPlugin: NSObject, FlutterPlugin {
     
+    public static let shared = SwiftBackendlessSdkPlugin()
+    
+    private override init() {}
+    
     static var handlers: [FlutterCallHandlerProtocol] = []
     
     static let backendless = Backendless.shared
+    
+    private var messagingHandler: MessagingCallHandler?
     
     public static func register(with registrar: FlutterPluginRegistrar) {
         
@@ -71,7 +77,9 @@ public class SwiftBackendlessSdkPlugin: NSObject, FlutterPlugin {
                     handler = LoggingCallHandler()
                 case .messagingChannel:
                     channel = FlutterMethodChannel(name: pluginChannel.rawValue, binaryMessenger: messenger, codec: codec)
-                    handler = MessagingCallHandler(messagingChannel: channel)
+                    let messagingCallHandler = MessagingCallHandler(messagingChannel: channel)
+                    handler = messagingCallHandler
+                    SwiftBackendlessSdkPlugin.shared.messagingHandler = messagingCallHandler
                 case .userServiceChannel:
                     channel = FlutterMethodChannel(name: pluginChannel.rawValue, binaryMessenger: messenger, codec: codec)
                     handler = UserServiceCallHandler()
@@ -84,6 +92,15 @@ public class SwiftBackendlessSdkPlugin: NSObject, FlutterPlugin {
                 
                 channel.setMethodCallHandler(handler.routeFlutterCall)
         }
+        
+        registrar.addApplicationDelegate(SwiftBackendlessSdkPlugin.shared)
+    }
+    
+    
+    public func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        SwiftBackendlessSdkPlugin.shared
+            .messagingHandler
+            .map { $0.didRegisterForRemotePushNotifications(withToken: deviceToken) }
     }
     
 }

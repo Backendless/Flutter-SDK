@@ -36,7 +36,7 @@ class BackendlessReader: FlutterStandardReader {
     private func readDate() -> Date? {
         return readValue()
             .flatMap(cast)
-            .map { Date(timeIntervalSince1970: $0) }
+            .map { Date(timeIntervalSince1970: $0 / 1000) }
     }
     
     // MARK: -
