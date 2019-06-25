@@ -9,12 +9,21 @@ import Foundation
 
 class DeviceRegistrationResult: Codable {
     
-    let token: String
+    let deviceToken: String
     let channelRegistrations: [String: String]
     
     init(token: String, planeString: String) {
-        self.token = token
+        self.deviceToken = token
         
-        channelRegistrations = [:]
+        var channelRegistrations: [String: String] = [:]
+        let splitterString = planeString.components(separatedBy: ",")
+        splitterString.forEach {
+            let splittedReg = $0.components(separatedBy: "::")
+            let key = splittedReg[0]
+            let value = splittedReg[1]
+            channelRegistrations[key] = value
+        }
+        
+        self.channelRegistrations = channelRegistrations
     }
 }
