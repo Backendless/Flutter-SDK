@@ -21,13 +21,25 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+    Backendless.setUrl("https://apitest.backendless.com");
     Backendless.initApp(
-        "4C50E3CB-D44F-2019-FF4D-ECE3F1E06B00",
-        "FD99AED3-300E-8BAC-FF42-6DCBE4084F00",
-        "2809016A-662D-7133-FFC0-08EC52CA6800");
+        "B4988CE4-4805-1DEA-FFBA-36349CA71E00",
+        "C5F6C390-E963-5D7B-FF5C-0F702B6E6B00",
+        "3A11CEE8-9EC2-F5AD-FF43-BF82D4937A00");
   }
 
-  void buttonPressed() {}
+  void buttonPressed() {
+    EmailEnvelope envelope = EmailEnvelope()
+      ..to = ["email@gmail.com"]
+      ..cc = ["secondemail@gmail.com"];
+
+    Map<String, String> templateValues = {
+      "app_name": "My app yoooo",
+      "confirmation_url": "Here is some link",
+    };
+
+    Backendless.Messaging.sendEmailFromTemplate("MyTemplate", envelope, templateValues).then((v) => print(v));
+  }
 
   void showResult(dynamic result) {
     setState(() => _result = result.toString());

@@ -32,6 +32,7 @@ class BackendlessMessageCodec extends StandardMessageCodec {
   static const int _kBackendlessUser = 151;
   static const int _kUserProperty = 152;
   static const int _kBulkEvent = 153;
+  static const int _kEmailEnvelope = 154;
 
   @override
   void writeValue(WriteBuffer buffer, dynamic value) {
@@ -113,6 +114,9 @@ class BackendlessMessageCodec extends StandardMessageCodec {
     } else if (value is BulkEvent) {
       buffer.putUint8(_kBulkEvent);
       writeValue(buffer, value.toJson());
+    } else if (value is EmailEnvelope) {
+      buffer.putUint8(_kEmailEnvelope);
+      writeValue(buffer, value.toJson());
     } else {
       super.writeValue(buffer, value);
     }
@@ -173,6 +177,8 @@ class BackendlessMessageCodec extends StandardMessageCodec {
         return UserProperty.fromJson(readValue(buffer));
       case _kBulkEvent:
         return BulkEvent.fromJson(readValue(buffer));
+      case _kEmailEnvelope:
+        return EmailEnvelope.fromJson(readValue(buffer));
       default:
         return super.readValueOfType(type, buffer);
     }

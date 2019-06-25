@@ -135,6 +135,14 @@ class BackendlessMessaging {
       _channel.invokeMethod("Backendless.Messaging.unregisterDevice",
           <String, dynamic>{"channels": channels});
 
+  Future<MessageStatus> sendEmailFromTemplate(String templateName, EmailEnvelope envelope, [Map<String, String> templateValues]) =>
+    _channel.invokeMethod(
+      "Backendless.Messaging.sendEmailFromTemplate", <String, dynamic> {
+        "templateName":templateName,
+        "envelope": envelope,
+        "templateValues": templateValues
+      });
+      
   Future<Channel> subscribe([String channelName = DEFAULT_CHANNEL_NAME]) async {
     int handle = _channelHandle++;
     return _channel.invokeMethod(
@@ -721,6 +729,30 @@ class UserStatusResponse {
 
   @override
   String toString() => "UserStatusResponse{status=$status, data=$data}";
+}
+
+class EmailEnvelope {
+  String query;
+  List<String> to;
+  List<String> cc;
+  List<String> bcc;
+
+  EmailEnvelope();
+
+  EmailEnvelope.fromJson(Map json):
+    query = json['query'],
+    to = json['to'],
+    cc = json['cc'],
+    bcc = json['bcc'];
+
+  Map toJson() =>
+    {
+      'query': query,
+      'to': to,
+      'cc': cc,
+      'bcc': bcc,
+    };
+
 }
 
 class BodyParts {

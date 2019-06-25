@@ -8,6 +8,7 @@ import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 import com.backendless.messaging.BodyParts;
 import com.backendless.messaging.DeliveryOptions;
+import com.backendless.messaging.EmailEnvelope;
 import com.backendless.messaging.MessageStatus;
 import com.backendless.messaging.PublishMessageInfo;
 import com.backendless.messaging.PublishOptions;
@@ -76,6 +77,9 @@ public class MessagingCallHandler implements MethodChannel.MethodCallHandler {
                 break;
             case "Backendless.Messaging.unregisterDevice":
                 unregisterDevice(call, result);
+                break;
+            case "Backendless.Messaging.sendEmailFromTemplate":
+                sendEmailFromTemplate(call, result);
                 break;
             case "Backendless.Messaging.subscribe":
                 subscribe(call, result);
@@ -234,6 +238,20 @@ public class MessagingCallHandler implements MethodChannel.MethodCallHandler {
             Backendless.Messaging.unregisterDevice(channels, callback);
         } else {
             Backendless.Messaging.unregisterDevice(callback);
+        }
+    }
+
+    private void sendEmailFromTemplate(MethodCall call, MethodChannel.Result result) {
+        String templateName = call.argument("templateName");
+        EmailEnvelope envelope = call.argument("envelope");
+        Map<String, String> templateValues = call.argument("templateValues");
+
+        FlutterCallback<MessageStatus> callback = new FlutterCallback<>(result);
+
+        if (templateValues != null) {
+            Backendless.Messaging.sendEmailFromTemplate(templateName, envelope, templateValues, callback);
+        } else {
+            Backendless.Messaging.sendEmailFromTemplate(templateName, envelope, callback);
         }
     }
 

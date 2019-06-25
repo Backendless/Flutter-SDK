@@ -16,6 +16,7 @@ import com.backendless.geo.GeoCluster;
 import com.backendless.geo.GeoPoint;
 import com.backendless.geo.SearchMatchesResult;
 import com.backendless.messaging.DeliveryOptions;
+import com.backendless.messaging.EmailEnvelope;
 import com.backendless.messaging.Message;
 import com.backendless.messaging.MessageStatus;
 import com.backendless.messaging.PublishMessageInfo;
@@ -72,6 +73,7 @@ public final class BackendlessMessageCodec extends StandardMessageCodec {
     private static final byte BACKENDLESS_USER = (byte) 151;
     private static final byte USER_PROPERTY = (byte) 152;
     private static final byte BULK_EVENT = (byte) 153;
+    private static final byte EMAIL_ENVELOPE = (byte) 154;
 
     private BackendlessMessageCodec() {
         objectMapper.enable(SerializationFeature.WRITE_ENUMS_USING_INDEX);
@@ -162,6 +164,9 @@ public final class BackendlessMessageCodec extends StandardMessageCodec {
         } else if (value instanceof BulkEvent) {
             stream.write(BULK_EVENT);
             writeValue(stream, objectMapper.convertValue(value, Map.class));
+        } else if (value instanceof EmailEnvelope) {
+            stream.write(EMAIL_ENVELOPE);
+            writeValue(stream, objectMapper.convertValue(value, Map.class));
         } else if (value != null && value.getClass().isArray()) {
             Object[] array = (Object[]) value;
             List list = Arrays.asList(array);
@@ -226,6 +231,8 @@ public final class BackendlessMessageCodec extends StandardMessageCodec {
                 return objectMapper.convertValue(readValue(buffer), UserProperty.class);
             case BULK_EVENT:
                 return objectMapper.convertValue(readValue(buffer), BulkEvent.class);
+            case EMAIL_ENVELOPE:
+                return objectMapper.convertValue(readValue(buffer), EmailEnvelope.class);
             default:
                 return super.readValueOfType(type, buffer);
         }
