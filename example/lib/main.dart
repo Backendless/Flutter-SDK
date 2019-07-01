@@ -14,15 +14,16 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    Backendless.setUrl("https://apitest.backendless.com");
+
+
     Backendless.initApp(
-        "B4988CE4-4805-1DEA-FFBA-36349CA71E00",
-        "C5F6C390-E963-5D7B-FF5C-0F702B6E6B00",
-        "3A11CEE8-9EC2-F5AD-FF43-BF82D4937A00");
+        "4C50E3CB-D44F-2019-FF4D-ECE3F1E06B00",
+        "FD99AED3-300E-8BAC-FF42-6DCBE4084F00",
+        "2809016A-662D-7133-FFC0-08EC52CA6800");
   }
 
   void buttonPressed() {
-    Backendless.Data.of("tableName").find(DataQueryBuilder());
+    Backendless.data.of("Price").save({"price": 1488}).then((onValue) => showResult(onValue));
   }
 
   void showResult(dynamic result) {

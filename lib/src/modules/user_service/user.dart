@@ -29,13 +29,13 @@ class BackendlessUser {
 
   String getUserId() => getProperty(ID_KEY);
 
-  void setPassword(String password) => setProperty(PASSWORD_KEY, password);
+  set password(String password) => setProperty(PASSWORD_KEY, password);
 
-  String getPassword() => getProperty(PASSWORD_KEY);
+  String get password => getProperty(PASSWORD_KEY);
 
-  void setEmail(String email) => setProperty(EMAIL_KEY, email);
+  set email(String email) => setProperty(EMAIL_KEY, email);
 
-  String getEmail() => getProperty(EMAIL_KEY);
+  String get email => getProperty(EMAIL_KEY);
 
   void clearProperties() => _properties.clear();
 

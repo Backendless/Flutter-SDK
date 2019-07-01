@@ -18,7 +18,7 @@ class ObjectProperty extends AbstractProperty {
     relatedTable = json['relatedTable'];
     defaultValue = json['defaultValue'];
     name = json['name'];
-    required = json['required'];
+    this.required = json['required'];
     type = DateTypeEnum.values[json['type']];
   }
 
@@ -27,7 +27,7 @@ class ObjectProperty extends AbstractProperty {
       'relatedTable': relatedTable,
       'defaultValue': defaultValue,
       'name': name,
-      'required': required,
+      'required': this.required,
       'type': type?.index,
     };
 }
