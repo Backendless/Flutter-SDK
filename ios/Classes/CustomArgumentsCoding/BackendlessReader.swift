@@ -162,8 +162,7 @@ class BackendlessReader: FlutterStandardReader {
         case .bulkEvent:
             return try? JSONDecoder().decode(BulkEvent.self, from: jsonData)
         case .emailEnvelope:
-//            return try? JSONDecoder().decode(EmailEnvelope, from: jsonData)
-            return nil
+            return try? JSONDecoder().decode(EmailEnvelope.self, from: jsonData)
         }
     }
 }

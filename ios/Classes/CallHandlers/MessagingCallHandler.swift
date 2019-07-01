@@ -464,7 +464,7 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
         let templateValues: [String: String]? = arguments[Args.templateValues].flatMap(cast)
         
         if let templateValues = templateValues {
-            messaging.sendEmailFromTemplate(templateName: templateName, templateValues: templateValues, envelope: envelope,
+            messaging.sendEmailFromTemplate(templateName: templateName, envelope: envelope, templateValues: templateValues,
                 responseHandler: {
                     result($0)
                 },

@@ -107,8 +107,7 @@ class BackendlessWtiter: FlutterStandardWriter {
         case is BulkEvent:
             return try? JSONEncoder().encode(value as! BulkEvent)
         case is EmailEnvelope:
-//            return try? JSONEncoder().encode(value as! EmailEnvelope)
-            return nil
+            return try? JSONEncoder().encode(value as! EmailEnvelope)
         default:
             return nil
         }
@@ -177,7 +176,7 @@ class BackendlessWtiter: FlutterStandardWriter {
         
         inputDict.forEach {
             if $0.key == Args.status, let stringValue = $0.value as? String {
-                let enumValue = PublishStatusEnum(rawValue: stringValue) ?? .unknown
+                let enumValue = PublishStatusEnum(rawValue: stringValue) ?? .UNKNOWN
                 result[$0.key] = enumValue.index
             }
         }

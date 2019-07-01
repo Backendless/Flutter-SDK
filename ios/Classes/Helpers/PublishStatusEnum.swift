@@ -8,23 +8,23 @@
 import Foundation
 
 enum PublishStatusEnum: String {
-    case failed
-    case published
-    case scheduled
-    case cancelled
-    case unknown
+    case FAILED
+    case PUBLISHED
+    case SCHEDULED
+    case CANCELLED
+    case UNKNOWN
     
     var index: Int {
         switch self {
-        case .failed:
+        case .FAILED:
             return 0
-        case .published:
+        case .PUBLISHED:
             return 1
-        case .scheduled:
+        case .SCHEDULED:
             return 2
-        case .cancelled:
+        case .CANCELLED:
             return 3
-        case .unknown:
+        case .UNKNOWN:
             return 4
         }
     }
