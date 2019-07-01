@@ -45,6 +45,10 @@ class BackendlessWtiter: FlutterStandardWriter {
             let json = commandObject.encodeToJson()
             writeCode(for: value)
             super.writeValue(json)
+        case is UserStatus:
+            let json = jsonFrom(userStatus: value as! UserStatus)
+            writeCode(for: value)
+            super.writeValue(json)
         default:
             super.writeValue(value)
         }
@@ -95,8 +99,6 @@ class BackendlessWtiter: FlutterStandardWriter {
             return try? JSONEncoder().encode(value as! DeviceRegistrationResult)
         case is UserInfo:
             return try? JSONEncoder().encode(value as! UserInfo)
-            //        case is UserStatusResponse:
-        //            return try? JSONEncoder().encode(value as! UserStatusResponse)
         case is ReconnectAttemptObject:
             return try? JSONEncoder().encode(value as! ReconnectAttemptObject)
         case is BackendlessUser:
@@ -150,8 +152,8 @@ class BackendlessWtiter: FlutterStandardWriter {
         //            writeValue(FlutterTypeCode.command.rawValue)
         case is UserInfo:
             writeByte(FlutterTypeCode.userInfo.rawValue)
-            //        case is UserStatusResponse:
-        //            writeValue(FlutterTypeCode.userStatusResponse.rawValue)
+        case is UserStatus:
+            writeByte(FlutterTypeCode.userStatusResponse.rawValue)
         case is ReconnectAttemptObject:
             writeByte(FlutterTypeCode.reconnectAttempt.rawValue)
         case is BackendlessUser:
@@ -188,6 +190,20 @@ class BackendlessWtiter: FlutterStandardWriter {
                 let enumValue = DataTypeEnum(rawValue: stringValue) ?? .UNKNOWN
                 result[$0.key] = enumValue.index
             }
+        }
+        
+        return result
+    }
+    
+    private func jsonFrom(userStatus: UserStatus) -> [String: Any] {
+        var result: [String: Any] = [:]
+        
+        if let statusString = userStatus.status, let status = UserStatusEnum(rawValue: statusString) {
+            result["status"] = status.index
+        }
+        
+        if let data = userStatus.data {
+            result["data"] = data
         }
         
         return result
