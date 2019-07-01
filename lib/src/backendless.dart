@@ -1,18 +1,18 @@
 part of backendless_sdk;
 
 class Backendless {
-  static final Data = new BackendlessData();
-  static final Cache = new BackendlessCache();
-  static final Commerce = new BackendlessCommerce();
-  static final Counters = new BackendlessCounters();
-  static final CustomService = new BackendlessCustomService();
-  static final Events = new BackendlessEvents();
-  static final Files = new BackendlessFiles();
-  static final Geo = new BackendlessGeo();
-  static final Logging = new BackendlessLogging();
-  static final Messaging = new BackendlessMessaging();
-  static final RT = new BackendlessRT();
-  static final UserService = new BackendlessUserService();
+  static final data = new BackendlessData();
+  static final cache = new BackendlessCache();
+  static final commerce = new BackendlessCommerce();
+  static final counters = new BackendlessCounters();
+  static final customService = new BackendlessCustomService();
+  static final events = new BackendlessEvents();
+  static final files = new BackendlessFiles();
+  static final geo = new BackendlessGeo();
+  static final logging = new BackendlessLogging();
+  static final messaging = new BackendlessMessaging();
+  static final rt = new BackendlessRT();
+  static final userService = new BackendlessUserService();
 
   static const MethodChannel _channel = const MethodChannel('backendless');
 

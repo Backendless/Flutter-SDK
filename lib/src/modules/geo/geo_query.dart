@@ -234,3 +234,5 @@ class BackendlessGeoQuery extends AbstractBackendlessGeoQuery {
       dpp,
       clusterGridSize);
 }
+
+enum Units { METERS, MILES, YARDS, KILOMETERS, FEET }

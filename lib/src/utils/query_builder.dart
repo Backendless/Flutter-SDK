@@ -50,5 +50,3 @@ void _validatePageSize(int pageSize) {
   if (pageSize != null && pageSize <= 0)
     throw new ArgumentError("Page size cannot have a negative value.");
 }
-
-enum Units { METERS, MILES, YARDS, KILOMETERS, FEET }
