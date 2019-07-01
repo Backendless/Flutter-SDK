@@ -733,9 +733,9 @@ class UserStatusResponse {
 
 class EmailEnvelope {
   String query;
-  List<String> to;
-  List<String> cc;
-  List<String> bcc;
+  Set<String> to;
+  Set<String> cc;
+  Set<String> bcc;
 
   EmailEnvelope();
 

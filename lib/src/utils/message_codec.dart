@@ -117,6 +117,8 @@ class BackendlessMessageCodec extends StandardMessageCodec {
     } else if (value is EmailEnvelope) {
       buffer.putUint8(_kEmailEnvelope);
       writeValue(buffer, value.toJson());
+    } else if (value is Set) {
+      writeValue(buffer, value.toList());
     } else {
       super.writeValue(buffer, value);
     }
