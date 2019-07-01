@@ -1,7 +1,4 @@
-import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
-import 'package:backendless_sdk/src/modules/modules.dart';
-import 'package:backendless_sdk/src/utils/utils.dart';
+part of backendless_sdk;
 
 class BackendlessMessageCodec extends StandardMessageCodec {
   const BackendlessMessageCodec();

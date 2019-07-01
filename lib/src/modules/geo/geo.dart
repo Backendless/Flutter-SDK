@@ -1,9 +1,4 @@
-import 'package:flutter/services.dart';
-import 'package:backendless_sdk/src/utils/utils.dart';
-import 'package:collection/collection.dart';
-
-import 'dart:ui' show hashValues;
-import 'dart:core';
+part of backendless_sdk;
 
 typedef void GeofenceCallback(
     String geofenceName, String geofenceId, double latitude, double longitude);
@@ -223,7 +218,7 @@ class EntityDescription {
       MapEquality().equals(o.fields, fields);
 
   @override
-  int get hashCode => fields.hashCode;
+  int get hashCode => MapEquality().hash(fields);
 }
 
 class BaseGeoPoint extends EntityDescription {

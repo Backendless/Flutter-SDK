@@ -1,5 +1,4 @@
-import 'package:flutter/services.dart';
-import 'package:backendless_sdk/src/utils/utils.dart';
+part of backendless_sdk;
 
 class BackendlessData {
   static const MethodChannel _channel = const MethodChannel(

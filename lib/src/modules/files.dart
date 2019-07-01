@@ -1,8 +1,4 @@
-import 'dart:io';
-import 'dart:typed_data';
-
-import 'package:flutter/services.dart';
-import 'package:backendless_sdk/src/utils/utils.dart';
+part of backendless_sdk;
 
 class BackendlessFiles {
   static const MethodChannel _channel = const MethodChannel(

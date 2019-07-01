@@ -1,12 +1,5 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'dart:async';
-
-import 'package:flutter/services.dart';
 import 'package:backendless_sdk/backendless_sdk.dart';
-import 'package:backendless_sdk/src/utils/utils.dart';
-import 'package:backendless_sdk/src/modules/modules.dart';
 
 void main() => runApp(MyApp());
 
@@ -29,16 +22,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   void buttonPressed() {
-    EmailEnvelope envelope = EmailEnvelope()
-      ..to = ["email@gmail.com"]
-      ..cc = ["secondemail@gmail.com"];
-
-    Map<String, String> templateValues = {
-      "app_name": "My app yoooo",
-      "confirmation_url": "Here is some link",
-    };
-
-    Backendless.Messaging.sendEmailFromTemplate("MyTemplate", envelope, templateValues).then((v) => print(v));
+    Backendless.Data.of("tableName").find(DataQueryBuilder());
   }
 
   void showResult(dynamic result) {

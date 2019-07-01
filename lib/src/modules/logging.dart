@@ -1,4 +1,4 @@
-import 'package:flutter/services.dart';
+part of backendless_sdk;
 
 class BackendlessLogging {
   static const MethodChannel _channel =

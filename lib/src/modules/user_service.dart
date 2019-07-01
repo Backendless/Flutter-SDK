@@ -1,7 +1,4 @@
-import 'package:collection/collection.dart';
-import 'package:flutter/services.dart';
-import 'package:backendless_sdk/src/modules/data.dart';
-import 'package:backendless_sdk/src/utils/message_codec.dart';
+part of backendless_sdk;
 
 class BackendlessUserService {
   static const MethodChannel _channel = const MethodChannel(

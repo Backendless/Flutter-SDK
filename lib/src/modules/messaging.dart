@@ -1,9 +1,4 @@
-import 'dart:async';
-import 'dart:ui' show hashValues;
-
-import 'package:collection/collection.dart';
-import 'package:flutter/services.dart';
-import 'package:backendless_sdk/src/utils/utils.dart';
+part of backendless_sdk;
 
 class BackendlessMessaging {
   static const String DEFAULT_CHANNEL_NAME = "default";

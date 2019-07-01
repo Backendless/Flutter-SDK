@@ -1,4 +1,4 @@
-import 'package:flutter/services.dart';
+part of backendless_sdk;
 
 class BackendlessCounters {
   static const MethodChannel _channel =
