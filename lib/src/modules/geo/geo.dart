@@ -227,13 +227,12 @@ class SearchMatchesResult {
 
   SearchMatchesResult();
 
-  SearchMatchesResult.fromJson(Map json) : 
-    matches = json['matches'].toDouble(),
-    geoPoint = GeoPoint.fromJson(json['geoPoint']);
+  SearchMatchesResult.fromJson(Map json)
+      : matches = json['matches'].toDouble(),
+        geoPoint = GeoPoint.fromJson(json['geoPoint']);
 
-  Map toJson() =>
-    {
-      'matches': matches,
-      'geoPoint': geoPoint,
-    };
+  Map toJson() => {
+        'matches': matches,
+        'geoPoint': geoPoint,
+      };
 }

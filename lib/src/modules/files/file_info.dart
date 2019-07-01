@@ -9,19 +9,18 @@ class FileInfo {
 
   FileInfo();
 
-  FileInfo.fromJson(Map json) : 
-    name = json['name'],
-    createdOn = json['createdOn'],
-    publicUrl = json['publicUrl'],
-    url = json['url'],
-    size = json['size'];
+  FileInfo.fromJson(Map json)
+      : name = json['name'],
+        createdOn = json['createdOn'],
+        publicUrl = json['publicUrl'],
+        url = json['url'],
+        size = json['size'];
 
-  Map toJson() =>
-    {
-      'name': name,
-      'createdOn': createdOn,
-      'publicUrl': publicUrl,
-      'url': url,
-      'size': size,
-    };
+  Map toJson() => {
+        'name': name,
+        'createdOn': createdOn,
+        'publicUrl': publicUrl,
+        'url': url,
+        'size': size,
+      };
 }

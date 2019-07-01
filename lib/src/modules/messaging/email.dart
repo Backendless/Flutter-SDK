@@ -8,20 +8,18 @@ class EmailEnvelope {
 
   EmailEnvelope();
 
-  EmailEnvelope.fromJson(Map json):
-    query = json['query'],
-    to = json['to'],
-    cc = json['cc'],
-    bcc = json['bcc'];
+  EmailEnvelope.fromJson(Map json)
+      : query = json['query'],
+        to = json['to'],
+        cc = json['cc'],
+        bcc = json['bcc'];
 
-  Map toJson() =>
-    {
-      'query': query,
-      'to': to,
-      'cc': cc,
-      'bcc': bcc,
-    };
-
+  Map toJson() => {
+        'query': query,
+        'to': to,
+        'cc': cc,
+        'bcc': bcc,
+      };
 }
 
 class BodyParts {

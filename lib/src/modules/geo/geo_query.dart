@@ -45,7 +45,8 @@ class BackendlessGeoQuery extends AbstractBackendlessGeoQuery {
     _categories = json['categories'].cast<String>();
     metadata = json['metadata'].cast<String, Object>();
     relativeFindMetadata = json['relativeFindMetadata'].cast<String, String>();
-    relativeFindPercentThreshold = json['relativeFindPercentThreshold'].toDouble();
+    relativeFindPercentThreshold =
+        json['relativeFindPercentThreshold'].toDouble();
     whereClause = json['whereClause'];
     sortBy = json['sortBy'].cast<String>();
     dpp = json['dpp'].toDouble();
@@ -57,25 +58,24 @@ class BackendlessGeoQuery extends AbstractBackendlessGeoQuery {
     searchRectangle = json['searchRectangle'];
   }
 
-  Map toJson() =>
-    {
-      'latitude': latitude,
-      'longitude': longitude,
-      'radius': radius,
-      'categories': _categories,
-      'metadata': metadata,
-      'relativeFindMetadata': relativeFindMetadata,
-      'relativeFindPercentThreshold': relativeFindPercentThreshold,
-      'whereClause': whereClause,
-      'sortBy': sortBy,
-      'dpp': dpp,
-      'clusterGridSize': clusterGridSize,
-      'pageSize': pageSize,
-      'offset': offset,
-      'units': units?.index,
-      'includeMeta': includeMeta,
-      'searchRectangle': searchRectangle,
-    };
+  Map toJson() => {
+        'latitude': latitude,
+        'longitude': longitude,
+        'radius': radius,
+        'categories': _categories,
+        'metadata': metadata,
+        'relativeFindMetadata': relativeFindMetadata,
+        'relativeFindPercentThreshold': relativeFindPercentThreshold,
+        'whereClause': whereClause,
+        'sortBy': sortBy,
+        'dpp': dpp,
+        'clusterGridSize': clusterGridSize,
+        'pageSize': pageSize,
+        'offset': offset,
+        'units': units?.index,
+        'includeMeta': includeMeta,
+        'searchRectangle': searchRectangle,
+      };
 
   BackendlessGeoQuery.byLatLon(double latitude, double longitude,
       [double radius,
@@ -133,7 +133,7 @@ class BackendlessGeoQuery extends AbstractBackendlessGeoQuery {
   set pageSize(int pageSize) {
     if (pageSize != null)
       pagedQueryBuilder.pageSize = pageSize;
-    else 
+    else
       pagedQueryBuilder.pageSize = DEFAULT_PAGE_SIZE;
   }
 
@@ -144,7 +144,7 @@ class BackendlessGeoQuery extends AbstractBackendlessGeoQuery {
       pagedQueryBuilder.offset = offset;
     else
       pagedQueryBuilder.offset = DEFAULT_OFFSET;
-    }
+  }
 
   get offset => pagedQueryBuilder.offset;
 

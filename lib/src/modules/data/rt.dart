@@ -132,15 +132,14 @@ class BulkEvent {
 
   BulkEvent();
 
-  BulkEvent.fromJson(Map json) : 
-    whereClause = json['whereClause'],
-    count = json['count'];
+  BulkEvent.fromJson(Map json)
+      : whereClause = json['whereClause'],
+        count = json['count'];
 
-  Map toJson() =>
-    {
-      'whereClause': whereClause,
-      'count': count,
-    };
+  Map toJson() => {
+        'whereClause': whereClause,
+        'count': count,
+      };
 
   @override
   String toString() => "BulkEvent{whereClause='$whereClause', count=$count}";

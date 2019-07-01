@@ -36,15 +36,14 @@ class PublishOptions {
 
   PublishOptions();
 
-  PublishOptions.fromJson(Map json) : 
-    publisherId = json['publisherId'],
-    headers = json['headers'].cast<String, String>();
+  PublishOptions.fromJson(Map json)
+      : publisherId = json['publisherId'],
+        headers = json['headers'].cast<String, String>();
 
-  Map toJson() =>
-    {
-      'publisherId': publisherId,
-      'headers': headers,
-    };
+  Map toJson() => {
+        'publisherId': publisherId,
+        'headers': headers,
+      };
 
   PublishOptions.from(PublishMessageInfo info) {
     this.publisherId = info.publisherId;
@@ -65,25 +64,24 @@ class DeliveryOptions {
 
   DeliveryOptions();
 
-  DeliveryOptions.fromJson(Map json) : 
-    pushBroadcast = json['pushBroadcast'],
-    pushSinglecast = json['pushSinglecast'].cast<String>(),
-    segmentQuery = json['segmentQuery'],
-    publishPolicy = PublishPolicyEnum.values[json['publishPolicy']],
-    publishAt = json['publishAt'],
-    repeatEvery = json['repeatEvery'],
-    repeatExpiresAt = json['repeatExpiresAt'];
+  DeliveryOptions.fromJson(Map json)
+      : pushBroadcast = json['pushBroadcast'],
+        pushSinglecast = json['pushSinglecast'].cast<String>(),
+        segmentQuery = json['segmentQuery'],
+        publishPolicy = PublishPolicyEnum.values[json['publishPolicy']],
+        publishAt = json['publishAt'],
+        repeatEvery = json['repeatEvery'],
+        repeatExpiresAt = json['repeatExpiresAt'];
 
-  Map toJson() =>
-    {
-      'pushBroadcast': pushBroadcast,
-      'pushSinglecast': pushSinglecast,
-      'segmentQuery': segmentQuery,
-      'publishPolicy': publishPolicy?.index,
-      'publishAt': publishAt,
-      'repeatEvery': repeatEvery,
-      'repeatExpiresAt': repeatExpiresAt,
-    };
+  Map toJson() => {
+        'pushBroadcast': pushBroadcast,
+        'pushSinglecast': pushSinglecast,
+        'segmentQuery': segmentQuery,
+        'publishPolicy': publishPolicy?.index,
+        'publishAt': publishAt,
+        'repeatEvery': repeatEvery,
+        'repeatExpiresAt': repeatExpiresAt,
+      };
 
   DeliveryOptions.from(PublishMessageInfo info) {
     this.publishPolicy = PublishPolicyEnum.BOTH;
@@ -146,22 +144,21 @@ class PublishMessageInfo {
     headers = json['headers'].cast<String, String>();
   }
 
-  Map toJson() =>
-    {
-      'messageId': _messageId,
-      'timestamp': _timestamp,
-      'message': message,
-      'publisherId': publisherId,
-      'subtopic': subtopic,
-      'pushSinglecast': pushSinglecast,
-      'pushBroadcast': pushBroadcast,
-      'publishPolicy': publishPolicy,
-      'query': query,
-      'publishAt': publishAt,
-      'repeatEvery': repeatEvery,
-      'repeatExpiresAt': repeatExpiresAt,
-      'headers': headers,
-    };
+  Map toJson() => {
+        'messageId': _messageId,
+        'timestamp': _timestamp,
+        'message': message,
+        'publisherId': publisherId,
+        'subtopic': subtopic,
+        'pushSinglecast': pushSinglecast,
+        'pushBroadcast': pushBroadcast,
+        'publishPolicy': publishPolicy,
+        'query': query,
+        'publishAt': publishAt,
+        'repeatEvery': repeatEvery,
+        'repeatExpiresAt': repeatExpiresAt,
+        'headers': headers,
+      };
 
   get messageId => _messageId;
   get timestamp => _timestamp;

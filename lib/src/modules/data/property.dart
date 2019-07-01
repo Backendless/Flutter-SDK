@@ -22,14 +22,13 @@ class ObjectProperty extends AbstractProperty {
     type = DateTypeEnum.values[json['type']];
   }
 
-  Map toJson() =>
-    {
-      'relatedTable': relatedTable,
-      'defaultValue': defaultValue,
-      'name': name,
-      'required': this.required,
-      'type': type?.index,
-    };
+  Map toJson() => {
+        'relatedTable': relatedTable,
+        'defaultValue': defaultValue,
+        'name': name,
+        'required': this.required,
+        'type': type?.index,
+      };
 }
 
 enum DateTypeEnum {

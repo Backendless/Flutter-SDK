@@ -36,18 +36,17 @@ class DataQueryBuilder {
       relationsDepth = DEFAULT_RELATIONS_DEPTH;
   }
 
-  Map toJson() =>
-    {
-      'pageSize': pageSize,
-      'offset': offset,
-      'properties': properties,
-      'whereClause': whereClause,
-      'groupBy': groupBy,
-      'havingClause': havingClause,
-      'sortBy': sortBy,
-      'related': related,
-      'relationsDepth': relationsDepth,
-    };
+  Map toJson() => {
+        'pageSize': pageSize,
+        'offset': offset,
+        'properties': properties,
+        'whereClause': whereClause,
+        'groupBy': groupBy,
+        'havingClause': havingClause,
+        'sortBy': sortBy,
+        'related': related,
+        'relationsDepth': relationsDepth,
+      };
 
   set pageSize(int pageSize) => _pagedQueryBuilder.pageSize = pageSize;
 
@@ -75,12 +74,11 @@ class LoadRelationsQueryBuilder<R> {
     offset = json['offset'];
   }
 
-  Map toJson() =>
-    {
-      'relationName': relationName,
-      'pageSize': pageSize,
-      'offset': offset,
-    };
+  Map toJson() => {
+        'relationName': relationName,
+        'pageSize': pageSize,
+        'offset': offset,
+      };
 
   set pageSize(int pageSize) => pagedQueryBuilder.pageSize = pageSize;
 

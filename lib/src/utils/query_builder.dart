@@ -6,7 +6,8 @@ class PagedQueryBuilder {
   int _pageSize;
   int _offset;
 
-  PagedQueryBuilder([this._pageSize = DEFAULT_PAGE_SIZE, this._offset = DEFAULT_OFFSET]);
+  PagedQueryBuilder(
+      [this._pageSize = DEFAULT_PAGE_SIZE, this._offset = DEFAULT_OFFSET]);
 
   set pageSize(int pageSize) {
     _validatePageSize(pageSize);

@@ -15,7 +15,6 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
 
-
     Backendless.initApp(
         "4C50E3CB-D44F-2019-FF4D-ECE3F1E06B00",
         "FD99AED3-300E-8BAC-FF42-6DCBE4084F00",
@@ -23,7 +22,9 @@ class _MyAppState extends State<MyApp> {
   }
 
   void buttonPressed() {
-    Backendless.data.of("Price").save({"price": 1488}).then((onValue) => showResult(onValue));
+    Backendless.data
+        .of("Price")
+        .save({"price": 1488}).then((onValue) => showResult(onValue));
   }
 
   void showResult(dynamic result) {

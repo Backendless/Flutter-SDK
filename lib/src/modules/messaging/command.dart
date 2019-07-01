@@ -12,17 +12,16 @@ class Command<T> {
 
   Command.map() : this._(Map);
 
-  Command.fromJson(Map json) : 
-    type = json['type'],
-    data = json['data'],
-    userInfo = UserInfo.fromJson(json['userInfo']);
+  Command.fromJson(Map json)
+      : type = json['type'],
+        data = json['data'],
+        userInfo = UserInfo.fromJson(json['userInfo']);
 
-  Map toJson() =>
-    {
-      'type': type,
-      'data': data,
-      'userInfo': userInfo,
-    };
+  Map toJson() => {
+        'type': type,
+        'data': data,
+        'userInfo': userInfo,
+      };
 
   @override
   String toString() =>

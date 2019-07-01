@@ -10,7 +10,6 @@ class BaseGeoCategory {
 }
 
 class GeoCategory extends BaseGeoCategory implements Comparable<GeoCategory> {
-
   GeoCategory();
 
   GeoCategory.fromJson(Map json) {
@@ -19,12 +18,11 @@ class GeoCategory extends BaseGeoCategory implements Comparable<GeoCategory> {
     size = json['size'];
   }
 
-  Map toJson() =>
-    {
-      'objectId': objectId,
-      'name': name,
-      'size': size,
-    };
+  Map toJson() => {
+        'objectId': objectId,
+        'name': name,
+        'size': size,
+      };
 
   String get id => objectId;
 

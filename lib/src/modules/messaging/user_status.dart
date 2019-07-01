@@ -13,11 +13,10 @@ class UserStatusResponse {
     data = userInfos;
   }
 
-  Map toJson() =>
-    {
-      'status': status?.index,
-      'data': data,
-    };
+  Map toJson() => {
+        'status': status?.index,
+        'data': data,
+      };
 
   @override
   String toString() => "UserStatusResponse{status=$status, data=$data}";
@@ -29,15 +28,14 @@ class UserInfo {
 
   UserInfo();
 
-  UserInfo.fromJson(Map json) : 
-    connectionId = json['connectionId'],
-    userId = json['userId'];
+  UserInfo.fromJson(Map json)
+      : connectionId = json['connectionId'],
+        userId = json['userId'];
 
-  Map toJson() =>
-    {
-      'connectionId': connectionId,
-      'userId': userId,
-    };
+  Map toJson() => {
+        'connectionId': connectionId,
+        'userId': userId,
+      };
 
   @override
   String toString() =>

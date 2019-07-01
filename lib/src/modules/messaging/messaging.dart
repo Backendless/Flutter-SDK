@@ -130,14 +130,16 @@ class BackendlessMessaging {
       _channel.invokeMethod("Backendless.Messaging.unregisterDevice",
           <String, dynamic>{"channels": channels});
 
-  Future<MessageStatus> sendEmailFromTemplate(String templateName, EmailEnvelope envelope, [Map<String, String> templateValues]) =>
-    _channel.invokeMethod(
-      "Backendless.Messaging.sendEmailFromTemplate", <String, dynamic> {
-        "templateName":templateName,
+  Future<MessageStatus> sendEmailFromTemplate(
+          String templateName, EmailEnvelope envelope,
+          [Map<String, String> templateValues]) =>
+      _channel.invokeMethod(
+          "Backendless.Messaging.sendEmailFromTemplate", <String, dynamic>{
+        "templateName": templateName,
         "envelope": envelope,
         "templateValues": templateValues
       });
-      
+
   Future<Channel> subscribe([String channelName = DEFAULT_CHANNEL_NAME]) async {
     int handle = _channelHandle++;
     return _channel.invokeMethod(

@@ -7,17 +7,16 @@ class MessageStatus implements Comparable<MessageStatus> {
 
   MessageStatus();
 
-  MessageStatus.fromJson(Map json) : 
-    messageId = json['messageId'],
-    errorMessage = json['errorMessage'],
-    status = PublishStatusEnum.values[json['status']];
+  MessageStatus.fromJson(Map json)
+      : messageId = json['messageId'],
+        errorMessage = json['errorMessage'],
+        status = PublishStatusEnum.values[json['status']];
 
-  Map toJson() =>
-    {
-      'messageId': messageId,
-      'errorMessage': errorMessage,
-      'status': status?.index,
-    };
+  Map toJson() => {
+        'messageId': messageId,
+        'errorMessage': errorMessage,
+        'status': status?.index,
+      };
 
   @override
   bool operator ==(other) =>

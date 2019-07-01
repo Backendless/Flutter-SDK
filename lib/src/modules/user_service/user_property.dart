@@ -12,11 +12,10 @@ class UserProperty extends AbstractProperty {
     identity = json['identity'];
   }
 
-  Map toJson() =>
-    {
-      'name': name,
-      'required': this.required,
-      'type': type?.index,
-      'identity': identity,
-    };
+  Map toJson() => {
+        'name': name,
+        'required': this.required,
+        'type': type?.index,
+        'identity': identity,
+      };
 }

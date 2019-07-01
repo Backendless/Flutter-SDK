@@ -8,19 +8,18 @@ class GooglePlaySubscriptionStatus {
 
   GooglePlaySubscriptionStatus();
 
-  GooglePlaySubscriptionStatus.fromJson(Map json) :
-    autoRenewing = json['autoRenewing'],
-    startTimeMillis = json['startTimeMillis'],
-    kind = json['kind'],
-    expiryTimeMillis = json['expiryTimeMillis'];
+  GooglePlaySubscriptionStatus.fromJson(Map json)
+      : autoRenewing = json['autoRenewing'],
+        startTimeMillis = json['startTimeMillis'],
+        kind = json['kind'],
+        expiryTimeMillis = json['expiryTimeMillis'];
 
-  Map toJson() =>
-    {
-      'autoRenewing': autoRenewing,
-      'startTimeMillis': startTimeMillis,
-      'kind': kind,
-      'expiryTimeMillis': expiryTimeMillis,
-    };
+  Map toJson() => {
+        'autoRenewing': autoRenewing,
+        'startTimeMillis': startTimeMillis,
+        'kind': kind,
+        'expiryTimeMillis': expiryTimeMillis,
+      };
 }
 
 class GooglePlayPurchaseStatus {
@@ -32,19 +31,18 @@ class GooglePlayPurchaseStatus {
 
   GooglePlayPurchaseStatus();
 
-  GooglePlayPurchaseStatus.fromJson(Map json) :
-    kind = json['kind'],
-    purchaseTimeMillis = json['purchaseTimeMillis'],
-    purchaseState = json['purchaseState'],
-    consumptionState = json['consumptionState'],
-    developerPayload = json['developerPayload'];
+  GooglePlayPurchaseStatus.fromJson(Map json)
+      : kind = json['kind'],
+        purchaseTimeMillis = json['purchaseTimeMillis'],
+        purchaseState = json['purchaseState'],
+        consumptionState = json['consumptionState'],
+        developerPayload = json['developerPayload'];
 
-  Map toJson() =>
-    {
-      'kind': kind,
-      'purchaseTimeMillis': purchaseTimeMillis,
-      'purchaseState': purchaseState,
-      'consumptionState': consumptionState,
-      'developerPayload': developerPayload,
-    };
+  Map toJson() => {
+        'kind': kind,
+        'purchaseTimeMillis': purchaseTimeMillis,
+        'purchaseState': purchaseState,
+        'consumptionState': consumptionState,
+        'developerPayload': developerPayload,
+      };
 }

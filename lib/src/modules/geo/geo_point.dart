@@ -74,8 +74,7 @@ class BaseGeoPoint extends EntityDescription {
       MapEquality().equals(o.metadata, metadata);
 
   @override
-  int get hashCode =>
-      hashValues(objectId, latitude, longitude, _categories);
+  int get hashCode => hashValues(objectId, latitude, longitude, _categories);
 }
 
 class GeoPoint extends BaseGeoPoint {
@@ -91,14 +90,13 @@ class GeoPoint extends BaseGeoPoint {
     metadata = json['metadata']?.cast<String, Object>();
   }
 
-  Map toJson() =>
-    {
-      'objectId': objectId,
-      'latitude': latitude,
-      'longitude': longitude,
-      'categories': categories,
-      'metadata': metadata,
-    };    
+  Map toJson() => {
+        'objectId': objectId,
+        'latitude': latitude,
+        'longitude': longitude,
+        'categories': categories,
+        'metadata': metadata,
+      };
 
   GeoPoint.fromLatLng(double latitude, double longitude,
       [List<String> categories, Map<String, Object> metadata]) {
@@ -165,22 +163,22 @@ class GeoCluster extends GeoPoint {
 
   GeoCluster();
 
-  GeoCluster.fromJson(Map json) :
-    totalPoints = json['totalPoints'],
-    geoQuery = json['geoQuery'] == null ? null : BackendlessGeoQuery.fromJson(json['geoQuery']),
-    super.fromJson(json);
-  
+  GeoCluster.fromJson(Map json)
+      : totalPoints = json['totalPoints'],
+        geoQuery = json['geoQuery'] == null
+            ? null
+            : BackendlessGeoQuery.fromJson(json['geoQuery']),
+        super.fromJson(json);
 
-  Map toJson() =>
-    {
-      'objectId': objectId,
-      'latitude': latitude,
-      'longitude': longitude,
-      'categories': categories,
-      'metadata': metadata,
-      'totalPoints': totalPoints,
-      'geoQuery': geoQuery?.toJson(),
-    };
+  Map toJson() => {
+        'objectId': objectId,
+        'latitude': latitude,
+        'longitude': longitude,
+        'categories': categories,
+        'metadata': metadata,
+        'totalPoints': totalPoints,
+        'geoQuery': geoQuery?.toJson(),
+      };
 
   @override
   bool operator ==(other) =>
