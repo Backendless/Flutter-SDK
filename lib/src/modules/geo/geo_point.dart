@@ -79,7 +79,6 @@ class BaseGeoPoint extends EntityDescription {
 }
 
 class GeoPoint extends BaseGeoPoint {
-  static final int _serialVersionUID = -4982310969493523406;
   static final int multiplier = 1000000;
 
   GeoPoint();
