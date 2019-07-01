@@ -52,7 +52,7 @@ public class RtCallHandler implements MethodChannel.MethodCallHandler {
                 addDisconnectListener(result);
                 break;
             case "Backendless.RT.removeConnectionListeners":
-                removeConnectionListeners();
+                removeConnectionListeners(result);
                 break;
             case "Backendless.RT.removeListener":
                 removeListener(call);
@@ -105,9 +105,10 @@ public class RtCallHandler implements MethodChannel.MethodCallHandler {
         result.success(disconnectHandle);
     }
 
-    private void removeConnectionListeners() {
+    private void removeConnectionListeners(MethodChannel.Result result) {
         Backendless.RT.removeConnectionListeners();
         connectCallbacks.clear();
+        result.success(null);
     }
 
     private void removeListener(MethodCall call) {

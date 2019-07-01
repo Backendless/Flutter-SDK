@@ -55,9 +55,6 @@ public class UserServiceCallHandler implements MethodChannel.MethodCallHandler {
             case "Backendless.UserService.restorePassword":
                 restorePassword(call, result);
                 break;
-            case "Backendless.UserService.setCurrentUser":
-                setCurrentUser(call, result);
-                break;
             case "Backendless.UserService.unassignRole":
                 unassignRole(call, result);
                 break;
@@ -130,12 +127,6 @@ public class UserServiceCallHandler implements MethodChannel.MethodCallHandler {
     private void restorePassword(MethodCall call, MethodChannel.Result result) {
         String identity = call.argument("identity");
         Backendless.UserService.restorePassword(identity, new FlutterCallback<Void>(result));
-    }
-
-    private void setCurrentUser(MethodCall call, MethodChannel.Result result) {
-        BackendlessUser user = call.argument("user");
-        Backendless.UserService.setCurrentUser(user);
-        result.success(null);
     }
 
     private void unassignRole(MethodCall call, MethodChannel.Result result) {

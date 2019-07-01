@@ -254,8 +254,8 @@ public class DataCallHandler implements MethodChannel.MethodCallHandler {
     }
 
     private void describe(MethodCall call, MethodChannel.Result result) {
-        String classSimpleName = call.argument("classSimpleName");
-        Backendless.Data.describe(classSimpleName, new FlutterCallback<List<ObjectProperty>>(result));
+        String tableName = call.argument("tableName");
+        Backendless.Data.describe(tableName, new FlutterCallback<List<ObjectProperty>>(result));
     }
 
     private void getView(MethodCall call, MethodChannel.Result result) {

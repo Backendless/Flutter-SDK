@@ -1,7 +1,4 @@
-import 'package:collection/collection.dart';
-import 'package:flutter/services.dart';
-import 'package:backendless_sdk/src/modules/data.dart';
-import 'package:backendless_sdk/src/utils/message_codec.dart';
+part of backendless_sdk;
 
 class BackendlessUserService {
   static const MethodChannel _channel = const MethodChannel(
@@ -62,10 +59,6 @@ class BackendlessUserService {
       "Backendless.UserService.restorePassword",
       <String, dynamic>{"identity": identity});
 
-  Future<void> setCurrentUser(BackendlessUser user) => _channel.invokeMethod(
-      "Backendless.UserService.setCurrentUser",
-      <String, dynamic>{"user": user});
-
   Future<void> unassignRole(String identity, String roleName) =>
       _channel.invokeMethod(
           "Backendless.UserService.unassignRole", <String, dynamic>{
@@ -75,61 +68,4 @@ class BackendlessUserService {
 
   Future<BackendlessUser> update(BackendlessUser user) => _channel.invokeMethod(
       "Backendless.UserService.update", <String, dynamic>{"user": user});
-}
-
-class BackendlessUser {
-  Map<String, dynamic> _properties = new Map<String, Object>();
-  static const String PASSWORD_KEY = "password";
-  static const String EMAIL_KEY = "email";
-  static const String ID_KEY = "objectId";
-
-  BackendlessUser();
-
-  get properties => Map.from(_properties);
-
-  void setProperties(Map other) => _properties
-    ..clear()
-    ..addAll(other);
-
-  void putProperties(Map other) => _properties.addAll(other);
-
-  dynamic getProperty(String key) => _properties[key];
-
-  void setProperty(String key, dynamic value) => _properties[key] = value;
-
-  String getObjectId() => getUserId();
-
-  String getUserId() => getProperty(ID_KEY);
-
-  void setPassword(String password) => setProperty(PASSWORD_KEY, password);
-
-  String getPassword() => getProperty(PASSWORD_KEY);
-
-  void setEmail(String email) => setProperty(EMAIL_KEY, email);
-
-  String getEmail() => getProperty(EMAIL_KEY);
-
-  void clearProperties() => _properties.clear();
-
-  dynamic removeProperty(String key) => _properties.remove(key);
-
-  @override
-  bool operator ==(other) =>
-      identical(this, other) ||
-      other is BackendlessUser &&
-          runtimeType == other.runtimeType &&
-          MapEquality().equals(_properties, other._properties);
-
-  @override
-  int get hashCode => MapEquality().hash(_properties);
-
-  @override
-  String toString() => "BackendlessUser{${_properties.toString()}";
-}
-
-class UserProperty extends AbstractProperty {
-  bool identity;
-
-  UserProperty(String name, bool required, DateTypeEnum type, this.identity)
-      : super(name: name, required: required, type: type);
 }

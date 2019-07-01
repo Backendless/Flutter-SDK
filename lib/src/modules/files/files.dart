@@ -1,8 +1,4 @@
-import 'dart:io';
-import 'dart:typed_data';
-
-import 'package:flutter/services.dart';
-import 'package:backendless_sdk/src/utils/utils.dart';
+part of backendless_sdk;
 
 class BackendlessFiles {
   static const MethodChannel _channel = const MethodChannel(
@@ -119,16 +115,6 @@ class BackendlessFiles {
     }
     return _channel.invokeMethod("Backendless.Files.upload", args);
   }
-}
-
-class FileInfo {
-  String name;
-  int createdOn;
-  String publicUrl;
-  String url;
-  int size;
-
-  FileInfo({this.name, this.createdOn, this.publicUrl, this.url, this.size});
 }
 
 class UploadCallback {

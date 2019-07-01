@@ -1,4 +1,4 @@
-import 'package:flutter/services.dart';
+part of backendless_sdk;
 
 class BackendlessRT {
   static const MethodChannel _channel = const MethodChannel('backendless/rt');
@@ -83,9 +83,9 @@ class BackendlessRT {
     });
   }
 
-  void removeConnectionListeners() {
+  Future<void> removeConnectionListeners() {
     _connectCallbacks.clear();
-    _channel.invokeMethod("Backendless.RT.removeConnectionListeners");
+    return _channel.invokeMethod("Backendless.RT.removeConnectionListeners");
   }
 }
 
@@ -96,6 +96,15 @@ class ReconnectAttempt {
   final int attempt;
 
   ReconnectAttempt(this.timeout, this.attempt);
+
+  ReconnectAttempt.fromJson(Map json)
+      : timeout = json['timeout'],
+        attempt = json['attempt'];
+
+  Map toJson() => {
+        'timeout': timeout,
+        'attempt': attempt,
+      };
 
   @override
   String toString() => "ReconnectAttempt{timeout=$timeout, attempt=$attempt}";
