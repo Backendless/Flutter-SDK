@@ -259,10 +259,6 @@ class GeoCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - RelativeFind
     private func relativeFind(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        
-        // TODO: -
-        // TODO: - Need to test. Problems with getting BackendlessGeoQuery from Flutter
-        
         guard let geoQuery: BackendlessGeoQuery = arguments[Args.query].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             
