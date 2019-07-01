@@ -30,8 +30,8 @@ class _MyAppState extends State<MyApp> {
 
   void buttonPressed() {
     EmailEnvelope envelope = EmailEnvelope()
-      ..to = ["email@gmail.com"]
-      ..cc = ["secondemail@gmail.com"];
+      ..to = ["email@gmail.com"].toSet()
+      ..cc = ["secondemail@gmail.com"].toSet();
 
     Map<String, String> templateValues = {
       "app_name": "My app yoooo",

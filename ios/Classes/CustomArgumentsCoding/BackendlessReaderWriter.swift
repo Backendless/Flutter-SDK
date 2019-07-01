@@ -28,6 +28,7 @@ enum FlutterTypeCode: UInt8 {
     case backendlessUser
     case userProperty
     case bulkEvent
+    case emailEnvelope
 }
 
 // MARK: -

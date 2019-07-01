@@ -21,16 +21,15 @@ class BackendlessWtiter: FlutterStandardWriter {
             writeDate(value as! Date)
         case is GeoPoint, is DataQueryBuilder, is LoadRelationsQueryBuilder, is ObjectProperty,
              is BackendlessFileInfo, is GeoCategory, is BackendlessGeoQuery, is GeoCluster,
-             is SearchMatchesResult,
-             is MessageStatus, is DeviceRegistration,
-//             is Message
-             is PublishOptions, is DeliveryOptions, is PublishMessageInfo, is DeviceRegistrationResult,
-             is UserInfo,
-//             is UserStatusResponse
-             is ReconnectAttemptObject, is BackendlessUser, is UserProperty, is BulkEvent:
+             is SearchMatchesResult, is MessageStatus, is DeviceRegistration, is PublishOptions,
+             is DeliveryOptions, is PublishMessageInfo, is DeviceRegistrationResult,
+             is UserInfo, is ReconnectAttemptObject, is BackendlessUser, is UserProperty,
+             // is Message
+             is BulkEvent, is EmailEnvelope:
             guard let jsonData = dataFromValue(value) else { return }
             guard let json = try? JSONSerialization.jsonObject(with: jsonData, options: []) else { return }
             writeCode(for: value)
+            
             if value is MessageStatus {
                 let jsonToWrite = prepareJsonForMessageStatus(json)
                 super.writeValue(jsonToWrite)
@@ -107,6 +106,9 @@ class BackendlessWtiter: FlutterStandardWriter {
             return try? JSONEncoder().encode(value as! UserProperty)
         case is BulkEvent:
             return try? JSONEncoder().encode(value as! BulkEvent)
+        case is EmailEnvelope:
+//            return try? JSONEncoder().encode(value as! EmailEnvelope)
+            return nil
         default:
             return nil
         }
@@ -148,8 +150,8 @@ class BackendlessWtiter: FlutterStandardWriter {
             writeByte(FlutterTypeCode.publishMessageInfo.rawValue)
         case is DeviceRegistrationResult:
             writeByte(FlutterTypeCode.deviceRegistrationResult.rawValue)
-            //        case is Command:
-        //            writeValue(FlutterTypeCode.command.rawValue)
+        case is CommandObject:
+            writeByte(FlutterTypeCode.command.rawValue)
         case is UserInfo:
             writeByte(FlutterTypeCode.userInfo.rawValue)
         case is UserStatus:
@@ -162,6 +164,8 @@ class BackendlessWtiter: FlutterStandardWriter {
             writeByte(FlutterTypeCode.userProperty.rawValue)
         case is BulkEvent:
             writeByte(FlutterTypeCode.bulkEvent.rawValue)
+        case is EmailEnvelope:
+            writeByte(FlutterTypeCode.emailEnvelope.rawValue)
         default:
             break
         }
