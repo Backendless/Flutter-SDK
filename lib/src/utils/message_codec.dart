@@ -1,7 +1,4 @@
-import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
-import 'package:backendless_sdk/src/modules/modules.dart';
-import 'package:backendless_sdk/src/utils/utils.dart';
+part of backendless_sdk;
 
 class BackendlessMessageCodec extends StandardMessageCodec {
   const BackendlessMessageCodec();
@@ -20,7 +17,6 @@ class BackendlessMessageCodec extends StandardMessageCodec {
   static const int _kSearchMatchesResult = 139;
   static const int _kMessageStatus = 140;
   static const int _kDeviceRegistration = 141;
-  static const int _kMessage = 142;
   static const int _kPublishOptions = 143;
   static const int _kDeliveryOptions = 144;
   static const int _kPublishMessageInfo = 145;
@@ -77,9 +73,6 @@ class BackendlessMessageCodec extends StandardMessageCodec {
       writeValue(buffer, value.toJson());
     } else if (value is DeviceRegistration) {
       buffer.putUint8(_kDeviceRegistration);
-      writeValue(buffer, value.toJson());
-    } else if (value is Message) {
-      buffer.putUint8(_kMessage);
       writeValue(buffer, value.toJson());
     } else if (value is PublishOptions) {
       buffer.putUint8(_kPublishOptions);
@@ -155,8 +148,6 @@ class BackendlessMessageCodec extends StandardMessageCodec {
         return MessageStatus.fromJson(readValue(buffer));
       case _kDeviceRegistration:
         return DeviceRegistration.fromJson(readValue(buffer));
-      case _kMessage:
-        return Message.fromJson(readValue(buffer));
       case _kPublishOptions:
         return PublishOptions.fromJson(readValue(buffer));
       case _kDeliveryOptions:

@@ -1,3 +1,7 @@
+## 0.0.3
+
+* Restructure the plugin.
+
 ## 0.0.2
 
 * Fix all analyzer hints.

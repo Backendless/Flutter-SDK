@@ -1,4 +1,4 @@
-import 'package:flutter/services.dart';
+part of backendless_sdk;
 
 class BackendlessRT {
   static const MethodChannel _channel = const MethodChannel('backendless/rt');
@@ -97,15 +97,14 @@ class ReconnectAttempt {
 
   ReconnectAttempt(this.timeout, this.attempt);
 
-  ReconnectAttempt.fromJson(Map json) :
-    timeout = json['timeout'],
-    attempt = json['attempt'];
+  ReconnectAttempt.fromJson(Map json)
+      : timeout = json['timeout'],
+        attempt = json['attempt'];
 
-  Map toJson() =>
-    {
-      'timeout': timeout,
-      'attempt': attempt,
-    };
+  Map toJson() => {
+        'timeout': timeout,
+        'attempt': attempt,
+      };
 
   @override
   String toString() => "ReconnectAttempt{timeout=$timeout, attempt=$attempt}";
