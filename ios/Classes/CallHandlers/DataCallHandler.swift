@@ -105,7 +105,7 @@ class DataCallHandler: FlutterCallHandlerProtocol {
         case Methods.create:
             create(tableName, arguments, result)
         case Methods.deleteRelation:
-            addRelation(tableName, arguments, result)
+            deleteRelation(tableName, arguments, result)
         case Methods.find:
             find(tableName, arguments, result)
         case Methods.findById:
@@ -195,7 +195,8 @@ class DataCallHandler: FlutterCallHandlerProtocol {
     private func deleteRelation(_ tableName: String, _ arguments: [String: Any], _ result: @escaping FlutterResult) {
         guard
             let relationColumnName: String = arguments[Args.relationColumnName].flatMap(cast),
-            let parent: String = arguments[Args.parent].flatMap(cast)
+            let parent: [String: Any] = arguments[Args.parent].flatMap(cast),
+            let parentId: String = parent[Args.objectId].flatMap(cast)
         else {
             result(FlutterError.noRequiredArguments)
             
@@ -215,13 +216,13 @@ class DataCallHandler: FlutterCallHandlerProtocol {
         children.flatMap { [weak self] in
             self?.data
                 .ofTable(tableName)
-                .deleteRelation(columnName: relationColumnName, parentObjectId: parent, childrenObjectIds: $0, responseHandler: successHander, errorHandler: errorHandler)
+                .deleteRelation(columnName: relationColumnName, parentObjectId: parentId, childrenObjectIds: $0, responseHandler: successHander, errorHandler: errorHandler)
         }
         
         whereClause.flatMap { [weak self] in
             self?.data
                 .ofTable(tableName)
-                .deleteRelation(columnName: relationColumnName, parentObjectId: parent, whereClause: $0, responseHandler: successHander, errorHandler: errorHandler)
+                .deleteRelation(columnName: relationColumnName, parentObjectId: parentId, whereClause: $0, responseHandler: successHander, errorHandler: errorHandler)
         }
     }
     
@@ -413,20 +414,29 @@ class DataCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Remove
     private func remove(_ tableName: String, _ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        guard let entity: [String: Any] = arguments[Args.entity].flatMap(cast) else {
-            result(FlutterError.noRequiredArguments)
-            
-            return
-        }
         
-        data.ofTable(tableName)
-            .remove(entity: entity,
-                responseHandler: {
-                    result($0)
-                },
-                errorHandler: {
-                    result(FlutterError($0))
-                })
+        let entity: [String: Any]? = arguments[Args.entity].flatMap(cast)
+        let whereClause: String? = arguments[Args.whereClause].flatMap(cast)
+        
+        if let entity = entity {
+            data.ofTable(tableName)
+                .remove(entity: entity,
+                    responseHandler: {
+                        result($0)
+                    },
+                    errorHandler: {
+                        result(FlutterError($0))
+                    })
+        } else if let whereClause = whereClause {
+            data.ofTable(tableName)
+                .removeBulk(whereClause: whereClause,
+                    responseHandler: {
+                        result($0)
+                    },
+                    errorHandler: {
+                        result(FlutterError($0))
+                    })
+        }
     }
     
     // MARK: -
@@ -491,14 +501,25 @@ class DataCallHandler: FlutterCallHandlerProtocol {
             return
         }
         
-        data.ofTable(tableName)
-            .update(entity: changes,
+        let whereClause: String? = arguments[Args.whereClause].flatMap(cast)
+        
+        if let whereClause = whereClause {
+            data.ofTable(tableName).updateBulk(whereClause: whereClause, changes: changes,
                 responseHandler: {
                     result($0)
                 },
                 errorHandler: {
                     result(FlutterError($0))
                 })
+        } else {
+            data.ofTable(tableName).update(entity: changes,
+                responseHandler: { _ in
+                    result(1)
+                },
+                errorHandler: {
+                    result(FlutterError($0))
+                })
+        }
     }
     
     // MARK: -
