@@ -34,7 +34,7 @@ class BackendlessGeoQuery extends AbstractBackendlessGeoQuery {
       PagedQueryBuilder(DEFAULT_PAGE_SIZE, DEFAULT_OFFSET);
   Units units;
   bool includeMeta;
-  Float64List searchRectangle;
+  Float64List _searchRectangle;
 
   BackendlessGeoQuery();
 
@@ -55,7 +55,7 @@ class BackendlessGeoQuery extends AbstractBackendlessGeoQuery {
     offset = json['offset'];
     units = Units.values[json['units']];
     includeMeta = json['includeMeta'];
-    searchRectangle = json['searchRectangle'];
+    _searchRectangle = json['searchRectangle'];
   }
 
   Map toJson() => {
@@ -74,7 +74,7 @@ class BackendlessGeoQuery extends AbstractBackendlessGeoQuery {
         'offset': offset,
         'units': units?.index,
         'includeMeta': includeMeta,
-        'searchRectangle': searchRectangle,
+        'searchRectangle': _searchRectangle,
       };
 
   BackendlessGeoQuery.byLatLon(double latitude, double longitude,
@@ -106,7 +106,7 @@ class BackendlessGeoQuery extends AbstractBackendlessGeoQuery {
   }
 
   BackendlessGeoQuery.rectangle(GeoPoint topLeft, GeoPoint bottomRight) {
-    this.searchRectangle = Float64List.fromList([
+    this._searchRectangle = Float64List.fromList([
       topLeft.latitude,
       topLeft.longitude,
       bottomRight.latitude,
@@ -120,7 +120,7 @@ class BackendlessGeoQuery extends AbstractBackendlessGeoQuery {
     if (units != null && categories == null)
       throw new ArgumentError(
           "Parameter 'units' should be declared with parameter 'categories'");
-    this.searchRectangle = Float64List.fromList([nwLat, nwLon, seLat, seLon]);
+    this._searchRectangle = Float64List.fromList([nwLat, nwLon, seLat, seLon]);
     this.units = units;
     this.categories = categories;
   }
@@ -129,6 +129,12 @@ class BackendlessGeoQuery extends AbstractBackendlessGeoQuery {
     this.metadata = metadata;
     if (metadata != null) includeMeta = true;
   }
+
+  set searchRectangle(List<double> searchRectangle) {
+    _searchRectangle = Float64List.fromList(searchRectangle);
+  }
+
+  List<double> get searchRectangle => _searchRectangle?.toList();
 
   set pageSize(int pageSize) {
     if (pageSize != null)
@@ -173,7 +179,7 @@ class BackendlessGeoQuery extends AbstractBackendlessGeoQuery {
   }
 
   void setSearchRectangle(GeoPoint topLeft, GeoPoint bottomRight) {
-    searchRectangle = Float64List.fromList([
+    _searchRectangle = Float64List.fromList([
       topLeft.latitude,
       topLeft.longitude,
       bottomRight.latitude,
@@ -210,7 +216,7 @@ class BackendlessGeoQuery extends AbstractBackendlessGeoQuery {
           latitude == other.latitude &&
           longitude == other.longitude &&
           radius == other.radius &&
-          ListEquality().equals(searchRectangle, other.searchRectangle) &&
+          ListEquality().equals(_searchRectangle, other._searchRectangle) &&
           units == other.units &&
           relativeFindPercentThreshold == other.relativeFindPercentThreshold &&
           MapEquality()
@@ -226,7 +232,7 @@ class BackendlessGeoQuery extends AbstractBackendlessGeoQuery {
       latitude,
       longitude,
       radius,
-      searchRectangle,
+      _searchRectangle,
       units,
       relativeFindMetadata,
       relativeFindPercentThreshold,

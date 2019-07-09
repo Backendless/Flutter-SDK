@@ -21,16 +21,14 @@ class BackendlessWtiter: FlutterStandardWriter {
             writeDate(value as! Date)
         case is GeoPoint, is DataQueryBuilder, is LoadRelationsQueryBuilder, is ObjectProperty,
              is BackendlessFileInfo, is GeoCategory, is BackendlessGeoQuery, is GeoCluster,
-             is SearchMatchesResult,
-             is MessageStatus, is DeviceRegistration,
-//             is Message
-             is PublishOptions, is DeliveryOptions, is PublishMessageInfo, is DeviceRegistrationResult,
-             is UserInfo,
-//             is UserStatusResponse
-             is ReconnectAttemptObject, is BackendlessUser, is UserProperty, is BulkEvent:
+             is SearchMatchesResult, is MessageStatus, is DeviceRegistration, is PublishOptions,
+             is DeliveryOptions, is PublishMessageInfo, is DeviceRegistrationResult,
+             is UserInfo, is ReconnectAttemptObject, is BackendlessUser, is UserProperty,
+             is BulkEvent, is EmailEnvelope:
             guard let jsonData = dataFromValue(value) else { return }
             guard let json = try? JSONSerialization.jsonObject(with: jsonData, options: []) else { return }
             writeCode(for: value)
+            
             if value is MessageStatus {
                 let jsonToWrite = prepareJsonForMessageStatus(json)
                 super.writeValue(jsonToWrite)
@@ -43,6 +41,10 @@ class BackendlessWtiter: FlutterStandardWriter {
         case is CommandObject:
             let commandObject = value as! CommandObject
             let json = commandObject.encodeToJson()
+            writeCode(for: value)
+            super.writeValue(json)
+        case is UserStatus:
+            let json = jsonFrom(userStatus: value as! UserStatus)
             writeCode(for: value)
             super.writeValue(json)
         default:
@@ -83,8 +85,6 @@ class BackendlessWtiter: FlutterStandardWriter {
             return try? JSONEncoder().encode(value as! MessageStatus)
         case is DeviceRegistration:
             return try? JSONEncoder().encode(value as! DeviceRegistration)
-            //        case is Message:
-        //            return try? JSONEncoder().encode(value as! Message)
         case is PublishOptions:
             return try? JSONEncoder().encode(value as! PublishOptions)
         case is DeliveryOptions:
@@ -95,8 +95,6 @@ class BackendlessWtiter: FlutterStandardWriter {
             return try? JSONEncoder().encode(value as! DeviceRegistrationResult)
         case is UserInfo:
             return try? JSONEncoder().encode(value as! UserInfo)
-            //        case is UserStatusResponse:
-        //            return try? JSONEncoder().encode(value as! UserStatusResponse)
         case is ReconnectAttemptObject:
             return try? JSONEncoder().encode(value as! ReconnectAttemptObject)
         case is BackendlessUser:
@@ -105,6 +103,8 @@ class BackendlessWtiter: FlutterStandardWriter {
             return try? JSONEncoder().encode(value as! UserProperty)
         case is BulkEvent:
             return try? JSONEncoder().encode(value as! BulkEvent)
+        case is EmailEnvelope:
+            return try? JSONEncoder().encode(value as! EmailEnvelope)
         default:
             return nil
         }
@@ -136,8 +136,6 @@ class BackendlessWtiter: FlutterStandardWriter {
             writeByte(FlutterTypeCode.messageStatus.rawValue)
         case is DeviceRegistration:
             writeByte(FlutterTypeCode.deviceRegistration.rawValue)
-            //        case is Message:
-        //            writeValue(FlutterTypeCode.message.rawValue)
         case is PublishOptions:
             writeByte(FlutterTypeCode.publishOptions.rawValue)
         case is DeliveryOptions:
@@ -146,12 +144,12 @@ class BackendlessWtiter: FlutterStandardWriter {
             writeByte(FlutterTypeCode.publishMessageInfo.rawValue)
         case is DeviceRegistrationResult:
             writeByte(FlutterTypeCode.deviceRegistrationResult.rawValue)
-            //        case is Command:
-        //            writeValue(FlutterTypeCode.command.rawValue)
+        case is CommandObject:
+            writeByte(FlutterTypeCode.command.rawValue)
         case is UserInfo:
             writeByte(FlutterTypeCode.userInfo.rawValue)
-            //        case is UserStatusResponse:
-        //            writeValue(FlutterTypeCode.userStatusResponse.rawValue)
+        case is UserStatus:
+            writeByte(FlutterTypeCode.userStatusResponse.rawValue)
         case is ReconnectAttemptObject:
             writeByte(FlutterTypeCode.reconnectAttempt.rawValue)
         case is BackendlessUser:
@@ -160,6 +158,8 @@ class BackendlessWtiter: FlutterStandardWriter {
             writeByte(FlutterTypeCode.userProperty.rawValue)
         case is BulkEvent:
             writeByte(FlutterTypeCode.bulkEvent.rawValue)
+        case is EmailEnvelope:
+            writeByte(FlutterTypeCode.emailEnvelope.rawValue)
         default:
             break
         }
@@ -171,7 +171,7 @@ class BackendlessWtiter: FlutterStandardWriter {
         
         inputDict.forEach {
             if $0.key == Args.status, let stringValue = $0.value as? String {
-                let enumValue = PublishStatusEnum(rawValue: stringValue) ?? .unknown
+                let enumValue = PublishStatusEnum(rawValue: stringValue) ?? .UNKNOWN
                 result[$0.key] = enumValue.index
             }
         }
@@ -188,6 +188,20 @@ class BackendlessWtiter: FlutterStandardWriter {
                 let enumValue = DataTypeEnum(rawValue: stringValue) ?? .UNKNOWN
                 result[$0.key] = enumValue.index
             }
+        }
+        
+        return result
+    }
+    
+    private func jsonFrom(userStatus: UserStatus) -> [String: Any] {
+        var result: [String: Any] = [:]
+        
+        if let statusString = userStatus.status, let status = UserStatusEnum(rawValue: statusString) {
+            result["status"] = status.index
+        }
+        
+        if let data = userStatus.data {
+            result["data"] = data
         }
         
         return result

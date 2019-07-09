@@ -66,10 +66,9 @@ class BackendlessGeo {
       {String geofenceName,
       BackendlessGeoQuery query,
       GeoCluster geoCluster}) async {
-    checkArguments({"geoCluster": geoCluster}, {"geofenceName": geofenceName});
-    if (geoCluster != null && query != null)
+    if (geoCluster != null && (query != null || geofenceName != null))
       throw new ArgumentError(
-          "Either 'geoCluster' or 'geofenceName' and 'query' should be defined");
+          "Either 'geoCluster' or 'geofenceName/query' should be defined");
     return (await _channel.invokeMethod(
             "Backendless.Geo.getPoints", <String, dynamic>{
       "query": query,

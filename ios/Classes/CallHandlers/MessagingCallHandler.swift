@@ -25,6 +25,7 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
         static let sendHTMLEmail = "Backendless.Messaging.sendHTMLEmail"
         static let sendTextEmail = "Backendless.Messaging.sendTextEmail"
         static let unregisterDevice = "Backendless.Messaging.unregisterDevice"
+        static let sendEmailFromTemplate = "Backendless.Messaging.sendEmailFromTemplate"
         static let subscribe = "Backendless.Messaging.subscribe"
         static let join = "Backendless.Messaging.Channel.join"
         static let leave = "Backendless.Messaging.Channel.leave"
@@ -66,6 +67,8 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
         static let messageType = "messageType"
         static let type = "type"
         static let data = "data"
+        static let envelope = "envelope"
+        static let templateValues = "templateValues"
     }
     
     private enum MessageTypes {
@@ -141,6 +144,8 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
             sendTextEmail(arguments, result)
         case Methods.unregisterDevice:
             unregisterDevice(arguments, result)
+        case Methods.sendEmailFromTemplate:
+            sendEmailFromTemplate(arguments, result)
         case Methods.subscribe:
             subscribe(arguments, result)
         case Methods.join:
@@ -441,6 +446,39 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
             }, errorHandler: {
                 result(FlutterError($0))
             })
+        }
+    }
+    
+    // MARK: -
+    // MARK: - SendEmailFromTemplate
+    private func sendEmailFromTemplate(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
+        guard
+            let templateName: String = arguments[Args.templateName].flatMap(cast),
+            let envelope: EmailEnvelope = arguments[Args.envelope].flatMap(cast)
+        else {
+            result(FlutterError.noRequiredArguments)
+            
+            return
+        }
+        
+        let templateValues: [String: String]? = arguments[Args.templateValues].flatMap(cast)
+        
+        if let templateValues = templateValues {
+            messaging.sendEmailFromTemplate(templateName: templateName, envelope: envelope, templateValues: templateValues,
+                responseHandler: {
+                    result($0)
+                },
+                errorHandler: {
+                    result(FlutterError($0))
+                })
+        } else {
+            messaging.sendEmailFromTemplate(templateName: templateName, envelope: envelope,
+                responseHandler: {
+                    result($0)
+                },
+                errorHandler: {
+                    result(FlutterError($0))
+                })
         }
     }
     

@@ -156,31 +156,44 @@ class GeoCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - GetGeopointCount
     private func getGeopointCount(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        
-        // TODO: -
-        // TODO: - Need to test: problem with getting BackendlessGeoQuery object from Flutter
-        
-        // TODO: -
-        // TODO: - How to use GeofenceName?
-        
         let geoQuery: BackendlessGeoQuery? = arguments[Args.query].flatMap(cast)
         let geofenceName: String? = arguments[Args.geofenceName].flatMap(cast)
         
-        if let geoQuery = geoQuery {
-            geo.getPointsCount(geoQuery: geoQuery,
-                responseHandler: {
+        if let geofenceName = geofenceName {
+            if let geoQuery = geoQuery {
+                geo.getFencePointsCount(geoFenceName: geofenceName, geoQuery: geoQuery,
+                    responseHandler: {
+                        result($0)
+                    },
+                    errorHandler: {
+                        result(FlutterError($0))
+                    })
+            } else {
+                geo.getFencePointsCount(geoFenceName: geofenceName, responseHandler: {
                     result($0)
-                },
-                errorHandler: {
+                }, errorHandler: {
                     result(FlutterError($0))
                 })
+            }
         } else {
-            geo.getPointsCount(responseHandler: {
-                result($0)
-            }, errorHandler: {
-                result(FlutterError($0))
-            })
+            if let geoQuery = geoQuery {
+                geo.getPointsCount(geoQuery: geoQuery,
+                    responseHandler: {
+                        result($0)
+                    },
+                    errorHandler: {
+                        result(FlutterError($0))
+                    })
+            } else {
+                geo.getPointsCount(responseHandler: {
+                    result($0)
+                }, errorHandler: {
+                    result(FlutterError($0))
+                })
+            }
         }
+        
+        
     }
     
     // MARK: -
@@ -246,10 +259,6 @@ class GeoCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - RelativeFind
     private func relativeFind(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        
-        // TODO: -
-        // TODO: - Need to test. Problems with getting BackendlessGeoQuery from Flutter
-        
         guard let geoQuery: BackendlessGeoQuery = arguments[Args.query].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             

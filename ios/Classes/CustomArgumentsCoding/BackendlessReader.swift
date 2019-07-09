@@ -22,10 +22,12 @@ class BackendlessReader: FlutterStandardReader {
         switch code {
         case .dateTime:
             value = readDate()
+        case .geoQuery:
+            value = readGeoQuery()
         default:
             guard let json: [String: Any] = readValue().flatMap(cast) else { return nil }
-            let jsonToParse = prepareJsonToParse(json)
-            value = decode(from: jsonToParse, code)
+            let jsonToDecode = prepareJsonToParse(json)
+            value = decode(from: jsonToDecode, code)
         }
 
         return value
@@ -37,6 +39,52 @@ class BackendlessReader: FlutterStandardReader {
         return readValue()
             .flatMap(cast)
             .map { Date(timeIntervalSince1970: $0 / 1000) }
+    }
+    
+    // MARK: -
+    // MARK: - Read Geo Query
+    private func readGeoQuery() -> BackendlessGeoQuery? {
+        guard let json: [String: Any] = readValue().flatMap(cast) else { return nil }
+        let jsonToDecode = prepareGeoQueryJson(from: json)
+        guard let jsonData = try? JSONSerialization.data(withJSONObject: jsonToDecode, options: []) else { return nil }
+        
+        return try? JSONDecoder().decode(BackendlessGeoQuery.self, from: jsonData)
+    }
+    
+    private func prepareGeoQueryJson(from json: [String: Any]) -> [String: Any] {
+        var result: [String: Any] = [:]
+        var geoPoint: [String: Any] = [:]
+        var rectangleSource: [Double] = []
+        
+        let geopointKeys = ["latitude", "longitude"]
+        
+        json.forEach {
+            if geopointKeys.contains($0.key) {
+                geoPoint[$0.key] = $0.value
+            } else if $0.key == "searchRectangle" {
+                if let data = ($0.value as? FlutterStandardTypedData)?.data {
+                    rectangleSource = data.withUnsafeBytes { (pointer: UnsafePointer<Double>) -> [Double] in
+                        let buffer = UnsafeBufferPointer(start: pointer,
+                                                         count: data.count / 8)
+                        return Array<Double>(buffer)
+                    }
+                }
+            } else {
+                result[$0.key] = $0.value
+            }
+        }
+        
+        result["geoPoint"] = geoPoint
+        
+        if !rectangleSource.isEmpty {
+            var rectJson: [String: Any] = [:]
+            let northWest = ["latitude": rectangleSource[0], "longitude": rectangleSource[1]]
+            let southEast = ["latitude": rectangleSource[2], "longitude": rectangleSource[3]]
+            rectJson = ["nordWestPoint": northWest, "southEastPoint": southEast]
+            result["rectangle"] = rectJson
+        }
+        
+        return result
     }
     
     // MARK: -
@@ -88,7 +136,6 @@ class BackendlessReader: FlutterStandardReader {
         case .deviceRegistration:
             return try? JSONDecoder().decode(DeviceRegistration.self, from: jsonData)
         case .message:
-//            return try? JSONDecoder().decode(Message.self, from: jsonData)
             return nil
         case .publishOptions:
             return try? JSONDecoder().decode(PublishOptions.self, from: jsonData)
@@ -97,11 +144,7 @@ class BackendlessReader: FlutterStandardReader {
         case .publishMessageInfo:
             return try? JSONDecoder().decode(PublishMessageInfo.self, from: jsonData)
         case .deviceRegistrationResult:
-            // TODO: -
-            // TODO: - Add creating of DeviceRegistrationResult object in iOS proxy
-            
-//            return try? JSONDecoder().decode(DeviceRegistrationResult.self, from: jsonData)
-            return nil
+            return try? JSONDecoder().decode(DeviceRegistrationResult.self, from: jsonData)
         case .command:
             return CommandObject.decodeFromJson(json)
         case .userInfo:
@@ -117,6 +160,8 @@ class BackendlessReader: FlutterStandardReader {
             return try? JSONDecoder().decode(UserProperty.self, from: jsonData)
         case .bulkEvent:
             return try? JSONDecoder().decode(BulkEvent.self, from: jsonData)
+        case .emailEnvelope:
+            return try? JSONDecoder().decode(EmailEnvelope.self, from: jsonData)
         }
     }
 }
