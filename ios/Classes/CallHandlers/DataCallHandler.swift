@@ -388,9 +388,6 @@ class DataCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Load Relations
     private func loadRelations(_ tableName: String, _ arguments: [String: Any], _ result: @escaping FlutterResult) {
-
-        // TODO: -
-        // TODO: - How to parse LoadRelationsQueryBuilder
         
         guard
             let objectId: String = arguments[Args.objectId].flatMap(cast),

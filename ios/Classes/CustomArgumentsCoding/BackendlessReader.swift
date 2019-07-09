@@ -42,7 +42,7 @@ class BackendlessReader: FlutterStandardReader {
     }
     
     // MARK: -
-    // MARK: - Read Date
+    // MARK: - Read Geo Query
     private func readGeoQuery() -> BackendlessGeoQuery? {
         guard let json: [String: Any] = readValue().flatMap(cast) else { return nil }
         let jsonToDecode = prepareGeoQueryJson(from: json)
@@ -136,7 +136,6 @@ class BackendlessReader: FlutterStandardReader {
         case .deviceRegistration:
             return try? JSONDecoder().decode(DeviceRegistration.self, from: jsonData)
         case .message:
-//            return try? JSONDecoder().decode(Message.self, from: jsonData)
             return nil
         case .publishOptions:
             return try? JSONDecoder().decode(PublishOptions.self, from: jsonData)

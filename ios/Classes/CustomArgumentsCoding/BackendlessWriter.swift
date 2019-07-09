@@ -24,7 +24,6 @@ class BackendlessWtiter: FlutterStandardWriter {
              is SearchMatchesResult, is MessageStatus, is DeviceRegistration, is PublishOptions,
              is DeliveryOptions, is PublishMessageInfo, is DeviceRegistrationResult,
              is UserInfo, is ReconnectAttemptObject, is BackendlessUser, is UserProperty,
-             // is Message
              is BulkEvent, is EmailEnvelope:
             guard let jsonData = dataFromValue(value) else { return }
             guard let json = try? JSONSerialization.jsonObject(with: jsonData, options: []) else { return }
@@ -86,8 +85,6 @@ class BackendlessWtiter: FlutterStandardWriter {
             return try? JSONEncoder().encode(value as! MessageStatus)
         case is DeviceRegistration:
             return try? JSONEncoder().encode(value as! DeviceRegistration)
-            //        case is Message:
-        //            return try? JSONEncoder().encode(value as! Message)
         case is PublishOptions:
             return try? JSONEncoder().encode(value as! PublishOptions)
         case is DeliveryOptions:
@@ -139,8 +136,6 @@ class BackendlessWtiter: FlutterStandardWriter {
             writeByte(FlutterTypeCode.messageStatus.rawValue)
         case is DeviceRegistration:
             writeByte(FlutterTypeCode.deviceRegistration.rawValue)
-            //        case is Message:
-        //            writeValue(FlutterTypeCode.message.rawValue)
         case is PublishOptions:
             writeByte(FlutterTypeCode.publishOptions.rawValue)
         case is DeliveryOptions:
