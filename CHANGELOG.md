@@ -1,3 +1,7 @@
+## 0.0.4
+
+* Fixes and improvements.
+
 ## 0.0.3
 
 * Restructure the plugin.
