@@ -65,19 +65,25 @@ class DataQueryBuilder {
 class LoadRelationsQueryBuilder<R> {
   PagedQueryBuilder pagedQueryBuilder = new PagedQueryBuilder();
   String relationName;
+  List<String> properties;
+  List<String> sortBy;
 
-  LoadRelationsQueryBuilder.ofMap();
+  LoadRelationsQueryBuilder.ofMap(this.relationName);
 
   LoadRelationsQueryBuilder.fromJson(Map json) {
     relationName = json['relationName'];
     pageSize = json['pageSize'];
     offset = json['offset'];
+    properties = json['properties'].cast<String>();
+    sortBy = json['sortBy'].cast<String>();
   }
 
   Map toJson() => {
         'relationName': relationName,
         'pageSize': pageSize,
         'offset': offset,
+        'properties': properties,
+        'sortBy': sortBy,
       };
 
   set pageSize(int pageSize) => pagedQueryBuilder.pageSize = pageSize;
