@@ -98,6 +98,7 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
         
         // TODO: -
         // TODO: - No such method in SDK
+        // TODO: - BKNDLSS-19092
         
         result(FlutterMethodNotImplemented)
     }
@@ -278,6 +279,7 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
         
         // TODO: -
         // TODO: - No such method in SDK
+        // TODO: - BKNDLSS-19092
         
         result(FlutterMethodNotImplemented)
     }

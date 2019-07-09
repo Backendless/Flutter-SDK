@@ -445,14 +445,25 @@ class DataCallHandler: FlutterCallHandlerProtocol {
             return
         }
         
-        data.ofTable(tableName)
-            .save(entity: entity,
-                responseHandler: {
-                    result($0)
-                },
-                errorHandler: {
-                    result(FlutterError($0))
-                })
+        if let _ = entity[Args.objectId] {
+            data.ofTable(tableName)
+                .update(entity: entity,
+                    responseHandler: {
+                        result($0)
+                    },
+                    errorHandler: {
+                        result(FlutterError($0))
+                    })
+        } else {
+            data.ofTable(tableName)
+                .save(entity: entity,
+                    responseHandler: {
+                        result($0)
+                    },
+                    errorHandler: {
+                        result(FlutterError($0))
+                    })
+        }
     }
     
     // MARK: -
@@ -500,23 +511,14 @@ class DataCallHandler: FlutterCallHandlerProtocol {
         
         let whereClause: String? = arguments[Args.whereClause].flatMap(cast)
         
-        if let whereClause = whereClause {
-            data.ofTable(tableName).updateBulk(whereClause: whereClause, changes: changes,
+        data.ofTable(tableName)
+            .updateBulk(whereClause: whereClause, changes: changes,
                 responseHandler: {
                     result($0)
                 },
                 errorHandler: {
                     result(FlutterError($0))
                 })
-        } else {
-            data.ofTable(tableName).update(entity: changes,
-                responseHandler: { _ in
-                    result(1)
-                },
-                errorHandler: {
-                    result(FlutterError($0))
-                })
-        }
     }
     
     // MARK: -
