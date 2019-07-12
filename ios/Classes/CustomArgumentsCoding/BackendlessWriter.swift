@@ -171,7 +171,7 @@ class BackendlessWtiter: FlutterStandardWriter {
         
         inputDict.forEach {
             if $0.key == Args.status, let stringValue = $0.value as? String {
-                let enumValue = PublishStatusEnum(rawValue: stringValue) ?? .UNKNOWN
+                let enumValue = PublishStatusEnum(rawValue: stringValue) ?? .unknown
                 result[$0.key] = enumValue.index
             }
         }
