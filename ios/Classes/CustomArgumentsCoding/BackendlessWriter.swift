@@ -69,6 +69,8 @@ class BackendlessWtiter: FlutterStandardWriter {
             return try? JSONEncoder().encode(value as! DataQueryBuilder)
         case is LoadRelationsQueryBuilder:
             return try? JSONEncoder().encode(value as! LoadRelationsQueryBuilder)
+        case is UserProperty:
+            return try? JSONEncoder().encode(value as! UserProperty)
         case is ObjectProperty:
             return try? JSONEncoder().encode(value as! ObjectProperty)
         case is BackendlessFileInfo:
@@ -99,8 +101,6 @@ class BackendlessWtiter: FlutterStandardWriter {
             return try? JSONEncoder().encode(value as! ReconnectAttemptObject)
         case is BackendlessUser:
             return try? JSONEncoder().encode(value as! BackendlessUser)
-        case is UserProperty:
-            return try? JSONEncoder().encode(value as! UserProperty)
         case is BulkEvent:
             return try? JSONEncoder().encode(value as! BulkEvent)
         case is EmailEnvelope:
@@ -120,6 +120,8 @@ class BackendlessWtiter: FlutterStandardWriter {
             writeByte(FlutterTypeCode.dataQueryBuilder.rawValue)
         case is LoadRelationsQueryBuilder:
             writeByte(FlutterTypeCode.loadRelationsQueryBuilder.rawValue)
+        case is UserProperty:
+            writeByte(FlutterTypeCode.userProperty.rawValue)
         case is ObjectProperty:
             writeByte(FlutterTypeCode.objectProperty.rawValue)
         case is BackendlessFileInfo:
@@ -154,8 +156,6 @@ class BackendlessWtiter: FlutterStandardWriter {
             writeByte(FlutterTypeCode.reconnectAttempt.rawValue)
         case is BackendlessUser:
             writeByte(FlutterTypeCode.backendlessUser.rawValue)
-        case is UserProperty:
-            writeByte(FlutterTypeCode.userProperty.rawValue)
         case is BulkEvent:
             writeByte(FlutterTypeCode.bulkEvent.rawValue)
         case is EmailEnvelope:
@@ -171,7 +171,7 @@ class BackendlessWtiter: FlutterStandardWriter {
         
         inputDict.forEach {
             if $0.key == Args.status, let stringValue = $0.value as? String {
-                let enumValue = PublishStatusEnum(rawValue: stringValue) ?? .UNKNOWN
+                let enumValue = PublishStatusEnum(rawValue: stringValue) ?? .unknown
                 result[$0.key] = enumValue.index
             }
         }

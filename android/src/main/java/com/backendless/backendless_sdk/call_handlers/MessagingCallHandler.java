@@ -8,7 +8,7 @@ import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 import com.backendless.messaging.BodyParts;
 import com.backendless.messaging.DeliveryOptions;
-//import com.backendless.messaging.EmailEnvelope;
+import com.backendless.messaging.EmailEnvelope;
 import com.backendless.messaging.MessageStatus;
 import com.backendless.messaging.PublishMessageInfo;
 import com.backendless.messaging.PublishOptions;
@@ -242,17 +242,17 @@ public class MessagingCallHandler implements MethodChannel.MethodCallHandler {
     }
 
     private void sendEmailFromTemplate(MethodCall call, MethodChannel.Result result) {
-//        String templateName = call.argument("templateName");
-//        EmailEnvelope envelope = call.argument("envelope");
-//        Map<String, String> templateValues = call.argument("templateValues");
-//
-//        FlutterCallback<MessageStatus> callback = new FlutterCallback<>(result);
-//
-//        if (templateValues != null) {
-//            Backendless.Messaging.sendEmailFromTemplate(templateName, envelope, templateValues, callback);
-//        } else {
-//            Backendless.Messaging.sendEmailFromTemplate(templateName, envelope, callback);
-//        }
+        String templateName = call.argument("templateName");
+        EmailEnvelope envelope = call.argument("envelope");
+        Map<String, String> templateValues = call.argument("templateValues");
+
+        FlutterCallback<MessageStatus> callback = new FlutterCallback<>(result);
+
+        if (templateValues != null) {
+            Backendless.Messaging.sendEmailFromTemplate(templateName, envelope, templateValues, callback);
+        } else {
+            Backendless.Messaging.sendEmailFromTemplate(templateName, envelope, callback);
+        }
     }
 
     private void subscribe(MethodCall call, MethodChannel.Result result) {

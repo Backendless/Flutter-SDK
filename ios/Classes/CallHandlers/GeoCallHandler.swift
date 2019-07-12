@@ -36,6 +36,7 @@ class GeoCallHandler: FlutterCallHandlerProtocol {
     private enum Args {
         static let categoryName = "categoryName"
         static let query = "query"
+        static let geoQuery = "geoQuery"
         static let geofenceName = "geoFenceName"
         static let geoPoint = "geoPoint"
         static let latitude = "latitude"
@@ -259,7 +260,7 @@ class GeoCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - RelativeFind
     private func relativeFind(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        guard let geoQuery: BackendlessGeoQuery = arguments[Args.query].flatMap(cast) else {
+        guard let geoQuery: BackendlessGeoQuery = arguments[Args.geoQuery].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             
             return
@@ -507,6 +508,4 @@ class GeoCallHandler: FlutterCallHandlerProtocol {
         
         result(nil)
     }
-    
-    
 }

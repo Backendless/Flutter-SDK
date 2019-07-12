@@ -167,8 +167,8 @@ class FilesCallHandler: FlutterCallHandlerProtocol {
                 responseHandler: {
                     result($0)
                 },
-                    errorHandler: {
-                result(FlutterError($0))
+                errorHandler: {
+                    result(FlutterError($0))
                 })
         }
     }
@@ -332,7 +332,7 @@ class FilesCallHandler: FlutterCallHandlerProtocol {
         } else if let filePathName = filePathName {
             if let lastSlashPos = filePathName.lastIndex(of: "/") {
                 pathToSend = String(filePathName[..<lastSlashPos])
-                nameToSend = String(filePathName[lastSlashPos...])
+                nameToSend = String(filePathName[lastSlashPos...].dropFirst())
             } else {
                 pathToSend = ""
                 nameToSend = filePathName
@@ -374,10 +374,9 @@ class FilesCallHandler: FlutterCallHandlerProtocol {
             return
         }
         
-        guard
-            let fileUrl: URL = URL(string: filePath),
-            let fileContent = try? Data(contentsOf: fileUrl, options: [])
-        else {
+        let fileUrl = URL(fileURLWithPath: filePath)
+        
+        guard let fileContent = try? Data(contentsOf: fileUrl) else {
             result(FlutterError(code: "", message: "No such file", details: nil))
             
             return
@@ -390,7 +389,7 @@ class FilesCallHandler: FlutterCallHandlerProtocol {
         
         if let lastSlashPos = path.lastIndex(of: "/") {
             pathToSend = String(path[..<lastSlashPos])
-            nameToSend = String(path[lastSlashPos...])
+            nameToSend = String(path[lastSlashPos...].dropFirst())
         } else {
             pathToSend = ""
             nameToSend = path

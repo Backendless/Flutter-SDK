@@ -20,7 +20,7 @@ class EventHandler<T> {
     _removeListeners(RTDataEvent.CREATED);
   }
 
-  void removeCreateListener({String whereClause, void callback(T response)}) {
+  void removeCreateListener(void callback(T response), [String whereClause]) {
     _removeListeners(RTDataEvent.CREATED, whereClause, callback);
   }
 
@@ -37,7 +37,7 @@ class EventHandler<T> {
     _removeListeners(RTDataEvent.UPDATED);
   }
 
-  void removeUpdateListener({String whereClause, void callback(T response)}) {
+  void removeUpdateListener(void callback(T response), [String whereClause]) {
     _removeListeners(RTDataEvent.UPDATED, whereClause, callback);
   }
 
@@ -54,7 +54,7 @@ class EventHandler<T> {
     _removeListeners(RTDataEvent.DELETED);
   }
 
-  void removeDeleteListener({String whereClause, void callback(T response)}) {
+  void removeDeleteListener(void callback(T response), [String whereClause]) {
     _removeListeners(RTDataEvent.DELETED, whereClause, callback);
   }
 
@@ -71,8 +71,8 @@ class EventHandler<T> {
     _removeListeners(RTDataEvent.BULK_UPDATED);
   }
 
-  void removeBulkUpdateListener(
-      {String whereClause, void callback(BulkEvent response)}) {
+  void removeBulkUpdateListener(void callback(BulkEvent response),
+      [String whereClause]) {
     _removeListeners(RTDataEvent.BULK_UPDATED, whereClause, callback);
   }
 
@@ -89,8 +89,8 @@ class EventHandler<T> {
     _removeListeners(RTDataEvent.BULK_DELETED);
   }
 
-  void removeBulkDeleteListener(
-      {String whereClause, void callback(BulkEvent response)}) {
+  void removeBulkDeleteListener(void callback(BulkEvent response),
+      [String whereClause]) {
     _removeListeners(RTDataEvent.BULK_DELETED, whereClause, callback);
   }
 

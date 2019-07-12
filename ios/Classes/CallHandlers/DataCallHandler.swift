@@ -50,6 +50,8 @@ class DataCallHandler: FlutterCallHandlerProtocol {
         static let event = "event"
         static let handle = "handle"
         static let changes = "changes"
+        static let fault = "fault"
+        static let response = "response"
     }
     
     private enum DataRTEvents {
@@ -563,21 +565,21 @@ class DataCallHandler: FlutterCallHandlerProtocol {
         var subscription: RTSubscription?
         
         let errorHandler: (Fault) -> Void = { [weak self] in
-            var args: [String: Any] = [:]
-            args["handle"] = currentHandle
-            args["fault"] = $0.message ?? ""
+            var response: [String: Any] = [:]
+            response[Args.handle] = currentHandle
+            response[Args.fault] = $0.message ?? ""
             
-            self?.methodChannel.invokeMethod(CallbackEvents.eventFault, arguments: args);
+            self?.methodChannel.invokeMethod(CallbackEvents.eventFault, arguments: response);
         }
         
         if event.contains("BULK") {
             
             let bulkEventHandler: (BulkEvent) -> Void = { [weak self] in
-                var args: [String: Any] = [:]
-                args["hanlde"] = currentHandle
-                args["response"] = $0
+                var response: [String: Any] = [:]
+                response[Args.handle] = currentHandle
+                response[Args.response] = $0
                 
-                self?.methodChannel.invokeMethod(CallbackEvents.eventResponse, arguments: args)
+                self?.methodChannel.invokeMethod(CallbackEvents.eventResponse, arguments: response)
             }
             
             switch event {
@@ -601,11 +603,11 @@ class DataCallHandler: FlutterCallHandlerProtocol {
         } else {
             
             let dataEventHandler: ([String: Any]) -> Void = { [weak self] in
-                var args: [String: Any] = [:]
-                args["handle"] = currentHandle
-                args["response"] = $0
+                var response: [String: Any] = [:]
+                response[Args.handle] = currentHandle
+                response[Args.response] = $0
                 
-                self?.methodChannel.invokeMethod("Backendless.Data.RT.EventResponse", arguments: args)
+                self?.methodChannel.invokeMethod(CallbackEvents.eventResponse, arguments: response)
             }
             
             switch event {
@@ -620,6 +622,12 @@ class DataCallHandler: FlutterCallHandlerProtocol {
                     subscription = data.ofTable(tableName).rt.addUpdateListener(whereClause: whereClause, responseHandler: dataEventHandler, errorHandler: errorHandler)
                 } else {
                     subscription = data.ofTable(tableName).rt.addUpdateListener(responseHandler: dataEventHandler, errorHandler: errorHandler)
+                }
+            case DataRTEvents.deleted:
+                if let whereClause = whereClause {
+                    subscription = data.ofTable(tableName).rt.addDeleteListener(whereClause: whereClause, responseHandler: dataEventHandler, errorHandler: errorHandler)
+                } else {
+                    subscription = data.ofTable(tableName).rt.addDeleteListener(responseHandler: dataEventHandler, errorHandler: errorHandler)
                 }
             default:
                 result(FlutterMethodNotImplemented)
@@ -649,8 +657,8 @@ class DataCallHandler: FlutterCallHandlerProtocol {
         subscription?.stop()
         subscriptions.removeValue(forKey: handle)
         
-        var args: [String: Any] = [:]
-        args["handle"] = handle
-        methodChannel.invokeMethod("Backendless.Data.RT.EventResponse", arguments: args)
+        var response: [String: Any] = [:]
+        response[Args.handle] = handle
+        methodChannel.invokeMethod("Backendless.Data.RT.EventResponse", arguments: response)
     }
 }

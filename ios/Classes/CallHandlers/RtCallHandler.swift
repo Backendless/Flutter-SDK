@@ -125,10 +125,10 @@ class RtCallHandler: FlutterCallHandlerProtocol {
         let currentReconnectAttemptSubscription = nextReconnectAttemptSubscription
         nextReconnectAttemptSubscription += 1
         
-        let newReconnectAttemptSubscription = realTime.addReconnectAttemptEventListener { [weak self] _ in
+        let newReconnectAttemptSubscription = realTime.addReconnectAttemptEventListener { [weak self] in
             let callbackArgs: [String: Any] = [
                 "handle": currentReconnectAttemptSubscription,
-                "result": true
+                "result": $0
             ]
             
             self?.messagingChannel.invokeMethod("Backendless.RT.ReconnectAttempt.EventResponse", arguments: callbackArgs)
@@ -144,10 +144,10 @@ class RtCallHandler: FlutterCallHandlerProtocol {
         let currentConnectErrorSubscription = nextConnectErrorSubscription
         nextConnectErrorSubscription += 1
         
-        let newConnectErrorSubscription = realTime.addConnectErrorEventListener { [weak self] _ in
+        let newConnectErrorSubscription = realTime.addConnectErrorEventListener { [weak self] in
             let callbackArgs: [String: Any] = [
                 "handle": currentConnectErrorSubscription,
-                "result": true
+                "result": Fault(message: $0, faultCode: 0)
             ]
             
             self?.messagingChannel.invokeMethod("Backendless.RT.ConnectError.EventResponse", arguments: callbackArgs)
@@ -163,10 +163,10 @@ class RtCallHandler: FlutterCallHandlerProtocol {
         let currentDisconnectSubscription = nextDisconnectSubscription
         nextDisconnectSubscription += 1
         
-        let newDisconnectSubscription = realTime.addDisсonnectEventListener { [weak self] _ in
+        let newDisconnectSubscription = realTime.addDisсonnectEventListener { [weak self] in
             let callbackArgs: [String: Any] = [
                 "handle": currentDisconnectSubscription,
-                "result": true
+                "result": $0
             ]
             
             self?.messagingChannel.invokeMethod("Backendless.RT.Disconnect.EventResponse", arguments: callbackArgs)

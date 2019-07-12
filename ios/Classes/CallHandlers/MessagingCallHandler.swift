@@ -204,7 +204,7 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
     // MARK: - GetDeviceRegistration
     private func getDeviceRegistration(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
         messaging.getDeviceRegistrations(responseHandler: {
-            result($0)
+            result($0.first)
         }, errorHandler: {
             result(FlutterError($0))
         })
@@ -664,10 +664,14 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - RemoveAllMessageListeners
     private func removeAllMessageListeners(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
+        guard let channelHandle: Int = arguments[Args.channelHandle].flatMap(cast) else {
+            result(FlutterError.noRequiredArguments)
+            
+            return
+        }
         
-        // TODO: -
-        // TODO: - Updated Flutter implementation will handle listener filtering
-        result(FlutterMethodNotImplemented)
+        channels[channelHandle]?.removeMessageListeners()
+        result(nil)
     }
     
     // MARK: -
@@ -802,10 +806,14 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - RemoveUserStatusListeners
     private func removeUserStatusListeners(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
+        guard let channelHandle: Int = arguments[Args.channelHandle].flatMap(cast) else {
+            result(FlutterError.noRequiredArguments)
+            
+            return
+        }
         
-        // TODO: -
-        // TODO: - Updated Flutter implementation will handle listener filtering
-        result(FlutterMethodNotImplemented)
+        channels[channelHandle]?.removeUserStatusListeners()
+        result(nil)
     }
 }
 
