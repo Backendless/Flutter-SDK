@@ -55,7 +55,8 @@ class BackendlessGeo {
       <String, dynamic>{"categoryName": categoryName});
 
   Future<List<GeoCategory>> getCategories() async =>
-      (await _channel.invokeMethod("Backendless.Geo.getCategories")).cast<GeoCategory>();
+      (await _channel.invokeMethod("Backendless.Geo.getCategories"))
+          .cast<GeoCategory>();
 
   Future<int> getGeopointCount(BackendlessGeoQuery query,
           [String geoFenceName]) =>
