@@ -16,6 +16,6 @@ Map testObject = new Map();
 testObject["foo"] = "bar";
 
 // Save the object in the database. The name of the database table is "TestTable".
-Backendless.Data.of("TestTable").save(testObject).then(
+Backendless.data.of("TestTable").save(testObject).then(
   (response) => print("Object is saved in Backendless. Please check in the console."));
 ```
