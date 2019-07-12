@@ -204,7 +204,7 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
     // MARK: - GetDeviceRegistration
     private func getDeviceRegistration(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
         messaging.getDeviceRegistrations(responseHandler: {
-            result($0)
+            result($0.first)
         }, errorHandler: {
             result(FlutterError($0))
         })
