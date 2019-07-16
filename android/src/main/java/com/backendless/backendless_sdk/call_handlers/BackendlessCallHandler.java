@@ -26,26 +26,11 @@ public class BackendlessCallHandler implements MethodChannel.MethodCallHandler {
             case "Backendless.getApplicationId":
                 getApplicationId(result);
                 break;
-            case "Backendless.getNotificationIdGeneratorInitValue":
-                getNotificationIdGeneratorInitValue(result);
-                break;
-            case "Backendless.getPushTemplatesAsJson":
-                getPushTemplatesAsJson(result);
-                break;
             case "Backendless.getUrl":
                 getUrl(result);
                 break;
             case "Backendless.isInitialized":
                 isInitialized(result);
-                break;
-            case "Backendless.saveNotificationIdGeneratorState":
-                saveNotificationIdGeneratorState(call, result);
-                break;
-            case "Backendless.savePushTemplates":
-                savePushTemplates(call, result);
-                break;
-            case "Backendless.setUIState":
-                setUIState(call, result);
                 break;
             case "Backendless.setUrl":
                 setUrl(call, result);
@@ -71,38 +56,12 @@ public class BackendlessCallHandler implements MethodChannel.MethodCallHandler {
         result.success(Backendless.getApplicationId());
     }
 
-    private void getNotificationIdGeneratorInitValue(MethodChannel.Result result) {
-        result.success(Backendless.getNotificationIdGeneratorInitValue());
-    }
-
-    private void getPushTemplatesAsJson(MethodChannel.Result result) {
-        result.success(Backendless.getPushTemplatesAsJson());
-    }
-
     private void getUrl(MethodChannel.Result result) {
         result.success(Backendless.getUrl());
     }
 
     private void isInitialized(MethodChannel.Result result) {
         result.success(Backendless.isInitialized());
-    }
-
-    private void saveNotificationIdGeneratorState(MethodCall call, MethodChannel.Result result) {
-        int value = call.argument("value");
-        Backendless.saveNotificationIdGeneratorState(value);
-        result.success(null);
-    }
-
-    private void savePushTemplates(MethodCall call, MethodChannel.Result result) {
-        String pushTemplatesAsJson = call.argument("pushTemplatesAsJson");
-        Backendless.savePushTemplates(pushTemplatesAsJson);
-        result.success(null);
-    }
-
-    private void setUIState(MethodCall call, MethodChannel.Result result) {
-        String state = call.argument("state");
-        Backendless.setUIState(state);
-        result.success(null);
     }
 
     private void setUrl(MethodCall call, MethodChannel.Result result) {

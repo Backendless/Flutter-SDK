@@ -19,13 +19,8 @@ class BackendlessCallHandler: FlutterCallHandlerProtocol {
         static let initApp = "Backendless.initApp"
         static let getApiKey = "Backendless.getApiKey"
         static let getApplicationId = "Backendless.getApplicationId"
-        static let getNotificationIdGeneratorInitValue = "Backendless.getNotificationIdGeneratorInitValue"
-        static let getPushTemplatesAsJson = "Backendless.getPushTemplatesAsJson"
         static let getUrl = "Backendless.getUrl"
         static let isInitialized = "Backendless.isInitialized"
-        static let saveNotificationIdGeneratorState = "Backendless.saveNotificationIdGeneratorState"
-        static let savePushTemplates = "Backendless.savePushTemplates"
-        static let setUIState = "Backendless.setUIState"
         static let setUrl = "Backendless.setUrl"
     }
     
@@ -51,20 +46,10 @@ class BackendlessCallHandler: FlutterCallHandlerProtocol {
             getApiKey(arguments, result)
         case Methods.getApplicationId:
             getApplicationId(arguments, result)
-        case Methods.getNotificationIdGeneratorInitValue:
-            getNotificationIdGeneratorInitValue(arguments, result)
-        case Methods.getPushTemplatesAsJson:
-            getPushTemplatesAsJson(arguments, result)
         case Methods.getUrl:
             getUrl(arguments, result)
         case Methods.isInitialized:
             isInitialized(arguments, result)
-        case Methods.saveNotificationIdGeneratorState:
-            saveNotificationIdGeneratorState(arguments, result)
-        case Methods.savePushTemplates:
-            savePushTemplates(arguments, result)
-        case Methods.setUIState:
-            setUIState(arguments, result)
         case Methods.setUrl:
             setUrl(arguments, result)
         default:
@@ -103,20 +88,6 @@ class BackendlessCallHandler: FlutterCallHandlerProtocol {
     }
     
     // MARK: -
-    // MARK: - Get Notification Id Generator Init Value
-    // MARK: - Not actual for iOS
-    private func getNotificationIdGeneratorInitValue(_ arguments: [String: Any], _ result: FlutterResult) {
-        result(FlutterMethodNotImplemented)
-    }
-    
-    // MARK: -
-    // MARK: - Get Push Templates As Json
-    // MARK: - Not actual for iOS
-    private func getPushTemplatesAsJson(_ arguments: [String: Any], _ result: FlutterResult) {
-        result(FlutterMethodNotImplemented)
-    }
-    
-    // MARK: -
     // MARK: - Get URL
     private func getUrl(_ arguments: [String: Any], _ result: FlutterResult) {
         let url = backendless.hostUrl
@@ -131,27 +102,6 @@ class BackendlessCallHandler: FlutterCallHandlerProtocol {
         let isInitialized = appId != "AppId" && apiKey != "APIKey"
         
         result(isInitialized)
-    }
-    
-    // MARK: -
-    // MARK: - Save Notification Id Generator State
-    // MARK: - Not actual for iOS
-    private func saveNotificationIdGeneratorState(_ arguments: [String: Any], _ result: FlutterResult) {
-        result(FlutterMethodNotImplemented)
-    }
-    
-    // MARK: -
-    // MARK: - Save Push Templates
-    // MARK: - Not actual for iOS
-    private func savePushTemplates(_ arguments: [String: Any], _ result: FlutterResult) {
-        result(FlutterMethodNotImplemented)
-    }
-    
-    // MARK: -
-    // MARK: - Set UI State
-    // MARK: - Not actual for iOS
-    private func setUIState(_ arguments: [String: Any], _ result: FlutterResult) {
-        result(FlutterMethodNotImplemented)
     }
     
     // MARK: -

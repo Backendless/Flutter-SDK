@@ -13,7 +13,7 @@ enum FlutterTypeCode: UInt8 {
     case geoCategory
     case geoQuery
     case geoCluster
-    case searchMathesResult
+    case searchMatchesResult
     case messageStatus
     case deviceRegistration
     case message

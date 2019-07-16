@@ -14,7 +14,6 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Constants
     private enum Methods {
-        static let assignRole = "Backendless.UserService.assignRole"
         static let currentUser = "Backendless.UserService.currentUser"
         static let describeUserClass = "Backendless.UserService.describeUserClass"
         static let findById = "Backendless.UserService.findById"
@@ -26,13 +25,11 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
         static let register = "Backendless.UserService.register"
         static let resendEmailConfirmation = "Backendless.UserService.resendEmailConfirmation"
         static let restorePassword = "Backendless.UserService.restorePassword"
-        static let unassignRole = "Backendless.UserService.unassignRole"
         static let update = "Backendless.UserService.update"
     }
     
     private enum Args {
         static let identity = "identity"
-        static let roleName = "roleName"
         static let id = "id"
         static let login = "login"
         static let password = "password"
@@ -51,8 +48,6 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
         let arguments: [String: Any] = call.arguments.flatMap(cast) ?? [:]
         
         switch call.method {
-        case Methods.assignRole:
-            assignRole(arguments, result)
         case Methods.currentUser:
             currentUser(arguments, result)
         case Methods.describeUserClass:
@@ -75,32 +70,11 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
             resendEmailConfirmation(arguments, result)
         case Methods.restorePassword:
             restorePassword(arguments, result)
-        case Methods.unassignRole:
-            unassignRole(arguments, result)
         case Methods.update:
             update(arguments, result)
         default:
             result(FlutterMethodNotImplemented)
         }
-    }
-    
-    // MARK: -
-    // MARK: - Assign Role
-    private func assignRole(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        guard
-            let identity: String = arguments[Args.identity].flatMap(cast),
-            let roleName: String = arguments[Args.roleName].flatMap(cast)
-        else {
-            result(FlutterError.noRequiredArguments)
-            
-            return
-        }
-        
-        // TODO: -
-        // TODO: - No such method in SDK
-        // TODO: - BKNDLSS-19092
-        
-        result(FlutterMethodNotImplemented)
     }
     
     // MARK: -
@@ -263,25 +237,6 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
         }, errorHandler: {
             result(FlutterError($0))
         })
-    }
-    
-    // MARK: -
-    // MARK: - Unassign Role
-    private func unassignRole(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        guard
-            let identity: String = arguments[Args.identity].flatMap(cast),
-            let roleName: String = arguments[Args.roleName].flatMap(cast)
-        else {
-            result(FlutterError.noRequiredArguments)
-            
-            return
-        }
-        
-        // TODO: -
-        // TODO: - No such method in SDK
-        // TODO: - BKNDLSS-19092
-        
-        result(FlutterMethodNotImplemented)
     }
     
     // MARK: -

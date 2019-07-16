@@ -20,7 +20,7 @@ class Command<T> {
   Map toJson() => {
         'type': type,
         'data': data,
-        'userInfo': userInfo,
+        'userInfo': userInfo.toJson(),
       };
 
   @override

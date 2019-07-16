@@ -233,6 +233,6 @@ class SearchMatchesResult {
 
   Map toJson() => {
         'matches': matches,
-        'geoPoint': geoPoint,
+        'geoPoint': geoPoint.toJson(),
       };
 }
