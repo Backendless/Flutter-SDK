@@ -1,3 +1,8 @@
+## 0.1.1
+
+* Remove redundant methods.
+* Fix encoding issues.
+
 ## 0.1.0
 
 * Add support for iOS.
