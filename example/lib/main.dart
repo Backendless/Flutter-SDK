@@ -23,8 +23,8 @@ class _MyAppState extends State<MyApp> {
 
   void buttonPressed() {
     Backendless.data
-        .of("Price")
-        .save({"price": 1488}).then((onValue) => showResult(onValue));
+        .of("TestTable")
+        .save({"foo": "bar"}).then((onValue) => showResult(onValue));
   }
 
   void showResult(dynamic result) {

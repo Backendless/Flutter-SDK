@@ -17,8 +17,8 @@ class UserStatusResponse {
     List<Map> userInfos = List();
     data.forEach((userInfo) => userInfos.add(userInfo.toJson()));
     return {
-        'status': status?.index,
-        'data': userInfos,
+      'status': status?.index,
+      'data': userInfos,
     };
   }
 
