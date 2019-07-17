@@ -13,10 +13,14 @@ class UserStatusResponse {
     data = userInfos;
   }
 
-  Map toJson() => {
-        'status': status?.index,
-        'data': data,
-      };
+  Map toJson() {
+    List<Map> userInfos = List();
+    data.forEach((userInfo) => userInfos.add(userInfo.toJson()));
+    return {
+      'status': status?.index,
+      'data': userInfos,
+    };
+  }
 
   @override
   String toString() => "UserStatusResponse{status=$status, data=$data}";

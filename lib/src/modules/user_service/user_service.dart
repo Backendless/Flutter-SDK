@@ -10,12 +10,6 @@ class BackendlessUserService {
       new BackendlessUserService._internal();
   BackendlessUserService._internal();
 
-  Future<void> assignRole(String identity, String roleName) => _channel
-          .invokeMethod("Backendless.UserService.assignRole", <String, dynamic>{
-        "identity": identity,
-        "roleName": roleName,
-      });
-
   Future<BackendlessUser> currentUser() =>
       _channel.invokeMethod("Backendless.UserService.currentUser");
 
@@ -58,13 +52,6 @@ class BackendlessUserService {
   Future<void> restorePassword(String identity) => _channel.invokeMethod(
       "Backendless.UserService.restorePassword",
       <String, dynamic>{"identity": identity});
-
-  Future<void> unassignRole(String identity, String roleName) =>
-      _channel.invokeMethod(
-          "Backendless.UserService.unassignRole", <String, dynamic>{
-        "identity": identity,
-        "roleName": roleName,
-      });
 
   Future<BackendlessUser> update(BackendlessUser user) => _channel.invokeMethod(
       "Backendless.UserService.update", <String, dynamic>{"user": user});

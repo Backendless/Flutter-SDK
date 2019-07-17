@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum UserStatusEnum: String {
+enum UserStatusEnum: String, CaseIterable {
     case LISTING
     case CONNECTED
     case DISCONNECTED
@@ -24,5 +24,9 @@ enum UserStatusEnum: String {
         case .USERUPDATE:
             return 3
         }
+    }
+    
+    init(index: Int) {
+        self = UserStatusEnum.allCases[index]
     }
 }

@@ -133,7 +133,7 @@ class BackendlessWtiter: FlutterStandardWriter {
         case is GeoCluster:
             writeByte(FlutterTypeCode.geoCluster.rawValue)
         case is SearchMatchesResult:
-            writeByte(FlutterTypeCode.searchMathesResult.rawValue)
+            writeByte(FlutterTypeCode.searchMatchesResult.rawValue)
         case is MessageStatus:
             writeByte(FlutterTypeCode.messageStatus.rawValue)
         case is DeviceRegistration:
@@ -171,7 +171,7 @@ class BackendlessWtiter: FlutterStandardWriter {
         
         inputDict.forEach {
             if $0.key == Args.status, let stringValue = $0.value as? String {
-                let enumValue = PublishStatusEnum(rawValue: stringValue) ?? .unknown
+                let enumValue = PublishStatusEnum(rawValue: stringValue)
                 result[$0.key] = enumValue.index
             }
         }

@@ -129,7 +129,7 @@ class BackendlessReader: FlutterStandardReader {
             return try? JSONDecoder().decode(BackendlessGeoQuery.self, from: jsonData)
         case .geoCluster:
             return try? JSONDecoder().decode(GeoCluster.self, from: jsonData)
-        case .searchMathesResult:
+        case .searchMatchesResult:
             return try? JSONDecoder().decode(SearchMatchesResult.self, from: jsonData)
         case .messageStatus:
             return try? JSONDecoder().decode(MessageStatus.self, from: jsonData)
@@ -150,8 +150,7 @@ class BackendlessReader: FlutterStandardReader {
         case .userInfo:
             return try? JSONDecoder().decode(UserInfo.self, from: jsonData)
         case .userStatusResponse:
-//            return try? JSONDecoder().decode(UserStatusResponse.self, from: jsonData)
-            return nil
+            return userStatus(fromJson: json)
         case .reconnectAttempt:
             return try? JSONDecoder().decode(ReconnectAttemptObject.self, from: jsonData)
         case .backendlessUser:
@@ -163,5 +162,20 @@ class BackendlessReader: FlutterStandardReader {
         case .emailEnvelope:
             return try? JSONDecoder().decode(EmailEnvelope.self, from: jsonData)
         }
+    }
+    
+    private func userStatus(fromJson json: [String: Any]) -> UserStatus {
+        let userStatusResult = UserStatus()
+        
+        if let index: Int = json["status"].flatMap(cast) {
+            let status = UserStatusEnum(index: index)
+            userStatusResult.status = status.rawValue
+        }
+        
+        if let data: [[String: Any]] = json["data"].flatMap(cast) {
+            userStatusResult.data = data
+        }
+        
+        return userStatusResult
     }
 }

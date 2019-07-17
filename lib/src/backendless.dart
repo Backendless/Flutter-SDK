@@ -32,27 +32,10 @@ class Backendless {
   static Future<String> getApplicationId() =>
       _channel.invokeMethod("Backendless.getApplicationId");
 
-  static Future<int> getNotificationIdGeneratorInitValue() =>
-      _channel.invokeMethod("Backendless.getNotificationIdGeneratorInitValue");
-
-  static Future<String> getPushTemplatesAsJson() =>
-      _channel.invokeMethod("Backendless.getPushTemplatesAsJson");
-
   static Future<String> getUrl() => _channel.invokeMethod("Backendless.getUrl");
 
   static Future<bool> isInitialized() =>
       _channel.invokeMethod("Backendless.isInitialized");
-
-  static Future<void> saveNotificationIdGeneratorState(int value) =>
-      _channel.invokeMethod("Backendless.saveNotificationIdGeneratorState",
-          <String, dynamic>{"value": value});
-
-  static Future<void> savePushTemplates(String pushTemplatesAsJson) =>
-      _channel.invokeMethod("Backendless.savePushTemplates",
-          <String, dynamic>{"pushTemplatesAsJson": pushTemplatesAsJson});
-
-  static Future<void> setUIState(String state) => _channel.invokeMethod(
-      "Backendless.setUIState", <String, dynamic>{"state": state});
 
   static Future<void> setUrl(String url) => _channel
       .invokeMethod("Backendless.setUrl", <String, dynamic>{"url": url});

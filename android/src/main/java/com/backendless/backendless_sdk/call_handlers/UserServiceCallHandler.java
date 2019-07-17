@@ -19,9 +19,6 @@ public class UserServiceCallHandler implements MethodChannel.MethodCallHandler {
     @Override
     public void onMethodCall(MethodCall call, MethodChannel.Result result) {
         switch (call.method) {
-            case "Backendless.UserService.assignRole":
-                assignRole(call, result);
-                break;
             case "Backendless.UserService.currentUser":
                 currentUser(result);
                 break;
@@ -55,21 +52,10 @@ public class UserServiceCallHandler implements MethodChannel.MethodCallHandler {
             case "Backendless.UserService.restorePassword":
                 restorePassword(call, result);
                 break;
-            case "Backendless.UserService.unassignRole":
-                unassignRole(call, result);
-                break;
             case "Backendless.UserService.update":
                 update(call, result);
                 break;
         }
-    }
-
-    private void assignRole(MethodCall call, MethodChannel.Result result) {
-        String identity = call.argument("identity");
-        String roleName = call.argument("roleName");
-
-        Backendless.UserService.assignRole(identity, roleName, new FlutterCallback<Void>(result));
-
     }
 
     private void currentUser(MethodChannel.Result result) {
@@ -127,13 +113,6 @@ public class UserServiceCallHandler implements MethodChannel.MethodCallHandler {
     private void restorePassword(MethodCall call, MethodChannel.Result result) {
         String identity = call.argument("identity");
         Backendless.UserService.restorePassword(identity, new FlutterCallback<Void>(result));
-    }
-
-    private void unassignRole(MethodCall call, MethodChannel.Result result) {
-        String identity = call.argument("identity");
-        String roleName = call.argument("roleName");
-
-        Backendless.UserService.unassignRole(identity, roleName, new FlutterCallback<Void>(result));
     }
 
     private void update(MethodCall call, MethodChannel.Result result) {
