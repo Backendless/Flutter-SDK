@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:backendless_sdk/backendless_sdk.dart';
 
-void main() => runApp(MyApp());
+import 'main.reflectable.dart';
+import 'car.dart'; 
+import 'bus.dart';
+
+void main() {
+  initializeReflectable();
+  runApp(MyApp());
+}
 
 class MyApp extends StatefulWidget {
   @override
@@ -10,7 +17,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   String _result = 'Result';
-
+  
   @override
   void initState() {
     super.initState();
@@ -22,9 +29,21 @@ class _MyAppState extends State<MyApp> {
   }
 
   void buttonPressed() {
-    Backendless.data
-        .of("TestTable")
-        .save({"foo": "bar"}).then((onValue) => showResult(onValue));
+    Bus bus = Bus()
+      ..s = "some string"
+      ..i = 1337
+      ..date = DateTime.now();
+
+    Car car = Car()
+      ..brand = "Tesla"
+      ..model = "X"
+      ..price = 100000.99
+      ..year = DateTime.now()
+      ..isUsed = false;
+      // ..bus = bus;
+
+    Backendless.data.ofClass<Car>().findFirst()
+    .then((savedCar) => print(savedCar));
   }
 
   void showResult(dynamic result) {
