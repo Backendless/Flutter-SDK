@@ -7,6 +7,7 @@ import 'dart:ui' show hashValues;
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:reflectable/reflectable.dart';
 
 import 'src/utils/utils.dart';
 
@@ -22,6 +23,7 @@ part 'src/modules/data/data_query_builder.dart';
 part 'src/modules/data/data_store.dart';
 part 'src/modules/data/property.dart';
 part 'src/modules/data/rt.dart';
+part 'src/modules/data/reflector.dart';
 part 'src/modules/events.dart';
 part 'src/modules/files/files.dart';
 part 'src/modules/files/file_info.dart';
