@@ -5,6 +5,8 @@ import 'main.reflectable.dart';
 import 'car.dart'; 
 import 'bus.dart';
 
+import 'package:reflectable/reflectable.dart';
+
 void main() {
   initializeReflectable();
   runApp(MyApp());
@@ -32,18 +34,32 @@ class _MyAppState extends State<MyApp> {
     Bus bus = Bus()
       ..s = "some string"
       ..i = 1337
-      ..date = DateTime.now();
+      ..dateTime = DateTime.now();
 
     Car car = Car()
       ..brand = "Tesla"
       ..model = "X"
       ..price = 100000.99
       ..year = DateTime.now()
-      ..isUsed = false;
-      // ..bus = bus;
+      ..isUsed = false
+      ..bus = [bus];
 
-    Backendless.data.ofClass<Car>().findFirst()
-    .then((savedCar) => print(savedCar));
+
+
+
+
+    // Backendless.data.ofClass<Bus>().save(bus).then((savedBus) => print(savedBus));
+    Backendless.data.ofClass<Car>().findLast().then((foundCar) => print(foundCar));
+    // Backendless.data.ofClass<Car>().save(car).then((savedCar) => print(savedCar));
+    // print(reflector.annotatedClasses.first.reflectedType);
+    // print(reflector.annotatedClasses.first.dynamicReflectedType);
+
+
+  }
+
+  void dd<T>(T type) {
+    print(T);
+
   }
 
   void showResult(dynamic result) {

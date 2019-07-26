@@ -9,8 +9,10 @@ class Car {
   double price;
   DateTime year;
   bool isUsed;
-  Bus bus;
+  int date;
+  BackendlessUser user;
+  List bus;
 
   @override
-  toString() => 'brand: $brand\nmodel: $model\nprice: $price\nyear: $year\nisUsed:$isUsed\nbus: ${bus.toString()}';
+  toString() => 'brand: $brand\nmodel: $model\nprice: $price\nyear: $year\nisUsed:$isUsed\nuser: $user\nbus: $bus';
 }
