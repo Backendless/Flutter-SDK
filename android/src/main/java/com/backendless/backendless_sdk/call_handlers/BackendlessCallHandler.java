@@ -3,6 +3,11 @@ package com.backendless.backendless_sdk.call_handlers;
 import android.content.Context;
 
 import com.backendless.Backendless;
+import com.backendless.HeadersManager;
+
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Map;
 
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -34,6 +39,15 @@ public class BackendlessCallHandler implements MethodChannel.MethodCallHandler {
                 break;
             case "Backendless.setUrl":
                 setUrl(call, result);
+                break;
+            case "Backendless.getHeaders":
+                getHeaders(result);
+                break;
+            case "Backendless.setHeader":
+                setHeader(call, result);
+                break;
+            case "Backendless.removeHeader":
+                removeHeader(call, result);
                 break;
             default:
                 result.notImplemented();
@@ -67,6 +81,33 @@ public class BackendlessCallHandler implements MethodChannel.MethodCallHandler {
     private void setUrl(MethodCall call, MethodChannel.Result result) {
         String url = call.argument("url");
         Backendless.setUrl(url);
+        result.success(null);
+    }
+
+    private void getHeaders(MethodChannel.Result result) {
+        Hashtable<String, String> headers = HeadersManager.getInstance().getHeaders();
+        result.success(headers);
+    }
+
+    private void setHeader(MethodCall call, MethodChannel.Result result) {
+        String key = call.argument("key");
+        String value = call.argument("value");
+        if (key == null || value == null) {
+            result.error("Invalid argument", "Key and value cannot be null", null);
+            return;
+        }
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put(key, value);
+        HeadersManager.getInstance().setHeaders(headers);
+        result.success(null);
+    }
+
+    private void removeHeader(MethodCall call, MethodChannel.Result result) {
+        String key = call.argument("key");
+
+        HeadersManager.HeadersEnum headersEnum = HeadersManager.HeadersEnum.valueOf(key);
+        HeadersManager.getInstance().removeHeader(headersEnum);
         result.success(null);
     }
 }

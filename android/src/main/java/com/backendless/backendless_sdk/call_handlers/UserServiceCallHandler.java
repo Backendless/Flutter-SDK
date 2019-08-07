@@ -62,6 +62,8 @@ public class UserServiceCallHandler implements MethodChannel.MethodCallHandler {
             case "Backendless.UserService.setUserToken":
                 setUserToken(call, result);
                 break;
+            default:
+                result.notImplemented();
         }
     }
 
