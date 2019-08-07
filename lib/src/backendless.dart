@@ -39,4 +39,13 @@ class Backendless {
 
   static Future<void> setUrl(String url) => _channel
       .invokeMethod("Backendless.setUrl", <String, dynamic>{"url": url});
+
+  static Future<Map>getHeaders() => 
+      _channel.invokeMethod("Backendless.getHeaders");
+
+  static Future<void>setHeader(String key, String value) =>
+      _channel.invokeMethod("Backendless.setHeader", <String, dynamic>{"key": key, "value": value});
+
+  static Future<void>removeHeader(String key) =>
+      _channel.invokeMethod("Backendless.removeHeader", <String, dynamic>{"key": key});
 }

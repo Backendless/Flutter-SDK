@@ -22,12 +22,17 @@ class BackendlessCallHandler: FlutterCallHandlerProtocol {
         static let getUrl = "Backendless.getUrl"
         static let isInitialized = "Backendless.isInitialized"
         static let setUrl = "Backendless.setUrl"
+        static let getHeaders = "Backendless.getHeaders"
+        static let setHeader = "Backendless.setHeader"
+        static let removeHeader = "Backendless.removeHeader"
     }
     
     private enum Args {
         static let applicationId = "applicationId"
         static let apiKey = "apiKey"
         static let url = "url"
+        static let key = "key"
+        static let value = "value"
     }
     
     // MARK: - 
@@ -52,6 +57,12 @@ class BackendlessCallHandler: FlutterCallHandlerProtocol {
             isInitialized(arguments, result)
         case Methods.setUrl:
             setUrl(arguments, result)
+        case Methods.getHeaders:
+            getHeaders(arguments, result)
+        case Methods.setHeader:
+            setHeader(arguments, result)
+        case Methods.removeHeader:
+            removeHeader(arguments, result)
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -114,6 +125,42 @@ class BackendlessCallHandler: FlutterCallHandlerProtocol {
         }
         
         backendless.hostUrl = url
+        result(nil)
+    }
+    
+    // MARK: -
+    // MARK: - Get Headers
+    private func getHeaders(_ arguments: [String: Any], _ result: FlutterResult) {
+        let headers = backendless.getHeaders()
+        result(headers)
+    }
+    
+    // MARK: -
+    // MARK: - Set Header
+    private func setHeader(_ arguments: [String: Any], _ result: FlutterResult) {
+        guard
+            let key: String = arguments[Args.key].flatMap(cast),
+            let value: String = arguments[Args.value].flatMap(cast)
+        else {
+            result(FlutterError.noRequiredArguments)
+            
+            return
+        }
+        
+        backendless.setHeader(key: key, value: value)
+        result(nil)
+    }
+    
+    // MARK: -
+    // MARK: - Remove Header
+    private func removeHeader(_ arguments: [String: Any], _ result: FlutterResult) {
+        guard let key: String = arguments[Args.key].flatMap(cast) else {
+            result(FlutterError.noRequiredArguments)
+            
+            return
+        }
+        
+        backendless.removeHeader(key: key)
         result(nil)
     }
 }
