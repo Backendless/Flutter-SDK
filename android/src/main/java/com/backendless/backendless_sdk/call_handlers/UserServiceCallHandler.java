@@ -2,6 +2,7 @@ package com.backendless.backendless_sdk.call_handlers;
 
 import com.backendless.Backendless;
 import com.backendless.BackendlessUser;
+import com.backendless.HeadersManager;
 import com.backendless.backendless_sdk.utils.FlutterCallback;
 import com.backendless.property.UserProperty;
 
@@ -54,6 +55,12 @@ public class UserServiceCallHandler implements MethodChannel.MethodCallHandler {
                 break;
             case "Backendless.UserService.update":
                 update(call, result);
+                break;
+            case "Backendless.UserService.getUserToken":
+                getUserToken(result);
+                break;
+            case "Backendless.UserService.setUserToken":
+                setUserToken(call, result);
                 break;
         }
     }
@@ -118,5 +125,16 @@ public class UserServiceCallHandler implements MethodChannel.MethodCallHandler {
     private void update(MethodCall call, MethodChannel.Result result) {
         BackendlessUser user = call.argument("user");
         Backendless.UserService.update(user, new FlutterCallback<BackendlessUser>(result));
+    }
+
+    private void getUserToken(MethodChannel.Result result) {
+        String userToken = HeadersManager.getInstance().getHeader(HeadersManager.HeadersEnum.USER_TOKEN_KEY);
+        result.success(userToken);
+    }
+
+    private void setUserToken(MethodCall call, MethodChannel.Result result) {
+        String userToken = call.argument("userToken");
+        HeadersManager.getInstance().addHeader(HeadersManager.HeadersEnum.USER_TOKEN_KEY, userToken);
+        result.success(null);
     }
 }
