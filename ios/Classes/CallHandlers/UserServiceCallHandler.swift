@@ -28,6 +28,7 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
         static let update = "Backendless.UserService.update"
         static let setUserToken = "Backendless.UserService.setUserToken"
         static let getUserToken = "Backendless.UserService.getUserToken"
+        static let loginAsGuest = "Backendless.UserService.loginAsGuest"
     }
     
     private enum Args {
@@ -79,6 +80,8 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
             setUserToken(arguments, result)
         case Methods.getUserToken:
             getUserToken(arguments, result)
+        case Methods.loginAsGuest:
+            loginAsGuest(arguments, result)
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -283,5 +286,27 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
         let userToken = userService.getUserToken()
         
         result(userToken)
+    }
+    
+    // MARK: -
+    // MARK: - Login As Guest
+    private func loginAsGuest(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
+        let stayLoggedIn: Bool? = arguments[Args.stayLoggedIn].flatMap(cast)
+        
+        if let stayLoggedIn = stayLoggedIn {
+            userService.loginAsGuest(stayLoggedIn: stayLoggedIn,
+                responseHandler: {
+                    result($0)
+                },
+                errorHandler: {
+                    result(FlutterError($0))
+                })
+        } else {
+            userService.loginAsGuest(responseHandler: {
+                result($0)
+            }, errorHandler: {
+                result(FlutterError($0))
+            })
+        }
     }
 }

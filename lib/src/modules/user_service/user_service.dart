@@ -62,4 +62,8 @@ class BackendlessUserService {
   Future<void> setUserToken(String userToken) => _channel.invokeMethod(
       "Backendless.UserService.setUserToken",
       <String, dynamic>{"userToken": userToken});
+
+  Future<BackendlessUser> loginAsGuest([bool stayLoggedIn]) =>
+      _channel.invokeMethod("Backendless.UserService.loginAsGuest",
+      <String, dynamic>{"stayLoggedIn": stayLoggedIn});
 }
