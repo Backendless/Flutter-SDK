@@ -55,6 +55,9 @@ public class UserServiceCallHandler implements MethodChannel.MethodCallHandler {
             case "Backendless.UserService.update":
                 update(call, result);
                 break;
+            case "Backendless.UserService.loginAsGuest":
+                loginAsGuest(call, result);
+                break;
         }
     }
 
@@ -118,5 +121,17 @@ public class UserServiceCallHandler implements MethodChannel.MethodCallHandler {
     private void update(MethodCall call, MethodChannel.Result result) {
         BackendlessUser user = call.argument("user");
         Backendless.UserService.update(user, new FlutterCallback<BackendlessUser>(result));
+    }
+
+    private void loginAsGuest(MethodCall call, MethodChannel.Result result) {
+        Boolean stayLoggedIn = call.argument("stayLoggedIn");
+
+        FlutterCallback<BackendlessUser> callback = new FlutterCallback<>(result);
+
+        if (stayLoggedIn != null) {
+            Backendless.UserService.loginAsGuest(callback, stayLoggedIn);
+        } else {
+            Backendless.UserService.loginAsGuest(callback);
+        }
     }
 }
