@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.backendless.Backendless;
 import com.backendless.HeadersManager;
+import com.backendless.HeadersManager.HeadersEnum;
 
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -90,23 +91,21 @@ public class BackendlessCallHandler implements MethodChannel.MethodCallHandler {
     }
 
     private void setHeader(MethodCall call, MethodChannel.Result result) {
-        String key = call.argument("key");
+        Integer headersEnumIndex = call.argument("headersEnum");
         String value = call.argument("value");
-        if (key == null || value == null) {
+        if (headersEnumIndex == null || value == null) {
             result.error("Invalid argument", "Key and value cannot be null", null);
             return;
         }
 
-        Map<String, String> headers = new HashMap<>();
-        headers.put(key, value);
-        HeadersManager.getInstance().setHeaders(headers);
+        HeadersEnum headersEnum = HeadersEnum.values()[headersEnumIndex];
+        HeadersManager.getInstance().addHeader(headersEnum, value);
         result.success(null);
     }
 
     private void removeHeader(MethodCall call, MethodChannel.Result result) {
-        String key = call.argument("key");
-
-        HeadersManager.HeadersEnum headersEnum = HeadersManager.HeadersEnum.valueOf(key);
+        Integer headersEnumIndex = call.argument("headersEnum");
+        HeadersEnum headersEnum = HeadersEnum.values()[headersEnumIndex];
         HeadersManager.getInstance().removeHeader(headersEnum);
         result.success(null);
     }

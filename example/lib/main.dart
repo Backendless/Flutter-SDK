@@ -22,9 +22,19 @@ class _MyAppState extends State<MyApp> {
   }
 
   void buttonPressed() {
-    Backendless.data
-        .of("TestTable")
-        .save({"foo": "bar"}).then((onValue) => showResult(onValue));
+    Backendless.getHeaders().then((headers) {
+      print(headers);
+      Backendless.setHeader(HeadersEnum.API_VERSION, "mavalue").then((onValue) {
+        Backendless.getHeaders().then((headers) {
+          print(headers);
+          Backendless.removeHeader(HeadersEnum.APP_TYPE_NAME).then((onValue) {
+            Backendless.getHeaders().then((headers) {
+              print(headers);
+            });
+          });
+        });
+      });
+    });
   }
 
   void showResult(dynamic result) {

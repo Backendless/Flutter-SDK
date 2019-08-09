@@ -40,12 +40,12 @@ class Backendless {
   static Future<void> setUrl(String url) => _channel
       .invokeMethod("Backendless.setUrl", <String, dynamic>{"url": url});
 
-  static Future<Map>getHeaders() => 
-      _channel.invokeMethod("Backendless.getHeaders");
+  static Future<Map<String, String>> getHeaders() async => 
+      (await _channel.invokeMethod("Backendless.getHeaders")).cast<String, String>();
 
-  static Future<void>setHeader(String key, String value) =>
-      _channel.invokeMethod("Backendless.setHeader", <String, dynamic>{"key": key, "value": value});
+  static Future<void> setHeader(HeadersEnum headersEnum, String value) =>
+      _channel.invokeMethod("Backendless.setHeader", <String, dynamic>{"headersEnum": headersEnum.index, "value": value});
 
-  static Future<void>removeHeader(String key) =>
-      _channel.invokeMethod("Backendless.removeHeader", <String, dynamic>{"key": key});
+  static Future<void>removeHeader(HeadersEnum headersEnum) =>
+      _channel.invokeMethod("Backendless.removeHeader", <String, dynamic>{"headersEnum": headersEnum.index});
 }
