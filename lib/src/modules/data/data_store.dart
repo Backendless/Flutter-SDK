@@ -188,11 +188,11 @@ class ClassDrivenDataStore<T> implements IDataStore<T> {
   static const MethodChannel _channel = const MethodChannel(
       'backendless/data', StandardMethodCodec(BackendlessMessageCodec()));
   String _tableName;
-  // EventHandler<Map> _eventHandler;
+  EventHandler<T> _eventHandler;
 
   ClassDrivenDataStore() {
     _tableName = reflector.getSimpleName(T);
-    // _eventHandler = new EventHandler<Map>(tableName);
+    _eventHandler = new EventHandler<T>(_tableName);
   }
 
   Future<int> addRelation(T parent, String relationColumnName,
@@ -340,9 +340,5 @@ class ClassDrivenDataStore<T> implements IDataStore<T> {
         'changes': changes
       });
 
-  // EventHandler<Map> rt() => _eventHandler;
-  EventHandler<T> rt() => null;
-
-
-
+  EventHandler<T> rt() => _eventHandler;
 }

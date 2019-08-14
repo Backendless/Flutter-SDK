@@ -28,7 +28,7 @@ class EventHandler<T> {
 
   void addUpdateListener(void callback(T response),
       {void onError(String error), String whereClause}) {
-    DataSubscription subscription = new DataSubscription(
+    DataSubscription subscription = new DataSubscription<T>(
         RTDataEvent.UPDATED, _tableName, callback, onError, whereClause);
     addEventListener(subscription);
   }
@@ -45,7 +45,7 @@ class EventHandler<T> {
 
   void addDeleteListener(void callback(T response),
       {void onError(String error), String whereClause}) {
-    DataSubscription subscription = new DataSubscription(
+    DataSubscription subscription = new DataSubscription<T>(
         RTDataEvent.DELETED, _tableName, callback, onError, whereClause);
     addEventListener(subscription);
   }
@@ -62,7 +62,7 @@ class EventHandler<T> {
 
   void addBulkUpdateListener(void callback(BulkEvent response),
       {void onError(String error), String whereClause}) {
-    DataSubscription subscription = new DataSubscription(
+    DataSubscription subscription = new DataSubscription<T>(
         RTDataEvent.BULK_UPDATED, _tableName, callback, onError, whereClause);
     addEventListener(subscription);
   }
@@ -80,7 +80,7 @@ class EventHandler<T> {
 
   void addBulkDeleteListener(void callback(BulkEvent response),
       {void onError(String error), String whereClause}) {
-    DataSubscription subscription = new DataSubscription(
+    DataSubscription subscription = new DataSubscription<T>(
         RTDataEvent.BULK_DELETED, _tableName, callback, onError, whereClause);
     addEventListener(subscription);
   }
@@ -148,13 +148,21 @@ class BulkEvent {
 class DataSubscription<T> {
   RTDataEvent event;
   String tableName;
-  Function handleResponse;
+  Function _handleResponse;
   void Function(String fault) _handleFault;
   String whereClause;
 
   DataSubscription(
-      this.event, this.tableName, this.handleResponse, this._handleFault,
+      this.event, this.tableName, this._handleResponse, this._handleFault,
       [this.whereClause]);
+
+  void handleResponse(dynamic response) {
+    if ((T != Map) && (response is Map)) {
+      _handleResponse(reflector.deserialize<T>(response));
+    } else {
+      _handleResponse(response);
+    }
+  }
 
   void handleFault(String fault) {
     if (_handleFault != null) _handleFault(fault);

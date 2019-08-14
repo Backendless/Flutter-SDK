@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:backendless_sdk/backendless_sdk.dart';
 
-import 'package:reflectable/reflectable.dart';
+import 'test_table.dart';
+import 'main.reflectable.dart';
 
 void main() {
+  initializeReflectable();
   runApp(MyApp());
 }
 
@@ -26,12 +28,11 @@ class _MyAppState extends State<MyApp> {
   }
 
   void buttonPressed() {
+    EventHandler<TestTable> eventHandler = Backendless.data.ofClass<TestTable>().rt();
+    eventHandler.addCreateListener((testTable) => print("CLASS RESULT: $testTable"), onError: (error) => print("CLASS ERROR: $error"));
 
-  }
-
-  void dd<T>(T type) {
-    print(T);
-
+    EventHandler<Map> mapEventHandler = Backendless.data.of("TestTable").rt();
+    mapEventHandler.addCreateListener((testTable) => print("MAP RESULT: $testTable"), onError: (error) => print("MAP ERROR: $error"));
   }
 
   void showResult(dynamic result) {
