@@ -91,22 +91,41 @@ public class BackendlessCallHandler implements MethodChannel.MethodCallHandler {
     }
 
     private void setHeader(MethodCall call, MethodChannel.Result result) {
-        Integer headersEnumIndex = call.argument("headersEnum");
+        Integer enumKeyIndex = call.argument("enumKey");
+        String stringKey = call.argument("stringKey");
         String value = call.argument("value");
-        if (headersEnumIndex == null || value == null) {
+        if ((enumKeyIndex == null && stringKey == null) || value == null) {
             result.error("Invalid argument", "Key and value cannot be null", null);
             return;
         }
 
-        HeadersEnum headersEnum = HeadersEnum.values()[headersEnumIndex];
-        HeadersManager.getInstance().addHeader(headersEnum, value);
-        result.success(null);
+        if (stringKey != null) {
+            Map<String, String> headers = new HashMap<>();
+            headers.put(stringKey, value);
+            HeadersManager.getInstance().setHeaders(headers);
+            result.success(null);
+        } else if (enumKeyIndex != null) {
+            HeadersEnum headersEnum = HeadersEnum.values()[enumKeyIndex];
+            HeadersManager.getInstance().addHeader(headersEnum, value);
+            result.success(null);
+        } else {
+            result.error("Invalid argument", "Key cannot be null", null);
+        }
     }
 
     private void removeHeader(MethodCall call, MethodChannel.Result result) {
-        Integer headersEnumIndex = call.argument("headersEnum");
-        HeadersEnum headersEnum = HeadersEnum.values()[headersEnumIndex];
-        HeadersManager.getInstance().removeHeader(headersEnum);
-        result.success(null);
+        Integer enumKeyIndex = call.argument("enumKey");
+        String stringKey = call.argument("stringKey");
+
+        if (stringKey != null) {
+            result.notImplemented();
+        } else if (enumKeyIndex != null) {
+            HeadersEnum headersEnum = HeadersEnum.values()[enumKeyIndex];
+            HeadersManager.getInstance().removeHeader(headersEnum);
+            result.success(null);
+        } else {
+            result.error("Invalid argument", "Key cannot be null", null);
+
+        }
     }
 }

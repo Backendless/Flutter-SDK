@@ -24,10 +24,10 @@ class _MyAppState extends State<MyApp> {
   void buttonPressed() {
     Backendless.getHeaders().then((headers) {
       print(headers);
-      Backendless.setHeader(HeadersEnum.API_VERSION, "mavalue").then((onValue) {
+      Backendless.setHeader("mavalue", stringKey: "api-version").then((onValue) {
         Backendless.getHeaders().then((headers) {
           print(headers);
-          Backendless.removeHeader(HeadersEnum.APP_TYPE_NAME).then((onValue) {
+          Backendless.removeHeader(enumKey: HeadersEnum.API_VERSION).then((onValue) {
             Backendless.getHeaders().then((headers) {
               print(headers);
             });
