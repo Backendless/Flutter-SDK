@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:backendless_sdk/backendless_sdk.dart';
 
-import 'main.reflectable.dart';
-import 'car.dart'; 
-import 'bus.dart';
-
 import 'package:reflectable/reflectable.dart';
 
 void main() {
-  initializeReflectable();
   runApp(MyApp());
 }
 
@@ -31,29 +26,6 @@ class _MyAppState extends State<MyApp> {
   }
 
   void buttonPressed() {
-    Bus bus = Bus()
-      ..s = "some string"
-      ..i = 1337
-      ..dateTime = DateTime.now();
-
-    Car car = Car()
-      ..brand = "Tesla"
-      ..model = "X"
-      ..price = 100000.99
-      ..year = DateTime.now()
-      ..isUsed = false
-      ..bus = [bus];
-
-
-
-
-
-    // Backendless.data.ofClass<Bus>().save(bus).then((savedBus) => print(savedBus));
-    Backendless.data.ofClass<Car>().findLast().then((foundCar) => print(foundCar));
-    // Backendless.data.ofClass<Car>().save(car).then((savedCar) => print(savedCar));
-    // print(reflector.annotatedClasses.first.reflectedType);
-    // print(reflector.annotatedClasses.first.dynamicReflectedType);
-
 
   }
 

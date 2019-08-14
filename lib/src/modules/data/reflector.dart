@@ -24,6 +24,9 @@ class Reflector extends Reflectable {
   T deserialize<T>(Map map) => _deserialize(map, reflectType(T));
 
   Object _deserialize(Map map, ClassMirror classMirror) {
+    if (map == null || classMirror == null)
+      return null;
+      
     var object = classMirror.newInstance("", []);
     var declarations = classMirror.declarations;
 
