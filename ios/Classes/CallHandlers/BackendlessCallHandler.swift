@@ -33,6 +33,8 @@ class BackendlessCallHandler: FlutterCallHandlerProtocol {
         static let url = "url"
         static let key = "key"
         static let value = "value"
+        static let stringKey = "stringKey"
+        static let enumKey = "enumKey"
     }
     
     // MARK: - 
@@ -138,29 +140,50 @@ class BackendlessCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Set Header
     private func setHeader(_ arguments: [String: Any], _ result: FlutterResult) {
-        guard
-            let key: String = arguments[Args.key].flatMap(cast),
-            let value: String = arguments[Args.value].flatMap(cast)
-        else {
+        
+        guard let value: String = arguments[Args.value].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             
             return
         }
         
-        backendless.setHeader(key: key, value: value)
+        let stringKey: String? = arguments[Args.stringKey].flatMap(cast)
+        let enumKey: HeadersEnum? = arguments[Args.enumKey]
+            .flatMap(cast)
+            .flatMap { HeadersEnum(index: $0) }
+        
+        
+        if let stringKey = stringKey {
+            backendless.setHeader(key: stringKey, value: value)
+        } else if let enumKey = enumKey {
+            backendless.setHeader(key: enumKey.rawValue, value: value)
+        } else {
+            result(FlutterError.noRequiredArguments)
+            
+            return
+        }
+        
         result(nil)
     }
     
     // MARK: -
     // MARK: - Remove Header
     private func removeHeader(_ arguments: [String: Any], _ result: FlutterResult) {
-        guard let key: String = arguments[Args.key].flatMap(cast) else {
+        let stringKey: String? = arguments[Args.stringKey].flatMap(cast)
+        let enumKey: HeadersEnum? = arguments[Args.enumKey]
+            .flatMap(cast)
+            .flatMap { HeadersEnum(index: $0) }
+        
+        if let stringKey = stringKey {
+            backendless.removeHeader(key: stringKey)
+        } else if let enumKey = enumKey {
+            backendless.removeHeader(key: enumKey.rawValue)
+        } else {
             result(FlutterError.noRequiredArguments)
             
             return
         }
         
-        backendless.removeHeader(key: key)
         result(nil)
     }
 }

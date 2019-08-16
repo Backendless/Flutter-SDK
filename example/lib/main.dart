@@ -16,25 +16,44 @@ class _MyAppState extends State<MyApp> {
     super.initState();
 
     Backendless.initApp(
-        "4C50E3CB-D44F-2019-FF4D-ECE3F1E06B00",
-        "FD99AED3-300E-8BAC-FF42-6DCBE4084F00",
-        "2809016A-662D-7133-FFC0-08EC52CA6800");
+        "1E0573AC-46CC-7244-FFAB-A55AD3D05B00",
+        "8A61E955-D8D6-CBF3-FFF8-FE53DEE02800",
+        "6CBB8265-045A-C493-FF70-FD0908D51200");
   }
 
   void buttonPressed() {
-    Backendless.getHeaders().then((headers) {
-      print(headers);
-      Backendless.setHeader("mavalue", stringKey: "api-version").then((onValue) {
-        Backendless.getHeaders().then((headers) {
-          print(headers);
-          Backendless.removeHeader(enumKey: HeadersEnum.API_VERSION).then((onValue) {
-            Backendless.getHeaders().then((headers) {
-              print(headers);
-            });
+    Backendless.getHeaders()
+      .then( (aH) {
+        print(aH);
+        Backendless.setHeader("first", stringKey: "first")  
+          .then( (_) {
+            Backendless.getHeaders()
+              .then( (bH) {
+                print(bH);
+                Backendless.setHeader("second", enumKey: HeadersEnum.UI_STATE)
+                  .then( (_) {
+                    Backendless.getHeaders()
+                      .then( (cH) {
+                        print(cH);
+                        Backendless.removeHeader(stringKey: "first")
+                          .then( (_) {
+                            Backendless.getHeaders()
+                              .then( (dH) {
+                                print(dH);
+                                Backendless.removeHeader(enumKey: HeadersEnum.UI_STATE)
+                                  .then( (_) {
+                                    Backendless.getHeaders()
+                                      .then( (eH) {
+                                        print(eH);
+                                      });
+                                  });
+                              });
+                          });
+                      });
+                  });
+              });
           });
-        });
       });
-    });
   }
 
   void showResult(dynamic result) {
