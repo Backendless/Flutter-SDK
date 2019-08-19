@@ -47,4 +47,5 @@ part 'src/modules/user_service/user.dart';
 part 'src/modules/user_service/user_property.dart';
 part 'src/utils/message_codec.dart';
 part 'src/utils/query_builder.dart';
+part 'src/utils/headers.dart';
 part 'src/backendless.dart';

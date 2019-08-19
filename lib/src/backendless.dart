@@ -39,4 +39,24 @@ class Backendless {
 
   static Future<void> setUrl(String url) => _channel
       .invokeMethod("Backendless.setUrl", <String, dynamic>{"url": url});
+
+  static Future<Map<String, String>> getHeaders() async => 
+      (await _channel.invokeMethod("Backendless.getHeaders")).cast<String, String>();
+
+  static Future<void> setHeader(String value, {String stringKey, HeadersEnum enumKey}) {
+    checkArguments({"stringKey": stringKey}, {"enumKey": enumKey});
+    return  _channel.invokeMethod("Backendless.setHeader", <String, dynamic> {
+        "value": value,
+        "stringKey": stringKey,
+        "enumKey": enumKey?.index, 
+      });
+  }
+
+  static Future<void> removeHeader({String stringKey, HeadersEnum enumKey}) {
+    checkArguments({"stringKey": stringKey}, {"enumKey": enumKey});
+    return _channel.invokeMethod("Backendless.removeHeader", <String, dynamic> {
+        "stringKey": stringKey,
+        "enumKey": enumKey?.index,
+      });
+  }
 }

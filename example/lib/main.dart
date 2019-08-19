@@ -16,7 +16,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   String _result = 'Result';
-  
+
   @override
   void initState() {
     super.initState();
@@ -28,6 +28,12 @@ class _MyAppState extends State<MyApp> {
   }
 
   void buttonPressed() {
+    // save the object to the database
+    Backendless.data
+        .of("TestTable")
+        .save({"foo": "bar"}).then((onValue) => showResult(onValue));
+
+    // add real-time listener to "TestTable" table
     EventHandler<TestTable> eventHandler = Backendless.data.ofClass<TestTable>().rt();
     eventHandler.addCreateListener((testTable) => print("CLASS RESULT: $testTable"), onError: (error) => print("CLASS ERROR: $error"));
 

@@ -26,6 +26,8 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
         static let resendEmailConfirmation = "Backendless.UserService.resendEmailConfirmation"
         static let restorePassword = "Backendless.UserService.restorePassword"
         static let update = "Backendless.UserService.update"
+        static let setUserToken = "Backendless.UserService.setUserToken"
+        static let getUserToken = "Backendless.UserService.getUserToken"
     }
     
     private enum Args {
@@ -36,6 +38,7 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
         static let stayLoggedIn = "stayLoggedIn"
         static let user = "user"
         static let email = "email"
+        static let userToken = "userToken"
     }
     
     // MARK: -
@@ -72,6 +75,10 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
             restorePassword(arguments, result)
         case Methods.update:
             update(arguments, result)
+        case Methods.setUserToken:
+            setUserToken(arguments, result)
+        case Methods.getUserToken:
+            getUserToken(arguments, result)
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -255,5 +262,26 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
             errorHandler: {
                 result(FlutterError($0))
             })
+    }
+    
+    // MARK: -
+    // MARK: - Set User Token
+    private func setUserToken(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
+        guard let userToken: String = arguments[Args.userToken].flatMap(cast) else {
+            result(FlutterError.noRequiredArguments)
+            
+            return
+        }
+        
+        userService.setUserToken(value: userToken)
+        result(nil)
+    }
+    
+    // MARK: -
+    // MARK: - Get User Token
+    private func getUserToken(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
+        let userToken = userService.getUserToken()
+        
+        result(userToken)
     }
 }
