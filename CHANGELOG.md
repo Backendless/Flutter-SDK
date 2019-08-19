@@ -1,3 +1,9 @@
+## 0.2.0
+
+* Add support for custom classes. To start working with custom classes, use the following method: `Backendless.data.withClass<TestTable>()`.
+* Add methods `Backendless.getHeaders`, `Backendless.setHeader`, `Backendless.removeHeader`, and also `Backendless.userService.getUserToken`, `Backendless.UserService.setUserToken`.
+* Fixes and optimizations.
+
 ## 0.1.1
 
 * Remove redundant methods.
