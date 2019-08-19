@@ -209,7 +209,7 @@ class ClassDrivenDataStore<T> implements IDataStore<T> {
   }
 
   Future<List<String>> create(List<T> objects) async {
-    List<Map<String, dynamic>> mapObjects = objects.map((object) => reflector.serialize(object));
+    List<Map<String, dynamic>> mapObjects = objects.map((object) => reflector.serialize(object)).toList();
     return (await _channel.invokeMethod("Backendless.Data.of.create",
               <String, dynamic>{'tableName': _tableName, 'objects': mapObjects}))
           .cast<String>();

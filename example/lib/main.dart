@@ -34,7 +34,7 @@ class _MyAppState extends State<MyApp> {
         .save({"foo": "bar"}).then((onValue) => showResult(onValue));
 
     // add real-time listener to "TestTable" table
-    EventHandler<TestTable> eventHandler = Backendless.data.ofClass<TestTable>().rt();
+    EventHandler<TestTable> eventHandler = Backendless.data.withClass<TestTable>().rt();
     eventHandler.addCreateListener((testTable) => print("CLASS RESULT: $testTable"), onError: (error) => print("CLASS ERROR: $error"));
 
     EventHandler<Map> mapEventHandler = Backendless.data.of("TestTable").rt();
