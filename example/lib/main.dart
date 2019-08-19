@@ -34,11 +34,16 @@ class _MyAppState extends State<MyApp> {
         .save({"foo": "bar"}).then((onValue) => showResult(onValue));
 
     // add real-time listener to "TestTable" table
-    EventHandler<TestTable> eventHandler = Backendless.data.withClass<TestTable>().rt();
-    eventHandler.addCreateListener((testTable) => print("CLASS RESULT: $testTable"), onError: (error) => print("CLASS ERROR: $error"));
+    EventHandler<TestTable> eventHandler =
+        Backendless.data.withClass<TestTable>().rt();
+    eventHandler.addCreateListener(
+        (testTable) => print("CLASS RESULT: $testTable"),
+        onError: (error) => print("CLASS ERROR: $error"));
 
     EventHandler<Map> mapEventHandler = Backendless.data.of("TestTable").rt();
-    mapEventHandler.addCreateListener((testTable) => print("MAP RESULT: $testTable"), onError: (error) => print("MAP ERROR: $error"));
+    mapEventHandler.addCreateListener(
+        (testTable) => print("MAP RESULT: $testTable"),
+        onError: (error) => print("MAP ERROR: $error"));
   }
 
   void showResult(dynamic result) {

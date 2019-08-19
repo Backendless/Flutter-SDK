@@ -209,10 +209,11 @@ class ClassDrivenDataStore<T> implements IDataStore<T> {
   }
 
   Future<List<String>> create(List<T> objects) async {
-    List<Map<String, dynamic>> mapObjects = objects.map((object) => reflector.serialize(object)).toList();
+    List<Map<String, dynamic>> mapObjects =
+        objects.map((object) => reflector.serialize(object)).toList();
     return (await _channel.invokeMethod("Backendless.Data.of.create",
-              <String, dynamic>{'tableName': _tableName, 'objects': mapObjects}))
-          .cast<String>();
+            <String, dynamic>{'tableName': _tableName, 'objects': mapObjects}))
+        .cast<String>();
   }
 
   Future<int> deleteRelation(T parent, String relationColumnName,
@@ -229,13 +230,14 @@ class ClassDrivenDataStore<T> implements IDataStore<T> {
   }
 
   Future<List<T>> find([DataQueryBuilder queryBuilder]) async {
-      List<Map> mapObjects = (await _channel.invokeMethod(
-              "Backendless.Data.of.find", <String, dynamic>{
-        'tableName': _tableName,
-        'queryBuilder': queryBuilder
-      })).cast<Map>();
+    List<Map> mapObjects = (await _channel.invokeMethod(
+            "Backendless.Data.of.find", <String, dynamic>{
+      'tableName': _tableName,
+      'queryBuilder': queryBuilder
+    }))
+        .cast<Map>();
 
-      return mapObjects.map((map) => reflector.deserialize<T>(map));
+    return mapObjects.map((map) => reflector.deserialize<T>(map));
   }
 
   Future<T> findById(String id,
@@ -304,8 +306,8 @@ class ClassDrivenDataStore<T> implements IDataStore<T> {
 
   Future<int> remove({T entity, String whereClause}) {
     checkArguments({"entity": entity}, {"whereClause": whereClause});
-    return _channel.invokeMethod(
-        "Backendless.Data.of.remove", <String, dynamic>{
+    return _channel
+        .invokeMethod("Backendless.Data.of.remove", <String, dynamic>{
       'tableName': _tableName,
       'entity': reflector.serialize(entity),
       'whereClause': whereClause
@@ -313,7 +315,8 @@ class ClassDrivenDataStore<T> implements IDataStore<T> {
   }
 
   Future<T> save(T entity) async {
-    Map mapObject = await _channel.invokeMethod("Backendless.Data.of.save", <String, dynamic>{
+    Map mapObject = await _channel.invokeMethod(
+        "Backendless.Data.of.save", <String, dynamic>{
       'tableName': _tableName,
       'entity': reflector.serialize(entity)
     });

@@ -24,9 +24,8 @@ class Reflector extends Reflectable {
   T deserialize<T>(Map map) => _deserialize(map, reflectType(T));
 
   Object _deserialize(Map map, ClassMirror classMirror) {
-    if (map == null || classMirror == null)
-      return null;
-      
+    if (map == null || classMirror == null) return null;
+
     var object = classMirror.newInstance("", []);
     var declarations = classMirror.declarations;
 
@@ -35,11 +34,13 @@ class Reflector extends Reflectable {
     map.forEach((name, value) {
       if (declarations.containsKey(name)) {
         if (value is Map) {
-          instanceMirror.invokeSetter(name, _deserialize(value, _getClassMirror(value)));
+          instanceMirror.invokeSetter(
+              name, _deserialize(value, _getClassMirror(value)));
         } else if (value is List) {
           if (value.isNotEmpty) {
             ClassMirror listItemClassMirror = _getClassMirror(value.first);
-            var deserializedList = List.from(value.map((listItem) => _deserialize(listItem, listItemClassMirror)));
+            var deserializedList = List.from(value.map(
+                (listItem) => _deserialize(listItem, listItemClassMirror)));
             instanceMirror.invokeSetter(name, deserializedList);
           } else {
             instanceMirror.invokeSetter(name, List());
@@ -55,8 +56,8 @@ class Reflector extends Reflectable {
 
   ClassMirror _getClassMirror(Map map) {
     if (map.containsKey("___class")) {
-      return annotatedClasses.firstWhere((annotatedClass) => 
-        annotatedClass.simpleName == map["___class"]);
+      return annotatedClasses.firstWhere(
+          (annotatedClass) => annotatedClass.simpleName == map["___class"]);
     }
     return null;
   }

@@ -56,7 +56,7 @@ class BackendlessUserService {
   Future<BackendlessUser> update(BackendlessUser user) => _channel.invokeMethod(
       "Backendless.UserService.update", <String, dynamic>{"user": user});
 
-  Future<String> getUserToken() => 
+  Future<String> getUserToken() =>
       _channel.invokeMethod("Backendless.UserService.getUserToken");
 
   Future<void> setUserToken(String userToken) => _channel.invokeMethod(
