@@ -18,7 +18,7 @@ Follow the steps below to get started with Backendless Flutter SDK:
 To use this plugin in your Flutter project, add `backendless_sdk` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/):
 ```dart
 dependencies:
-  backendless_sdk: ^0.1.0
+  backendless_sdk: ^0.2.0
 ```
 #### STEP 2. Import the Backendless SDK:
 Add the following import to your Dart code
@@ -56,5 +56,3 @@ testObject["foo"] = "bar";
 Backendless.data.of("TestTable").save(testObject).then(
   (response) => print("Object is saved in Backendless. Please check in the console."));
 ```
-## Known Issues
-- The plugin does not support custom classes for Backendless database integration

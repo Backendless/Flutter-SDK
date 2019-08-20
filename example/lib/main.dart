@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:backendless_sdk/backendless_sdk.dart';
 
-void main() => runApp(MyApp());
+import 'test_table.dart';
+import 'main.reflectable.dart';
+
+void main() {
+  initializeReflectable();
+  runApp(MyApp());
+}
 
 class MyApp extends StatefulWidget {
   @override
@@ -22,9 +28,22 @@ class _MyAppState extends State<MyApp> {
   }
 
   void buttonPressed() {
+    // save the object to the database
     Backendless.data
         .of("TestTable")
         .save({"foo": "bar"}).then((onValue) => showResult(onValue));
+
+    // add real-time listener to "TestTable" table
+    EventHandler<TestTable> eventHandler =
+        Backendless.data.withClass<TestTable>().rt();
+    eventHandler.addCreateListener(
+        (testTable) => print("CLASS RESULT: $testTable"),
+        onError: (error) => print("CLASS ERROR: $error"));
+
+    EventHandler<Map> mapEventHandler = Backendless.data.of("TestTable").rt();
+    mapEventHandler.addCreateListener(
+        (testTable) => print("MAP RESULT: $testTable"),
+        onError: (error) => print("MAP ERROR: $error"));
   }
 
   void showResult(dynamic result) {

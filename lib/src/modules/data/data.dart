@@ -30,7 +30,9 @@ class BackendlessData {
     });
   }
 
-  IDataStore<Map> of(String tableName) => new MapDataStore(tableName);
+  IDataStore<Map> of(String tableName) => new MapDrivenDataStore(tableName);
+
+  IDataStore<T> withClass<T>() => new ClassDrivenDataStore<T>();
 
   Future<Map> callStoredProcedure(
           String procedureName, Map<String, Object> arguments) =>

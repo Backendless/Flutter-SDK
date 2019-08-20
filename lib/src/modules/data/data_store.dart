@@ -25,25 +25,25 @@ abstract class IDataStore<E> {
   Future<List<R>> loadRelations<R>(
       String objectId, LoadRelationsQueryBuilder<R> queryBuilder);
 
-  Future<int> remove({Map entity, String whereClause});
+  Future<int> remove({E entity, String whereClause});
 
   Future<E> save(E entity);
 
   Future<int> setRelation(E parent, String relationColumnName,
-      {List children, String whereClause});
+      {List<String> children, String whereClause});
 
   Future<int> update(String whereClause, Map changes);
 
   EventHandler<E> rt();
 }
 
-class MapDataStore implements IDataStore<Map> {
+class MapDrivenDataStore implements IDataStore<Map> {
   static const MethodChannel _channel = const MethodChannel(
       'backendless/data', StandardMethodCodec(BackendlessMessageCodec()));
   String _tableName;
   EventHandler<Map> _eventHandler;
 
-  MapDataStore(String tableName) {
+  MapDrivenDataStore(String tableName) {
     _tableName = tableName;
     _eventHandler = new EventHandler<Map>(tableName);
   }
@@ -182,4 +182,166 @@ class MapDataStore implements IDataStore<Map> {
       });
 
   EventHandler<Map> rt() => _eventHandler;
+}
+
+class ClassDrivenDataStore<T> implements IDataStore<T> {
+  static const MethodChannel _channel = const MethodChannel(
+      'backendless/data', StandardMethodCodec(BackendlessMessageCodec()));
+  String _tableName;
+  EventHandler<T> _eventHandler;
+
+  ClassDrivenDataStore() {
+    _tableName = reflector.getSimpleName(T);
+    _eventHandler = new EventHandler<T>(_tableName);
+  }
+
+  Future<int> addRelation(T parent, String relationColumnName,
+      {List children, String whereClause}) {
+    checkArguments({"children": children}, {"whereClause": whereClause});
+    return _channel
+        .invokeMethod("Backendless.Data.of.addRelation", <String, dynamic>{
+      'tableName': _tableName,
+      'parent': reflector.serialize(parent),
+      'relationColumnName': relationColumnName,
+      'children': children,
+      'whereClause': whereClause
+    });
+  }
+
+  Future<List<String>> create(List<T> objects) async {
+    List<Map<String, dynamic>> mapObjects =
+        objects.map((object) => reflector.serialize(object)).toList();
+    return (await _channel.invokeMethod("Backendless.Data.of.create",
+            <String, dynamic>{'tableName': _tableName, 'objects': mapObjects}))
+        .cast<String>();
+  }
+
+  Future<int> deleteRelation(T parent, String relationColumnName,
+      {List children, String whereClause}) {
+    checkArguments({"children": children}, {"whereClause": whereClause});
+    return _channel
+        .invokeMethod("Backendless.Data.of.deleteRelation", <String, dynamic>{
+      'tableName': _tableName,
+      'parent': reflector.serialize(parent),
+      'relationColumnName': relationColumnName,
+      'children': children,
+      'whereClause': whereClause
+    });
+  }
+
+  Future<List<T>> find([DataQueryBuilder queryBuilder]) async {
+    List<Map> mapObjects = (await _channel.invokeMethod(
+            "Backendless.Data.of.find", <String, dynamic>{
+      'tableName': _tableName,
+      'queryBuilder': queryBuilder
+    }))
+        .cast<Map>();
+
+    return mapObjects.map((map) => reflector.deserialize<T>(map));
+  }
+
+  Future<T> findById(String id,
+      {List<String> relations,
+      int relationsDepth,
+      DataQueryBuilder queryBuilder}) async {
+    checkArguments({
+      "relations": relations,
+      "relationsDepth": relationsDepth
+    }, {
+      "queryBuilder": queryBuilder
+    }, isRequired: false);
+    Map mapObject = await _channel
+        .invokeMethod("Backendless.Data.of.findById", <String, dynamic>{
+      'tableName': _tableName,
+      'id': id,
+      'relations': relations,
+      'relationsDepth': relationsDepth,
+      'queryBuilder': queryBuilder
+    });
+
+    return reflector.deserialize<T>(mapObject);
+  }
+
+  Future<T> findFirst({List<String> relations, int relationsDepth}) async {
+    checkArguments({"relations": relations}, {"relationsDepth": relationsDepth},
+        isRequired: false);
+    Map mapObject = await _channel
+        .invokeMethod("Backendless.Data.of.findFirst", <String, dynamic>{
+      'tableName': _tableName,
+      'relations': relations,
+      'relationsDepth': relationsDepth,
+    });
+
+    return reflector.deserialize<T>(mapObject);
+  }
+
+  Future<T> findLast({List<String> relations, int relationsDepth}) async {
+    checkArguments({"relations": relations}, {"relationsDepth": relationsDepth},
+        isRequired: false);
+    Map mapObject = await _channel
+        .invokeMethod("Backendless.Data.of.findLast", <String, dynamic>{
+      'tableName': _tableName,
+      'relations': relations,
+      'relationsDepth': relationsDepth,
+    });
+
+    return reflector.deserialize<T>(mapObject);
+  }
+
+  Future<int> getObjectCount([DataQueryBuilder queryBuilder]) => _channel
+          .invokeMethod("Backendless.Data.of.getObjectCount", <String, dynamic>{
+        'tableName': _tableName,
+        'queryBuilder': queryBuilder
+      });
+
+  Future<List<R>> loadRelations<R>(
+          String objectId, LoadRelationsQueryBuilder<R> queryBuilder) async =>
+      (await _channel.invokeMethod(
+              "Backendless.Data.of.loadRelations", <String, dynamic>{
+        'tableName': _tableName,
+        'objectId': objectId,
+        'queryBuilder': queryBuilder,
+      }))
+          .cast<R>();
+
+  Future<int> remove({T entity, String whereClause}) {
+    checkArguments({"entity": entity}, {"whereClause": whereClause});
+    return _channel
+        .invokeMethod("Backendless.Data.of.remove", <String, dynamic>{
+      'tableName': _tableName,
+      'entity': reflector.serialize(entity),
+      'whereClause': whereClause
+    });
+  }
+
+  Future<T> save(T entity) async {
+    Map mapObject = await _channel.invokeMethod(
+        "Backendless.Data.of.save", <String, dynamic>{
+      'tableName': _tableName,
+      'entity': reflector.serialize(entity)
+    });
+    return reflector.deserialize<T>(mapObject);
+  }
+
+  Future<int> setRelation(T parent, String relationColumnName,
+      {List children, String whereClause}) {
+    checkArguments({"children": children}, {"whereClause": whereClause});
+    return _channel
+        .invokeMethod("Backendless.Data.of.setRelation", <String, dynamic>{
+      'tableName': _tableName,
+      'parent': reflector.serialize(parent),
+      'relationColumnName': relationColumnName,
+      'children': children,
+      'whereClause': whereClause
+    });
+  }
+
+  Future<int> update(String whereClause, Map changes) =>
+      _channel.invokeMethod("Backendless.Data.of.update", <String, dynamic>{
+        'tableName': _tableName,
+        'whereClause': whereClause,
+        'changes': changes
+      });
+
+  EventHandler<T> rt() => _eventHandler;
 }
