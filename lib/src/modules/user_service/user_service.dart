@@ -62,4 +62,27 @@ class BackendlessUserService {
   Future<void> setUserToken(String userToken) => _channel.invokeMethod(
       "Backendless.UserService.setUserToken",
       <String, dynamic>{"userToken": userToken});
+
+  Future<BackendlessUser> loginWithFacebook(String accessToken,
+          Map<String, String> fieldsMapping) =>
+      _channel.invokeMethod(
+        "Backendless.UserService.loginWithFacebook",
+        <String, dynamic>{"accessToken": accessToken, "fieldsMapping": fieldsMapping}
+      );
+
+  Future<BackendlessUser> loginWithTwitter(String authToken, String authTokenSecret,
+          Map<String, String> fieldsMapping) =>
+      _channel.invokeMethod(
+        "Backendless.UserService.loginWithFacebook",
+        <String, dynamic>{"authToken": authToken, "authTokenSecret": authTokenSecret,
+        "fieldsMapping": fieldsMapping}
+      );
+
+  Future<BackendlessUser> loginWithGoogle(String accessToken,
+          Map<String, String> fieldsMapping) =>
+      _channel.invokeMethod(
+        "Backendless.UserService.loginWithFacebook",
+        <String, dynamic>{"accessToken": accessToken, "fieldsMapping": fieldsMapping}
+      );
+          
 }
