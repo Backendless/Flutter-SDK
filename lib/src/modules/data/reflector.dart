@@ -4,6 +4,8 @@ class Reflector extends Reflectable {
   const Reflector() : super(declarationsCapability, invokingCapability);
 
   Map<String, dynamic> serialize<T>(T object) {
+    if (object == null) return null;
+    
     Map<String, dynamic> result = Map();
 
     ClassMirror classMirror = reflectType(T);
