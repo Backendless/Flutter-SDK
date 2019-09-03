@@ -28,6 +28,9 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
         static let update = "Backendless.UserService.update"
         static let setUserToken = "Backendless.UserService.setUserToken"
         static let getUserToken = "Backendless.UserService.getUserToken"
+        static let loginWithFacebook = "Backendless.UserService.loginWithFacebook"
+        static let loginWithTwitter = "Backendless.UserService.loginWithTwitter"
+        static let loginWithGoogle = "Backendless.UserService.loginWithGoogle"
     }
     
     private enum Args {
@@ -39,6 +42,10 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
         static let user = "user"
         static let email = "email"
         static let userToken = "userToken"
+        static let accessToken = "accessToken"
+        static let fieldsMapping = "fieldsMapping"
+        static let authToken = "authToken"
+        static let authTokenSecret = "authTokenSecret"
     }
     
     // MARK: -
@@ -79,6 +86,12 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
             setUserToken(arguments, result)
         case Methods.getUserToken:
             getUserToken(arguments, result)
+        case Methods.loginWithFacebook:
+            loginWithFacebook(arguments, result)
+        case Methods.loginWithTwitter:
+            loginWithTwitter(arguments, result)
+        case Methods.loginWithGoogle:
+            loginWithGoogle(arguments, result)
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -171,9 +184,8 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
             return
         }
         
-        arguments[Args.stayLoggedIn]
-            .flatMap(cast)
-            .map { userService.stayLoggedIn = $0 }
+        let stayLoggedIn = arguments[Args.stayLoggedIn].flatMap(cast) ?? false
+        userService.stayLoggedIn = stayLoggedIn
         
         userService.login(identity: login, password: password,
             responseHandler: {
@@ -283,5 +295,79 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
         let userToken = userService.getUserToken()
         
         result(userToken)
+    }
+    
+    // MARK: -
+    // MARK: - Login With Facebook
+    private func loginWithFacebook(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
+        
+        guard let accessToken: String = arguments[Args.accessToken].flatMap(cast) else {
+            result(FlutterError.noRequiredArguments)
+            
+            return
+        }
+        
+        let fieldsMapping: [String: String] = arguments[Args.fieldsMapping].flatMap(cast) ?? [:]
+        let stayLoggedIn = arguments[Args.stayLoggedIn].flatMap(cast) ?? false
+        
+        userService.stayLoggedIn = stayLoggedIn
+        
+        userService.logingWithFacebook(accessToken: accessToken, fieldsMapping: fieldsMapping,
+            responseHandler: {
+                result($0)
+            },
+            errorHandler: {
+                result(FlutterError($0))
+            })
+    }
+    
+    // MARK: -
+    // MARK: - Login With Twitter
+    private func loginWithTwitter(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
+        guard
+            let authToken: String = arguments[Args.authToken].flatMap(cast),
+            let authTokenSecret: String = arguments[Args.authTokenSecret].flatMap(cast)
+        else {
+            result(FlutterError.noRequiredArguments)
+            
+            return
+        }
+        
+        let fieldsMapping: [String: String] = arguments[Args.fieldsMapping].flatMap(cast) ?? [:]
+        let stayLoggedIn = arguments[Args.stayLoggedIn].flatMap(cast) ?? false
+        
+        userService.stayLoggedIn = stayLoggedIn
+        
+        userService.loginWithTwitter(authToken: authToken, authTokenSecret: authTokenSecret, fieldsMapping: fieldsMapping,
+            responseHandler: {
+                result($0)
+            },
+            errorHandler: {
+                result(FlutterError($0))
+            })
+    }
+    
+    // MARK: -
+    // MARK: - Login With Google
+    private func loginWithGoogle(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
+        
+        guard let accessToken: String = arguments[Args.accessToken].flatMap(cast) else {
+            result(FlutterError.noRequiredArguments)
+            
+            return
+        }
+        
+        let fieldsMapping: [String: String] = arguments[Args.fieldsMapping].flatMap(cast) ?? [:]
+        let stayLoggedIn = arguments[Args.stayLoggedIn].flatMap(cast) ?? false
+        
+        userService.stayLoggedIn = stayLoggedIn
+        
+        userService.loginWithGoogle(accessToken: accessToken, fieldsMapping: fieldsMapping,
+            responseHandler: {
+                result($0)
+            },
+            errorHandler: {
+                result(FlutterError($0))
+            })
     }
 }

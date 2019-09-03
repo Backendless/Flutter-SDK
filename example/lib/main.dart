@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:backendless_sdk/backendless_sdk.dart';
 
-import 'test_table.dart';
-import 'main.reflectable.dart';
-
 void main() {
-  initializeReflectable();
   runApp(MyApp());
 }
 
@@ -22,28 +18,21 @@ class _MyAppState extends State<MyApp> {
     super.initState();
 
     Backendless.initApp(
-        "4C50E3CB-D44F-2019-FF4D-ECE3F1E06B00",
-        "FD99AED3-300E-8BAC-FF42-6DCBE4084F00",
-        "2809016A-662D-7133-FFC0-08EC52CA6800");
+        "1E0573AC-46CC-7244-FFAB-A55AD3D05B00",
+        "8A61E955-D8D6-CBF3-FFF8-FE53DEE02800",
+        "6CBB8265-045A-C493-FF70-FD0908D51200");
   }
 
   void buttonPressed() {
-    // save the object to the database
-    Backendless.data
-        .of("TestTable")
-        .save({"foo": "bar"}).then((onValue) => showResult(onValue));
+    Backendless.userService.login("email2@email.com", "password", true)
+      .then( (beUser) {
+        print(beUser.properties);
 
-    // add real-time listener to "TestTable" table
-    EventHandler<TestTable> eventHandler =
-        Backendless.data.withClass<TestTable>().rt();
-    eventHandler.addCreateListener(
-        (testTable) => print("CLASS RESULT: $testTable"),
-        onError: (error) => print("CLASS ERROR: $error"));
-
-    EventHandler<Map> mapEventHandler = Backendless.data.of("TestTable").rt();
-    mapEventHandler.addCreateListener(
-        (testTable) => print("MAP RESULT: $testTable"),
-        onError: (error) => print("MAP ERROR: $error"));
+        Backendless.userService.logout()
+          .then( (_) {
+            print("~~~> Did logout");
+          });
+      });
   }
 
   void showResult(dynamic result) {
