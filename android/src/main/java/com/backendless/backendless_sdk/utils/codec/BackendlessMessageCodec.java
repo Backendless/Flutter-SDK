@@ -6,6 +6,7 @@ import com.backendless.backendless_sdk.utils.codec.mixins.CommandMixin;
 import com.backendless.backendless_sdk.utils.codec.mixins.DataQueryBuilderMixin;
 import com.backendless.backendless_sdk.utils.codec.mixins.GeoPointMixin;
 import com.backendless.backendless_sdk.utils.codec.mixins.LoadRelationsQueryBuilderMixin;
+import com.backendless.backendless_sdk.utils.codec.mixins.ObjectPropertyMixin;
 import com.backendless.backendless_sdk.utils.codec.mixins.ReconnectAttemptMixin;
 import com.backendless.commerce.GooglePlayPurchaseStatus;
 import com.backendless.commerce.GooglePlaySubscriptionStatus;
@@ -100,7 +101,7 @@ public final class BackendlessMessageCodec extends StandardMessageCodec {
             writeValue(stream, objectMapper.convertValue(value, Map.class));
         } else if (value instanceof ObjectProperty) {
             stream.write(OBJECT_PROPERTY);
-            writeValue(stream, objectMapper.convertValue(value, Map.class));
+            writeValue(stream, objectMapper.convertValue(new ObjectPropertyMixin(value), Map.class));
         } else if (value instanceof GooglePlaySubscriptionStatus) {
             stream.write(GOOGLE_PLAY_SUBSCRIPTION_STATUS);
             writeValue(stream, objectMapper.convertValue(value, Map.class));

@@ -29,6 +29,9 @@ class ObjectProperty extends AbstractProperty {
         'required': this.required,
         'type': type?.index,
       };
+  
+  @override
+  String toString() => "ObjectProperty{name='$name', required=${this.required}, type=$type, relatedTable='$relatedTable', defaultValue=$defaultValue}";
 }
 
 enum DateTypeEnum {
