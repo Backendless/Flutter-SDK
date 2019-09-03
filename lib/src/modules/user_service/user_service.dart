@@ -64,25 +64,25 @@ class BackendlessUserService {
       <String, dynamic>{"userToken": userToken});
 
   Future<BackendlessUser> loginWithFacebook(String accessToken,
-          Map<String, String> fieldsMapping) =>
+          {Map<String, String> fieldsMapping, bool stayLoggedIn}) =>
       _channel.invokeMethod(
         "Backendless.UserService.loginWithFacebook",
-        <String, dynamic>{"accessToken": accessToken, "fieldsMapping": fieldsMapping}
+        <String, dynamic>{"accessToken": accessToken, "fieldsMapping": fieldsMapping, "stayLoggedIn": stayLoggedIn}
       );
 
   Future<BackendlessUser> loginWithTwitter(String authToken, String authTokenSecret,
-          Map<String, String> fieldsMapping) =>
+          {Map<String, String> fieldsMapping, bool stayLoggedIn}) =>
       _channel.invokeMethod(
         "Backendless.UserService.loginWithTwitter",
         <String, dynamic>{"authToken": authToken, "authTokenSecret": authTokenSecret,
-        "fieldsMapping": fieldsMapping}
+        "fieldsMapping": fieldsMapping, "stayLoggedIn": stayLoggedIn}
       );
 
   Future<BackendlessUser> loginWithGoogle(String accessToken,
-          Map<String, String> fieldsMapping) =>
+          {Map<String, String> fieldsMapping, bool stayLoggedIn}) =>
       _channel.invokeMethod(
         "Backendless.UserService.loginWithGoogle",
-        <String, dynamic>{"accessToken": accessToken, "fieldsMapping": fieldsMapping}
+        <String, dynamic>{"accessToken": accessToken, "fieldsMapping": fieldsMapping, "stayLoggedIn": stayLoggedIn}
       );
           
 }
