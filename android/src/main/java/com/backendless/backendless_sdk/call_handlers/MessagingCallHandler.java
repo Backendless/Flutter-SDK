@@ -160,6 +160,8 @@ public class MessagingCallHandler implements MethodChannel.MethodCallHandler {
                 } else {
                     Backendless.Messaging.publish(channelName, message, publishOptions, callback);
                 }
+            } else if (deliveryOptions != null) {
+                Backendless.Messaging.publish(channelName, message, null, deliveryOptions, callback);
             } else {
                 Backendless.Messaging.publish(channelName, message, callback);
             }
@@ -170,6 +172,8 @@ public class MessagingCallHandler implements MethodChannel.MethodCallHandler {
                 } else {
                     Backendless.Messaging.publish(message, publishOptions, callback);
                 }
+            } else if (deliveryOptions != null) {
+                Backendless.Messaging.publish(message, null, deliveryOptions, callback);
             } else {
                 Backendless.Messaging.publish(message, callback);
             }

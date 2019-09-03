@@ -74,18 +74,13 @@ class BackendlessMessaging {
   Future<MessageStatus> publish(Object message,
       {String channelName,
       PublishOptions publishOptions,
-      DeliveryOptions deliveryOptions}) {
-    if (deliveryOptions != null && publishOptions == null)
-      throw new ArgumentError(
-          "Argument 'deliveryOptions' should be defined with argument 'publishOptions'");
-    return _channel
+      DeliveryOptions deliveryOptions}) => _channel
         .invokeMethod("Backendless.Messaging.publish", <String, dynamic>{
       "message": message,
       "channelName": channelName,
       "publishOptions": publishOptions,
       "deliveryOptions": deliveryOptions
     });
-  }
 
   Future<MessageStatus> pushWithTemplate(String templateName) =>
       _channel.invokeMethod("Backendless.Messaging.pushWithTemplate",
