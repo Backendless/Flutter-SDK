@@ -64,7 +64,14 @@ class Reflector extends Reflectable {
     return null;
   }
 
-  String getSimpleName(Type type) => reflectType(type).simpleName;
+  String getSimpleName(Type type) {
+    String serverClassName = reflectType(type).simpleName;
+    if (Types.serverMappings.containsKey(serverClassName)) {
+      return Types.getMappedClientClass(serverClassName);
+    } else {
+      return serverClassName;
+    }
+  }
 }
 
 const reflector = const Reflector();

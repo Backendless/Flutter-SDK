@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:backendless_sdk/backendless_sdk.dart';
 
+import 'test_table.dart';
+import 'main.reflectable.dart';
+
 void main() {
+  initializeReflectable();
   runApp(MyApp());
 }
 
@@ -18,21 +22,15 @@ class _MyAppState extends State<MyApp> {
     super.initState();
 
     Backendless.initApp(
-        "1E0573AC-46CC-7244-FFAB-A55AD3D05B00",
-        "8A61E955-D8D6-CBF3-FFF8-FE53DEE02800",
-        "6CBB8265-045A-C493-FF70-FD0908D51200");
+        "4C50E3CB-D44F-2019-FF4D-ECE3F1E06B00",
+        "FD99AED3-300E-8BAC-FF42-6DCBE4084F00",
+        "2809016A-662D-7133-FFC0-08EC52CA6800");
   }
 
   void buttonPressed() {
-    Backendless.userService.login("email2@email.com", "password", true)
-      .then( (beUser) {
-        print(beUser.properties);
+    Backendless.data.mapTableToClass("MyCustomAwesomeName", TestTable);
 
-        Backendless.userService.logout()
-          .then( (_) {
-            print("~~~> Did logout");
-          });
-      });
+    Backendless.data.withClass<TestTable>().save(TestTable()..foo = "baaar");
   }
 
   void showResult(dynamic result) {
