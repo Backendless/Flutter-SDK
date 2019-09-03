@@ -77,5 +77,13 @@ class BackendlessData {
   void mapTableToClass(String tableName, Type type) =>
       throw new UnimplementedError();
 
-  Future<E> save<E>(E entity) => throw new UnimplementedError();
+  Future<E> save<E>(E entity) async {
+    String tableName = reflector.getSimpleName(E);
+    Map mapObject = await _channel.invokeMethod(
+        "Backendless.Data.of.save", <String, dynamic>{
+      'tableName': tableName,
+      'entity': reflector.serialize(entity)
+    });
+    return reflector.deserialize<E>(mapObject);
+  }
 }
