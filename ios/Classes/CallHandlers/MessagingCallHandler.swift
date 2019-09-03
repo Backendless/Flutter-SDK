@@ -231,15 +231,13 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Publish
     private func publish(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        guard
-            let channelName: String = arguments[Args.channelName].flatMap(cast),
-            let message = arguments[Args.message]
-        else {
+        guard let message = arguments[Args.message] else {
             result(FlutterError.noRequiredArguments)
             
             return
         }
         
+        let channelName: String = arguments[Args.channelName].flatMap(cast) ?? "default"
         let publishOptions: PublishOptions? = arguments[Args.publishOptions].flatMap(cast)
         let deliveryOptions: DeliveryOptions? = arguments[Args.deliveryOptions].flatMap(cast)
         
