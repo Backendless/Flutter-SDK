@@ -184,9 +184,8 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
             return
         }
         
-        arguments[Args.stayLoggedIn]
-            .flatMap(cast)
-            .map { userService.stayLoggedIn = $0 }
+        let stayLoggedIn = arguments[Args.stayLoggedIn].flatMap(cast) ?? false
+        userService.stayLoggedIn = stayLoggedIn
         
         userService.login(identity: login, password: password,
             responseHandler: {
@@ -302,14 +301,16 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
     // MARK: - Login With Facebook
     private func loginWithFacebook(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
         
-        guard
-            let accessToken: String = arguments[Args.accessToken].flatMap(cast),
-            let fieldsMapping: [String: String] = arguments[Args.fieldsMapping].flatMap(cast)
-        else {
+        guard let accessToken: String = arguments[Args.accessToken].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             
             return
         }
+        
+        let fieldsMapping: [String: String] = arguments[Args.fieldsMapping].flatMap(cast) ?? [:]
+        let stayLoggedIn = arguments[Args.stayLoggedIn].flatMap(cast) ?? false
+        
+        userService.stayLoggedIn = stayLoggedIn
         
         userService.logingWithFacebook(accessToken: accessToken, fieldsMapping: fieldsMapping,
             responseHandler: {
@@ -325,14 +326,17 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
     private func loginWithTwitter(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
         guard
             let authToken: String = arguments[Args.authToken].flatMap(cast),
-            let authTokenSecret: String = arguments[Args.authTokenSecret].flatMap(cast),
-            let fieldsMapping: [String: String] = arguments[Args.fieldsMapping].flatMap(cast)
+            let authTokenSecret: String = arguments[Args.authTokenSecret].flatMap(cast)
         else {
             result(FlutterError.noRequiredArguments)
             
             return
         }
         
+        let fieldsMapping: [String: String] = arguments[Args.fieldsMapping].flatMap(cast) ?? [:]
+        let stayLoggedIn = arguments[Args.stayLoggedIn].flatMap(cast) ?? false
+        
+        userService.stayLoggedIn = stayLoggedIn
         
         userService.loginWithTwitter(authToken: authToken, authTokenSecret: authTokenSecret, fieldsMapping: fieldsMapping,
             responseHandler: {
@@ -347,14 +351,16 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
     // MARK: - Login With Google
     private func loginWithGoogle(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
         
-        guard
-            let accessToken: String = arguments[Args.accessToken].flatMap(cast),
-            let fieldsMapping: [String: String] = arguments[Args.fieldsMapping].flatMap(cast)
-        else {
-                result(FlutterError.noRequiredArguments)
-                
-                return
+        guard let accessToken: String = arguments[Args.accessToken].flatMap(cast) else {
+            result(FlutterError.noRequiredArguments)
+            
+            return
         }
+        
+        let fieldsMapping: [String: String] = arguments[Args.fieldsMapping].flatMap(cast) ?? [:]
+        let stayLoggedIn = arguments[Args.stayLoggedIn].flatMap(cast) ?? false
+        
+        userService.stayLoggedIn = stayLoggedIn
         
         userService.loginWithGoogle(accessToken: accessToken, fieldsMapping: fieldsMapping,
             responseHandler: {
