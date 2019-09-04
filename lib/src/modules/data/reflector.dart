@@ -1,7 +1,7 @@
 part of backendless_sdk;
 
 class Reflector extends Reflectable {
-  const Reflector() : super(declarationsCapability, invokingCapability);
+  const Reflector() : super(declarationsCapability, invokingCapability, metadataCapability);
 
   Map<String, dynamic> serialize<T>(T object) {
     if (object == null) return null;
@@ -15,7 +15,13 @@ class Reflector extends Reflectable {
       if (value is VariableMirror) {
         var variable = instanceMirror.invokeGetter(name);
         if (_isNativeType(variable)) {
-          result[name] = variable;
+          var propertyName = name;
+          value.metadata.forEach((metadata) {
+            if (metadata is MapToProperty) {
+              propertyName = metadata.property;
+            }
+          });
+          result[propertyName] = variable;
         }
       }
     });

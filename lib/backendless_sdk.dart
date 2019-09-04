@@ -25,6 +25,7 @@ part 'src/modules/data/data_store.dart';
 part 'src/modules/data/property.dart';
 part 'src/modules/data/rt.dart';
 part 'src/modules/data/reflector.dart';
+part 'src/modules/data/map_to_property.dart';
 part 'src/modules/data/types.dart';
 part 'src/modules/events.dart';
 part 'src/modules/files/files.dart';
