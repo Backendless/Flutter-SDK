@@ -191,7 +191,7 @@ class ClassDrivenDataStore<T> implements IDataStore<T> {
   EventHandler<T> _eventHandler;
 
   ClassDrivenDataStore() {
-    _tableName = reflector.getSimpleName(T);
+    _tableName = reflector.getServerName(T);
     _eventHandler = new EventHandler<T>(_tableName);
   }
 

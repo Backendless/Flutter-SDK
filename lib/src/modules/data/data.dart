@@ -77,7 +77,7 @@ class BackendlessData {
   void mapTableToClass(String tableName, Type type) => Types.addClientClassMapping(tableName, type);
 
   Future<E> save<E>(E entity) async {
-    String tableName = reflector.getSimpleName(E);
+    String tableName = reflector.getServerName(E);
     Map mapObject = await _channel.invokeMethod(
         "Backendless.Data.of.save", <String, dynamic>{
       'tableName': tableName,
