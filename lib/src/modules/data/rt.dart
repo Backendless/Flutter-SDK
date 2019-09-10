@@ -16,12 +16,12 @@ class EventHandler<T> {
     addEventListener(subscription);
   }
 
-  void removeCreateListeners() {
-    _removeListeners(RTDataEvent.CREATED);
+  void removeCreateListeners([String whereClause]) {
+    _removeListeners(RTDataEvent.CREATED, whereClause);
   }
 
-  void removeCreateListener(void callback(T response), [String whereClause]) {
-    _removeListeners(RTDataEvent.CREATED, whereClause, callback);
+  void removeCreateListener(void callback(T response)) {
+    _removeListeners(RTDataEvent.CREATED, null, callback);
   }
 
 // Update
@@ -33,12 +33,12 @@ class EventHandler<T> {
     addEventListener(subscription);
   }
 
-  void removeUpdateListeners() {
-    _removeListeners(RTDataEvent.UPDATED);
+  void removeUpdateListeners([String whereClause]) {
+    _removeListeners(RTDataEvent.UPDATED, whereClause);
   }
 
-  void removeUpdateListener(void callback(T response), [String whereClause]) {
-    _removeListeners(RTDataEvent.UPDATED, whereClause, callback);
+  void removeUpdateListener(void callback(T response)) {
+    _removeListeners(RTDataEvent.UPDATED, null, callback);
   }
 
 // Delete
@@ -50,12 +50,12 @@ class EventHandler<T> {
     addEventListener(subscription);
   }
 
-  void removeDeleteListeners() {
-    _removeListeners(RTDataEvent.DELETED);
+  void removeDeleteListeners([String whereClause]) {
+    _removeListeners(RTDataEvent.DELETED, whereClause);
   }
 
-  void removeDeleteListener(void callback(T response), [String whereClause]) {
-    _removeListeners(RTDataEvent.DELETED, whereClause, callback);
+  void removeDeleteListener(void callback(T response)) {
+    _removeListeners(RTDataEvent.DELETED, null, callback);
   }
 
 // Bulk Update
@@ -67,13 +67,12 @@ class EventHandler<T> {
     addEventListener(subscription);
   }
 
-  void removeBulkUpdateListeners() {
-    _removeListeners(RTDataEvent.BULK_UPDATED);
+  void removeBulkUpdateListeners([String whereClause]) {
+    _removeListeners(RTDataEvent.BULK_UPDATED, whereClause);
   }
 
-  void removeBulkUpdateListener(void callback(BulkEvent response),
-      [String whereClause]) {
-    _removeListeners(RTDataEvent.BULK_UPDATED, whereClause, callback);
+  void removeBulkUpdateListener(void callback(BulkEvent response)) {
+    _removeListeners(RTDataEvent.BULK_UPDATED, null, callback);
   }
 
 // Bulk Delete
@@ -85,13 +84,12 @@ class EventHandler<T> {
     addEventListener(subscription);
   }
 
-  void removeBulkDeleteListeners() {
-    _removeListeners(RTDataEvent.BULK_DELETED);
+  void removeBulkDeleteListeners([String whereClause]) {
+    _removeListeners(RTDataEvent.BULK_DELETED, whereClause);
   }
 
-  void removeBulkDeleteListener(void callback(BulkEvent response),
-      [String whereClause]) {
-    _removeListeners(RTDataEvent.BULK_DELETED, whereClause, callback);
+  void removeBulkDeleteListener(void callback(BulkEvent response)) {
+    _removeListeners(RTDataEvent.BULK_DELETED, null, callback);
   }
 
   void addEventListener(DataSubscription subscription) {
