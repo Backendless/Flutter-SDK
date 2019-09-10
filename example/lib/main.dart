@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:backendless_sdk/backendless_sdk.dart';
 
 import 'test_table.dart';
-import 'main.reflectable.dart';
 
 void main() {
-  initializeReflectable();
   runApp(MyApp());
 }
 
@@ -22,15 +20,17 @@ class _MyAppState extends State<MyApp> {
     super.initState();
 
     Backendless.initApp(
-        "4C50E3CB-D44F-2019-FF4D-ECE3F1E06B00",
-        "FD99AED3-300E-8BAC-FF42-6DCBE4084F00",
-        "2809016A-662D-7133-FFC0-08EC52CA6800");
+        "67993429-C72B-72C7-FFDF-FEA2A54FFD00",
+        "F609FF3E-588E-0CCC-FFBB-EB44CFC78600",
+        "849D5B40-C3CD-E3E2-FF37-AEB0CC452700");
   }
 
   void buttonPressed() {
-    Backendless.data.mapTableToClass("MyCustomAwesomeName", TestTable);
+    Backendless.messaging.registerDevice(null, null, _onMessage).then((response) => print("Device has been registered!"));
+  }
 
-    Backendless.data.withClass<TestTable>().save(TestTable()..foo = "baaar");
+  void _onMessage(Map<String, dynamic> message) {
+    print(message);
   }
 
   void showResult(dynamic result) {
