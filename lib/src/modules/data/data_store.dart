@@ -295,14 +295,15 @@ class ClassDrivenDataStore<T> implements IDataStore<T> {
       });
 
   Future<List<R>> loadRelations<R>(
-          String objectId, LoadRelationsQueryBuilder<R> queryBuilder) async =>
-      (await _channel.invokeMethod(
-              "Backendless.Data.of.loadRelations", <String, dynamic>{
-        'tableName': _tableName,
-        'objectId': objectId,
-        'queryBuilder': queryBuilder,
-      }))
-          .cast<R>();
+          String objectId, LoadRelationsQueryBuilder<R> queryBuilder) async {
+    List response = (await _channel.invokeMethod("Backendless.Data.of.loadRelations", <String, dynamic>{
+      'tableName': _tableName,
+      'objectId': objectId,
+      'queryBuilder': queryBuilder,
+    }));
+    List<R> result = response.map((map) => reflector.deserialize<R>(map)).toList();
+    return result;
+  }
 
   Future<int> remove({T entity, String whereClause}) {
     checkArguments({"entity": entity}, {"whereClause": whereClause});
