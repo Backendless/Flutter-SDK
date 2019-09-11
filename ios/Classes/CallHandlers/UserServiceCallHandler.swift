@@ -215,6 +215,8 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
             return
         }
         
+        Locale.current.languageCode.map { user.setLocale(languageCode: $0) }
+        
         userService.registerUser(user: user,
             responseHandler: {
                 result($0)
