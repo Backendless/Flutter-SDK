@@ -70,6 +70,16 @@ class Reflector extends Reflectable {
     String clientClassName = reflectType(type).simpleName;
     return Types.getMappedServerClass(clientClassName);
   }
+
+  bool isCustomClass<T>(T object) {
+    if (!canReflect(object)) return false;
+    ClassMirror classMirror = reflectType(T);
+    for (Object metadata in classMirror.metadata) {
+      if (metadata is Reflector)
+        return true;
+    }
+    return false;
+  }
 }
 
 const reflector = const Reflector();

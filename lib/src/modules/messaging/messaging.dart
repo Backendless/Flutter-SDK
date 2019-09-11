@@ -37,12 +37,12 @@ class BackendlessMessaging {
       _messagingChannel.invokeMethod("Backendless.Messaging.getMessageStatus",
           <String, dynamic>{"messageId": messageId});
 
-  Future<MessageStatus> publish(Object message,
+  Future<MessageStatus> publish<T>(T message,
       {String channelName,
       PublishOptions publishOptions,
       DeliveryOptions deliveryOptions}) => _messagingChannel
         .invokeMethod("Backendless.Messaging.publish", <String, dynamic>{
-      "message": message,
+      "message": reflector.isCustomClass(message) ? reflector.serialize(message) : message,
       "channelName": channelName,
       "publishOptions": publishOptions,
       "deliveryOptions": deliveryOptions
