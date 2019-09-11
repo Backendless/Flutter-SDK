@@ -1,7 +1,7 @@
 part of backendless_sdk;
 
 class BackendlessUser {
-  Map<String, dynamic> _properties = new Map<String, Object>();
+  Map<String, dynamic> _properties = new Map<String, dynamic>();
   static const String PASSWORD_KEY = "password";
   static const String EMAIL_KEY = "email";
   static const String ID_KEY = "objectId";
@@ -11,15 +11,15 @@ class BackendlessUser {
   BackendlessUser.fromJson(Map json)
       : _properties = json.cast<String, dynamic>();
 
-  Map toJson() => _properties;
+  Map toJson() => {"properties": _properties};
 
   get properties => Map.from(_properties);
 
-  void setProperties(Map other) => _properties
+  void setProperties(Map<String, dynamic> other) => _properties
     ..clear()
     ..addAll(other);
 
-  void putProperties(Map other) => _properties.addAll(other);
+  void putProperties(Map<String, dynamic> other) => _properties.addAll(other);
 
   dynamic getProperty(String key) => _properties[key];
 
