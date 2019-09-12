@@ -6,7 +6,8 @@ class BackendlessMessaging {
   static const String DEFAULT_CHANNEL_NAME = "default";
   static const MethodChannel _messagingChannel = const MethodChannel(
       'backendless/messaging', StandardMethodCodec(BackendlessMessageCodec()));
-  static const MethodChannel _fcmServiceChannel = const MethodChannel('backendless/messaging/push');
+  static const MethodChannel _fcmServiceChannel =
+      const MethodChannel('backendless/messaging/push');
   static final Map<int, EventCallback> _joinCallbacks = <int, EventCallback>{};
   static final Map<int, EventCallback> _messageCallbacks =
       <int, EventCallback>{};
@@ -26,36 +27,40 @@ class BackendlessMessaging {
     _fcmServiceChannel.setMethodCallHandler(_handleMethod);
   }
 
-  Future<MessageStatus> cancel(String messageId) => _messagingChannel.invokeMethod(
-      "Backendless.Messaging.cancel",
-      <String, dynamic>{"messageId": messageId});
+  Future<MessageStatus> cancel(String messageId) =>
+      _messagingChannel.invokeMethod("Backendless.Messaging.cancel",
+          <String, dynamic>{"messageId": messageId});
 
-  Future<DeviceRegistration> getDeviceRegistration() =>
-      _messagingChannel.invokeMethod("Backendless.Messaging.getDeviceRegistration");
+  Future<DeviceRegistration> getDeviceRegistration() => _messagingChannel
+      .invokeMethod("Backendless.Messaging.getDeviceRegistration");
 
   Future<MessageStatus> getMessageStatus(String messageId) =>
       _messagingChannel.invokeMethod("Backendless.Messaging.getMessageStatus",
           <String, dynamic>{"messageId": messageId});
 
   Future<MessageStatus> publish<T>(T message,
-      {String channelName,
-      PublishOptions publishOptions,
-      DeliveryOptions deliveryOptions}) => _messagingChannel
-        .invokeMethod("Backendless.Messaging.publish", <String, dynamic>{
-      "message": reflector.isCustomClass(message) ? reflector.serialize(message) : message,
-      "channelName": channelName,
-      "publishOptions": publishOptions,
-      "deliveryOptions": deliveryOptions
-    });
+          {String channelName,
+          PublishOptions publishOptions,
+          DeliveryOptions deliveryOptions}) =>
+      _messagingChannel
+          .invokeMethod("Backendless.Messaging.publish", <String, dynamic>{
+        "message": reflector.isCustomClass(message)
+            ? reflector.serialize(message)
+            : message,
+        "channelName": channelName,
+        "publishOptions": publishOptions,
+        "deliveryOptions": deliveryOptions
+      });
 
   Future<MessageStatus> pushWithTemplate(String templateName) =>
       _messagingChannel.invokeMethod("Backendless.Messaging.pushWithTemplate",
           <String, dynamic>{"templateName": templateName});
 
   Future<DeviceRegistrationResult> registerDevice(
-          [List<String> channels, DateTime expiration, MessageHandler onMessage]) {
+      [List<String> channels, DateTime expiration, MessageHandler onMessage]) {
     _onMessage = onMessage;
-    return _messagingChannel.invokeMethod("Backendless.Messaging.registerDevice",
+    return _messagingChannel.invokeMethod(
+        "Backendless.Messaging.registerDevice",
         <String, dynamic>{"channels": channels, "expiration": expiration});
   }
 

@@ -1,11 +1,12 @@
 part of backendless_sdk;
 
 class Reflector extends Reflectable {
-  const Reflector() : super(declarationsCapability, invokingCapability, metadataCapability);
+  const Reflector()
+      : super(declarationsCapability, invokingCapability, metadataCapability);
 
   Map<String, dynamic> serialize<T>(T object) {
     if (object == null) return null;
-    
+
     Map<String, dynamic> result = Map();
 
     ClassMirror classMirror = reflectType(T);
@@ -34,7 +35,8 @@ class Reflector extends Reflectable {
     InstanceMirror instanceMirror = reflect(object);
 
     map.forEach((columnName, value) {
-      var propertyName = Types.getPropertyNameForColumn(columnName, declarations);
+      var propertyName =
+          Types.getPropertyNameForColumn(columnName, declarations);
       if (propertyName != null) {
         if (value is Map) {
           instanceMirror.invokeSetter(
@@ -61,7 +63,7 @@ class Reflector extends Reflectable {
     if (map.containsKey("___class")) {
       String clientClassName = Types.getMappedClientClass(map["___class"]);
       return annotatedClasses.firstWhere(
-        (annotatedClass) => annotatedClass.simpleName == clientClassName);
+          (annotatedClass) => annotatedClass.simpleName == clientClassName);
     }
     return null;
   }
@@ -75,8 +77,7 @@ class Reflector extends Reflectable {
     if (!canReflect(object)) return false;
     ClassMirror classMirror = reflectType(T);
     for (Object metadata in classMirror.metadata) {
-      if (metadata is Reflector)
-        return true;
+      if (metadata is Reflector) return true;
     }
     return false;
   }

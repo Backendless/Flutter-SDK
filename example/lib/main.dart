@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:backendless_sdk/backendless_sdk.dart';
 
-import 'test_table.dart';
-
 void main() {
   runApp(MyApp());
 }
@@ -25,18 +23,7 @@ class _MyAppState extends State<MyApp> {
         "849D5B40-C3CD-E3E2-FF37-AEB0CC452700");
   }
 
-  void buttonPressed() {
-    Backendless.messaging.registerDevice(null, null, _onMessage).then((response) => print("Device has been registered!"));
-  }
-
-  void _onMessage(Map<String, dynamic> message) {
-    print(message);
-  }
-
-  void showResult(dynamic result) {
-    setState(() => _result = result.toString());
-    print(result.toString());
-  }
+  void buttonPressed() {}
 
   @override
   Widget build(BuildContext context) {

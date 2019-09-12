@@ -295,13 +295,15 @@ class ClassDrivenDataStore<T> implements IDataStore<T> {
       });
 
   Future<List<R>> loadRelations<R>(
-          String objectId, LoadRelationsQueryBuilder<R> queryBuilder) async {
-    List response = (await _channel.invokeMethod("Backendless.Data.of.loadRelations", <String, dynamic>{
+      String objectId, LoadRelationsQueryBuilder<R> queryBuilder) async {
+    List response = (await _channel
+        .invokeMethod("Backendless.Data.of.loadRelations", <String, dynamic>{
       'tableName': _tableName,
       'objectId': objectId,
       'queryBuilder': queryBuilder,
     }));
-    List<R> result = response.map((map) => reflector.deserialize<R>(map)).toList();
+    List<R> result =
+        response.map((map) => reflector.deserialize<R>(map)).toList();
     return result;
   }
 

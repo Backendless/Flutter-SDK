@@ -74,7 +74,8 @@ class BackendlessData {
           LoadRelationsQueryBuilder queryBuilder, Type relatedType) =>
       throw new UnimplementedError();
 
-  void mapTableToClass(String tableName, Type type) => Types.addClientClassMapping(tableName, type);
+  void mapTableToClass(String tableName, Type type) =>
+      Types.addClientClassMapping(tableName, type);
 
   Future<E> save<E>(E entity) async {
     String tableName = reflector.getServerName(E);

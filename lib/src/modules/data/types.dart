@@ -26,7 +26,8 @@ class Types {
     }
   }
 
-  static String getColumnNameForProperty(String propertyName, VariableMirror variableMirror) {
+  static String getColumnNameForProperty(
+      String propertyName, VariableMirror variableMirror) {
     var columnName = propertyName;
     variableMirror.metadata.forEach((metadata) {
       if (metadata is MapToProperty) {
@@ -36,7 +37,8 @@ class Types {
     return columnName;
   }
 
-  static String getPropertyNameForColumn(String columnName, Map<String, DeclarationMirror> declarations) {
+  static String getPropertyNameForColumn(
+      String columnName, Map<String, DeclarationMirror> declarations) {
     for (var entry in declarations.entries) {
       if (entry.value is VariableMirror) {
         for (var metadata in entry.value.metadata) {
@@ -46,15 +48,14 @@ class Types {
         }
       }
     }
-    
+
     if (declarations.containsKey(columnName)) {
       var value = declarations[columnName];
-      if (value is VariableMirror && !(value.metadata.any((metadata) => metadata is MapToProperty)))
+      if (value is VariableMirror &&
+          !(value.metadata.any((metadata) => metadata is MapToProperty)))
         return columnName;
     }
 
     return null;
   }
-
-  
 }
