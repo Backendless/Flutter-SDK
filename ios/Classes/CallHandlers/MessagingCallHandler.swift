@@ -311,7 +311,7 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
         }
     }
     
-    public func didRegisterForRemotePushNotifications(withToken deviceToken: Data) {
+    func didRegisterForRemotePushNotifications(withToken deviceToken: Data) {
         if didAskRegistration {
             let channels: [String]? = registerDeviceArgs[Args.channels].flatMap(cast)
             let expiration: Date? = registerDeviceArgs[Args.expiration].flatMap(cast)
