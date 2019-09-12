@@ -68,6 +68,12 @@ class LoadRelationsQueryBuilder<R> {
   List<String> properties;
   List<String> sortBy;
 
+  LoadRelationsQueryBuilder._(this.relationName);
+
+  static LoadRelationsQueryBuilder<R> of<R>(String relationName) {
+    return LoadRelationsQueryBuilder<R>._(relationName);
+  }
+
   LoadRelationsQueryBuilder.ofMap(this.relationName);
 
   LoadRelationsQueryBuilder.fromJson(Map json) {

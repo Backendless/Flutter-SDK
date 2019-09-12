@@ -331,6 +331,15 @@ public class MessagingCallHandler implements MethodChannel.MethodCallHandler {
                 }
                 messageCallbacks.put(messageHandle, messageInfoCallback);
                 break;
+            case "Map":
+                EventAsyncCallback<HashMap> mapCallback = new EventAsyncCallback<>("Message", messageHandle);
+                if (selector != null) {
+                    channel.addMessageListener(selector, mapCallback, HashMap.class);
+                } else {
+                    channel.addMessageListener(mapCallback, HashMap.class);
+                }
+                messageCallbacks.put(messageHandle, mapCallback);
+                break;
             default:
                 throw new IllegalArgumentException("Custom type messages are unsupported for now");
         }
