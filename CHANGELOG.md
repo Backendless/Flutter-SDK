@@ -1,3 +1,10 @@
+## 0.3.0
+
+* Added `Class to Table Mapping` and `Column Name Mapping`.
+* Added `FlutterBackendlessFCMService`. Now you can handle notifications from Flutter.
+* Added the ability to publish and subscribe to custom classes.
+* A lot of fixes and improvements.
+
 ## 0.2.0
 
 * Add support for custom classes. To start working with custom classes, use the following method: `Backendless.data.withClass<TestTable>()`.

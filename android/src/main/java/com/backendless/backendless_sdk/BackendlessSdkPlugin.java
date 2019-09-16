@@ -13,6 +13,7 @@ import com.backendless.backendless_sdk.call_handlers.LoggingCallHandler;
 import com.backendless.backendless_sdk.call_handlers.MessagingCallHandler;
 import com.backendless.backendless_sdk.call_handlers.RtCallHandler;
 import com.backendless.backendless_sdk.call_handlers.UserServiceCallHandler;
+import com.backendless.backendless_sdk.common.FlutterBackendlessFCMService;
 import com.backendless.backendless_sdk.utils.codec.BackendlessMessageCodec;
 
 import io.flutter.plugin.common.MethodChannel;
@@ -73,5 +74,8 @@ public class BackendlessSdkPlugin {
       final MethodChannel userServiceChannel = new MethodChannel(registrar.messenger(), "backendless/user_service",
           new StandardMethodCodec(BackendlessMessageCodec.INSTANCE));
       userServiceChannel.setMethodCallHandler(new UserServiceCallHandler());
+
+      final MethodChannel fcmServiceChannel = new MethodChannel(registrar.messenger(), "backendless/messaging/push");
+      FlutterBackendlessFCMService.setMethodChannel(fcmServiceChannel);
   }
 }

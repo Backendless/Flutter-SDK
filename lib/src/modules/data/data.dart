@@ -42,17 +42,6 @@ class BackendlessData {
         'arguments': arguments
       });
 
-  Future<List<String>> create({List<Object> objects, Type type, Map entity}) {
-    checkArguments({"objects": objects}, {"type": type, "entity": entity});
-    if (objects != null) {
-      // create with objects
-      throw new UnimplementedError();
-    } else {
-      // create with type&entity
-      throw new UnimplementedError();
-    }
-  }
-
   Future<List<ObjectProperty>> describe(String tableName) async =>
       (await _channel.invokeMethod("Backendless.Data.describe",
               <String, dynamic>{'tableName': tableName}))
@@ -75,7 +64,5 @@ class BackendlessData {
       throw new UnimplementedError();
 
   void mapTableToClass(String tableName, Type type) =>
-      throw new UnimplementedError();
-
-  Future<E> save<E>(E entity) => throw new UnimplementedError();
+      Types.addClientClassMapping(tableName, type);
 }

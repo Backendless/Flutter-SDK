@@ -18,20 +18,23 @@ fileprivate enum FlutterPluginChannels: String, CaseIterable {
     case messagingChannel = "backendless/messaging"
     case userServiceChannel = "backendless/user_service"
     case rtChannel = "backendless/rt"
+    case pushChannel = "backendless/messaging/push"
 }
 
 public class SwiftBackendlessSdkPlugin: NSObject, FlutterPlugin {
     
+    // MARK: - Shared instance
     public static let shared = SwiftBackendlessSdkPlugin()
     
     private override init() {}
     
+    // MARK: - Properties
     static var handlers: [FlutterCallHandlerProtocol] = []
-    
     static let backendless = Backendless.shared
-    
     private var messagingHandler: MessagingCallHandler?
+    private var pushHandler: PushCallHandler?
     
+    // MARK: - Register
     public static func register(with registrar: FlutterPluginRegistrar) {
         
         let readerWriter = BackendlessReaderWriter()
@@ -86,6 +89,11 @@ public class SwiftBackendlessSdkPlugin: NSObject, FlutterPlugin {
                 case .rtChannel:
                     channel = FlutterMethodChannel(name: pluginChannel.rawValue, binaryMessenger: messenger, codec: codec)
                     handler = RtCallHandler(messagingChannel: channel)
+                case .pushChannel:
+                    channel = FlutterMethodChannel(name: pluginChannel.rawValue, binaryMessenger: messenger, codec: codec)
+                    let pushCallHandler = PushCallHandler(pushChannel: channel)
+                    SwiftBackendlessSdkPlugin.shared.pushHandler = pushCallHandler
+                    handler = pushCallHandler
                 }
                 
                 handlers.append(handler)
@@ -96,11 +104,19 @@ public class SwiftBackendlessSdkPlugin: NSObject, FlutterPlugin {
         registrar.addApplicationDelegate(SwiftBackendlessSdkPlugin.shared)
     }
     
-    
     public func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         SwiftBackendlessSdkPlugin.shared
             .messagingHandler
             .map { $0.didRegisterForRemotePushNotifications(withToken: deviceToken) }
     }
+    
+    public func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) -> Bool {
+        SwiftBackendlessSdkPlugin.shared
+            .pushHandler
+            .map { $0.didReceiveRemoteNotification(userInfo: userInfo) }
+        completionHandler(.newData)
+        return true
+    }
+    
     
 }

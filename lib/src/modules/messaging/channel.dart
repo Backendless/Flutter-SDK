@@ -41,18 +41,32 @@ class Channel {
 
   Future<void> addMessageListener<T>(void callback(T response),
       {void onError(String error), String selector}) {
-    if (T != String && T != PublishMessageInfo)
-      throw UnimplementedError(); // Custom type message
+    String messageType;
+    Function handleResponse;
+
+    if (T == String || T == PublishMessageInfo) {
+      messageType = T.toString();
+      handleResponse = callback;
+    } else {
+      messageType = "Map";
+      if (T == Map) {
+        handleResponse = callback;
+      } else {
+        handleResponse = (map) {
+          callback(reflector.deserialize<T>(map));
+        };
+      }
+    }
 
     Map<String, dynamic> args = {
       "selector": selector,
-      "messageType": T.toString()
+      "messageType": messageType,
     };
     return _methodChannel
         .invokeMethod("Backendless.Messaging.Channel.addMessageListener",
             <String, dynamic>{"channelHandle": _channelHandle}..addAll(args))
         .then((handle) => BackendlessMessaging._messageCallbacks[handle] =
-            new EventCallback(callback, onError, args));
+            new EventCallback(handleResponse, onError, args));
   }
 
   void removeMessageListeners({String selector, Function callback}) {

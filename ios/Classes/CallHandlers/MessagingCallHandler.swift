@@ -74,6 +74,7 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
     private enum MessageTypes {
         static let string = "String"
         static let info = "PublishMessageInfo"
+        static let map = "Map"
     }
     
     // MARK: -
@@ -231,15 +232,13 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Publish
     private func publish(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        guard
-            let channelName: String = arguments[Args.channelName].flatMap(cast),
-            let message = arguments[Args.message]
-        else {
+        guard let message = arguments[Args.message] else {
             result(FlutterError.noRequiredArguments)
             
             return
         }
         
+        let channelName: String = arguments[Args.channelName].flatMap(cast) ?? "default"
         let publishOptions: PublishOptions? = arguments[Args.publishOptions].flatMap(cast)
         let deliveryOptions: DeliveryOptions? = arguments[Args.deliveryOptions].flatMap(cast)
         
@@ -313,7 +312,7 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
         }
     }
     
-    public func didRegisterForRemotePushNotifications(withToken deviceToken: Data) {
+    func didRegisterForRemotePushNotifications(withToken deviceToken: Data) {
         if didAskRegistration {
             let channels: [String]? = registerDeviceArgs[Args.channels].flatMap(cast)
             let expiration: Date? = registerDeviceArgs[Args.expiration].flatMap(cast)
@@ -634,6 +633,12 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
                 subscription = channels[channelHandle]?.addMessageListener(selector: selector, responseHandler: successHandler, errorHandler: errorHandler)
             } else {
                 subscription = channels[channelHandle]?.addMessageListener(responseHandler: successHandler, errorHandler: errorHandler)
+            }
+        case MessageTypes.map:
+            if let selector = selector {
+                subscription = channels[channelHandle]?.addDictionaryMessageListener(selector: selector, responseHandler: successHandler, errorHandler: errorHandler)
+            } else {
+                subscription = channels[channelHandle]?.addDictionaryMessageListener(responseHandler: successHandler, errorHandler: errorHandler)
             }
         default:
             result(nil)

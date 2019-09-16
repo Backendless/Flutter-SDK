@@ -1,19 +1,23 @@
 part of backendless_sdk;
 
 class Reflector extends Reflectable {
-  const Reflector() : super(declarationsCapability, invokingCapability);
+  const Reflector()
+      : super(declarationsCapability, invokingCapability, metadataCapability);
 
   Map<String, dynamic> serialize<T>(T object) {
+    if (object == null) return null;
+
     Map<String, dynamic> result = Map();
 
     ClassMirror classMirror = reflectType(T);
     InstanceMirror instanceMirror = reflect(object);
 
-    classMirror.declarations.forEach((name, value) {
+    classMirror.declarations.forEach((propertyName, value) {
       if (value is VariableMirror) {
-        var variable = instanceMirror.invokeGetter(name);
+        var variable = instanceMirror.invokeGetter(propertyName);
         if (_isNativeType(variable)) {
-          result[name] = variable;
+          var columnName = Types.getColumnNameForProperty(propertyName, value);
+          result[columnName] = variable;
         }
       }
     });
@@ -28,25 +32,26 @@ class Reflector extends Reflectable {
 
     var object = classMirror.newInstance("", []);
     var declarations = classMirror.declarations;
-
     InstanceMirror instanceMirror = reflect(object);
 
-    map.forEach((name, value) {
-      if (declarations.containsKey(name)) {
+    map.forEach((columnName, value) {
+      var propertyName =
+          Types.getPropertyNameForColumn(columnName, declarations);
+      if (propertyName != null) {
         if (value is Map) {
           instanceMirror.invokeSetter(
-              name, _deserialize(value, _getClassMirror(value)));
+              propertyName, _deserialize(value, _getClassMirror(value)));
         } else if (value is List) {
           if (value.isNotEmpty) {
             ClassMirror listItemClassMirror = _getClassMirror(value.first);
             var deserializedList = List.from(value.map(
                 (listItem) => _deserialize(listItem, listItemClassMirror)));
-            instanceMirror.invokeSetter(name, deserializedList);
+            instanceMirror.invokeSetter(propertyName, deserializedList);
           } else {
-            instanceMirror.invokeSetter(name, List());
+            instanceMirror.invokeSetter(propertyName, List());
           }
         } else {
-          instanceMirror.invokeSetter(name, value);
+          instanceMirror.invokeSetter(propertyName, value);
         }
       }
     });
@@ -56,13 +61,26 @@ class Reflector extends Reflectable {
 
   ClassMirror _getClassMirror(Map map) {
     if (map.containsKey("___class")) {
+      String clientClassName = Types.getMappedClientClass(map["___class"]);
       return annotatedClasses.firstWhere(
-          (annotatedClass) => annotatedClass.simpleName == map["___class"]);
+          (annotatedClass) => annotatedClass.simpleName == clientClassName);
     }
     return null;
   }
 
-  String getSimpleName(Type type) => reflectType(type).simpleName;
+  String getServerName(Type type) {
+    String clientClassName = reflectType(type).simpleName;
+    return Types.getMappedServerClass(clientClassName);
+  }
+
+  bool isCustomClass<T>(T object) {
+    if (!canReflect(object)) return false;
+    ClassMirror classMirror = reflectType(T);
+    for (Object metadata in classMirror.metadata) {
+      if (metadata is Reflector) return true;
+    }
+    return false;
+  }
 }
 
 const reflector = const Reflector();
