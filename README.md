@@ -1,6 +1,7 @@
 # Backendless SDK for Flutter
 
-[![pub package](https://img.shields.io/pub/v/backendless_sdk.svg)](https://pub.dartlang.org/packages/backendless_sdk)
+[![pub package][0]][1]
+[![Build Status - Travis][2]][3]
 
 A Flutter plugin enabling integration with [Backendless](https://backendless.com).
 
@@ -56,3 +57,8 @@ testObject["foo"] = "bar";
 Backendless.data.of("TestTable").save(testObject).then(
   (response) => print("Object is saved in Backendless. Please check in the console."));
 ```
+[0]: https://img.shields.io/pub/v/backendless_sdk.svg
+[1]: https://pub.dartlang.org/packages/backendless_sdk
+
+[2]: https://travis-ci.com/Backendless/Flutter-SDK.svg?branch=develop
+[3]: https://travis-ci.com/Backendless/Flutter-SDK
