@@ -8,12 +8,12 @@
 import Foundation
 
 enum HeadersEnum: String, CaseIterable {
-    case userToken = "USER_TOKEN_KEY"
-    case loggedIn = "LOGGED_IN_KEY"
-    case sessionTimeout = "SESSION_TIME_OUT_KEY"
-    case appTypeName = "APP_TYPE_NAME"
-    case apiVersion = "API_VERSION"
-    case uiState = "UI_STATE"
+    case userToken = "user-token"
+    case loggedIn = "logged-in"
+    case sessionTimeout = "session-time-out"
+    case appTypeName = "application-type"
+    case apiVersion = "api-version"
+    case uiState = "uiState"
     
     init?(index: Int) {
         if HeadersEnum.allCases.indices.contains(index) {
