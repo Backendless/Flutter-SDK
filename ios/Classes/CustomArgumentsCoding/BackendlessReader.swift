@@ -26,7 +26,8 @@ class BackendlessReader: FlutterStandardReader {
             value = readGeoQuery()
         default:
             guard let json: [String: Any] = readValue().flatMap(cast) else { return nil }
-            let jsonToDecode = prepareJsonToParse(json)
+            let jsonWithDates = mapDateValues(json)
+            let jsonToDecode = code == .backendlessUser ? mapUser(jsonWithDates) : jsonWithDates
             value = decode(from: jsonToDecode, code)
         }
 
@@ -89,7 +90,7 @@ class BackendlessReader: FlutterStandardReader {
     
     // MARK: -
     // MARK: - Prepare Json To Parse
-    private func prepareJsonToParse(_ json: [String: Any]) -> [String: Any] {
+    private func mapDateValues(_ json: [String: Any]) -> [String: Any] {
         var result = json
         
         json.forEach {
@@ -99,6 +100,12 @@ class BackendlessReader: FlutterStandardReader {
         }
         
         return result
+    }
+    
+    // MARK: -
+    // MARK: - Map User
+    private func mapUser(_ json: [String: Any]) -> [String: Any] {
+        return json["properties"].flatMap(cast) ?? [:]
     }
     
     // MARK: -
