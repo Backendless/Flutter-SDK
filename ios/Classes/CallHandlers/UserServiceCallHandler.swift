@@ -164,7 +164,7 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
     // MARK: - Logged In User
     private func loggedInUser(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
         guard let user = userService.getCurrentUser() else {
-            result(nil)
+            result("")
             
             return
         }
