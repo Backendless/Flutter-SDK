@@ -1,3 +1,8 @@
+## 0.3.1
+
+* Fixed `HeadersEnum` rawValues in iOS.
+* Fixed problem with sending BackendlessUser from Flutter to native SDK.
+
 ## 0.3.0
 
 * Added `Class to Table Mapping` and `Column Name Mapping`.
