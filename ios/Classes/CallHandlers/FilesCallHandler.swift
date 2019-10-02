@@ -353,8 +353,8 @@ class FilesCallHandler: FlutterCallHandlerProtocol {
                 })
         } else {
             fileService.saveFile(fileName: nameToSend, filePath: pathToSend, base64Content: base64Content,
-                responseHandler: {
-                    result($0)
+                responseHandler: { (file: BackendlessFile) in
+                    file.fileUrl.map { result($0) }
                 },
                 errorHandler: {
                     result(FlutterError($0))
