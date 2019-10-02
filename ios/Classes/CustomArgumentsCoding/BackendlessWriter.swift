@@ -55,8 +55,8 @@ class BackendlessWtiter: FlutterStandardWriter {
     // MARK: -
     // MARK: - Write Date
     private func writeDate(_ date: Date) {
-        writeValue(FlutterTypeCode.dateTime.rawValue)
-        writeValue(date.timeIntervalSince1970)
+        writeByte(FlutterTypeCode.dateTime.rawValue)
+        writeValue(Int(date.timeIntervalSince1970))
     }
     
     // MARK: -
