@@ -248,7 +248,7 @@ class FilesCallHandler: FlutterCallHandlerProtocol {
         
         fileService.remove(path: fileUrl,
             responseHandler: {
-                result(nil)
+                result(1)
             },
             errorHandler: {
                 result(FlutterError($0))
