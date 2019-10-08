@@ -27,7 +27,17 @@ class BackendlessReader: FlutterStandardReader {
         default:
             guard let json: [String: Any] = readValue().flatMap(cast) else { return nil }
             let jsonWithDates = mapDateValues(json)
-            let jsonToDecode = code == .backendlessUser ? mapUser(jsonWithDates) : jsonWithDates
+            
+            let jsonToDecode: [String: Any]
+            switch code {
+            case .backendlessUser:
+                jsonToDecode = mapUser(jsonWithDates)
+            case .messageStatus:
+                jsonToDecode = mapMessageStatus(jsonWithDates)
+            default:
+                jsonToDecode = jsonWithDates
+            }
+            
             value = decode(from: jsonToDecode, code)
         }
 
@@ -106,6 +116,27 @@ class BackendlessReader: FlutterStandardReader {
     // MARK: - Map User
     private func mapUser(_ json: [String: Any]) -> [String: Any] {
         return json["properties"].flatMap(cast) ?? [:]
+    }
+    
+    // MARK: -
+    // MARK: - Map Message Status
+    private func mapMessageStatus(_ json: [String: Any]) -> [String: Any] {
+        var result: [String: Any] = [:]
+        
+        let statuses = ["failed", "published", "scheduled", "cancelled", "unknown"]
+        
+        json.forEach { (key, value) in
+            let newValue: Any
+            if key == "status" {
+                guard let index = value as? Int else { return }
+                newValue = statuses[index]
+            } else {
+                newValue = value
+            }
+            result[key] = newValue
+        }
+        
+        return result
     }
     
     // MARK: -
