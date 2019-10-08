@@ -114,6 +114,8 @@ class BackendlessWtiter: FlutterStandardWriter {
     // MARK: - WriteCodeForValue
     private func writeCode(for value: Any) {
         switch value {
+        case is GeoCluster:
+            writeByte(FlutterTypeCode.geoCluster.rawValue)
         case is GeoPoint:
             writeByte(FlutterTypeCode.geoPoint.rawValue)
         case is DataQueryBuilder:
@@ -130,8 +132,6 @@ class BackendlessWtiter: FlutterStandardWriter {
             writeByte(FlutterTypeCode.geoCategory.rawValue)
         case is BackendlessGeoQuery:
             writeByte(FlutterTypeCode.geoQuery.rawValue)
-        case is GeoCluster:
-            writeByte(FlutterTypeCode.geoCluster.rawValue)
         case is SearchMatchesResult:
             writeByte(FlutterTypeCode.searchMatchesResult.rawValue)
         case is MessageStatus:
