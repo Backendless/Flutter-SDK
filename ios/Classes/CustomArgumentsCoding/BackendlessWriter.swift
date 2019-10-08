@@ -63,6 +63,8 @@ class BackendlessWtiter: FlutterStandardWriter {
     // MARK: - DataFromValue
     private func dataFromValue(_ value: Any) -> Data? {
         switch value {
+        case is GeoCluster:
+            return try? JSONEncoder().encode(value as! GeoCluster)
         case is GeoPoint:
             return try? JSONEncoder().encode(value as! GeoPoint)
         case is DataQueryBuilder:
@@ -79,8 +81,6 @@ class BackendlessWtiter: FlutterStandardWriter {
             return try? JSONEncoder().encode(value as! GeoCategory)
         case is BackendlessGeoQuery:
             return try? JSONEncoder().encode(value as! BackendlessGeoQuery)
-        case is GeoCluster:
-            return try? JSONEncoder().encode(value as! GeoCluster)
         case is SearchMatchesResult:
             return try? JSONEncoder().encode(value as! SearchMatchesResult)
         case is MessageStatus:
