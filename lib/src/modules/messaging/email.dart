@@ -10,9 +10,9 @@ class EmailEnvelope {
 
   EmailEnvelope.fromJson(Map json)
       : query = json['query'],
-        to = json['to'],
-        cc = json['cc'],
-        bcc = json['bcc'];
+        to = Set<String>.from(json['to']),
+        cc = Set<String>.from(json['cc']),
+        bcc = Set<String>.from(json['bcc']);
 
   Map toJson() => {
         'query': query,
