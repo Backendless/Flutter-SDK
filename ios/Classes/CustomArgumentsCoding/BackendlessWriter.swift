@@ -44,6 +44,9 @@ class BackendlessWtiter: FlutterStandardWriter {
             } else if value is CommandObject {
                 let jsonToWrite = prepareJsonForCommandObject(json)
                 super.writeValue(jsonToWrite)
+            } else if value is BackendlessUser {
+                let jsonToWrite = prepareJsonForBackendlessUser(json)
+                super.writeValue(jsonToWrite)
             } else {
                 super.writeValue(json)
             }
@@ -255,6 +258,24 @@ class BackendlessWtiter: FlutterStandardWriter {
         }
         
         result["userInfo"] = userInfo
+        
+        return result
+    }
+    
+    private func prepareJsonForBackendlessUser(_ json: Any) -> [String: Any] {
+        guard let inputDict = json as? [String: Any] else { return [:] }
+        var result: [String: Any] = [:]
+        
+        inputDict.forEach { (key, value) in
+            if key == "properties" {
+                guard let properties = value as? [String: Any] else { return }
+                properties.forEach { (key, value) in
+                    result[key] = value
+                }
+            } else {
+                result[key] = value
+            }
+        }
         
         return result
     }
