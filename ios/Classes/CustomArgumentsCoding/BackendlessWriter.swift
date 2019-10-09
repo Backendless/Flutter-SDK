@@ -38,6 +38,9 @@ class BackendlessWtiter: FlutterStandardWriter {
             } else if value is DeviceRegistration {
                 let jsonToWrite = prepareJsonForDeviceRegistration(json)
                 super.writeValue(jsonToWrite)
+            } else if value is DeliveryOptions {
+                let jsonToWrite = prepareJsonForDeliveryOptions(json)
+                super.writeValue(jsonToWrite)
             } else {
                 super.writeValue(json)
             }
@@ -203,6 +206,24 @@ class BackendlessWtiter: FlutterStandardWriter {
         inputDict.forEach { (key, value) in
             let newValue: Any
             if key == "expiration" {
+                guard let doubleValue = value as? Double else { return }
+                newValue = Date(timeIntervalSince1970: doubleValue)
+            } else {
+                newValue = value
+            }
+            result[key] = newValue
+        }
+        
+        return result
+    }
+    
+    private func prepareJsonForDeliveryOptions(_ json: Any) -> [String: Any] {
+        guard let inputDict = json as? [String: Any] else { return [:] }
+        var result = inputDict
+        
+        inputDict.forEach { (key, value) in
+            let newValue: Any
+            if key == "publishAt" || key == "repeatExpiresAt" {
                 guard let doubleValue = value as? Double else { return }
                 newValue = Date(timeIntervalSince1970: doubleValue)
             } else {
