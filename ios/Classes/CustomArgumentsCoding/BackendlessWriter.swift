@@ -41,14 +41,18 @@ class BackendlessWtiter: FlutterStandardWriter {
             } else if value is DeliveryOptions {
                 let jsonToWrite = prepareJsonForDeliveryOptions(json)
                 super.writeValue(jsonToWrite)
+            } else if value is CommandObject {
+                let jsonToWrite = prepareJsonForCommandObject(json)
+                super.writeValue(jsonToWrite)
             } else {
                 super.writeValue(json)
             }
         case is CommandObject:
             let commandObject = value as! CommandObject
             let json = commandObject.encodeToJson()
+            let jsonToWrite = prepareJsonForCommandObject(json)
             writeCode(for: value)
-            super.writeValue(json)
+            super.writeValue(jsonToWrite)
         case is UserStatus:
             let json = jsonFrom(userStatus: value as! UserStatus)
             writeCode(for: value)
@@ -231,6 +235,26 @@ class BackendlessWtiter: FlutterStandardWriter {
             }
             result[key] = newValue
         }
+        
+        return result
+    }
+    
+    private func prepareJsonForCommandObject(_ json: Any) -> [String: Any] {
+        guard let inputDict = json as? [String: Any] else { return [:] }
+        var result = inputDict
+        var userInfo: [String: Any] = [:]
+        
+        inputDict.forEach { (key, value) in
+            if key == "connectionId" || key == "userId" {
+                userInfo[key] = value
+            } else if key == "___class" {
+                return
+            } else {
+                result[key] = value
+            }
+        }
+        
+        result["userInfo"] = userInfo
         
         return result
     }

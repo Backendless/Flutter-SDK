@@ -34,6 +34,8 @@ class BackendlessReader: FlutterStandardReader {
                 jsonToDecode = mapUser(jsonWithDates)
             case .messageStatus:
                 jsonToDecode = mapMessageStatus(jsonWithDates)
+            case .command:
+                jsonToDecode = mapCommand(jsonWithDates)
             default:
                 jsonToDecode = jsonWithDates
             }
@@ -134,6 +136,23 @@ class BackendlessReader: FlutterStandardReader {
                 newValue = value
             }
             result[key] = newValue
+        }
+        
+        return result
+    }
+    
+    // MARK: -
+    // MARK: - Map Command
+    private func mapCommand(_ json: [String: Any]) -> [String: Any] {
+        var result: [String: Any] = [:]
+        
+        json.forEach { (key, value) in
+            if key == "userInfo" {
+                guard let userInfo = value as? [String: Any] else { return }
+                userInfo.forEach { (k, v) in result[k] = v }
+            } else {
+                result[key] = value
+            }
         }
         
         return result
