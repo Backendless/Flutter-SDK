@@ -69,7 +69,7 @@ class BackendlessWtiter: FlutterStandardWriter {
     // MARK: - Write Date
     private func writeDate(_ date: Date) {
         writeByte(FlutterTypeCode.dateTime.rawValue)
-        writeValue(Int(date.timeIntervalSince1970))
+        writeValue(Int(date.timeIntervalSince1970 * 1000))
     }
     
     // MARK: -
@@ -198,7 +198,7 @@ class BackendlessWtiter: FlutterStandardWriter {
         
         inputDict.forEach {
             if $0.key == Args.type, let stringValue = $0.value as? String {
-                let enumValue = DataTypeEnum(rawValue: stringValue) ?? .UNKNOWN
+                let enumValue = DataTypeEnum(rawValue: stringValue)
                 result[$0.key] = enumValue.index
             }
         }
@@ -214,7 +214,7 @@ class BackendlessWtiter: FlutterStandardWriter {
             let newValue: Any
             if key == "expiration" {
                 guard let doubleValue = value as? Double else { return }
-                newValue = Date(timeIntervalSince1970: doubleValue)
+                newValue = Date(timeIntervalSinceReferenceDate: doubleValue)
             } else {
                 newValue = value
             }
@@ -232,7 +232,7 @@ class BackendlessWtiter: FlutterStandardWriter {
             let newValue: Any
             if key == "publishAt" || key == "repeatExpiresAt" {
                 guard let doubleValue = value as? Double else { return }
-                newValue = Date(timeIntervalSince1970: doubleValue)
+                newValue = Date(timeIntervalSinceReferenceDate: doubleValue)
             } else {
                 newValue = value
             }
