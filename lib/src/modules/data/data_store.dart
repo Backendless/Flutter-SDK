@@ -30,7 +30,7 @@ abstract class IDataStore<E> {
   Future<E> save(E entity);
 
   Future<int> setRelation(E parent, String relationColumnName,
-      {List<String> children, String whereClause});
+      {List children, String whereClause});
 
   Future<int> update(String whereClause, Map changes);
 
