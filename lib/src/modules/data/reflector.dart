@@ -2,7 +2,8 @@ part of backendless_sdk;
 
 class Reflector extends Reflectable {
   const Reflector()
-      : super(declarationsCapability, invokingCapability, metadataCapability);
+      : super(declarationsCapability, invokingCapability, metadataCapability,
+            reflectedTypeCapability);
 
   Map<String, dynamic> serialize<T>(T object) {
     if (object == null) return null;
@@ -51,7 +52,17 @@ class Reflector extends Reflectable {
             instanceMirror.invokeSetter(propertyName, List());
           }
         } else {
-          instanceMirror.invokeSetter(propertyName, value);
+          VariableMirror variableMirror =
+              classMirror.declarations[propertyName];
+          Type variableType = variableMirror.dynamicReflectedType;
+          if (variableType == DateTime && Platform.isIOS) {
+            DateTime date = value != null
+                ? DateTime.fromMillisecondsSinceEpoch(value)
+                : null;
+            instanceMirror.invokeSetter(propertyName, date);
+          } else {
+            instanceMirror.invokeSetter(propertyName, value);
+          }
         }
       }
     });

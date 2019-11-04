@@ -35,14 +35,27 @@ class BackendlessWtiter: FlutterStandardWriter {
             } else if value is ObjectProperty || value is UserProperty {
                 let jsonToWrite = prepareJsonForObjectProperty(json)
                 super.writeValue(jsonToWrite)
+            } else if value is DeviceRegistration {
+                let jsonToWrite = prepareJsonForDeviceRegistration(json)
+                super.writeValue(jsonToWrite)
+            } else if value is DeliveryOptions {
+                let jsonToWrite = prepareJsonForDeliveryOptions(json)
+                super.writeValue(jsonToWrite)
+            } else if value is CommandObject {
+                let jsonToWrite = prepareJsonForCommandObject(json)
+                super.writeValue(jsonToWrite)
+            } else if value is BackendlessUser {
+                let jsonToWrite = prepareJsonForBackendlessUser(json)
+                super.writeValue(jsonToWrite)
             } else {
                 super.writeValue(json)
             }
         case is CommandObject:
             let commandObject = value as! CommandObject
             let json = commandObject.encodeToJson()
+            let jsonToWrite = prepareJsonForCommandObject(json)
             writeCode(for: value)
-            super.writeValue(json)
+            super.writeValue(jsonToWrite)
         case is UserStatus:
             let json = jsonFrom(userStatus: value as! UserStatus)
             writeCode(for: value)
@@ -55,14 +68,16 @@ class BackendlessWtiter: FlutterStandardWriter {
     // MARK: -
     // MARK: - Write Date
     private func writeDate(_ date: Date) {
-        writeValue(FlutterTypeCode.dateTime.rawValue)
-        writeValue(date.timeIntervalSince1970)
+        writeByte(FlutterTypeCode.dateTime.rawValue)
+        writeValue(Int(date.timeIntervalSince1970 * 1000))
     }
     
     // MARK: -
     // MARK: - DataFromValue
     private func dataFromValue(_ value: Any) -> Data? {
         switch value {
+        case is GeoCluster:
+            return try? JSONEncoder().encode(value as! GeoCluster)
         case is GeoPoint:
             return try? JSONEncoder().encode(value as! GeoPoint)
         case is DataQueryBuilder:
@@ -79,8 +94,6 @@ class BackendlessWtiter: FlutterStandardWriter {
             return try? JSONEncoder().encode(value as! GeoCategory)
         case is BackendlessGeoQuery:
             return try? JSONEncoder().encode(value as! BackendlessGeoQuery)
-        case is GeoCluster:
-            return try? JSONEncoder().encode(value as! GeoCluster)
         case is SearchMatchesResult:
             return try? JSONEncoder().encode(value as! SearchMatchesResult)
         case is MessageStatus:
@@ -114,6 +127,8 @@ class BackendlessWtiter: FlutterStandardWriter {
     // MARK: - WriteCodeForValue
     private func writeCode(for value: Any) {
         switch value {
+        case is GeoCluster:
+            writeByte(FlutterTypeCode.geoCluster.rawValue)
         case is GeoPoint:
             writeByte(FlutterTypeCode.geoPoint.rawValue)
         case is DataQueryBuilder:
@@ -130,8 +145,6 @@ class BackendlessWtiter: FlutterStandardWriter {
             writeByte(FlutterTypeCode.geoCategory.rawValue)
         case is BackendlessGeoQuery:
             writeByte(FlutterTypeCode.geoQuery.rawValue)
-        case is GeoCluster:
-            writeByte(FlutterTypeCode.geoCluster.rawValue)
         case is SearchMatchesResult:
             writeByte(FlutterTypeCode.searchMatchesResult.rawValue)
         case is MessageStatus:
@@ -185,8 +198,82 @@ class BackendlessWtiter: FlutterStandardWriter {
         
         inputDict.forEach {
             if $0.key == Args.type, let stringValue = $0.value as? String {
-                let enumValue = DataTypeEnum(rawValue: stringValue) ?? .UNKNOWN
+                let enumValue = DataTypeEnum(rawValue: stringValue)
                 result[$0.key] = enumValue.index
+            }
+        }
+        
+        return result
+    }
+    
+    private func prepareJsonForDeviceRegistration(_ json: Any) -> [String: Any] {
+        guard let inputDict = json as? [String: Any] else { return [:] }
+        var result = inputDict
+        
+        inputDict.forEach { (key, value) in
+            let newValue: Any
+            if key == "expiration" {
+                guard let doubleValue = value as? Double else { return }
+                newValue = Date(timeIntervalSinceReferenceDate: doubleValue)
+            } else {
+                newValue = value
+            }
+            result[key] = newValue
+        }
+        
+        return result
+    }
+    
+    private func prepareJsonForDeliveryOptions(_ json: Any) -> [String: Any] {
+        guard let inputDict = json as? [String: Any] else { return [:] }
+        var result = inputDict
+        
+        inputDict.forEach { (key, value) in
+            let newValue: Any
+            if key == "publishAt" || key == "repeatExpiresAt" {
+                guard let doubleValue = value as? Double else { return }
+                newValue = Date(timeIntervalSinceReferenceDate: doubleValue)
+            } else {
+                newValue = value
+            }
+            result[key] = newValue
+        }
+        
+        return result
+    }
+    
+    private func prepareJsonForCommandObject(_ json: Any) -> [String: Any] {
+        guard let inputDict = json as? [String: Any] else { return [:] }
+        var result = inputDict
+        var userInfo: [String: Any] = [:]
+        
+        inputDict.forEach { (key, value) in
+            if key == "connectionId" || key == "userId" {
+                userInfo[key] = value
+            } else if key == "___class" {
+                return
+            } else {
+                result[key] = value
+            }
+        }
+        
+        result["userInfo"] = userInfo
+        
+        return result
+    }
+    
+    private func prepareJsonForBackendlessUser(_ json: Any) -> [String: Any] {
+        guard let inputDict = json as? [String: Any] else { return [:] }
+        var result: [String: Any] = [:]
+        
+        inputDict.forEach { (key, value) in
+            if key == "properties" {
+                guard let properties = value as? [String: Any] else { return }
+                properties.forEach { (key, value) in
+                    result[key] = value
+                }
+            } else {
+                result[key] = value
             }
         }
         

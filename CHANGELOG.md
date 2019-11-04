@@ -1,3 +1,11 @@
+## 0.4.0
+
+* Fixed method `setRelation` to correctly work with `Map children`
+* Fixed deserialization of `DateTime` for `ClassDrivenDataStore` on iOS
+* Added AndroidX support in Android example
+* Fixed decoding of `EmailEnvelope`
+* A lot of fixes and improvements.
+
 ## 0.3.1
 
 * Fixed `HeadersEnum` rawValues in iOS.

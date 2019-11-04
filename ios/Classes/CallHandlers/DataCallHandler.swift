@@ -154,7 +154,12 @@ class DataCallHandler: FlutterCallHandlerProtocol {
             return
         }
         
-        let children: [String]? = arguments[Args.children].flatMap(cast)
+        let children: [String]? = arguments[Args.children]
+            .flatMap(cast)
+            .flatMap { (children: [[String: Any]]) in
+                children.map { $0[Args.objectId] }.compactMap(cast)
+        }
+        
         let whereClause: String? = arguments[Args.whereClause].flatMap(cast)
         
         let successHander = { (relations: Int) in
@@ -481,7 +486,12 @@ class DataCallHandler: FlutterCallHandlerProtocol {
             return
         }
         
-        let children: [String]? = arguments[Args.children].flatMap(cast)
+        let children: [String]? = arguments[Args.children]
+            .flatMap(cast)
+            .flatMap { (children: [[String: Any]]) in
+                children.map { $0[Args.objectId] }.compactMap(cast)
+            }
+        
         let whereClause: String? = arguments[Args.whereClause].flatMap(cast)
         
         let successHander = { (relations: Int) in

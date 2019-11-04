@@ -27,7 +27,19 @@ class BackendlessReader: FlutterStandardReader {
         default:
             guard let json: [String: Any] = readValue().flatMap(cast) else { return nil }
             let jsonWithDates = mapDateValues(json)
-            let jsonToDecode = code == .backendlessUser ? mapUser(jsonWithDates) : jsonWithDates
+            
+            let jsonToDecode: [String: Any]
+            switch code {
+            case .backendlessUser:
+                jsonToDecode = mapUser(jsonWithDates)
+            case .messageStatus:
+                jsonToDecode = mapMessageStatus(jsonWithDates)
+            case .command:
+                jsonToDecode = mapCommand(jsonWithDates)
+            default:
+                jsonToDecode = jsonWithDates
+            }
+            
             value = decode(from: jsonToDecode, code)
         }
 
@@ -105,7 +117,64 @@ class BackendlessReader: FlutterStandardReader {
     // MARK: -
     // MARK: - Map User
     private func mapUser(_ json: [String: Any]) -> [String: Any] {
-        return json["properties"].flatMap(cast) ?? [:]
+        guard let jsonFromProperties = json["properties"] as? [String: Any] else {
+            return [:]
+        }
+        
+        var result: [String: Any] = [:]
+        var properties: [String: Any] = [:]
+        let userFields = ["email", "name", "objectId", "userToken", "password"]
+        
+        jsonFromProperties.forEach { (key, value) in
+            if userFields.contains(key) {
+                result[key] = value
+            } else {
+                properties[key] = value
+            }
+        }
+        
+        properties["blUserLocale"] = Locale.current.languageCode
+        result["properties"] = properties
+        
+        return result
+    }
+    
+    // MARK: -
+    // MARK: - Map Message Status
+    private func mapMessageStatus(_ json: [String: Any]) -> [String: Any] {
+        var result: [String: Any] = [:]
+        
+        let statuses = ["failed", "published", "scheduled", "cancelled", "unknown"]
+        
+        json.forEach { (key, value) in
+            let newValue: Any
+            if key == "status" {
+                guard let index = value as? Int else { return }
+                newValue = statuses[index]
+            } else {
+                newValue = value
+            }
+            result[key] = newValue
+        }
+        
+        return result
+    }
+    
+    // MARK: -
+    // MARK: - Map Command
+    private func mapCommand(_ json: [String: Any]) -> [String: Any] {
+        var result: [String: Any] = [:]
+        
+        json.forEach { (key, value) in
+            if key == "userInfo" {
+                guard let userInfo = value as? [String: Any] else { return }
+                userInfo.forEach { (k, v) in result[k] = v }
+            } else {
+                result[key] = value
+            }
+        }
+        
+        return result
     }
     
     // MARK: -
