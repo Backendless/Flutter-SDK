@@ -6,7 +6,6 @@
 * Fixed decoding of `EmailEnvelope`
 * A lot of fixes and improvements.
 
-
 ## 0.3.1
 
 * Fixed `HeadersEnum` rawValues in iOS.
