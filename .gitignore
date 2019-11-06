@@ -12,6 +12,7 @@ build/
 
 pubspec.lock
 example/ios/Podfile.lock
+example/ios/Flutter/Flutter.podspec
 .metadata
 
 example/ios/Flutter/flutter_export_environment.sh
