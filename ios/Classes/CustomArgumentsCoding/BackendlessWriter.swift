@@ -232,7 +232,7 @@ class BackendlessWtiter: FlutterStandardWriter {
             let newValue: Any
             if key == "publishAt" || key == "repeatExpiresAt" {
                 guard let doubleValue = value as? Double else { return }
-                newValue = Date(timeIntervalSince1970: doubleValue)
+                newValue = Date(timeIntervalSinceReferenceDate: doubleValue)
             } else {
                 newValue = value
             }
