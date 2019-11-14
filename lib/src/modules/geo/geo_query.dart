@@ -55,7 +55,9 @@ class BackendlessGeoQuery extends AbstractBackendlessGeoQuery {
     offset = json['offset'];
     units = Units.values[json['units']];
     includeMeta = json['includeMeta'];
-    _searchRectangle = json['searchRectangle'];
+    List dynamicValues = json['searchRectangle'];
+    List<double> rectangle = dynamicValues.map((v) => v as double).toList();
+    _searchRectangle = Float64List.fromList(rectangle);
   }
 
   Map toJson() => {
