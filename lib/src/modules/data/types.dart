@@ -51,8 +51,9 @@ class Types {
 
     if (declarations.containsKey(columnName)) {
       var value = declarations[columnName];
-      if (value is VariableMirror &&
-          !(value.metadata.any((metadata) => metadata is MapToProperty)))
+      if (value is VariableMirror ||
+          value is MethodMirror &&
+              !(value.metadata.any((metadata) => metadata is MapToProperty)))
         return columnName;
     }
 
