@@ -1,3 +1,10 @@
+## 0.4.1
+
+* Added `relationsPageSize` parameter to `DataQueryBuilder`
+* Fixed deserialization of `List<CustomClass>` properties in `ClassDrivenDataStore`
+* Fixed `DateTime` deserialization in `ClassDrivenDataStore`
+* Fixed encoding/decoding of class `BackendlessGeoQuery`
+
 ## 0.4.0
 
 * Fixed method `setRelation` to correctly work with `Map children`
