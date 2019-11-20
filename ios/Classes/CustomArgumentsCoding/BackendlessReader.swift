@@ -82,6 +82,14 @@ class BackendlessReader: FlutterStandardReader {
                         return Array<Double>(buffer)
                     }
                 }
+            } else if $0.key == "categories" {
+                guard
+                    let categories = $0.value as? [String],
+                    !categories.isEmpty
+                    else {
+                        return
+                }
+                result[$0.key] = $0.value
             } else {
                 result[$0.key] = $0.value
             }

@@ -47,6 +47,9 @@ class BackendlessWtiter: FlutterStandardWriter {
             } else if value is BackendlessUser {
                 let jsonToWrite = prepareJsonForBackendlessUser(json)
                 super.writeValue(jsonToWrite)
+            } else if value is BackendlessGeoQuery {
+                let jsonToWrite = prepareJsonForBackendlessGeoQuery(json)
+                super.writeValue(jsonToWrite)
             } else {
                 super.writeValue(json)
             }
@@ -214,7 +217,7 @@ class BackendlessWtiter: FlutterStandardWriter {
             let newValue: Any
             if key == "expiration" {
                 guard let doubleValue = value as? Double else { return }
-                newValue = Date(timeIntervalSinceReferenceDate: doubleValue)
+                newValue = Date(timeIntervalSince1970: doubleValue)
             } else {
                 newValue = value
             }
@@ -272,6 +275,39 @@ class BackendlessWtiter: FlutterStandardWriter {
                 properties.forEach { (key, value) in
                     result[key] = value
                 }
+            } else {
+                result[key] = value
+            }
+        }
+        
+        return result
+    }
+    
+    private func prepareJsonForBackendlessGeoQuery(_ json: Any) -> [String: Any] {
+        guard let inputDict = json as? [String: Any] else { return [:] }
+        var result: [String: Any] = [:]
+        
+        inputDict.forEach { (key, value) in
+            if key == "geoPoint" {
+                guard let geoPointJSON = value as? [String: Any] else { return }
+                geoPointJSON
+                    .filter { (key, _) in ["latitude", "longitude"].contains(key) }
+                    .forEach { result[$0] = $1 }
+            } else if key == "rectangle" {
+                guard
+                    let rectangleJSON = value as? [String: Any],
+                    let nordWestPointJSON = rectangleJSON["nordWestPoint"] as? [String: Any],
+                    let southEastPointJSON = rectangleJSON["southEastPoint"] as? [String: Any],
+                    let firstCoordinate = nordWestPointJSON["latitude"] as? Double,
+                    let secondCoordinate = nordWestPointJSON["longitude"] as? Double,
+                    let thirdCoordinate = southEastPointJSON["latitude"] as? Double,
+                    let fourthCoordinate = southEastPointJSON["longitude"] as? Double
+                else {
+                    return
+                }
+                
+                let rectangleToWrite = [firstCoordinate, secondCoordinate, thirdCoordinate, fourthCoordinate]
+                result["searchRectangle"] = rectangleToWrite
             } else {
                 result[key] = value
             }
