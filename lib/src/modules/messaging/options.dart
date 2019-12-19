@@ -112,8 +112,8 @@ class DeliveryOptions {
 }
 
 class PublishMessageInfo {
-  String _messageId;
-  int _timestamp;
+  String messageId;
+  int timestamp;
   Object message;
   String publisherId;
   String subtopic;
@@ -129,8 +129,8 @@ class PublishMessageInfo {
   PublishMessageInfo();
 
   PublishMessageInfo.fromJson(Map json) {
-    _messageId = json['messageId'];
-    _timestamp = json['timestamp'];
+    messageId = json['messageId'];
+    timestamp = json['timestamp'];
     message = json['message'];
     publisherId = json['publisherId'];
     subtopic = json['subtopic'];
@@ -145,8 +145,8 @@ class PublishMessageInfo {
   }
 
   Map toJson() => {
-        'messageId': _messageId,
-        'timestamp': _timestamp,
+        'messageId': messageId,
+        'timestamp': timestamp,
         'message': message,
         'publisherId': publisherId,
         'subtopic': subtopic,
@@ -159,9 +159,6 @@ class PublishMessageInfo {
         'repeatExpiresAt': repeatExpiresAt,
         'headers': headers,
       };
-
-  get messageId => _messageId;
-  get timestamp => _timestamp;
 }
 
 class PushBroadcastMask {

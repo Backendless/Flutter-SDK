@@ -1,7 +1,40 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:backendless_sdk/backendless_sdk.dart';
+import 'main.reflectable.dart';
+
+@reflector
+class ChildTest {
+  String objectId;
+  String ownerId;
+  DateTime created;
+  DateTime updated;
+  String first;
+  String second;
+  DateTime third;
+  int fourth;
+  double fifth;
+  bool sixth;
+}
+
+@reflector
+class ClassDrivenTest {
+  String objectId;
+  String ownerId;
+  DateTime created;
+  DateTime updated;
+  String first;
+  String second;
+  DateTime third;
+  int fourth;
+  double fifth;
+  bool sixth;
+  List<ChildTest> seventh;
+}
 
 void main() {
+  initializeReflectable();
   runApp(MyApp());
 }
 
@@ -18,12 +51,26 @@ class _MyAppState extends State<MyApp> {
     super.initState();
 
     Backendless.initApp(
-        "67993429-C72B-72C7-FFDF-FEA2A54FFD00",
-        "F609FF3E-588E-0CCC-FFBB-EB44CFC78600",
-        "849D5B40-C3CD-E3E2-FF37-AEB0CC452700");
+        "1E0573AC-46CC-7244-FFAB-A55AD3D05B00",
+        "8A61E955-D8D6-CBF3-FFF8-FE53DEE02800",
+        "6CBB8265-045A-C493-FF70-FD0908D51200");
   }
 
-  void buttonPressed() {}
+  void buttonPressed() async {
+    final dataStore = Backendless.data.withClass<ClassDrivenTest>();
+
+    final toSave = ClassDrivenTest()
+      ..first = "aaaa"
+      ..third = DateTime.now()
+      ..fourth = 42;
+
+    final listToSave = List.filled(10, toSave);
+
+    await dataStore.create(listToSave);
+
+    final loaded = await dataStore.find();
+    print(loaded);
+  }
 
   @override
   Widget build(BuildContext context) {

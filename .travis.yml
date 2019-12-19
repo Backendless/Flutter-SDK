@@ -1,32 +1,49 @@
-os:
-  - linux
-sudo: false
-addons:
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-    packages:
-      - libstdc++6
-      - fonts-noto
-git:
-  depth: 3
-env:
-  - FLUTTER_VERSION=stable
-  - FLUTTER_VERSION=beta
-matrix:
-  allow_failures:
-    - env: FLUTTER_VERSION=beta
-before_script:
-  - git clone https://github.com/flutter/flutter.git -b $FLUTTER_VERSION
-  - ./flutter/bin/flutter doctor
-script:
-  - ./flutter/bin/flutter test
-cache:
-  directories:
-    - $HOME/.pub-cache
-notifications:
-  email:
-    maksym.khobotin@backendless.consulting
-
-branches:
-  only: [develop]
+{
+  "language": "shell",
+  "os": [
+    "osx",
+    "linux"
+  ],
+  "jobs": {
+    "include": [
+      {
+        "stage": "iOS_Test",
+        "os": "osx",
+        "osx_image": "xcode11",
+        "git": {
+          "depth": 3
+        },
+        "before_script": [
+          "open /Applications/Xcode.app/Contents/Developer/Applications/Simulator.app",
+          "brew update",
+          "brew install libimobiledevice",
+          "brew install ideviceinstaller",
+          "brew install ios-deploy",
+          "sudo gem install cocoapods",
+          "git clone https://github.com/flutter/flutter.git -b beta",
+          "export PATH=\"$PATH\":\"$HOME/.pub-cache/bin\"",
+          "export PATH=`pwd`/flutter/bin:`pwd`/flutter/bin/cache/dart-sdk/bin:$PATH",
+          "flutter precache",
+          "flutter doctor -v",
+          "flutter devices",
+          "flutter packages get",
+          "flutter packages pub run build_runner build --delete-conflicting-outputs",
+          "cd example"
+        ],
+        "script": [
+          "./test_driver/run_tests.sh iPhone X"
+        ],
+        "cache": {
+          "directories": [
+            "$HOME/.pub-cache"
+          ]
+        },
+        "branches": {
+          "only": [
+            "bodnar/19570/tests"
+          ]
+        }
+      }
+    ]
+  }
+}

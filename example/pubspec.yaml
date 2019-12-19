@@ -14,11 +14,13 @@ dependencies:
   cupertino_icons: ^0.1.2
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
-
   backendless_sdk:
     path: ../
+  flutter_driver:
+    sdk: flutter
+  test: any
+  path_provider:
+  intl:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec
