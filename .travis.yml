@@ -1,49 +1,147 @@
-{
-  "language": "shell",
-  "os": [
-    "osx",
-    "linux"
-  ],
-  "jobs": {
-    "include": [
-      {
-        "stage": "iOS_Test",
-        "os": "osx",
-        "osx_image": "xcode11",
-        "git": {
-          "depth": 3
-        },
-        "before_script": [
-          "open /Applications/Xcode.app/Contents/Developer/Applications/Simulator.app",
-          "brew update",
-          "brew install libimobiledevice",
-          "brew install ideviceinstaller",
-          "brew install ios-deploy",
-          "sudo gem install cocoapods",
-          "git clone https://github.com/flutter/flutter.git -b beta",
-          "export PATH=\"$PATH\":\"$HOME/.pub-cache/bin\"",
-          "export PATH=`pwd`/flutter/bin:`pwd`/flutter/bin/cache/dart-sdk/bin:$PATH",
-          "flutter precache",
-          "flutter doctor -v",
-          "flutter devices",
-          "flutter packages get",
-          "flutter packages pub run build_runner build --delete-conflicting-outputs",
-          "cd example"
-        ],
-        "script": [
-          "./test_driver/run_tests.sh iPhone X"
-        ],
-        "cache": {
-          "directories": [
-            "$HOME/.pub-cache"
-          ]
-        },
-        "branches": {
-          "only": [
-            "bodnar/19570/tests"
-          ]
-        }
-      }
-    ]
-  }
-}
+language: shell
+os:
+  - osx
+  - linux
+
+env:
+  global:
+    # Android
+    - API=28
+    - ABI=x86_64
+    - G_SERVICES=default
+    - ANDROID_TOOLS=4333796 # android-28
+    # Flutter
+    - FLUTTER_CHANNEL=stable
+    - FLUTTER_VERSION=1.9.1+hotfix.6-${FLUTTER_CHANNEL}
+    # Path
+    - ANDROID_HOME=${HOME}/android-sdk-linux
+    - TOOLS=${ANDROID_HOME}/tools
+    - PATH=${ANDROID_HOME}:${ANDROID_HOME}/emulator:${TOOLS}:${TOOLS}/bin:${ANDROID_HOME}/platform-tools:${PATH}
+    - JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+    - PATH="$JAVA_HOME/bin:$PATH"
+    - FLUTTER_HOME=${HOME}/flutter
+    - PATH=${HOME}/.pub-cache/bin:${PATH}
+    - PATH=${FLUTTER_HOME}/bin:${FLUTTER_HOME}/bin/cache/dart-sdk/bin:${PATH}
+
+jobs:
+  include:
+    - stage: iOS_Test
+      os: osx
+      osx_image: xcode11
+      git:
+        depth: 3
+      before_script:
+        - open /Applications/Xcode.app/Contents/Developer/Applications/Simulator.app
+        - brew update
+        - brew install libimobiledevice
+        - brew install ideviceinstaller
+        - brew install ios-deploy
+        - sudo gem install cocoapods
+        - git clone https://github.com/flutter/flutter.git -b beta
+        - export PATH="$PATH":"$HOME/.pub-cache/bin"
+        - export PATH=`pwd`/flutter/bin:`pwd`/flutter/bin/cache/dart-sdk/bin:$PATH
+        - flutter precache
+        - flutter doctor -v
+        - flutter devices
+        - flutter packages get
+        - flutter packages pub run build_runner build
+        - cd example
+      script:
+        - ./test_driver/run_tests.sh iPhone X
+      cache:
+        directories:
+          - $HOME/.pub-cache
+      branches:
+        only:
+          - bodnar/19570/tests
+    - stage: Android_Test
+      os: linux
+      dist: bionic
+      
+
+
+      cache:
+        directories:
+          - $HOME/.gradle/caches/
+          - $HOME/.gradle/wrapper/
+          - $HOME/.pub-cache
+          - flutter
+
+      before_cache:
+        - rm -rf $HOME/.gradle/caches/[1-9]*  
+        - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+
+      addons:
+        apt:
+          packages:
+            - libvirt-bin
+            - bridge-utils
+            - openjdk-8-jdk-headless
+
+      install:
+        # Android tools
+        - curl -L "https://dl.google.com/android/repository/sdk-tools-linux-$ANDROID_TOOLS.zip" -o $HOME/tools.zip
+        - unzip -oq $HOME/tools.zip -d ${ANDROID_HOME}
+
+        # Accept licenses before installing components, no need to echo y for each component
+        - yes | sdkmanager --licenses
+        
+        # Download SDK tools
+        - sdkmanager "tools" >/dev/null
+        - sdkmanager "platform-tools" >/dev/null
+        - sdkmanager "emulator" >/dev/null
+        - sdkmanager "platforms;android-$API" >/dev/null # We need the API of the emulator we will run
+        - sdkmanager "system-images;android-$API;$G_SERVICES;$ABI" >/dev/null # install system images for emulator
+
+        - sudo adduser $USER libvirt
+
+        # Define emulator parameters
+        - EMU_PARAMS="
+          -avd test 
+          -no-audio 
+          -no-window
+          -no-accel
+          -gpu swiftshader_indirect
+          -no-boot-anim
+          -camera-back none 
+          -camera-front none"
+
+        # Create and start emulator as early as possible
+        - adb start-server
+        - avdmanager create avd --force --name test --package "system-images;android-$API;$G_SERVICES;$ABI" --abi $ABI --device 'Nexus 4' --sdcard 128M
+        - $ANDROID_HOME/emulator/emulator ${EMU_PARAMS} &
+
+        # Install other required tools:
+        - sdkmanager "build-tools;28.0.3" >/dev/null # Implicit gradle dependency - gradle drives changes
+        - sdkmanager "platforms;android-28" >/dev/null # We need the API of the current compileSdkVersion from gradle.properties
+        - sdkmanager "extras;android;m2repository" >/dev/null
+
+        # Install flutter (while emulator is starting)
+        - sudo apt-get install -y --no-install-recommends lib32stdc++6 libstdc++6 > /dev/null
+        - if [ ! -f $HOME/flutter/bin/flutter ] ; then 
+            git clone https://github.com/flutter/flutter.git $FLUTTER_HOME -b beta;
+            flutter pub get;
+          fi
+        # - wget --quiet --output-document=flutter.tar.xz https://storage.googleapis.com/flutter_infra/releases/${FLUTTER_CHANNEL}/linux/flutter_linux_v${FLUTTER_VERSION}.tar.xz
+        # - tar xf flutter.tar.xz -C $(dirname ${FLUTTER_HOME})
+        # - rm flutter.tar.xz
+
+        # Download the script to wait for emulator
+        - curl -L https://raw.githubusercontent.com/travis-ci/travis-cookbooks/master/community-cookbooks/android-sdk/files/default/android-wait-for-emulator -o $HOME/bin/android-wait-for-emulator
+        - chmod +x $HOME/bin/android-wait-for-emulator
+        - chmod -R +x $FLUTTER_HOME
+
+      before_script:
+        # Wait for emulator to finish startup
+        - android-wait-for-emulator
+        # Unlock screen
+        - adb shell input keyevent 82 &
+
+      script:
+        - cd example
+        - ./test_driver/run_tests.sh emulator-5554
+
+
+notifications:
+  email:
+    - maksym.khobotin@backendless.consulting
