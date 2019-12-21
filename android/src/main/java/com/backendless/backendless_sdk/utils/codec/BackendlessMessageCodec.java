@@ -22,6 +22,7 @@ import com.backendless.messaging.Message;
 import com.backendless.messaging.MessageStatus;
 import com.backendless.messaging.PublishMessageInfo;
 import com.backendless.messaging.PublishOptions;
+import com.backendless.persistence.BackendlessDataQuery;
 import com.backendless.persistence.DataQueryBuilder;
 import com.backendless.persistence.LoadRelationsQueryBuilder;
 import com.backendless.property.ObjectProperty;
@@ -38,6 +39,7 @@ import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -95,10 +97,28 @@ public final class BackendlessMessageCodec extends StandardMessageCodec {
             writeValue(stream, objectMapper.convertValue(value, Map.class));
         } else if (value instanceof DataQueryBuilder) {
             stream.write(DATA_QUERY_BUILDER);
-            writeValue(stream, objectMapper.convertValue(value, Map.class));
+            Map<String, Object> result = new HashMap<>();
+            BackendlessDataQuery dataQuery = ((DataQueryBuilder) value).build();
+            result.put("pageSize", dataQuery.getPageSize());
+            result.put("offset", dataQuery.getOffset());
+            result.put("properties", dataQuery.getProperties());
+            result.put("whereClause", dataQuery.getWhereClause());
+            result.put("groupBy", dataQuery.getGroupBy());
+            result.put("havingClause", dataQuery.getHavingClause());
+            result.put("sortBy", dataQuery.getQueryOptions().getSortBy());
+            result.put("related", dataQuery.getQueryOptions().getRelated());
+            result.put("relationsDepth", dataQuery.getQueryOptions().getRelationsDepth());
+            writeValue(stream, result);
         } else if (value instanceof LoadRelationsQueryBuilder) {
             stream.write(LOAD_RELATIONS_QUERY_BUILDER);
-            writeValue(stream, objectMapper.convertValue(value, Map.class));
+            Map<String, Object> result = new HashMap<>();
+            BackendlessDataQuery dataQuery = ((LoadRelationsQueryBuilder) value).build();
+            result.put("relationName", dataQuery.getQueryOptions().getRelated().get(0));
+            result.put("pageSize", dataQuery.getPageSize());
+            result.put("offset", dataQuery.getOffset());
+            result.put("properties", dataQuery.getProperties());
+            result.put("sortBy", dataQuery.getQueryOptions().getSortBy());
+            writeValue(stream, result);
         } else if (value instanceof ObjectProperty) {
             stream.write(OBJECT_PROPERTY);
             writeValue(stream, objectMapper.convertValue(new ObjectPropertyMixin(value), Map.class));

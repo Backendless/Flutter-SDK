@@ -5,19 +5,25 @@ class DeviceRegistration {
   String deviceToken = "";
   String deviceId = "";
   String os;
-  String osVersion;
+  String _osVersion;
   DateTime expiration;
   List<String> channels = new List<String>();
 
   DeviceRegistration();
+
+  set osVersion(int value) => _osVersion = value.toString();
+
+  get osVersion => _osVersion;
 
   DeviceRegistration.fromJson(Map json)
       : id = json['id'],
         deviceToken = json['deviceToken'],
         deviceId = json['deviceId'],
         os = json['os'],
-        osVersion = json['osVersion'],
-        expiration = json['expiration'],
+        _osVersion = json['osVersion'],
+        expiration = json['expiration'] is int
+            ? DateTime.fromMillisecondsSinceEpoch(json['expiration'])
+            : json['expiration'],
         channels = json['channels'].cast<String>();
 
   Map toJson() => {
@@ -25,7 +31,7 @@ class DeviceRegistration {
         'deviceToken': deviceToken,
         'deviceId': deviceId,
         'os': os,
-        'osVersion': osVersion,
+        'osVersion': _osVersion,
         'expiration': expiration,
         'channels': channels,
       };

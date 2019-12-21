@@ -85,7 +85,10 @@ class BackendlessFiles {
           <String, dynamic>{"oldPathName": oldPathName, "newName": newName});
 
   Future<String> saveFile(Uint8List fileContent,
-      {String path, String fileName, String filePathName, bool overwrite}) {
+      {String path,
+      String fileName,
+      String filePathName,
+      bool overwrite = false}) {
     checkArguments(
         {"path": path, "fileName": fileName}, {"filePathName": filePathName});
 

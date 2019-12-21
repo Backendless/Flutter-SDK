@@ -19,6 +19,7 @@ fileprivate enum FlutterPluginChannels: String, CaseIterable {
     case userServiceChannel = "backendless/user_service"
     case rtChannel = "backendless/rt"
     case pushChannel = "backendless/messaging/push"
+    case testChannel = "backendless/test"
 }
 
 public class SwiftBackendlessSdkPlugin: NSObject, FlutterPlugin {
@@ -94,6 +95,9 @@ public class SwiftBackendlessSdkPlugin: NSObject, FlutterPlugin {
                     let pushCallHandler = PushCallHandler(pushChannel: channel)
                     SwiftBackendlessSdkPlugin.shared.pushHandler = pushCallHandler
                     handler = pushCallHandler
+                case .testChannel:
+                    channel = FlutterMethodChannel(name: pluginChannel.rawValue, binaryMessenger: messenger, codec: codec)
+                    handler = TestCallHandler()
                 }
                 
                 handlers.append(handler)

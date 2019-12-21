@@ -237,7 +237,10 @@ class ClassDrivenDataStore<T> implements IDataStore<T> {
     }))
         .cast<Map>();
 
-    return mapObjects.map((map) => reflector.deserialize<T>(map));
+    List<T> deserializedList =
+        mapObjects.map((map) => reflector.deserialize<T>(map)).toList();
+
+    return Future<List<T>>.value(deserializedList);
   }
 
   Future<T> findById(String id,
