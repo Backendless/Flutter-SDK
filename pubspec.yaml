@@ -11,7 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   collection: ^1.14.11
-  reflectable: ^2.0.12
+  reflectable: ^2.2.1
 
 dev_dependencies:
   flutter_test:

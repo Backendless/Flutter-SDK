@@ -84,9 +84,15 @@ class Reflector extends Reflectable {
     return Types.getMappedServerClass(clientClassName);
   }
 
-  bool isCustomClass<T>(T object) {
+  bool isCustomClass<T>([T object]) {
     try {
-      if (!canReflect(object)) return false;
+      if (object == null ) {
+        if (!canReflectType(T)) {
+          return false;
+        }
+      } else if (!canReflect(object)) {
+        return false;
+      }
     } catch (e) {
       return false;
     }

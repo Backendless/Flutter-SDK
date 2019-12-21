@@ -24,15 +24,22 @@ class BackendlessCache {
       "Backendless.Cache.expireIn",
       <String, dynamic>{"key": key, "seconds": seconds});
 
-  /// This method does not support retrieving custom classes for now
-  Future<dynamic> get(String key) => _channel
-      .invokeMethod("Backendless.Cache.get", <String, dynamic>{"key": key});
+  Future<T> get<T>(String key) async {
+    var result = await _channel.invokeMethod("Backendless.Cache.get", <String, dynamic>{"key": key});
 
-  /// This method does not support putting custom classes for now
-  Future<void> put(String key, Object object, [int timeToLive]) =>
+    if (reflector.isCustomClass<T>()) {
+      return reflector.deserialize<T>(result);
+    } else {
+      return result;
+    }
+  }
+
+  Future<void> put<T>(String key, T object, [int timeToLive]) =>
       _channel.invokeMethod("Backendless.Cache.put", <String, dynamic>{
         "key": key,
-        "object": object,
+        "object": reflector.isCustomClass(object)
+            ? reflector.serialize(object)
+            : object,
         "timeToLive": timeToLive
       });
 
