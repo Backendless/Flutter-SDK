@@ -1,8 +1,3 @@
-language: shell
-os:
-  - osx
-  - linux
-
 env:
   global:
     # Android
@@ -25,38 +20,52 @@ env:
 
 jobs:
   include:
-    - stage: iOS_Test
+    - stage: iOS Tests
       os: osx
+      language: objective-c
       osx_image: xcode11
       git:
         depth: 3
       before_script:
         - open /Applications/Xcode.app/Contents/Developer/Applications/Simulator.app
-        - brew update
+        # - brew update
         - brew install libimobiledevice
         - brew install ideviceinstaller
         - brew install ios-deploy
         - sudo gem install cocoapods
-        - git clone https://github.com/flutter/flutter.git -b beta
+        # - git clone https://github.com/flutter/flutter.git -b beta
         - export PATH="$PATH":"$HOME/.pub-cache/bin"
         - export PATH=`pwd`/flutter/bin:`pwd`/flutter/bin/cache/dart-sdk/bin:$PATH
-        - flutter precache
-        - flutter doctor -v
-        - flutter devices
-        - flutter packages get
-        - flutter packages pub run build_runner build
+        # - flutter precache
+        # - flutter doctor -v
+        # - flutter devices
+        # - flutter packages get
+
+        - if [ ! -f $HOME/flutter/bin/flutter ] ; then 
+            git clone https://github.com/flutter/flutter.git $FLUTTER_HOME -b beta;
+            flutter pub get;
+          fi
+
+
+        # - flutter packages pub run build_runner build --delete-conflicting-outputs
         - cd example
       script:
         - ./test_driver/run_tests.sh iPhone X
       cache:
         directories:
           - $HOME/.pub-cache
+          - flutter
       branches:
         only:
           - bodnar/19570/tests
-    - stage: Android_Test
+
+
+    - stage: Android Tests
       os: linux
       dist: bionic
+      language: shell
+      git:
+        depth: 3
       
 
 
@@ -66,6 +75,10 @@ jobs:
           - $HOME/.gradle/wrapper/
           - $HOME/.pub-cache
           - flutter
+
+      branches:
+        only:
+          - bodnar/19570/tests
 
       before_cache:
         - rm -rf $HOME/.gradle/caches/[1-9]*  

@@ -51,25 +51,24 @@ class _MyAppState extends State<MyApp> {
     super.initState();
 
     Backendless.initApp(
-        "1E0573AC-46CC-7244-FFAB-A55AD3D05B00",
+        "A193657F-3E2D-4ADD-A450-5532F0BF09EC",
         "8A61E955-D8D6-CBF3-FFF8-FE53DEE02800",
         "6CBB8265-045A-C493-FF70-FD0908D51200");
+
+
+    
+    var rt = Backendless.data.of("Test").rt();
+    rt.addCreateListener((callback) => print("Create event"));
+    rt.addUpdateListener((callback) => print("Update event"));
+    rt.addDeleteListener((callback) => print("Delete event"));
+    rt.addBulkUpdateListener((callback) => print("BulkUpdate event"));
+    rt.addBulkDeleteListener((callback) => print("BulkDelete event"));
   }
 
   void buttonPressed() async {
-    final dataStore = Backendless.data.withClass<ClassDrivenTest>();
+      final copyCount = await Backendless.files.getFileCount("test_folder/copy_folder");
+      print(copyCount);
 
-    final toSave = ClassDrivenTest()
-      ..first = "aaaa"
-      ..third = DateTime.now()
-      ..fourth = 42;
-
-    final listToSave = List.filled(10, toSave);
-
-    await dataStore.create(listToSave);
-
-    final loaded = await dataStore.find();
-    print(loaded);
   }
 
   @override

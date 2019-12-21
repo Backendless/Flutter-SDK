@@ -41,7 +41,7 @@ class TestRT {
         };
 
         rt.addCreateListener(createListener);
-        await Future.delayed(Duration(seconds: 3));
+        await Future.delayed(Duration(seconds: 4));
 
         final entityToSave = {
           "first": firstFieldValue,
@@ -71,7 +71,7 @@ class TestRT {
         };
 
         rt.addUpdateListener(updateListener);
-        await Future.delayed(Duration(seconds: 3));
+        await Future.delayed(Duration(seconds: 4));
 
         savedEntity["first"] = firstFieldValueUpdated;
         savedEntity["fourth"] = fourthFieldValueUpdated;
@@ -93,7 +93,7 @@ class TestRT {
         };
 
         rt.addDeleteListener(deleteListener);
-        await Future.delayed(Duration(seconds: 3));
+        await Future.delayed(Duration(seconds: 4));
 
         await dataStore.remove(entity: savedEntity);
         await deleteCompleter.future;
@@ -113,7 +113,7 @@ class TestRT {
         };
 
         rt.addBulkUpdateListener(bulkUpdateListener);
-        await Future.delayed(Duration(seconds: 3));
+        await Future.delayed(Duration(seconds: 4));
 
         final singleEntity = {
           "first": firstFieldValue,
@@ -134,37 +134,37 @@ class TestRT {
         rt.removeBulkUpdateListeners();
       });
 
-      test("Bulk Delete", () async {
-        final bulkDeleteCompleter = Completer();
+      // test("Bulk Delete", () async {
+      //   final bulkDeleteCompleter = Completer();
 
-        final bulkDeleteListener = (BulkEvent event) {
-          if (event.count == numberOfObjectsInBulk &&
-              event.whereClause == whereClause) {
-            bulkDeleteCompleter.complete();
-          } else {
-            bulkDeleteCompleter.completeError("Bulk Delete Listener Error");
-          }
-        };
+      //   final bulkDeleteListener = (BulkEvent event) {
+      //     if (event.count == numberOfObjectsInBulk &&
+      //         event.whereClause == whereClause) {
+      //       bulkDeleteCompleter.complete();
+      //     } else {
+      //       bulkDeleteCompleter.completeError("Bulk Delete Listener Error");
+      //     }
+      //   };
 
-        rt.addBulkDeleteListener(bulkDeleteListener);
-        await Future.delayed(Duration(seconds: 3));
+      //   rt.addBulkDeleteListener(bulkDeleteListener);
+      //   await Future.delayed(Duration(seconds: 20));
 
-        final singleEntity = {
-          "first": firstFieldValue,
-          "second": secondFieldValue,
-          "third": thirdFieldValue,
-          "fourth": fourthFieldValue,
-          "fifth": fifthFieldValue,
-          "sixth": sixthFieldValue
-        };
-        final entitiesToSave = List.filled(numberOfObjectsInBulk, singleEntity);
+      //   final singleEntity = {
+      //     "first": firstFieldValue,
+      //     "second": secondFieldValue,
+      //     "third": thirdFieldValue,
+      //     "fourth": fourthFieldValue,
+      //     "fifth": fifthFieldValue,
+      //     "sixth": sixthFieldValue
+      //   };
+      //   final entitiesToSave = List.filled(numberOfObjectsInBulk, singleEntity);
 
-        await dataStore.create(entitiesToSave);
-        await dataStore.remove(whereClause: whereClause);
+      //   await dataStore.create(entitiesToSave);
+      //   await dataStore.remove(whereClause: whereClause);
 
-        await bulkDeleteCompleter.future;
-        rt.removeBulkDeleteListeners();
-      });
+      //   await bulkDeleteCompleter.future;
+      //   rt.removeBulkDeleteListeners();
+      // });
     });
   }
 }

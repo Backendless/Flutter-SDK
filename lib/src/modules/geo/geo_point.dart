@@ -74,7 +74,7 @@ class BaseGeoPoint extends EntityDescription {
       MapEquality().equals(o.metadata, metadata);
 
   @override
-  int get hashCode => hashValues(objectId, latitude, longitude, _categories);
+  int get hashCode => hashValues(objectId, latitude, longitude, ListEquality().hash(_categories));
 }
 
 class GeoPoint extends BaseGeoPoint {

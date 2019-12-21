@@ -20,7 +20,7 @@ class TestStatic {
 
       // --
       test('Init App', () async {
-        final appId = "1E0573AC-46CC-7244-FFAB-A55AD3D05B00";
+        final appId = "A193657F-3E2D-4ADD-A450-5532F0BF09EC";
         final androidKey = "8A61E955-D8D6-CBF3-FFF8-FE53DEE02800";
         final iosKey = "6CBB8265-045A-C493-FF70-FD0908D51200";
 
