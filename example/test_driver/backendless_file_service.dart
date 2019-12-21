@@ -85,7 +85,8 @@ class TestFileService {
           final copyPath = folder + "/" + copyFolder;
           final rootCount = await files.getFileCount(folder, "*", false, true);
 
-          final copyCount = await files.getFileCount(copyPath, "*", false, true);
+          final copyCount =
+              await files.getFileCount(copyPath, "*", false, true);
 
           expect(rootCount, 2);
           expect(copyCount, 2);

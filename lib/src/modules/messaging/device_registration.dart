@@ -21,7 +21,9 @@ class DeviceRegistration {
         deviceId = json['deviceId'],
         os = json['os'],
         _osVersion = json['osVersion'],
-        expiration = json['expiration'] is int ? DateTime.fromMillisecondsSinceEpoch(json['expiration']) : json['expiration'],
+        expiration = json['expiration'] is int
+            ? DateTime.fromMillisecondsSinceEpoch(json['expiration'])
+            : json['expiration'],
         channels = json['channels'].cast<String>();
 
   Map toJson() => {

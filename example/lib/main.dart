@@ -1,37 +1,6 @@
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:backendless_sdk/backendless_sdk.dart';
 import 'main.reflectable.dart';
-
-@reflector
-class ChildTest {
-  String objectId;
-  String ownerId;
-  DateTime created;
-  DateTime updated;
-  String first;
-  String second;
-  DateTime third;
-  int fourth;
-  double fifth;
-  bool sixth;
-}
-
-@reflector
-class ClassDrivenTest {
-  String objectId;
-  String ownerId;
-  DateTime created;
-  DateTime updated;
-  String first;
-  String second;
-  DateTime third;
-  int fourth;
-  double fifth;
-  bool sixth;
-  List<ChildTest> seventh;
-}
 
 void main() {
   initializeReflectable();
@@ -51,23 +20,12 @@ class _MyAppState extends State<MyApp> {
     super.initState();
 
     Backendless.initApp(
-        "A193657F-3E2D-4ADD-A450-5532F0BF09EC",
-        "8A61E955-D8D6-CBF3-FFF8-FE53DEE02800",
-        "6CBB8265-045A-C493-FF70-FD0908D51200");
-
-
-    
-    var rt = Backendless.data.of("Test").rt();
-    rt.addCreateListener((callback) => print("Create event"));
-    rt.addUpdateListener((callback) => print("Update event"));
-    rt.addDeleteListener((callback) => print("Delete event"));
-    rt.addBulkUpdateListener((callback) => print("BulkUpdate event"));
-    rt.addBulkDeleteListener((callback) => print("BulkDelete event"));
+        "APPLICATION-ID",
+        "ANDROID-API-KEY",
+        "IOS-API-KEY");
   }
 
   void buttonPressed() async {
-      final copyCount = await Backendless.files.getFileCount("test_folder/copy_folder");
-      print(copyCount);
 
   }
 

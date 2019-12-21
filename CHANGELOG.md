@@ -1,3 +1,9 @@
+## 1.0.0
+
+* Bump to released version
+* Added integration tests
+* Fixes and optimizations
+
 ## 0.4.1
 
 * Added `relationsPageSize` parameter to `DataQueryBuilder`

@@ -69,9 +69,13 @@ class DeliveryOptions {
         pushSinglecast = json['pushSinglecast'].cast<String>(),
         segmentQuery = json['segmentQuery'],
         publishPolicy = PublishPolicyEnum.values[json['publishPolicy']],
-        publishAt = json['publishAt'] is int ? DateTime.fromMillisecondsSinceEpoch(json['publishAt']) : json['publishAt'],
+        publishAt = json['publishAt'] is int
+            ? DateTime.fromMillisecondsSinceEpoch(json['publishAt'])
+            : json['publishAt'],
         repeatEvery = json['repeatEvery'],
-        repeatExpiresAt = json['repeatExpiresAt'] is int ? DateTime.fromMillisecondsSinceEpoch(json['repeatExpiresAt']) : json['repeatExpiresAt'];
+        repeatExpiresAt = json['repeatExpiresAt'] is int
+            ? DateTime.fromMillisecondsSinceEpoch(json['repeatExpiresAt'])
+            : json['repeatExpiresAt'];
 
   Map toJson() => {
         'pushBroadcast': pushBroadcast,
