@@ -1,3 +1,7 @@
+## 1.0.1
+
+* Fix crash during publish() call
+
 ## 1.0.0
 
 * Bump to released version

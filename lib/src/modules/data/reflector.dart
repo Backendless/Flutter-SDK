@@ -85,7 +85,11 @@ class Reflector extends Reflectable {
   }
 
   bool isCustomClass<T>(T object) {
-    if (!canReflect(object)) return false;
+    try {
+      if (!canReflect(object)) return false;
+    } catch (e) {
+      return false;
+    }
     ClassMirror classMirror = reflectType(T);
     for (Object metadata in classMirror.metadata) {
       if (metadata is Reflector) return true;
