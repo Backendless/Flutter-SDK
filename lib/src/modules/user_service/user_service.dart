@@ -56,12 +56,16 @@ class BackendlessUserService {
   Future<BackendlessUser> update(BackendlessUser user) => _channel.invokeMethod(
       "Backendless.UserService.update", <String, dynamic>{"user": user});
 
-  Future<String> getUserToken() =>
+  Future<String> getUserToken() => 
       _channel.invokeMethod("Backendless.UserService.getUserToken");
 
   Future<void> setUserToken(String userToken) => _channel.invokeMethod(
       "Backendless.UserService.setUserToken",
       <String, dynamic>{"userToken": userToken});
+
+  Future<BackendlessUser> loginAsGuest([bool stayLoggedIn]) =>
+      _channel.invokeMethod("Backendless.UserService.loginAsGuest",
+      <String, dynamic>{"stayLoggedIn": stayLoggedIn});
 
   Future<BackendlessUser> loginWithFacebook(String accessToken,
           {Map<String, String> fieldsMapping, bool stayLoggedIn}) =>
