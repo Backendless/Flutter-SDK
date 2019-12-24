@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:backendless_sdk/backendless_sdk.dart';
-import 'main.reflectable.dart';
 
 void main() {
-  initializeReflectable();
   runApp(MyApp());
 }
 
@@ -25,7 +23,19 @@ class _MyAppState extends State<MyApp> {
         "IOS-API-KEY");
   }
 
-  void buttonPressed() async {
+  void buttonPressed() {
+    final pointWKT = "POINT (30 10)";
+    final lineWKT = "LINESTRING (30 10, 10 30, 40 40)";
+    final polygonWKT = "POLYGON ((35 10, 45 45, 15 40, 10 20, 35 10),(20 30, 35 35, 30 20, 20 30))";
+
+    final point = Geometry.fromWKT(pointWKT);
+    print("Point: $point");
+
+    // final lineString = Geometry.fromWKT(lineWKT);
+    // print("LineString: $lineString");
+
+    // final polygon = Geometry.fromWKT(polygonWKT);
+
 
   }
 
