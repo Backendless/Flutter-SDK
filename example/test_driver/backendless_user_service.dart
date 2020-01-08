@@ -8,8 +8,8 @@ class TestUserService {
     group('User Service', () {
       final userService = Backendless.userService;
 
-      final testEmail = "test_user@testmail.com";
-      final updatedEmail = "updated_test_user@testmail.com";
+      final testEmail = "test@backendless.consulting";
+      final updatedEmail = "updated_test@backendless.consulting";
       final testPass = "test_password";
       final updatedPass = "updated_test_password";
 
