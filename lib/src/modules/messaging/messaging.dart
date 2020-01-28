@@ -114,7 +114,14 @@ class BackendlessMessaging {
         "Backendless.Messaging.subscribe", <String, dynamic>{
       "channelName": channelName,
       "channelHandle": handle
-    }).then((value) => new Channel(_messagingChannel, channelName, handle));
+    }).then((value) => new Channel(_messagingChannel, channelName, handle),
+        onError: (e) {
+      String errorMessage = "Couldn't subscribe to the channel: $e";
+      if (Platform.isAndroid) {
+        errorMessage += "Please check whether you add io.socket dependency.";
+      }
+      return Future.error(errorMessage);
+    });
   }
 
   Future<dynamic> _handleMethod(MethodCall call) async {

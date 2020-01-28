@@ -76,6 +76,7 @@ class TestStatic {
         final headers = await Backendless.getHeaders();
 
         expect(headers, currentHeaders);
+        expect(1, 2);
       });
 
       // --

@@ -27,6 +27,7 @@ class BackendlessWtiter: FlutterStandardWriter {
              is BulkEvent, is EmailEnvelope:
             guard let jsonData = dataFromValue(value) else { return }
             guard let json = try? JSONSerialization.jsonObject(with: jsonData, options: []) else { return }
+
             writeCode(for: value)
             
             if value is MessageStatus {
@@ -63,7 +64,22 @@ class BackendlessWtiter: FlutterStandardWriter {
             let json = jsonFrom(userStatus: value as! UserStatus)
             writeCode(for: value)
             super.writeValue(json)
-        default:
+        case is BLPoint:
+            if let wkt = wktFromGeometry(value as! BLPoint) {
+                writeCode(for: value)
+                super.writeValue(wkt)
+            }
+        case is BLLineString:
+            if let wkt = wktFromGeometry(value as! BLLineString) {
+                writeCode(for: value)
+                super.writeValue(wkt)
+            }
+        case is BLPolygon:
+                if let wkt = wktFromGeometry(value as! BLPolygon) {
+                writeCode(for: value)
+                super.writeValue(wkt)
+            }
+        default:               
             super.writeValue(value)
         }
     }
@@ -176,6 +192,12 @@ class BackendlessWtiter: FlutterStandardWriter {
             writeByte(FlutterTypeCode.bulkEvent.rawValue)
         case is EmailEnvelope:
             writeByte(FlutterTypeCode.emailEnvelope.rawValue)
+        case is BLPoint:
+             writeByte(FlutterTypeCode.point.rawValue)
+        case is BLLineString:
+             writeByte(FlutterTypeCode.lineString.rawValue)
+        case is BLPolygon:
+             writeByte(FlutterTypeCode.polygon.rawValue)
         default:
             break
         }
@@ -328,5 +350,18 @@ class BackendlessWtiter: FlutterStandardWriter {
         }
         
         return result
+    }
+    
+    private func wktFromGeometry(_ geometry: BLGeometry) -> String? {
+        if geometry is BLPoint {
+            return (geometry as! BLPoint).asWkt()
+        }
+        else if geometry is BLLineString {
+            return (geometry as! BLLineString).asWkt()
+        }
+        else if geometry is BLPolygon {
+            return (geometry as! BLPolygon).asWkt()
+        }
+        return nil
     }
 }

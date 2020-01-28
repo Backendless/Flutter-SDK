@@ -29,6 +29,9 @@ enum FlutterTypeCode: UInt8 {
     case userProperty
     case bulkEvent
     case emailEnvelope
+    case point
+    case lineString
+    case polygon
 }
 
 // MARK: -

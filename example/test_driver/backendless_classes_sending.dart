@@ -377,6 +377,33 @@ class TestClassesSending {
 
         expect(receivedValue.toJson(), envelope.toJson());
       });
+      test("Point", () async {
+        final point = Point()
+          ..latitude = 42.42
+          ..longitude = 1.01;
+
+        Point receivedValue = await sendValue(point);
+        expect(receivedValue.asWKT(), point.asWKT());
+      });
+      test("LineString", () async {
+        final lineString = LineString();
+        List<Point> points = [
+          Point(x: 1.0, y: 2.0),
+          Point(x: 42.42, y: 21.21),
+          Point(x: -10.5, y: -100),
+        ];
+        lineString.points = points;
+
+        LineString receivedValue = await sendValue(lineString);
+        expect(receivedValue.asWKT(), lineString.asWKT());
+      });
+      test("Polygon", () async {
+        final polygon = Geometry.fromWKT<Polygon>(
+            "POLYGON((0.5 0.5,5 0,5 5,0 5,0.5 0.5), (1.5 1,4 3,4 1,1.5 1))");
+
+        Polygon receivedValue = await sendValue(polygon);
+        expect(receivedValue.asWKT(), polygon.asWKT());
+      });
     });
   }
 }

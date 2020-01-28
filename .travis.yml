@@ -7,7 +7,7 @@ env:
     - ANDROID_TOOLS=4333796 # android-28
     # Flutter
     - FLUTTER_CHANNEL=stable
-    - FLUTTER_VERSION=1.9.1+hotfix.6-${FLUTTER_CHANNEL}
+    - FLUTTER_VERSION=1.12.13+hotfix.5-${FLUTTER_CHANNEL}
     # Path
     - ANDROID_HOME=${HOME}/android-sdk-linux
     - TOOLS=${ANDROID_HOME}/tools
@@ -18,56 +18,23 @@ env:
     - PATH=${HOME}/.pub-cache/bin:${PATH}
     - PATH=${FLUTTER_HOME}/bin:${FLUTTER_HOME}/bin/cache/dart-sdk/bin:${PATH}
 
+branches:
+  only:
+    - master
+    - develop
+    - travis
+
 jobs:
   include:
-    - stage: iOS Tests
-      os: osx
-      language: objective-c
-      osx_image: xcode11
-      git:
-        depth: 3
-      before_script:
-        - open /Applications/Xcode.app/Contents/Developer/Applications/Simulator.app
-        # - brew update
-        - brew install libimobiledevice
-        - brew install ideviceinstaller
-        - brew install ios-deploy
-        - sudo gem install cocoapods
-        # - git clone https://github.com/flutter/flutter.git -b beta
-        - export PATH="$PATH":"$HOME/.pub-cache/bin"
-        - export PATH=`pwd`/flutter/bin:`pwd`/flutter/bin/cache/dart-sdk/bin:$PATH
-        # - flutter precache
-        # - flutter doctor -v
-        # - flutter devices
-        # - flutter packages get
-
-        - if [ ! -f $HOME/flutter/bin/flutter ] ; then 
-            git clone https://github.com/flutter/flutter.git $FLUTTER_HOME -b beta;
-            flutter pub get;
-          fi
-
-
-        # - flutter packages pub run build_runner build --delete-conflicting-outputs
-        - cd example
-      script:
-        - ./test_driver/run_tests.sh iPhone X
-      cache:
-        directories:
-          - $HOME/.pub-cache
-          - flutter
-      branches:
-        only:
-          - bodnar/19570/tests
-
-
-    - stage: Android Tests
+    # Android integration tests
+    - &integration-test-stage
+      stage: Integration Testing
       os: linux
       dist: bionic
       language: shell
+      env: Android tests
       git:
         depth: 3
-      
-
 
       cache:
         directories:
@@ -75,10 +42,6 @@ jobs:
           - $HOME/.gradle/wrapper/
           - $HOME/.pub-cache
           - flutter
-
-      branches:
-        only:
-          - bodnar/19570/tests
 
       before_cache:
         - rm -rf $HOME/.gradle/caches/[1-9]*  
@@ -91,7 +54,7 @@ jobs:
             - bridge-utils
             - openjdk-8-jdk-headless
 
-      install:
+      before_install:
         # Android tools
         - curl -L "https://dl.google.com/android/repository/sdk-tools-linux-$ANDROID_TOOLS.zip" -o $HOME/tools.zip
         - unzip -oq $HOME/tools.zip -d ${ANDROID_HOME}
@@ -135,16 +98,11 @@ jobs:
             git clone https://github.com/flutter/flutter.git $FLUTTER_HOME -b beta;
             flutter pub get;
           fi
-        # - wget --quiet --output-document=flutter.tar.xz https://storage.googleapis.com/flutter_infra/releases/${FLUTTER_CHANNEL}/linux/flutter_linux_v${FLUTTER_VERSION}.tar.xz
-        # - tar xf flutter.tar.xz -C $(dirname ${FLUTTER_HOME})
-        # - rm flutter.tar.xz
 
         # Download the script to wait for emulator
         - curl -L https://raw.githubusercontent.com/travis-ci/travis-cookbooks/master/community-cookbooks/android-sdk/files/default/android-wait-for-emulator -o $HOME/bin/android-wait-for-emulator
         - chmod +x $HOME/bin/android-wait-for-emulator
         - chmod -R +x $FLUTTER_HOME
-
-      before_script:
         # Wait for emulator to finish startup
         - android-wait-for-emulator
         # Unlock screen
@@ -152,7 +110,36 @@ jobs:
 
       script:
         - cd example
-        - ./test_driver/run_tests.sh emulator-5554
+        - flutter drive --target=test_driver/backendless_tests.dart --driver=test_driver/backendless_driver.dart
+
+    # iOS integration tests
+    - <<: *integration-test-stage
+      os: osx
+      language: objective-c
+      osx_image: xcode11
+      env: iOS tests
+      git:
+        depth: 3
+      before_install:
+        - open /Applications/Xcode.app/Contents/Developer/Applications/Simulator.app
+        # - brew update
+        - brew install libimobiledevice
+        - brew install ideviceinstaller
+        - brew install ios-deploy
+        - sudo gem install cocoapods
+        - export PATH="$PATH":"$HOME/.pub-cache/bin"
+        - export PATH=`pwd`/flutter/bin:`pwd`/flutter/bin/cache/dart-sdk/bin:$PATH
+
+        - if [ ! -f $HOME/flutter/bin/flutter ] ; then 
+            git clone https://github.com/flutter/flutter.git $FLUTTER_HOME -b beta;
+            flutter pub get;
+          fi
+        # - flutter packages pub run build_runner build --delete-conflicting-outputs
+
+      cache:
+        directories:
+          - $HOME/.pub-cache
+          - flutter
 
 
 notifications:

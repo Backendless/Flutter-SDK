@@ -24,7 +24,10 @@ import com.backendless.messaging.PublishMessageInfo;
 import com.backendless.messaging.PublishOptions;
 import com.backendless.persistence.BackendlessDataQuery;
 import com.backendless.persistence.DataQueryBuilder;
+import com.backendless.persistence.LineString;
 import com.backendless.persistence.LoadRelationsQueryBuilder;
+import com.backendless.persistence.Point;
+import com.backendless.persistence.Polygon;
 import com.backendless.property.ObjectProperty;
 import com.backendless.property.UserProperty;
 import com.backendless.push.DeviceRegistrationResult;
@@ -77,6 +80,9 @@ public final class BackendlessMessageCodec extends StandardMessageCodec {
     private static final byte USER_PROPERTY = (byte) 152;
     private static final byte BULK_EVENT = (byte) 153;
     private static final byte EMAIL_ENVELOPE = (byte) 154;
+    private static final byte POINT = (byte) 155;
+    private static final byte LINE_STRING = (byte) 156;
+    private static final byte POLYGON = (byte) 157;
 
     private BackendlessMessageCodec() {
         objectMapper.enable(SerializationFeature.WRITE_ENUMS_USING_INDEX);
@@ -188,6 +194,15 @@ public final class BackendlessMessageCodec extends StandardMessageCodec {
         } else if (value instanceof EmailEnvelope) {
             stream.write(EMAIL_ENVELOPE);
             writeValue(stream, objectMapper.convertValue(value, Map.class));
+        } else if (value instanceof Point) {
+            stream.write(POINT);
+            writeValue(stream,  ((Point) value).asWKT());
+        } else if (value instanceof LineString) {
+            stream.write(LINE_STRING);
+            writeValue(stream,  ((LineString) value).asWKT());
+        } else if (value instanceof Polygon) {
+            stream.write(POLYGON);
+            writeValue(stream,  ((Polygon) value).asWKT());
         } else if (value != null && value.getClass().isArray()) {
             Object[] array = (Object[]) value;
             List list = Arrays.asList(array);
@@ -254,6 +269,12 @@ public final class BackendlessMessageCodec extends StandardMessageCodec {
                 return objectMapper.convertValue(readValue(buffer), BulkEvent.class);
             case EMAIL_ENVELOPE:
                 return objectMapper.convertValue(readValue(buffer), EmailEnvelope.class);
+            case POINT:
+                return Point.<Point>fromWKT((String) readValue(buffer));
+            case LINE_STRING:
+                return LineString.<LineString>fromWKT((String) readValue(buffer));
+            case POLYGON:
+                return Polygon.<Polygon>fromWKT((String) readValue(buffer));
             default:
                 return super.readValueOfType(type, buffer);
         }

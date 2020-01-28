@@ -29,6 +29,9 @@ class BackendlessMessageCodec extends StandardMessageCodec {
   static const int _kUserProperty = 152;
   static const int _kBulkEvent = 153;
   static const int _kEmailEnvelope = 154;
+  static const int _kPoint = 155;
+  static const int _kLineString = 156;
+  static const int _kPolygon = 157;
 
   @override
   void writeValue(WriteBuffer buffer, dynamic value) {
@@ -110,6 +113,15 @@ class BackendlessMessageCodec extends StandardMessageCodec {
     } else if (value is EmailEnvelope) {
       buffer.putUint8(_kEmailEnvelope);
       writeValue(buffer, value.toJson());
+    } else if (value is Point) {
+      buffer.putUint8(_kPoint);
+      writeValue(buffer, value.asWKT());
+    } else if (value is LineString) {
+      buffer.putUint8(_kLineString);
+      writeValue(buffer, value.asWKT());
+    } else if (value is Polygon) {
+      buffer.putUint8(_kPolygon);
+      writeValue(buffer, value.asWKT());
     } else if (value is Set) {
       writeValue(buffer, value.toList());
     } else {
@@ -172,6 +184,12 @@ class BackendlessMessageCodec extends StandardMessageCodec {
         return BulkEvent.fromJson(readValue(buffer));
       case _kEmailEnvelope:
         return EmailEnvelope.fromJson(readValue(buffer));
+      case _kPoint:
+        return Geometry.fromWKT(readValue(buffer));
+      case _kLineString:
+        return Geometry.fromWKT(readValue(buffer));
+      case _kPolygon:
+        return Geometry.fromWKT(readValue(buffer));
       default:
         return super.readValueOfType(type, buffer);
     }

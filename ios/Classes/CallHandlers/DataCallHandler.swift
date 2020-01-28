@@ -448,10 +448,8 @@ class DataCallHandler: FlutterCallHandlerProtocol {
     private func save(_ tableName: String, _ arguments: [String: Any], _ result: @escaping FlutterResult) {
         guard let entity: [String: Any] = arguments[Args.entity].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
-            
             return
         }
-        
         if let _ = entity[Args.objectId] {
             data.ofTable(tableName)
                 .update(entity: entity,

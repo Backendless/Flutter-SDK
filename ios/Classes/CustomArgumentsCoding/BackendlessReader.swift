@@ -8,26 +8,30 @@ class BackendlessReader: FlutterStandardReader {
     
     // MARK: -
     // MARK: - Read Value
-    override func readValue(ofType type: UInt8) -> Any? {
+    override func readValue(ofType type: UInt8) -> Any? {        
         let code = FlutterTypeCode(rawValue: type)
-        
-        return code != nil ? readCustomValue(byCode: code!) : super.readValue(ofType: type)
+            return code != nil ? readCustomValue(byCode: code!) : super.readValue(ofType: type)
     }
     
     // MARK: -
     // MARK: - Read Custom Value
     private func readCustomValue(byCode code: FlutterTypeCode) -> Any? {
         var value: Any?
-
+        
         switch code {
         case .dateTime:
             value = readDate()
         case .geoQuery:
             value = readGeoQuery()
+        case .point:
+            value = readPoint()
+        case .lineString:
+            value = readLineString()
+        case .polygon:
+            value = readPolygon()
         default:
             guard let json: [String: Any] = readValue().flatMap(cast) else { return nil }
-            let jsonWithDates = mapDateValues(json)
-            
+            let jsonWithDates = mapDateValues(json)            
             let jsonToDecode: [String: Any]
             switch code {
             case .backendlessUser:
@@ -35,14 +39,12 @@ class BackendlessReader: FlutterStandardReader {
             case .messageStatus:
                 jsonToDecode = mapMessageStatus(jsonWithDates)
             case .command:
-                jsonToDecode = mapCommand(jsonWithDates)
+                jsonToDecode = mapCommand(jsonWithDates)            
             default:
                 jsonToDecode = jsonWithDates
-            }
-            
+            }            
             value = decode(from: jsonToDecode, code)
         }
-
         return value
     }
     
@@ -59,9 +61,29 @@ class BackendlessReader: FlutterStandardReader {
     private func readGeoQuery() -> BackendlessGeoQuery? {
         guard let json: [String: Any] = readValue().flatMap(cast) else { return nil }
         let jsonToDecode = prepareGeoQueryJson(from: json)
-        guard let jsonData = try? JSONSerialization.data(withJSONObject: jsonToDecode, options: []) else { return nil }
-        
+        guard let jsonData = try? JSONSerialization.data(withJSONObject: jsonToDecode, options: []) else { return nil }        
         return try? JSONDecoder().decode(BackendlessGeoQuery.self, from: jsonData)
+    }
+
+    // MARK: -
+    // MARK: - Read Point
+    private func readPoint() -> BLPoint? {
+        guard let wkt = readValue() as? String else { return nil }
+        return try? BLPoint.fromWkt(wkt)
+    }
+    
+    // MARK: -
+    // MARK: - Read LineString
+    private func readLineString() -> BLLineString? {
+        guard let wkt = readValue() as? String else { return nil }
+        return try? BLLineString.fromWkt(wkt)
+    }
+
+    // MARK: -
+    // MARK: - Read Polygon
+    private func readPolygon() -> BLPolygon? {
+        guard let wkt = readValue() as? String else { return nil }
+        return try? BLPolygon.fromWkt(wkt)
     }
     
     private func prepareGeoQueryJson(from json: [String: Any]) -> [String: Any] {
@@ -189,7 +211,7 @@ class BackendlessReader: FlutterStandardReader {
     // MARK: - Decode
     private func decode(from json: [String: Any], _ code: FlutterTypeCode) -> Any? {
         guard let jsonData = try? JSONSerialization.data(withJSONObject: json, options: []) else { return nil }
-        
+
         switch code {
         case .dateTime:
             return nil
@@ -245,6 +267,12 @@ class BackendlessReader: FlutterStandardReader {
             return try? JSONDecoder().decode(BulkEvent.self, from: jsonData)
         case .emailEnvelope:
             return try? JSONDecoder().decode(EmailEnvelope.self, from: jsonData)
+        case .point:
+            return nil
+        case .lineString:
+            return nil
+        case .polygon:
+            return nil
         }
     }
     

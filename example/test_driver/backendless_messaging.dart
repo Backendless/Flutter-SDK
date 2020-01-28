@@ -7,7 +7,7 @@ class TestMessaging {
       final messaging = Backendless.messaging;
       String publishedMessageId;
       String delayedMessageId;
-      String email = "andrew.bodnar@backendless.consulting";
+      String email = "test@backendless.consulting";
       String subject = "Test Subject";
 
       String htmlMessage = """
