@@ -185,11 +185,11 @@ class BackendlessMessageCodec extends StandardMessageCodec {
       case _kEmailEnvelope:
         return EmailEnvelope.fromJson(readValue(buffer));
       case _kPoint:
-        return Geometry.fromWKT<Point>(readValue(buffer));
+        return Geometry.fromWKT(readValue(buffer));
       case _kLineString:
-        return Geometry.fromWKT<LineString>(readValue(buffer));
+        return Geometry.fromWKT(readValue(buffer));
       case _kPolygon:
-        return Geometry.fromWKT<Polygon>(readValue(buffer));
+        return Geometry.fromWKT(readValue(buffer));
       default:
         return super.readValueOfType(type, buffer);
     }

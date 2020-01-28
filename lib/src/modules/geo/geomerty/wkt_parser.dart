@@ -12,23 +12,19 @@ class WKTParser {
 
   T read<T extends Geometry>(String wellKnownText) {
     final formatterWKT = wellKnownText.toUpperCase();
-    final type = formatterWKT.split(" ").first;
-
-    switch (type) {
-      case Point.wktType:
-        return _readPoint(formatterWKT);
-      case LineString.wktType:
-        return _readLineString(formatterWKT);
-      case Polygon.wktType:
-        return _readPolygon(formatterWKT);
-      default:
-        return null;
-    }
+    
+    if (formatterWKT.startsWith(Point.wktType))
+      return _readPoint(formatterWKT);
+    else if (formatterWKT.startsWith(LineString.wktType))  
+      return _readLineString(formatterWKT);
+    else if (formatterWKT.startsWith(Polygon.wktType))
+      return _readPolygon(formatterWKT);
+    else throw ArgumentError("Unknown geometry type: $wellKnownText");
   }
 
   Geometry _readPoint(String wellKnownText) {
     final cleanedFromType =
-        wellKnownText.replaceAll(Point.wktType + WKTParser._SPACE, "");
+        wellKnownText.replaceAll(Point.wktType, "").trim();
     final rawPoint = cleanedFromType.substring(1, cleanedFromType.length - 1);
     return _getPoint(rawPoint);
   }
@@ -47,14 +43,14 @@ class WKTParser {
 
   Geometry _readLineString(String wellKnownText) {
     final cleanedFromType =
-        wellKnownText.replaceAll(LineString.wktType + WKTParser._SPACE, "");
+        wellKnownText.replaceAll(LineString.wktType, "").trim();
     final rawLineString =
         cleanedFromType.substring(1, cleanedFromType.length - 1);
     return _getLineString(rawLineString);
   }
 
   LineString _getLineString(String rawLineString) {
-    final rawPoints = rawLineString.split(", ");
+    final rawPoints = rawLineString.split(",");
     final points = rawPoints.map(_getPoint).toList();
 
     return LineString(points: points, srs: srs);
@@ -62,7 +58,7 @@ class WKTParser {
 
   Geometry _readPolygon(String wellKnownText) {
     final cleanedFromType =
-        wellKnownText.replaceAll(Polygon.wktType + WKTParser._SPACE, "");
+        wellKnownText.replaceAll(Polygon.wktType, "").trim();
     final rawPolygon = cleanedFromType.substring(1, cleanedFromType.length - 1);
 
     return _getPolygon(rawPolygon);

@@ -196,13 +196,13 @@ public final class BackendlessMessageCodec extends StandardMessageCodec {
             writeValue(stream, objectMapper.convertValue(value, Map.class));
         } else if (value instanceof Point) {
             stream.write(POINT);
-            writeValue(stream,  ((Point) value).toWKT());
+            writeValue(stream,  ((Point) value).asWKT());
         } else if (value instanceof LineString) {
             stream.write(LINE_STRING);
-            writeValue(stream,  ((LineString) value).toWKT());
+            writeValue(stream,  ((LineString) value).asWKT());
         } else if (value instanceof Polygon) {
             stream.write(POLYGON);
-            writeValue(stream,  ((Polygon) value).toWKT());
+            writeValue(stream,  ((Polygon) value).asWKT());
         } else if (value != null && value.getClass().isArray()) {
             Object[] array = (Object[]) value;
             List list = Arrays.asList(array);
@@ -269,6 +269,12 @@ public final class BackendlessMessageCodec extends StandardMessageCodec {
                 return objectMapper.convertValue(readValue(buffer), BulkEvent.class);
             case EMAIL_ENVELOPE:
                 return objectMapper.convertValue(readValue(buffer), EmailEnvelope.class);
+            case POINT:
+                return Point.<Point>fromWKT((String) readValue(buffer));
+            case LINE_STRING:
+                return LineString.<LineString>fromWKT((String) readValue(buffer));
+            case POLYGON:
+                return Polygon.<Polygon>fromWKT((String) readValue(buffer));
             default:
                 return super.readValueOfType(type, buffer);
         }

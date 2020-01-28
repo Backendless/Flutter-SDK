@@ -16,7 +16,7 @@ class Reflector extends Reflectable {
     classMirror.declarations.forEach((propertyName, value) {
       if (value is VariableMirror) {
         var variable = instanceMirror.invokeGetter(propertyName);
-        if (_isNativeType(variable)) {
+        if (_canSerializeObject(variable)) {
           var columnName = Types.getColumnNameForProperty(propertyName, value);
           result[columnName] = variable;
         }
@@ -106,6 +106,11 @@ class Reflector extends Reflectable {
 
 const reflector = const Reflector();
 
+bool _canSerializeObject(Object object) => _isNativeType(object) || _isSdkType(object);
+
 bool _isNativeType(Object object) => nativeTypes.contains(object.runtimeType);
 
+bool _isSdkType(Object object) => sdkSerializableTypes.contains(object.runtimeType);
+
 const List<Type> nativeTypes = [String, DateTime, int, double, bool];
+const List<Type> sdkSerializableTypes = [BackendlessUser, Point, LineString, Polygon];
