@@ -12,19 +12,19 @@ class WKTParser {
 
   T read<T extends Geometry>(String wellKnownText) {
     final formatterWKT = wellKnownText.toUpperCase();
-    
+
     if (formatterWKT.startsWith(Point.wktType))
       return _readPoint(formatterWKT);
-    else if (formatterWKT.startsWith(LineString.wktType))  
+    else if (formatterWKT.startsWith(LineString.wktType))
       return _readLineString(formatterWKT);
     else if (formatterWKT.startsWith(Polygon.wktType))
       return _readPolygon(formatterWKT);
-    else throw ArgumentError("Unknown geometry type: $wellKnownText");
+    else
+      throw ArgumentError("Unknown geometry type: $wellKnownText");
   }
 
   Geometry _readPoint(String wellKnownText) {
-    final cleanedFromType =
-        wellKnownText.replaceAll(Point.wktType, "").trim();
+    final cleanedFromType = wellKnownText.replaceAll(Point.wktType, "").trim();
     final rawPoint = cleanedFromType.substring(1, cleanedFromType.length - 1);
     return _getPoint(rawPoint);
   }

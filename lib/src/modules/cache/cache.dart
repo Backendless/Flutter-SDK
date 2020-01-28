@@ -25,7 +25,8 @@ class BackendlessCache {
       <String, dynamic>{"key": key, "seconds": seconds});
 
   Future<T> get<T>(String key) async {
-    var result = await _channel.invokeMethod("Backendless.Cache.get", <String, dynamic>{"key": key});
+    var result = await _channel
+        .invokeMethod("Backendless.Cache.get", <String, dynamic>{"key": key});
 
     if (reflector.isCustomClass<T>()) {
       return reflector.deserialize<T>(result);

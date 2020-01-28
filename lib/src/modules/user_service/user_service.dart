@@ -56,7 +56,7 @@ class BackendlessUserService {
   Future<BackendlessUser> update(BackendlessUser user) => _channel.invokeMethod(
       "Backendless.UserService.update", <String, dynamic>{"user": user});
 
-  Future<String> getUserToken() => 
+  Future<String> getUserToken() =>
       _channel.invokeMethod("Backendless.UserService.getUserToken");
 
   Future<void> setUserToken(String userToken) => _channel.invokeMethod(
@@ -65,10 +65,12 @@ class BackendlessUserService {
 
   Future<BackendlessUser> loginAsGuest([bool stayLoggedIn]) =>
       _channel.invokeMethod("Backendless.UserService.loginAsGuest",
-      <String, dynamic>{"stayLoggedIn": stayLoggedIn});
+          <String, dynamic>{"stayLoggedIn": stayLoggedIn});
 
   Future<BackendlessUser> loginWithFacebook(String accessToken,
-          {Map<String, String> fieldsMapping, bool stayLoggedIn, BackendlessUser guestUser}) =>
+          {Map<String, String> fieldsMapping,
+          bool stayLoggedIn,
+          BackendlessUser guestUser}) =>
       _channel.invokeMethod(
           "Backendless.UserService.loginWithFacebook", <String, dynamic>{
         "accessToken": accessToken,
@@ -79,7 +81,9 @@ class BackendlessUserService {
 
   Future<BackendlessUser> loginWithTwitter(
           String authToken, String authTokenSecret,
-          {Map<String, String> fieldsMapping, bool stayLoggedIn, BackendlessUser guestUser}) =>
+          {Map<String, String> fieldsMapping,
+          bool stayLoggedIn,
+          BackendlessUser guestUser}) =>
       _channel.invokeMethod(
           "Backendless.UserService.loginWithTwitter", <String, dynamic>{
         "authToken": authToken,
@@ -90,7 +94,9 @@ class BackendlessUserService {
       });
 
   Future<BackendlessUser> loginWithGoogle(String accessToken,
-          {Map<String, String> fieldsMapping, bool stayLoggedIn, BackendlessUser guestUser}) =>
+          {Map<String, String> fieldsMapping,
+          bool stayLoggedIn,
+          BackendlessUser guestUser}) =>
       _channel.invokeMethod(
           "Backendless.UserService.loginWithGoogle", <String, dynamic>{
         "accessToken": accessToken,

@@ -86,7 +86,7 @@ class Reflector extends Reflectable {
 
   bool isCustomClass<T>([T object]) {
     try {
-      if (object == null ) {
+      if (object == null) {
         if (!canReflectType(T)) {
           return false;
         }
@@ -106,11 +106,18 @@ class Reflector extends Reflectable {
 
 const reflector = const Reflector();
 
-bool _canSerializeObject(Object object) => _isNativeType(object) || _isSdkType(object);
+bool _canSerializeObject(Object object) =>
+    _isNativeType(object) || _isSdkType(object);
 
 bool _isNativeType(Object object) => nativeTypes.contains(object.runtimeType);
 
-bool _isSdkType(Object object) => sdkSerializableTypes.contains(object.runtimeType);
+bool _isSdkType(Object object) =>
+    sdkSerializableTypes.contains(object.runtimeType);
 
 const List<Type> nativeTypes = [String, DateTime, int, double, bool];
-const List<Type> sdkSerializableTypes = [BackendlessUser, Point, LineString, Polygon];
+const List<Type> sdkSerializableTypes = [
+  BackendlessUser,
+  Point,
+  LineString,
+  Polygon
+];
