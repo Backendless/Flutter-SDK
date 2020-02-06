@@ -8,7 +8,7 @@ class BackendlessReader: FlutterStandardReader {
     
     // MARK: -
     // MARK: - Read Value
-    override func readValue(ofType type: UInt8) -> Any? {        
+    override func readValue(ofType type: UInt8) -> Any? {
         let code = FlutterTypeCode(rawValue: type)
             return code != nil ? readCustomValue(byCode: code!) : super.readValue(ofType: type)
     }
@@ -17,7 +17,7 @@ class BackendlessReader: FlutterStandardReader {
     // MARK: - Read Custom Value
     private func readCustomValue(byCode code: FlutterTypeCode) -> Any? {
         var value: Any?
-        
+
         switch code {
         case .dateTime:
             value = readDate()
@@ -31,7 +31,7 @@ class BackendlessReader: FlutterStandardReader {
             value = readPolygon()
         default:
             guard let json: [String: Any] = readValue().flatMap(cast) else { return nil }
-            let jsonWithDates = mapDateValues(json)            
+            let jsonWithDates = mapDateValues(json)
             let jsonToDecode: [String: Any]
             switch code {
             case .backendlessUser:
@@ -39,10 +39,10 @@ class BackendlessReader: FlutterStandardReader {
             case .messageStatus:
                 jsonToDecode = mapMessageStatus(jsonWithDates)
             case .command:
-                jsonToDecode = mapCommand(jsonWithDates)            
+                jsonToDecode = mapCommand(jsonWithDates)
             default:
                 jsonToDecode = jsonWithDates
-            }            
+            }
             value = decode(from: jsonToDecode, code)
         }
         return value
@@ -61,7 +61,7 @@ class BackendlessReader: FlutterStandardReader {
     private func readGeoQuery() -> BackendlessGeoQuery? {
         guard let json: [String: Any] = readValue().flatMap(cast) else { return nil }
         let jsonToDecode = prepareGeoQueryJson(from: json)
-        guard let jsonData = try? JSONSerialization.data(withJSONObject: jsonToDecode, options: []) else { return nil }        
+        guard let jsonData = try? JSONSerialization.data(withJSONObject: jsonToDecode, options: []) else { return nil }
         return try? JSONDecoder().decode(BackendlessGeoQuery.self, from: jsonData)
     }
 
@@ -71,7 +71,7 @@ class BackendlessReader: FlutterStandardReader {
         guard let wkt = readValue() as? String else { return nil }
         return try? BLPoint.fromWkt(wkt)
     }
-    
+
     // MARK: -
     // MARK: - Read LineString
     private func readLineString() -> BLLineString? {
@@ -85,7 +85,7 @@ class BackendlessReader: FlutterStandardReader {
         guard let wkt = readValue() as? String else { return nil }
         return try? BLPolygon.fromWkt(wkt)
     }
-    
+
     private func prepareGeoQueryJson(from json: [String: Any]) -> [String: Any] {
         var result: [String: Any] = [:]
         var geoPoint: [String: Any] = [:]
@@ -158,6 +158,9 @@ class BackendlessReader: FlutterStandardReader {
         jsonFromProperties.forEach { (key, value) in
             if userFields.contains(key) {
                 result[key] = value
+                if key == "objectId" {
+                    properties[key] = value
+                }
             } else {
                 properties[key] = value
             }
