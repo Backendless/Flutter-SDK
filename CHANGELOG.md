@@ -1,7 +1,10 @@
+## 1.1.1
+
+* Guest login with social account
+
 ## 1.1.0
 
 * Support for geometry data types
-* Guest login with social account
 * Custom classes caching
 
 ## 1.0.1
