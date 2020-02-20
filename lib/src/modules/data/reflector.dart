@@ -36,7 +36,8 @@ class Reflector extends Reflectable {
     InstanceMirror instanceMirror = reflect(object);
 
     map.forEach((columnName, value) {
-      var propertyName = Types.getPropertyNameForColumn(columnName, declarations);
+      var propertyName =
+          Types.getPropertyNameForColumn(columnName, declarations);
       if (propertyName == null) return;
 
       if (value is Map) {
@@ -46,26 +47,24 @@ class Reflector extends Reflectable {
         if (value.isEmpty) {
           instanceMirror.invokeSetter(propertyName, List());
         } else if (value.first is Map) {
-            ClassMirror listItemClassMirror = _getClassMirror(value.first);
-            var deserializedList = List.from(value.map(
-                (listItem) => _deserialize(listItem, listItemClassMirror)));
-            instanceMirror.invokeSetter(propertyName, deserializedList);
+          ClassMirror listItemClassMirror = _getClassMirror(value.first);
+          var deserializedList = List.from(value
+              .map((listItem) => _deserialize(listItem, listItemClassMirror)));
+          instanceMirror.invokeSetter(propertyName, deserializedList);
         } else {
           instanceMirror.invokeSetter(propertyName, value);
         }
       } else {
-        VariableMirror variableMirror =
-            classMirror.declarations[propertyName];
+        VariableMirror variableMirror = classMirror.declarations[propertyName];
         Type variableType = variableMirror.dynamicReflectedType;
         if (variableType == DateTime && Platform.isIOS) {
-          DateTime date = value != null
-              ? DateTime.fromMillisecondsSinceEpoch(value)
-              : null;
+          DateTime date =
+              value != null ? DateTime.fromMillisecondsSinceEpoch(value) : null;
           instanceMirror.invokeSetter(propertyName, date);
         } else {
           instanceMirror.invokeSetter(propertyName, value);
         }
-      }  
+      }
     });
 
     return object;
@@ -75,7 +74,8 @@ class Reflector extends Reflectable {
     if (map.containsKey("___class")) {
       String clientClassName = Types.getMappedClientClass(map["___class"]);
       return annotatedClasses.firstWhere(
-          (annotatedClass) => annotatedClass.simpleName == clientClassName, orElse: () => null);
+          (annotatedClass) => annotatedClass.simpleName == clientClassName,
+          orElse: () => null);
     }
     return null;
   }

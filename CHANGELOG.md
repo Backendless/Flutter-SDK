@@ -1,3 +1,7 @@
+## 1.1.2
+
+* Fixed inner sdk classes deserialization
+
 ## 1.1.1
 
 * Guest login with social account
