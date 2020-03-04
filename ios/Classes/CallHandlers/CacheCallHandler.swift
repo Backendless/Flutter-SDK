@@ -125,7 +125,9 @@ class CacheCallHandler: FlutterCallHandlerProtocol {
                 errorHandler: {
                     result(FlutterError($0))
                 })
-        }
+        } else {
+            result(FlutterError(Fault(message: "Illegal arguments")))
+        }        
     }
     
     // MARK: -
