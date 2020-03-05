@@ -175,6 +175,8 @@ class DataCallHandler: FlutterCallHandlerProtocol {
         } else if let children = children {
             data.ofTable(tableName)
                 .addRelation(columnName: relationColumnName, parentObjectId: parentId, childrenObjectIds: children, responseHandler: successHander, errorHandler: errorHandler)
+        } else {
+            result(FlutterError.noRequiredArguments)
         }
     }
     
@@ -440,6 +442,8 @@ class DataCallHandler: FlutterCallHandlerProtocol {
                     errorHandler: {
                         result(FlutterError($0))
                     })
+        } else {
+            result(FlutterError.noRequiredArguments)
         }
     }
     
@@ -473,23 +477,24 @@ class DataCallHandler: FlutterCallHandlerProtocol {
     
     // MARK: -
     // MARK: - Set Relation
-    private func setRelation(_ tableName: String, _ arguments: [String: Any], _ result: @escaping FlutterResult) {
+    private func setRelation(_ tableName: String, _ arguments: [String: Any], _ result: @escaping FlutterResult) {        
         guard
             let relationColumnName: String = arguments[Args.relationColumnName].flatMap(cast),
             let parent: [String: Any] = arguments[Args.parent].flatMap(cast),
             let parentId: String = parent[Args.objectId].flatMap(cast)
         else {
             result(FlutterError.noRequiredArguments)
-            
             return
         }
         
-        let children: [String]? = arguments[Args.children]
-            .flatMap(cast)
-            .flatMap { (children: [[String: Any]]) in
-                children.map { $0[Args.objectId] }.compactMap(cast)
-            }
-        
+        var children: [String]? = arguments[Args.children].flatMap(cast)
+        .flatMap { (children: [[String: Any]]) in
+            children.map { $0[Args.objectId] }.compactMap(cast)
+        }
+        if children == nil {
+            children = arguments[Args.children] as? [String]
+        }
+                
         let whereClause: String? = arguments[Args.whereClause].flatMap(cast)
         
         let successHander = { (relations: Int) in
@@ -504,9 +509,13 @@ class DataCallHandler: FlutterCallHandlerProtocol {
                 .setRelation(columnName: relationColumnName, parentObjectId: parentId, childrenObjectIds: children, responseHandler: successHander, errorHandler: errorHandler)
         }
         
-        if let whereClause = whereClause {
+        else if let whereClause = whereClause {
             data.ofTable(tableName)
                 .setRelation(columnName: relationColumnName, parentObjectId: parentId, whereClause: whereClause, responseHandler: successHander, errorHandler: errorHandler)
+        } 
+
+        else {
+            result(FlutterError.noRequiredArguments)
         }
     }
     

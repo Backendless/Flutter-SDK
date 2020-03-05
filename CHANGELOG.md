@@ -1,3 +1,7 @@
+## 1.1.3
+
+* Fixed iOS methods not returning the result
+
 ## 1.1.2
 
 * Fixed inner sdk classes deserialization
