@@ -57,10 +57,9 @@ class Reflector extends Reflectable {
       } else {
         VariableMirror variableMirror = classMirror.declarations[propertyName];
         Type variableType = variableMirror.dynamicReflectedType;
-        if (variableType == DateTime && Platform.isIOS) {
-          DateTime date =
-              value != null ? DateTime.fromMillisecondsSinceEpoch(value) : null;
-          instanceMirror.invokeSetter(propertyName, date);
+        if (variableType == DateTime) {
+          instanceMirror.invokeSetter(
+              propertyName, _deserializeDateTime(value));
         } else {
           instanceMirror.invokeSetter(propertyName, value);
         }
@@ -68,6 +67,13 @@ class Reflector extends Reflectable {
     });
 
     return object;
+  }
+
+  DateTime _deserializeDateTime(dynamic value) {
+    if (value == null) return null;
+    if (value is DateTime) return value;
+    if (value is int) return DateTime.fromMillisecondsSinceEpoch(value);
+    return null;
   }
 
   ClassMirror _getClassMirror(Map map) {
