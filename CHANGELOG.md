@@ -1,3 +1,7 @@
+## 1.1.4
+
+* Fixed DateTime deserialization
+
 ## 1.1.3
 
 * Fixed iOS methods not returning the result

@@ -58,7 +58,8 @@ class Reflector extends Reflectable {
         VariableMirror variableMirror = classMirror.declarations[propertyName];
         Type variableType = variableMirror.dynamicReflectedType;
         if (variableType == DateTime) {
-          instanceMirror.invokeSetter(propertyName, _deserializeDateTime(value));
+          instanceMirror.invokeSetter(
+              propertyName, _deserializeDateTime(value));
         } else {
           instanceMirror.invokeSetter(propertyName, value);
         }
