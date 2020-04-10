@@ -154,11 +154,35 @@ class DataCallHandler: FlutterCallHandlerProtocol {
             return
         }
         
-        let children: [String]? = arguments[Args.children]
+        let childrenArgs = arguments[Args.children]
+        var children: [String]?
+        if childrenArgs is [[String : Any]] {
+            children = arguments[Args.children]
             .flatMap(cast)
             .flatMap { (children: [[String: Any]]) in
                 children.map { $0[Args.objectId] }.compactMap(cast)
+            }
         }
+        else if childrenArgs is [BackendlessUser] {
+            children = arguments[Args.children]
+            .flatMap(cast)
+            .flatMap { (children: [BackendlessUser]) in
+                children.map { $0.objectId }.compactMap(cast)
+            }
+        }
+        else if childrenArgs is [DeviceRegistration] {
+            children = arguments[Args.children]
+            .flatMap(cast)
+            .flatMap { (children: [DeviceRegistration]) in
+                children.map { $0.objectId }.compactMap(cast)
+            }
+        }
+        
+        /*let children: [String]? = arguments[Args.children]
+            .flatMap(cast)
+            .flatMap { (children: [[String: Any]]) in
+                children.map { $0[Args.objectId] }.compactMap(cast)
+        }*/
         
         let whereClause: String? = arguments[Args.whereClause].flatMap(cast)
         
