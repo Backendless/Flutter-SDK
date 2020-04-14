@@ -277,10 +277,8 @@ class TestDataMapDriven {
       });
 
       test("Set relation", () async {
-        final parent = {"objectId": firstEntityId};
-        final child = {"objectId": firstChildId};
-        final relations =
-            await dataStore.setRelation(parent, "seventh", children: [child]);
+        final relations = await dataStore.setRelation(firstEntityId, "seventh",
+            childrenObjectIds: [firstChildId]);
 
         expect(relations, isNotNull);
         expect(relations, 1);
@@ -304,12 +302,9 @@ class TestDataMapDriven {
       });
 
       test("Add relation", () async {
-        final parent = {"objectId": firstEntityId};
-        final firstChild = {"objectId": firstChildId};
-        final secondChild = {"objectId": secondChildId};
-
-        final addedRelations = await dataStore.addRelation(parent, "seventh",
-            children: [firstChild, secondChild]);
+        final addedRelations = await dataStore.addRelation(
+            firstEntityId, "seventh",
+            childrenObjectIds: [firstChildId, secondChildId]);
 
         expect(addedRelations, isNotNull);
         expect(addedRelations, 1);

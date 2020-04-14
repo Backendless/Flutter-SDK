@@ -93,17 +93,20 @@ public class DataCallHandler implements MethodChannel.MethodCallHandler {
     }
 
     private void addRelation(String tableName, MethodCall call, MethodChannel.Result result) {
-        Map parent = call.argument("parent");
+        String parentObjectId = call.argument("parentObjectId");
         String relationColumnName = call.argument("relationColumnName");
-        List children = call.argument("children");
+        List<String> childrenObjectIds = call.argument("childrenObjectIds");
         String whereClause = call.argument("whereClause");
 
         FlutterCallback<Integer> callback = new FlutterCallback<>(result);
 
-        if (children != null) {
-            Backendless.Data.of(tableName).addRelation(parent, relationColumnName, children, callback);
+        if (childrenObjectIds != null) {
+            Backendless.Data.of(tableName).addRelation(parentObjectId, relationColumnName, childrenObjectIds, callback);
         } else if (whereClause != null) {
-            Backendless.Data.of(tableName).addRelation(parent, relationColumnName, whereClause, callback);
+            Backendless.Data.of(tableName).addRelation(parentObjectId, relationColumnName, whereClause, callback);
+        } else {
+            callback.handleFault(new BackendlessFault(
+                new IllegalArgumentException("Either childrenObjectIds or whereClause should be defined")));
         }
     }
 
@@ -113,17 +116,20 @@ public class DataCallHandler implements MethodChannel.MethodCallHandler {
     }
 
     private void deleteRelation(String tableName, MethodCall call, MethodChannel.Result result) {
-        Map parent = call.argument("parent");
+        String parentObjectId = call.argument("parentObjectId");
         String relationColumnName = call.argument("relationColumnName");
-        List children = call.argument("children");
+        List<String> childrenObjectIds = call.argument("childrenObjectIds");
         String whereClause = call.argument("whereClause");
 
         FlutterCallback<Integer> callback = new FlutterCallback<>(result);
 
-        if (children != null) {
-            Backendless.Data.of(tableName).deleteRelation(parent, relationColumnName, children, callback);
+        if (childrenObjectIds != null) {
+            Backendless.Data.of(tableName).deleteRelation(parentObjectId, relationColumnName, childrenObjectIds, callback);
         } else if (whereClause != null) {
-            Backendless.Data.of(tableName).deleteRelation(parent, relationColumnName, whereClause, callback);
+            Backendless.Data.of(tableName).deleteRelation(parentObjectId, relationColumnName, whereClause, callback);
+        } else {
+            callback.handleFault(new BackendlessFault(
+                new IllegalArgumentException("Either childrenObjectIds or whereClause should be defined")));
         }
     }
 
@@ -227,17 +233,20 @@ public class DataCallHandler implements MethodChannel.MethodCallHandler {
     }
 
     private void setRelation(String tableName, MethodCall call, MethodChannel.Result result) {
-        Map parent = call.argument("parent");
+        String parentObjectId = call.argument("parentObjectId");
         String relationColumnName = call.argument("relationColumnName");
-        List children = call.argument("children");
+        List<String> childrenObjectIds = call.argument("childrenObjectIds");
         String whereClause = call.argument("whereClause");
 
         FlutterCallback<Integer> callback = new FlutterCallback<>(result);
 
-        if (children != null) {
-            Backendless.Data.of(tableName).setRelation(parent, relationColumnName, children, callback);
+        if (childrenObjectIds != null) {
+            Backendless.Data.of(tableName).setRelation(parentObjectId, relationColumnName, childrenObjectIds, callback);
         } else if (whereClause != null) {
-            Backendless.Data.of(tableName).setRelation(parent, relationColumnName, whereClause, callback);
+            Backendless.Data.of(tableName).setRelation(parentObjectId, relationColumnName, whereClause, callback);
+        } else {
+            callback.handleFault(new BackendlessFault(
+                new IllegalArgumentException("Either childrenObjectIds or whereClause should be defined")));
         }
     }
 
