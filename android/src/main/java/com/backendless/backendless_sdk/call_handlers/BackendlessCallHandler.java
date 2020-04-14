@@ -118,7 +118,8 @@ public class BackendlessCallHandler implements MethodChannel.MethodCallHandler {
         String stringKey = call.argument("stringKey");
 
         if (stringKey != null) {
-            result.notImplemented();
+            HeadersManager.getInstance().getHeaders().remove(stringKey);
+            result.success(null);
         } else if (enumKeyIndex != null) {
             HeadersEnum headersEnum = HeadersEnum.values()[enumKeyIndex];
             HeadersManager.getInstance().removeHeader(headersEnum);
