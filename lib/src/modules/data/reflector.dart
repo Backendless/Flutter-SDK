@@ -7,6 +7,7 @@ class Reflector extends Reflectable {
 
   Map<String, dynamic> serialize<T>(T object) {
     if (object == null) return null;
+    if (object is BackendlessUser) return object.properties.cast<String, dynamic>();
 
     Map<String, dynamic> result = Map();
 
@@ -26,7 +27,10 @@ class Reflector extends Reflectable {
     return result;
   }
 
-  T deserialize<T>(Map map) => _deserialize(map, reflectType(T));
+  T deserialize<T>(Map map) {
+    if (T == BackendlessUser) return BackendlessUser.fromJson(map) as T;
+    return _deserialize(map, reflectType(T));
+  }
 
   Object _deserialize(Map map, ClassMirror classMirror) {
     if (map == null || classMirror == null) return null;
@@ -87,6 +91,8 @@ class Reflector extends Reflectable {
   }
 
   String getServerName(Type type) {
+    if (type == BackendlessUser) return "Users";
+
     String clientClassName = reflectType(type).simpleName;
     return Types.getMappedServerClass(clientClassName);
   }
