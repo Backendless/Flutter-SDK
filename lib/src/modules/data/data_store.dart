@@ -50,7 +50,8 @@ class MapDrivenDataStore implements IDataStore<Map> {
 
   Future<int> addRelation(String parentObjectId, String relationColumnName,
       {List<String> childrenObjectIds, String whereClause}) {
-    checkArguments({"childrenObjectIds": childrenObjectIds}, {"whereClause": whereClause});
+    checkArguments(
+        {"childrenObjectIds": childrenObjectIds}, {"whereClause": whereClause});
     return _channel
         .invokeMethod("Backendless.Data.of.addRelation", <String, dynamic>{
       'tableName': _tableName,
@@ -68,7 +69,8 @@ class MapDrivenDataStore implements IDataStore<Map> {
 
   Future<int> deleteRelation(String parentObjectId, String relationColumnName,
       {List<String> childrenObjectIds, String whereClause}) {
-    checkArguments({"childrenObjectIds": childrenObjectIds}, {"whereClause": whereClause});
+    checkArguments(
+        {"childrenObjectIds": childrenObjectIds}, {"whereClause": whereClause});
     return _channel
         .invokeMethod("Backendless.Data.of.deleteRelation", <String, dynamic>{
       'tableName': _tableName,
@@ -163,7 +165,8 @@ class MapDrivenDataStore implements IDataStore<Map> {
 
   Future<int> setRelation(String parentObjectId, String relationColumnName,
       {List<String> childrenObjectIds, String whereClause}) {
-    checkArguments({"childrenObjectIds": childrenObjectIds}, {"whereClause": whereClause});
+    checkArguments(
+        {"childrenObjectIds": childrenObjectIds}, {"whereClause": whereClause});
     return _channel
         .invokeMethod("Backendless.Data.of.setRelation", <String, dynamic>{
       'tableName': _tableName,
@@ -197,7 +200,8 @@ class ClassDrivenDataStore<T> implements IDataStore<T> {
 
   Future<int> addRelation(String parentObjectId, String relationColumnName,
       {List<String> childrenObjectIds, String whereClause}) {
-    checkArguments({"childrenObjectIds": childrenObjectIds}, {"whereClause": whereClause});
+    checkArguments(
+        {"childrenObjectIds": childrenObjectIds}, {"whereClause": whereClause});
     return _channel
         .invokeMethod("Backendless.Data.of.addRelation", <String, dynamic>{
       'tableName': _tableName,
@@ -218,7 +222,8 @@ class ClassDrivenDataStore<T> implements IDataStore<T> {
 
   Future<int> deleteRelation(String parentObjectId, String relationColumnName,
       {List<String> childrenObjectIds, String whereClause}) {
-    checkArguments({"childrenObjectIds": childrenObjectIds}, {"whereClause": whereClause});
+    checkArguments(
+        {"childrenObjectIds": childrenObjectIds}, {"whereClause": whereClause});
     return _channel
         .invokeMethod("Backendless.Data.of.deleteRelation", <String, dynamic>{
       'tableName': _tableName,
@@ -331,7 +336,8 @@ class ClassDrivenDataStore<T> implements IDataStore<T> {
 
   Future<int> setRelation(String parentObjectId, String relationColumnName,
       {List<String> childrenObjectIds, String whereClause}) {
-    checkArguments({"childrenObjectIds": childrenObjectIds}, {"whereClause": whereClause});
+    checkArguments(
+        {"childrenObjectIds": childrenObjectIds}, {"whereClause": whereClause});
     return _channel
         .invokeMethod("Backendless.Data.of.setRelation", <String, dynamic>{
       'tableName': _tableName,

@@ -1,3 +1,10 @@
+## 1.1.5
+
+* Updated relations method signatures. Now you can just use parent and child object IDs instead of the object itself.
+* Fixed crash during `Backendless.data.describe()` call
+* Implemented method `removeHeader` that accepts `String` key
+* Implemented custom class approach for the `BackendlessUser` class. Call `Backendless.data.withClass<BackendlessUser>()` to start working with `Users` table.
+
 ## 1.1.4
 
 * Fixed DateTime deserialization
@@ -21,7 +28,7 @@
 
 ## 1.0.1
 
-* Fix crash during publish() call
+* Fixed crash during `publish()` call
 
 ## 1.0.0
 

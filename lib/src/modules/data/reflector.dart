@@ -7,7 +7,8 @@ class Reflector extends Reflectable {
 
   Map<String, dynamic> serialize<T>(T object) {
     if (object == null) return null;
-    if (object is BackendlessUser) return object.properties.cast<String, dynamic>();
+    if (object is BackendlessUser)
+      return object.properties.cast<String, dynamic>();
 
     Map<String, dynamic> result = Map();
 
