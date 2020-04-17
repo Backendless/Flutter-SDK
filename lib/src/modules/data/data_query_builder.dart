@@ -4,6 +4,7 @@ class DataQueryBuilder {
   static const int DEFAULT_RELATIONS_DEPTH = 0;
   PagedQueryBuilder _pagedQueryBuilder = new PagedQueryBuilder();
   List<String> properties;
+  List<String> excludeProperties;
   String whereClause;
   List<String> groupBy;
   String havingClause;
@@ -14,6 +15,7 @@ class DataQueryBuilder {
 
   DataQueryBuilder() {
     properties = new List();
+    excludeProperties = new List();
     whereClause = "";
     groupBy = new List();
     havingClause = "";
@@ -26,6 +28,7 @@ class DataQueryBuilder {
     pageSize = json['pageSize'];
     offset = json['offset'];
     properties = json['properties']?.cast<String>();
+    excludeProperties = json['excludeProperties']?.cast<String>();
     whereClause = json['whereClause'];
     groupBy = json['groupBy']?.cast<String>();
     havingClause = json['havingClause'];
@@ -42,6 +45,7 @@ class DataQueryBuilder {
         'pageSize': pageSize,
         'offset': offset,
         'properties': properties,
+        'excludeProperties': excludeProperties,
         'whereClause': whereClause,
         'groupBy': groupBy,
         'havingClause': havingClause,
@@ -62,6 +66,8 @@ class DataQueryBuilder {
   void prepareNextPage() => _pagedQueryBuilder.prepareNextPage();
 
   void preparePreviousPage() => _pagedQueryBuilder.preparePreviousPage();
+
+  void addAllProperties() => properties.add("*");
 }
 
 /// This class does not support relation types other than Map for now.
