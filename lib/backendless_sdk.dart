@@ -61,3 +61,23 @@ part 'src/modules/geo/geomerty/geo_json_parser.dart';
 part 'src/modules/geo/geomerty/point.dart';
 part 'src/modules/geo/geomerty/line_string.dart';
 part 'src/modules/geo/geomerty/polygon.dart';
+
+part 'src/modules/transaction/common/operation.dart';
+part 'src/modules/transaction/common/isolation_level.dart';
+part 'src/modules/transaction/common/operation_error.dart';
+part 'src/modules/transaction/common/operation_result.dart';
+part 'src/modules/transaction/common/operation_type.dart';
+part 'src/modules/transaction/common/uow_result.dart';
+part 'src/modules/transaction/common/payload/bulk.dart';
+part 'src/modules/transaction/common/payload/relation.dart';
+part 'src/modules/transaction/common/payload/selector.dart';
+
+part 'src/modules/transaction/op_result.dart';
+part 'src/modules/transaction/relation_operation.dart';
+part 'src/modules/transaction/uow.dart';
+part 'src/modules/transaction/uow_create.dart';
+part 'src/modules/transaction/uow_delete.dart';
+part 'src/modules/transaction/uow_update.dart';
+part 'src/modules/transaction/uow_find.dart';
+part 'src/modules/transaction/uow_executor.dart';
+part 'src/modules/transaction/helper.dart';
