@@ -13,7 +13,7 @@ class OpResult {
     return OpResultValueReference(this, resultIndex: resultIndex, propName: propName);
   }
 
-  Map<String, Object> makeReference() {
+  Map makeReference() {
     return {
       UnitOfWork.REFERENCE_MARKER: true,
       UnitOfWork.OP_RESULT_ID: _opResultId
@@ -48,7 +48,7 @@ class OpResultIdGenerator
   String generateOpResultId( OperationType operationType, String tableName )
   {
     String opResultIdGenerated;
-    final String key = operationType.operationName + tableName;
+    final String key =  operationType.operationName + tableName;
     if( opResultIdMaps.containsKey( key ) )
     {
       int count = opResultIdMaps[key];
@@ -77,9 +77,9 @@ class OpResultValueReference {
     return new OpResultValueReference( this.opResult, resultIndex: this.resultIndex, propName: propName );
   }
 
-  Map<String, Object> makeReference()
+  Map makeReference()
   {
-    Map<String, Object> referenceMap = opResult.makeReference();
+    Map referenceMap = opResult.makeReference();
 
     if( resultIndex != null )
       referenceMap[UnitOfWork.RESULT_INDEX] = resultIndex;

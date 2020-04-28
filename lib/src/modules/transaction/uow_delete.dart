@@ -22,14 +22,14 @@ class UnitOfWorkDelete {
   
   OpResult _deleteClassInstance<E> ( E instance )
   {
-    Map<String, Object> entityMap = reflector.serialize(instance);
+    Map entityMap = reflector.serialize(instance);
     String tableName = reflector.getServerName(E);
 
     return _deleteMapInstance( tableName, entityMap );
   }
 
   
-  OpResult _deleteMapInstance( String tableName, Map<String, Object> objectMap )
+  OpResult _deleteMapInstance( String tableName, Map objectMap )
   {
     String objectId = objectMap['objectId'];
     return _deleteById( tableName, objectId );
@@ -67,7 +67,7 @@ class UnitOfWorkDelete {
     if( resultIndex.resultIndex== null || resultIndex.propName != null )
       throw new ArgumentError( "This operation result in this operation must resolved only to resultIndex" );
 
-    Map<String, Object> referenceToObjectId = TransactionHelper.convertCreateBulkOrFindResultIndexToObjectId( resultIndex );
+    Map referenceToObjectId = TransactionHelper.convertCreateBulkOrFindResultIndexToObjectId( resultIndex );
 
     String operationResultId = opResultIdGenerator.generateOpResultId( OperationType.DELETE, resultIndex.opResult.tableName );
     OperationDelete operationDelete = new OperationDelete( OperationType.DELETE, resultIndex.opResult.tableName,
@@ -78,38 +78,54 @@ class UnitOfWorkDelete {
     return TransactionHelper.makeOpResult( resultIndex.opResult.tableName, operationResultId, OperationType.DELETE );
   }
 
+  OpResult bulkDelete(dynamic value, [String tableName]) {
+    if (value is List) {
+      if (value[0] is Map)
+        return _bulkDeleteMapInstances(tableName, value);
+      else if (value[0] is String)
+        return _bulkDeleteByIds(tableName, value);
+      else if (reflector.canReflect(value[0]))
+        return _bulkDeleteClassInstances(value);
+      else throw ArgumentError("The value should be the list of IDs, Map or Custom Class instances");
+    } else if (value is String)
+      return _bulkDeleteWithQuery(tableName, value);
+    else if (value is OpResult)
+      return _bulkDeleteOpResult(value);
+    else throw ArgumentError("The indetifier should be either whereClause, list of IDs or OpResult");
+  }
+
   
-  OpResult bulkDeleteClassInstances<E> ( List<E> instances )
+  OpResult _bulkDeleteClassInstances<E> ( List<E> instances )
   {
     List serializedEntities = instances.map((e) => reflector.serialize(e)).toList();
     String tableName = reflector.getServerName(E);
 
 
-    return bulkDeleteMapInstances( tableName, serializedEntities );
+    return _bulkDeleteMapInstances( tableName, serializedEntities );
   }
 
   
   
-  OpResult bulkDeleteMapInstances( String tableName, List<Map<String, Object>> arrayOfObjects )
+  OpResult _bulkDeleteMapInstances( String tableName, List<Map> arrayOfObjects )
   {
     List<Object> objectIds = TransactionHelper.convertMapsToObjectIds( arrayOfObjects );
 
     return _bulkDelete( tableName, null, objectIds );
   }
 
-  OpResult bulkDeleteByIds( String tableName, List<String> objectIdValues )
+  OpResult _bulkDeleteByIds( String tableName, List<String> objectIdValues )
   {
     return _bulkDelete( tableName, null, objectIdValues );
   }
 
   
-  OpResult bulkDeleteWithQuery( String tableName, String whereClause )
+  OpResult _bulkDeleteWithQuery( String tableName, String whereClause )
   {
     return _bulkDelete( tableName, whereClause, null );
   }
 
   
-  OpResult bulkDeleteOpResult( OpResult result )
+  OpResult _bulkDeleteOpResult( OpResult result )
   {
     if( ! ( OperationTypeExt.supportCollectionEntityDescriptionType.contains( result.operationType )
             || OperationTypeExt.supportListIdsResultType.contains( result.operationType ) ) )

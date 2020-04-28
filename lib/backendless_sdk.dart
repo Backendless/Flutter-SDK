@@ -11,6 +11,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:reflectable/reflectable.dart';
 
+import 'package:http/http.dart' as http;
+
 import 'src/utils/utils.dart';
 
 part 'src/modules/cache/cache.dart';

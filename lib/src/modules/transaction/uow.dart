@@ -50,12 +50,16 @@ class UnitOfWork
     return _unitOfWorkUpdate.update(changes, identifier);
   }
 
-  OpResult bulkUpdate(Map<String, Object> changes, dynamic identifier, [String tableName]  ) {
+  OpResult bulkUpdate(Map changes, dynamic identifier, [String tableName]) {
     return _unitOfWorkUpdate.bulkUpdate(changes, identifier, tableName);
   }
 
   OpResult delete(dynamic value, [String tableName]) {
     return _unitOfWorkDelete.delete(value, tableName);
+  }
+
+  OpResult bulkDelete(dynamic value, [String tableName]) {
+    return _unitOfWorkDelete.bulkDelete(value, tableName);
   }
   
   OpResult find( String tableName, DataQueryBuilder queryBuilder ) {

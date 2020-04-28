@@ -22,13 +22,13 @@ class UnitOfWorkUpdate {
 
   OpResult _updateClassInstance<E> ( E instance )
   {
-    Map<String, Object> entityMap = reflector.serialize(instance);
+    Map entityMap = reflector.serialize(instance);
     String tableName = reflector.getServerName(E);
 
     return _updateMapInstance( tableName, entityMap );
   }
 
-  OpResult _updateMapInstance( String tableName, Map<String, Object> objectMap )
+  OpResult _updateMapInstance( String tableName, Map objectMap )
   {
     TransactionHelper.makeReferenceToValueFromOpResult( objectMap );
 
@@ -40,7 +40,7 @@ class UnitOfWorkUpdate {
     return TransactionHelper.makeOpResult( tableName, operationResultId, OperationType.UPDATE );
   }
 
-  OpResult _updateOpResult( OpResult result, Map<String, Object> changes )
+  OpResult _updateOpResult( OpResult result, Map changes )
   {
     if( !OperationTypeExt.supportEntityDescriptionResultType.contains( result.operationType ) )
       throw new ArgumentError( "This operation result not supported in this operation" );
@@ -50,7 +50,7 @@ class UnitOfWorkUpdate {
     return _updateMapInstance( result.tableName, changes );
   }
 
-  OpResult _updateValueRef( OpResultValueReference result, Map<String, Object> changes )
+  OpResult _updateValueRef( OpResultValueReference result, Map changes )
   {
 
     if( result.resultIndex == null || result.propName != null )
@@ -67,7 +67,7 @@ class UnitOfWorkUpdate {
   }
 
 
-  OpResult bulkUpdate(Map<String, Object> changes, dynamic identifier, [String tableName]  ) {
+  OpResult bulkUpdate(Map changes, dynamic identifier, [String tableName]  ) {
     if (identifier is String)
       return _bulkUpdateWithQuery(tableName, identifier, changes);
     else if (identifier is List)
@@ -77,17 +77,17 @@ class UnitOfWorkUpdate {
     else throw ArgumentError("The indetifier should be either whereClause, list of IDs or OpResult");
   }
 
-  OpResult _bulkUpdateWithQuery( String tableName, String whereClause, Map<String, Object> changes )
+  OpResult _bulkUpdateWithQuery( String tableName, String whereClause, Map changes )
   {
     return _bulkUpdate( tableName, whereClause, null, changes );
   }
 
-  OpResult _bulkUpdateByIds( String tableName, List<String> objectsForChanges, Map<String, Object> changes )
+  OpResult _bulkUpdateByIds( String tableName, List<String> objectsForChanges, Map changes )
   {
     return _bulkUpdate( tableName, null, objectsForChanges, changes );
   }
 
-  OpResult _bulkUpdateOpResult( OpResult objectIdsForChanges, Map<String, Object> changes )
+  OpResult _bulkUpdateOpResult( OpResult objectIdsForChanges, Map changes )
   {
     if( ! ( OperationTypeExt.supportCollectionEntityDescriptionType.contains( objectIdsForChanges.operationType )
             || OperationTypeExt.supportListIdsResultType.contains( objectIdsForChanges.operationType ) ) )
@@ -96,8 +96,7 @@ class UnitOfWorkUpdate {
     return _bulkUpdate( objectIdsForChanges.tableName, null, objectIdsForChanges.makeReference(), changes );
   }
 
-  OpResult _bulkUpdate( String tableName, String whereClause, Object objectsForChanges,
-                               Map<String, Object> changes )
+  OpResult _bulkUpdate( String tableName, String whereClause, Object objectsForChanges, Map changes )
   {
     TransactionHelper.removeSystemField( changes );
 

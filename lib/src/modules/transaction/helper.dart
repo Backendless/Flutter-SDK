@@ -6,7 +6,7 @@ class TransactionHelper {
   static final String SOCIAL_ACCOUNT_COLUMN_NAME = "socialAccount";
   static final String USER_STATUS_COLUMN_NAME = "userStatus";
 
-  static void removeSystemField( Map<String, Object> changes )
+  static void removeSystemField( Map changes )
   {
     changes.remove( LAST_LOGIN_COLUMN_NAME );
     changes.remove( PASSWORD_KEY );
@@ -34,7 +34,7 @@ class TransactionHelper {
     return objectsMaps.map((e) => convertObjectMapToObjectIdOrLeaveReference(e)).toList();
   }
 
-  static Object convertObjectMapToObjectIdOrLeaveReference( Map<String, Object> objectMap )
+  static Object convertObjectMapToObjectIdOrLeaveReference( Map objectMap )
   {
     if( objectMap.containsKey( UnitOfWork.REFERENCE_MARKER ) )
     {
@@ -45,9 +45,9 @@ class TransactionHelper {
     return objectMap['objectId'];
   }
 
-  static Map<String, Object> convertCreateBulkOrFindResultIndexToObjectId( OpResultValueReference parentObject )
+  static Map convertCreateBulkOrFindResultIndexToObjectId( OpResultValueReference parentObject )
   {
-    Map<String, Object> referenceToObjectId;
+    Map referenceToObjectId;
     if( OperationTypeExt.supportCollectionEntityDescriptionType.contains( parentObject.opResult.operationType ) )
       referenceToObjectId = parentObject.resolveTo( 'objectId' ).makeReference();
     else if( OperationTypeExt.supportListIdsResultType.contains( parentObject.opResult.operationType ) )
@@ -57,7 +57,7 @@ class TransactionHelper {
     return referenceToObjectId;
   }
 
-  static void makeReferenceToValueFromOpResult( Map<String, dynamic> map )
+  static void makeReferenceToValueFromOpResult( Map map )
   {
     map.forEach((key, value) {
       if (value is OpResult) {

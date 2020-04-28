@@ -14,13 +14,13 @@ class UnitOfWorkCreate {
   }
 
   OpResult _createClassInstance<E> ( E instance ) {
-    Map<String, Object> entityMap = reflector.serialize(instance);
+    Map entityMap = reflector.serialize(instance);
     String tableName = reflector.getServerName(E);
 
     return _createMapInstance( tableName, entityMap );
   }
 
-  OpResult _createMapInstance( String tableName, Map<String, Object> objectMap ) {
+  OpResult _createMapInstance( String tableName, Map objectMap ) {
     TransactionHelper.makeReferenceToValueFromOpResult( objectMap );
 
     String operationResultId = opResultIdGenerator.generateOpResultId( OperationType.CREATE, tableName );
@@ -39,15 +39,15 @@ class UnitOfWorkCreate {
   }
 
   OpResult _bulkCreateClassInstances<E> ( List<E> instances ) {
-    List<Map<String, Object>> serializedEntities = TransactionHelper.convertInstancesToMaps( instances );
+    List<Map> serializedEntities = TransactionHelper.convertInstancesToMaps( instances );
 
     String tableName = reflector.getServerName(E);
 
     return _bulkCreateMapInstances( tableName, serializedEntities );
   }
 
-  OpResult _bulkCreateMapInstances( String tableName, List<Map<String, Object>> arrayOfObjectMaps ) {
-    for( Map<String, Object> mapObject in arrayOfObjectMaps )
+  OpResult _bulkCreateMapInstances( String tableName, List<Map> arrayOfObjectMaps ) {
+    for( Map mapObject in arrayOfObjectMaps )
         TransactionHelper.makeReferenceToValueFromOpResult( mapObject );
 
     String operationResultId = opResultIdGenerator.generateOpResultId( OperationType.CREATE_BULK, tableName );
