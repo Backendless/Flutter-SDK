@@ -1,7 +1,10 @@
 ## 1.1.6
 
 * Added `excludeProperties`.
-Usage: `dataQueryBuilder.excludeProperties = ['excluded-property-1', 'exclude-property-2'];`
+Usage:
+```dart
+dataQueryBuilder.excludeProperties = ['excluded-property-1', 'exclude-property-2'];
+```
 * Fixed `EmailBodyParts` naming
 
 ## 1.1.5
