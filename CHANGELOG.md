@@ -1,3 +1,12 @@
+## 1.1.6
+
+* Added `excludeProperties`.
+Usage:
+```dart
+dataQueryBuilder.excludeProperties = ['excluded-property-1', 'exclude-property-2'];
+```
+* Fixed `EmailBodyParts` naming
+
 ## 1.1.5
 
 * Updated relations method signatures. Now you can just use parent and child object IDs instead of the object itself.
