@@ -6,7 +6,7 @@ class UnitOfWorkDelete {
 
   UnitOfWorkDelete( this.operations, this.opResultIdGenerator );
 
-  OpResult delete(dynamic value, [String tableName]) {
+  OpResult delete<T>(T value, [String tableName]) {
     if (value is Map)
       return _deleteMapInstance(tableName, value);
     if (value is String)
@@ -78,12 +78,12 @@ class UnitOfWorkDelete {
     return TransactionHelper.makeOpResult( resultIndex.opResult.tableName, operationResultId, OperationType.DELETE );
   }
 
-  OpResult bulkDelete(dynamic value, [String tableName]) {
+  OpResult bulkDelete<T>(T value, [String tableName]) {
     if (value is List) {
       if (value[0] is Map)
-        return _bulkDeleteMapInstances(tableName, value);
+        return _bulkDeleteMapInstances(tableName, value.cast<Map>());
       else if (value[0] is String)
-        return _bulkDeleteByIds(tableName, value);
+        return _bulkDeleteByIds(tableName, value.cast<String>());
       else if (reflector.canReflect(value[0]))
         return _bulkDeleteClassInstances(value);
       else throw ArgumentError("The value should be the list of IDs, Map or Custom Class instances");
@@ -97,8 +97,8 @@ class UnitOfWorkDelete {
   
   OpResult _bulkDeleteClassInstances<E> ( List<E> instances )
   {
-    List serializedEntities = instances.map((e) => reflector.serialize(e)).toList();
-    String tableName = reflector.getServerName(E);
+    List serializedEntities = instances.map((E e) => reflector.serialize(e)).toList();
+    String tableName = reflector.getServerName(instances[0].runtimeType);
 
 
     return _bulkDeleteMapInstances( tableName, serializedEntities );

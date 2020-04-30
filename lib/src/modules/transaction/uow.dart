@@ -54,11 +54,11 @@ class UnitOfWork
     return _unitOfWorkUpdate.bulkUpdate(changes, identifier, tableName);
   }
 
-  OpResult delete(dynamic value, [String tableName]) {
+  OpResult delete<T>(T value, [String tableName]) {
     return _unitOfWorkDelete.delete(value, tableName);
   }
 
-  OpResult bulkDelete(dynamic value, [String tableName]) {
+  OpResult bulkDelete<T>(T value, [String tableName]) {
     return _unitOfWorkDelete.bulkDelete(value, tableName);
   }
   

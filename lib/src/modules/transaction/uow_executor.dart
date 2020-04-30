@@ -12,7 +12,7 @@ class UnitOfWorkExecutor {
     if( unitOfWork.operations == null || unitOfWork.operations.isEmpty )
       throw new ArgumentError( "List of operations in unitOfWork can not be null or empty" );
 
-    String url = "https://api.backendless.com/0B83DD7F-A769-898E-FF28-6EC3B93C4200/39FC3C80-CC40-5CBE-FF5A-EED6A995DA00/transaction/unit-of-work";
+    String url = "https://api.backendless.com/D6CD378E-DC9D-11E1-FF64-5F02BBE23C00/B6976DD7-75AA-48F8-9846-B51709D6C956/transaction/unit-of-work";
     String body = parseUow(unitOfWork);
 
     print("Body: $body");
@@ -32,7 +32,14 @@ class UnitOfWorkExecutor {
     String operations = '[';
 
     uow.operations.forEach((o) {
-      String payload = jsonEncode(o.payload);
+      String payload;
+      if (o.payload is Map || o.payload is List || o.payload is DataQueryBuilder)
+        payload = jsonEncode(o.payload);
+      else if (o.payload is String)
+        payload = '"${o.payload}"';
+      else
+        payload = o.payload.toJson();
+
       operations += '{"operationType": "${describeEnum(o.operationType)}", "table": "${o.table}", "payload" : $payload, "opResultId": "${o.opResultId}"},';
     });
     operations = operations.substring(0, operations.length - 1) + ']';
@@ -41,14 +48,7 @@ class UnitOfWorkExecutor {
   }
 
 
-
-// Map
-// List<Map>
-// String
-// DeleteBulkPayload
-// BackendlessDataQuery/DataQueryBuilder
 // Relation
-// UpdateBulkPayload
 
 
 

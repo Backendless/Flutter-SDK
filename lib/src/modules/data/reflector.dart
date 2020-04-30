@@ -12,7 +12,13 @@ class Reflector extends Reflectable {
 
     Map<String, dynamic> result = Map();
 
-    ClassMirror classMirror = reflectType(T);
+    ClassMirror classMirror;
+    
+    try {
+      classMirror = reflectType(T);
+    } on NoSuchCapabilityError {
+      classMirror = reflectType(object.runtimeType);
+    }
     InstanceMirror instanceMirror = reflect(object);
 
     classMirror.declarations.forEach((propertyName, value) {
