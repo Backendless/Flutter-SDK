@@ -9,6 +9,13 @@ class Relation extends Selector {
 
   Relation( [String conditional, Object unconditional, this.parentObject, this.relationColumn,
                    this.objectIds, this.relationTableName, this.columnUnique] ) : super(conditional, unconditional);
+  
+  Relation.fromJson(Map json) : 
+    parentObject = json['parentObject'], 
+    relationColumn = json['relationColumn'], 
+    objectIds = json['objectIds'], 
+    relationTableName = json['relationTableName'], 
+    super(json['conditional'], json['unconditional']);
 
 @override
   String toString()

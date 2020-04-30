@@ -5,4 +5,10 @@ class OperationResult<T> {
   T result;
 
   OperationResult(this.operationType, this.result);
+
+  OperationResult.fromJson(Map json) {
+    operationType = OperationType.values.firstWhere(
+        (element) => describeEnum(element) == json['operationType']);
+    result = json['result'];
+  }
 }

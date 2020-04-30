@@ -12,7 +12,10 @@ class UnitOfWorkExecutor {
     if( unitOfWork.operations == null || unitOfWork.operations.isEmpty )
       throw new ArgumentError( "List of operations in unitOfWork can not be null or empty" );
 
-    String url = "https://api.backendless.com/D6CD378E-DC9D-11E1-FF64-5F02BBE23C00/B6976DD7-75AA-48F8-9846-B51709D6C956/transaction/unit-of-work";
+    String appId = "D6CD378E-DC9D-11E1-FF64-5F02BBE23C00";
+    String apiKey = "B6976DD7-75AA-48F8-9846-B51709D6C956";
+
+    String url = "https://api.backendless.com/$appId/$apiKey/transaction/unit-of-work";
     String body = parseUow(unitOfWork);
 
     print("Body: $body");
@@ -23,8 +26,11 @@ class UnitOfWorkExecutor {
       },
       body: body);
     print("Execution result: ${response.body}");
-    
 
+    Map json = jsonDecode(response.body.toString());
+    UnitOfWorkResult unitOfWorkResult = UnitOfWorkResult.fromJson(json);
+    print("UnitOfWorkResult: $unitOfWorkResult");
+    return unitOfWorkResult;
   }
 
   String parseUow(UnitOfWork uow) {
@@ -46,19 +52,4 @@ class UnitOfWorkExecutor {
 
     return '{"isolationLevelEnum": "$isolation", "operations": $operations}';
   }
-
-
-// Relation
-
-
-
-
-
-  // Future<List<User>> fetchUsersFromGitHub() async {
-  //   final response = await http.get(‘https://api.github.com/users');
-  //   print(response.body);
-  //   List responseJson = json.decode(response.body.toString());
-  //   List<User> userList = createUserList(responseJson);
-  //   return userList;
-  // }
 }

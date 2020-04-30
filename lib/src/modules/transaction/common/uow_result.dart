@@ -7,6 +7,17 @@ class UnitOfWorkResult {
 
   UnitOfWorkResult(this.success, this.error);
 
+  UnitOfWorkResult.fromJson(Map json) {
+    this.success = json['success'];
+    this.error = json['error'] != null ? TransactionOperationError.fromJson(json['error']) : null;
+    if (json['results'] == null) return;
+
+    results = Map();
+    (json['results'] as Map).forEach((key, value) {
+      results[key] = OperationResult.fromJson(value);
+    });
+  }
+
   @override
    String toString()
   {
