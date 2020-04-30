@@ -6,7 +6,7 @@ class UnitOfWorkUpdate {
 
   UnitOfWorkUpdate(this.operations, this.opResultIdGenerator);
 
-  OpResult update(dynamic changes, [dynamic identifier ]) {
+  OpResult update<T>(T changes, [dynamic identifier ]) {
     if (changes is Map) {
       if (identifier is String)
         return _updateMapInstance(identifier, changes);

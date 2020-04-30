@@ -38,15 +38,15 @@ class UnitOfWork
     return _unitOfWorkExecutor.execute();
   }
 
-  OpResult create ( dynamic instance, [String tableName]) {
+  OpResult create<T> ( T instance, [String tableName]) {
     return _unitOfWorkCreate.create( instance, tableName );
   }
   
-  OpResult bulkCreate ( List<dynamic> instances, [String tableName] ) {
+  OpResult bulkCreate<T> ( List<T> instances, [String tableName] ) {
     return _unitOfWorkCreate.bulkCreate( instances, tableName );
   }
 
-  OpResult update(dynamic changes, [dynamic identifier ]) {
+  OpResult update<T>(T changes, [dynamic identifier ]) {
     return _unitOfWorkUpdate.update(changes, identifier);
   }
 

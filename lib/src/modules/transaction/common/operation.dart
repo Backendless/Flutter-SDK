@@ -15,8 +15,6 @@ abstract class Operation<T> {
   {
     return "Operation{operationType=$operationType, table=$table, opResultId=$opResultId, payload=$payload}";
   }
-
-  String toJson() => '{"operationType": "${describeEnum(operationType)}", "table": "$table", "payload" : "$payload", "opResultId": "$opResultId"}';
 }
 
 class OperationCreate extends Operation<Map> {

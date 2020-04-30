@@ -24,7 +24,7 @@ class TransactionHelper {
 
   static List<Map> convertInstancesToMaps<E>( List<E> instances )
   {
-    if (reflector.canReflect(E))
+    if (reflector.canReflectType(E))
       return instances.map((e) => reflector.serialize(e)).toList();
     throw ArgumentError("Serialization error. Cannot serialize $E");
   }

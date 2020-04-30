@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:backendless_sdk/backendless_sdk.dart';
 import 'main.reflectable.dart';
@@ -15,6 +18,7 @@ class Test {
 }
 
 void main() {
+  initializeReflectable();
   runApp(MyApp());
 }
 
@@ -23,43 +27,106 @@ class MyApp extends StatefulWidget {
   _MyAppState createState() => _MyAppState();
 }
 
+@reflector
+class Order {
+  String orderStatus;
+  DateTime deliveryDate;
+  String objectId;
+  double d;
+}
+
+@reflector
+class Person {
+  String name;
+  int age;
+  String objectId;
+}
+
+@reflector
+class TestTable {
+  String foo;
+  String objectId;
+}
+
 class _MyAppState extends State<MyApp> {
-  String _result = 'Result';
 
   @override
   void initState() {
     super.initState();
-    initializeReflectable();
+    Backendless.initApp(
+      "0B83DD7F-A769-898E-FF28-6EC3B93C4200",
+      "D7186AEB-32A8-9C08-FF41-4F4A87A98200",
+      null);
+  }
+  
+  void buttonPressed() async {
+    final unitOfWork = UnitOfWork();
 
-    Backendless.setUrl("https://api.backendless.com");
-    Backendless.initApp("APP-ID", "ANDROID-KEY", "IOS-KEY");
+// compose query builder
+final queryBuilder = DataQueryBuilder();
+
+// set the query condition
+queryBuilder.whereClause = "foo = 'bar2'";
+
+// we need only one object, this will help to speed it up
+queryBuilder.pageSize = 1;
+
+// add the find operation to the transaction
+final findResult = unitOfWork.find("TestTable", queryBuilder);
+
+// get a reference to the first object (order) from the result
+final orderObjectRef = findResult.resolveTo(resultIndex: 0);
+
+// compose a map of changes - notice the objectId is not needed there
+Map changes ={
+ "foo": "OPRESULT bar",
+};
+
+// add the update operation to the transaction
+unitOfWork.update(changes, orderObjectRef);
+
+// run the transaction
+unitOfWork.execute().then((result) => print("transaction complete - $result"));
   }
 
-  void buttonPressed() async {
-    final dataStore = Backendless.data.withClass<Test>();
+  void test() async {
+    final unitOfWork = UnitOfWork();
 
-    final point = Point(x: 20, y: 20);
+    Map testTable = {"foo": "bar_from_transaction"};
 
-    final point1 = Point(x: 30, y: 30);
-    final point2 = Point(x: 40, y: 40);
+    unitOfWork.create(testTable, "TestTable");
 
-    final ppoint1 = Point(x: -114.86082225, y: 51.77113916);
-    final ppoint2 = Point(x: -113.45457225, y: 47.44655569);
-    final ppoint3 = Point(x: -108.53269725, y: 49.31427466);
-    final ppoint4 = Point(x: -114.86082225, y: 51.77113916);
+    String json = jsonEncode(testTable);
+    print("Json encode: $json");
+  }
 
-    final lineString = LineString(points: [point1, point2]);
-    final polygon = Polygon(
-        boundary: LineString(points: [ppoint1, ppoint2, ppoint3, ppoint4]));
+  void setRelationTest() async {
+    final unitOfWork = UnitOfWork();
+    
+    final iPad = {
+    "objectId": "EE3BF4B5-DB88-1425-FF89-CC11B7707500"
+    };
 
-    final objectOfCustomClass = Test()
-      ..point = point
-      ..lineString = lineString
-      ..polygon = polygon;
+    final iPhone = {
+    "objectId": "0CF23E36-FCC0-4E04-FF3E-8B67E6E27200"
+    };
 
-    dataStore.save(objectOfCustomClass).then((saved) {
-      print("🟢 SAVED: $saved");
-    });
+    final gifts = [iPad, iPhone];
+
+    final personObject = {
+    "objectId": "E7AD83E0-1B4E-D250-FF46-61BFAB18D700"
+    };
+
+    final parentTableName = "Person";
+
+    final relationColumnName = "wishlist";
+
+    unitOfWork.setRelation(
+      personObject,
+      relationColumnName,
+      gifts,
+      parentTableName
+    );
   }
 
   @override
@@ -74,8 +141,9 @@ class _MyAppState extends State<MyApp> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text('$_result'),
-            RaisedButton(child: Text("Press"), onPressed: buttonPressed)
+            RaisedButton(child: Text("Press"), onPressed: buttonPressed),
+
+            RaisedButton(child: Text("Test"), onPressed: test)
           ],
         )),
       ),

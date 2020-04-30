@@ -6,7 +6,7 @@ class UnitOfWorkCreate {
 
   UnitOfWorkCreate( this.operations, this.opResultIdGenerator );
 
-  OpResult create ( dynamic instance, [String tableName]) {
+  OpResult create <T> ( T instance, [String tableName]) {
     if (instance is Map)
       return _createMapInstance(tableName, instance);
     else
@@ -31,9 +31,9 @@ class UnitOfWorkCreate {
     return TransactionHelper.makeOpResult( tableName, operationResultId, OperationType.CREATE );
   }
 
-  OpResult bulkCreate ( List<dynamic> instances, [String tableName] ) {
+  OpResult bulkCreate<T> ( List<T> instances, [String tableName] ) {
     if (instances[0] is Map)
-      return _bulkCreateMapInstances(tableName, instances);
+      return _bulkCreateMapInstances(tableName, instances.cast<Map>());
     else
       return _bulkCreateClassInstances(instances);
   }
