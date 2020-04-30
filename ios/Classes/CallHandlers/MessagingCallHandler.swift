@@ -361,13 +361,13 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
             return
         }
         
-        let bodyParts = EmailBodyparts()
+        let bodyParts = EmailBodyParts()
         bodyParts.textMessage = arguments[Args.textMessage].flatMap(cast)
         bodyParts.htmlMessage = arguments[Args.htmlMessage].flatMap(cast)
         
         let attachments: [String]? = arguments[Args.attachments].flatMap(cast)
         
-        messaging.sendEmail(subject: subject, bodyparts: bodyParts, recipients: recipients, attachments: attachments,
+        messaging.sendEmail(subject: subject, bodyParts: bodyParts, recipients: recipients, attachments: attachments,
             responseHandler: {
                 result($0)
             },
@@ -389,10 +389,10 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
                 return
         }
         
-        let bodyParts = EmailBodyparts()
+        let bodyParts = EmailBodyParts()
         bodyParts.htmlMessage = messageBody
         
-        messaging.sendEmail(subject: subject, bodyparts: bodyParts, recipients: recipients, attachments: nil,
+        messaging.sendEmail(subject: subject, bodyParts: bodyParts, recipients: recipients, attachments: nil,
             responseHandler: {
                 result($0)
             },
@@ -414,10 +414,10 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
             return
         }
         
-        let bodyParts = EmailBodyparts()
+        let bodyParts = EmailBodyParts()
         bodyParts.textMessage = messageBody
         
-        messaging.sendEmail(subject: subject, bodyparts: bodyParts, recipients: recipients, attachments: nil,
+        messaging.sendEmail(subject: subject, bodyParts: bodyParts, recipients: recipients, attachments: nil,
             responseHandler: {
                 result($0)
             },
