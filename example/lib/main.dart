@@ -1,18 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:backendless_sdk/backendless_sdk.dart';
-import 'main.reflectable.dart';
-
-@reflector
-class Test {
-  String foo;
-  Point point;
-  LineString lineString;
-  Polygon polygon;
-
-  @override
-  String toString() =>
-      "'Test' custom class:\n\tpoint: $point\n\tlineString: $lineString\n\tpolygon: $polygon";
-}
 
 void main() {
   runApp(MyApp());
@@ -24,42 +11,28 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _result = 'Result';
+  static const String APP_ID = "YOUR_APP_ID";
+  static const String ANDROID_KEY = "YOUR_ANDROID_KEY";
+  static const String IOS_KEY = "YOUR_IOS_KEY";
 
   @override
   void initState() {
     super.initState();
-    initializeReflectable();
-
-    Backendless.setUrl("https://api.backendless.com");
-    Backendless.initApp("APP-ID", "ANDROID-KEY", "IOS-KEY");
+    Backendless.initApp(APP_ID, ANDROID_KEY, IOS_KEY);
   }
 
-  void buttonPressed() async {
-    final dataStore = Backendless.data.withClass<Test>();
+  void buttonPressed() {
+    // create a Map object. This will become a record in a database table
+    Map testObject = new Map();
 
-    final point = Point(x: 20, y: 20);
+    // add a property to the object.
+    // The property name ("foo") will become a column in the database table
+    // The property value ("bar") will be stored as a value for the stored record
+    testObject["foo"] = "bar";
 
-    final point1 = Point(x: 30, y: 30);
-    final point2 = Point(x: 40, y: 40);
-
-    final ppoint1 = Point(x: -114.86082225, y: 51.77113916);
-    final ppoint2 = Point(x: -113.45457225, y: 47.44655569);
-    final ppoint3 = Point(x: -108.53269725, y: 49.31427466);
-    final ppoint4 = Point(x: -114.86082225, y: 51.77113916);
-
-    final lineString = LineString(points: [point1, point2]);
-    final polygon = Polygon(
-        boundary: LineString(points: [ppoint1, ppoint2, ppoint3, ppoint4]));
-
-    final objectOfCustomClass = Test()
-      ..point = point
-      ..lineString = lineString
-      ..polygon = polygon;
-
-    dataStore.save(objectOfCustomClass).then((saved) {
-      print("🟢 SAVED: $saved");
-    });
+    // Save the object in the database. The name of the database table is "TestTable".
+    Backendless.data.of("TestTable").save(testObject).then((response) =>
+        print("Object is saved in Backendless. Please check in the console."));
   }
 
   @override
@@ -74,7 +47,6 @@ class _MyAppState extends State<MyApp> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text('$_result'),
             RaisedButton(child: Text("Press"), onPressed: buttonPressed)
           ],
         )),
