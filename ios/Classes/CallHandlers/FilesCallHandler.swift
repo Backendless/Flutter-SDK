@@ -247,8 +247,8 @@ class FilesCallHandler: FlutterCallHandlerProtocol {
         }
         
         fileService.remove(path: fileUrl,
-            responseHandler: {
-                result(1)
+            responseHandler: { removed in
+                result(removed)
             },
             errorHandler: {
                 result(FlutterError($0))
@@ -269,16 +269,16 @@ class FilesCallHandler: FlutterCallHandlerProtocol {
         
         if let pattern = pattern, let recursive = recursive {
             fileService.remove(path: directoryPath, pattern: pattern, recursive: recursive,
-                responseHandler: {
-                    result(nil)
+                responseHandler: { removed in
+                    result(removed)
                 },
                 errorHandler: {
                     result(FlutterError($0))
                 })
         } else {
             fileService.remove(path: directoryPath, pattern: "*", recursive: true,
-                responseHandler: {
-                    result(nil)
+                responseHandler: { removed in
+                    result(removed)
                 },
                     errorHandler: {
                 result(FlutterError($0))
