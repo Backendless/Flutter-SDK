@@ -18,7 +18,7 @@ extension FlutterError {
     }
     
     /// Initialize Flutter Error from Backendless Fault Type
-    convenience init(_ fault: Fault) {
-        self.init(code: "\(fault.code)", message: fault.message, details: fault.userInfo)
+    convenience init(_ fault: Fault) {        
+        self.init(code: "\(fault.code)", message: fault.message, details: fault.userInfo["NSLocalizedDescription"])
     }
 }

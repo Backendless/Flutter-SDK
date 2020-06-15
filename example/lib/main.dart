@@ -3,19 +3,6 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:backendless_sdk/backendless_sdk.dart';
-import 'main.reflectable.dart';
-
-@reflector
-class Test {
-  String foo;
-  Point point;
-  LineString lineString;
-  Polygon polygon;
-
-  @override
-  String toString() =>
-      "'Test' custom class:\n\tpoint: $point\n\tlineString: $lineString\n\tpolygon: $polygon";
-}
 
 void main() {
   initializeReflectable();
@@ -49,20 +36,28 @@ class TestTable {
 }
 
 class _MyAppState extends State<MyApp> {
+  static const String APP_ID = "YOUR_APP_ID";
+  static const String ANDROID_KEY = "YOUR_ANDROID_KEY";
+  static const String IOS_KEY = "YOUR_IOS_KEY";
 
   @override
   void initState() {
     super.initState();
-    Backendless.initApp(
-      "0B83DD7F-A769-898E-FF28-6EC3B93C4200",
-      "D7186AEB-32A8-9C08-FF41-4F4A87A98200",
-      null);
+    Backendless.initApp(APP_ID, ANDROID_KEY, IOS_KEY);
   }
-  
-  void buttonPressed() async {
-    var uow = UnitOfWork();
-    uow.create({"foo": "bar"}, "TestTable");
-    uow.execute().then((uowResult) => print(uowResult));
+
+  void buttonPressed() {
+    // create a Map object. This will become a record in a database table
+    Map testObject = new Map();
+
+    // add a property to the object.
+    // The property name ("foo") will become a column in the database table
+    // The property value ("bar") will be stored as a value for the stored record
+    testObject["foo"] = "bar";
+
+    // Save the object in the database. The name of the database table is "TestTable".
+    Backendless.data.of("TestTable").save(testObject).then((response) =>
+        print("Object is saved in Backendless. Please check in the console."));
   }
 
   @override
@@ -77,9 +72,7 @@ class _MyAppState extends State<MyApp> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            RaisedButton(child: Text("Press"), onPressed: buttonPressed),
-
-            RaisedButton(child: Text("Test"), onPressed: (){})
+            RaisedButton(child: Text("Press"), onPressed: buttonPressed)
           ],
         )),
       ),

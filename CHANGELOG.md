@@ -1,3 +1,11 @@
+# 1.1.8
+
+* Fixed error handling for iOS
+
+## 1.1.7
+
+* Fixed a crash on iOS due to Swift SDK update
+
 ## 1.1.6
 
 * Added `excludeProperties`.
