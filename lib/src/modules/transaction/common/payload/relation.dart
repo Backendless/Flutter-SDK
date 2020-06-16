@@ -28,9 +28,10 @@ class Relation extends Selector {
             '}';
   }
 
-  String toJson() {
-    String properties = (conditional != null) ? 
-      '"conditional": "$conditional"' : '"unconditional": ${jsonEncode(unconditional)}';
-    return '{"parentObject" : ${jsonEncode(parentObject)}, "relationColumn": "$relationColumn",  $properties}';
-  }
+  Map toJson() => {
+    "conditional": conditional,
+    "unconditional": unconditional,
+    "parentObject" : parentObject,
+    "relationColumn": relationColumn,
+  };
 }

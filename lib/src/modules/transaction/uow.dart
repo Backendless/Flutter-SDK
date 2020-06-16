@@ -77,4 +77,9 @@ class UnitOfWork
   OpResult deleteRelation(dynamic parent, String columnName, dynamic children, [String parentTable]) {
     return _relationOperation.addOperation(OperationType.DELETE_RELATION, parent, columnName, children, parentTable);
   }
+
+  Map toJson() => {
+    "isolationLevelEnum": describeEnum(transactionIsolation), 
+    "operations": operations,
+  };
 }

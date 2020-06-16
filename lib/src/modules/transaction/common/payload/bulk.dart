@@ -10,11 +10,11 @@ class UpdateBulkPayload<T> extends Selector {
     changes = json['changes'], 
     super(json['conditional'], json['unconditional']);
 
-  String toJson() {
-    String properties = (conditional != null) ? 
-      '"conditional": "$conditional"' : '"unconditional": ${jsonEncode(unconditional)}';
-    return '{$properties, "changes": ${jsonEncode(changes)}}';
-  }
+  Map toJson() => {
+    "conditional": conditional,
+    "unconditional": unconditional,
+    "changes": changes,
+  };
 }
 
 class DeleteBulkPayload extends Selector {
@@ -24,8 +24,8 @@ class DeleteBulkPayload extends Selector {
   DeleteBulkPayload.fromJson(Map json) : 
     super(json['conditional'], json['unconditional']);
 
-  String toJson() {
-    return (conditional != null) ? 
-      '{"conditional": "$conditional"}' : '{"unconditional": ${jsonEncode(unconditional)}}';
-  }
+  Map toJson() => {
+    "conditional": conditional,
+    "unconditional": unconditional,
+  };
 }

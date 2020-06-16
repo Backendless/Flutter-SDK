@@ -11,6 +11,13 @@ abstract class Operation<T> {
   Operation.withPayload(
       this.operationType, this.table, this.opResultId, this.payload);
 
+  Map toJson() => {
+    "operationType": describeEnum(operationType),
+    "table": table, 
+    "payload" : payload,
+    "opResultId": opResultId,
+  };
+
   @override
   String toString() {
     return "Operation{operationType=$operationType, table=$table, opResultId=$opResultId, payload=$payload}";
@@ -42,12 +49,28 @@ class OperationCreate extends Operation<Map> {
   OperationCreate.fromJson(Map json) : super.fromJson(json);
 }
 
-class OperationCreateBulk extends Operation<List<Map>> {
+class OperationCreateBulk extends Operation<List> {
   OperationCreateBulk(OperationType operationType, String table,
-      String opResultId, List<Map> payload)
+      String opResultId, List payload)
       : super.withPayload(operationType, table, opResultId, payload);
 
   OperationCreateBulk.fromJson(Map json) : super.fromJson(json);
+}
+
+class OperationUpdate extends Operation<Map> {
+  OperationUpdate(
+      OperationType operationType, String table, String opResultId, Map payload)
+      : super.withPayload(operationType, table, opResultId, payload);
+
+  OperationUpdate.fromJson(Map json) : super.fromJson(json);
+}
+
+class OperationUpdateBulk extends Operation<UpdateBulkPayload> {
+  OperationUpdateBulk(OperationType operationType, String table,
+      String opResultId, UpdateBulkPayload payload)
+      : super.withPayload(operationType, table, opResultId, payload);
+
+  OperationUpdateBulk.fromJson(Map json) : super.fromJson(json);
 }
 
 class OperationDelete extends Operation<Object> {
@@ -98,18 +121,3 @@ class OperationSetRelation extends Operation<Relation> {
   OperationSetRelation.fromJson(Map json) : super.fromJson(json);
 }
 
-class OperationUpdate extends Operation<Map> {
-  OperationUpdate(
-      OperationType operationType, String table, String opResultId, Map payload)
-      : super.withPayload(operationType, table, opResultId, payload);
-
-  OperationUpdate.fromJson(Map json) : super.fromJson(json);
-}
-
-class OperationUpdateBulk extends Operation<UpdateBulkPayload> {
-  OperationUpdateBulk(OperationType operationType, String table,
-      String opResultId, UpdateBulkPayload payload)
-      : super.withPayload(operationType, table, opResultId, payload);
-
-  OperationUpdateBulk.fromJson(Map json) : super.fromJson(json);
-}

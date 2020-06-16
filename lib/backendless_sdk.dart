@@ -15,6 +15,10 @@ import 'package:http/http.dart' as http;
 
 import 'src/utils/utils.dart';
 
+part 'src/modules/common/invoker.dart';
+part 'src/modules/common/prefs.dart';
+part 'src/modules/common/exception.dart';
+
 part 'src/modules/cache/cache.dart';
 part 'src/modules/cache/cache_service.dart';
 part 'src/modules/commerce/commerce.dart';
