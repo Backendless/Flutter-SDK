@@ -1,38 +1,13 @@
-import 'dart:convert';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:backendless_sdk/backendless_sdk.dart';
 
 void main() {
-  initializeReflectable();
   runApp(MyApp());
 }
 
 class MyApp extends StatefulWidget {
   @override
   _MyAppState createState() => _MyAppState();
-}
-
-@reflector
-class Order {
-  String orderStatus;
-  DateTime deliveryDate;
-  String objectId;
-  double d;
-}
-
-@reflector
-class Person {
-  String name;
-  int age;
-  String objectId;
-}
-
-@reflector
-class TestTable {
-  String foo;
-  String objectId;
 }
 
 class _MyAppState extends State<MyApp> {
