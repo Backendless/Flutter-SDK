@@ -19,10 +19,10 @@ class Backendless {
   static const MethodChannel _channel = const MethodChannel('backendless');
 
   static Future<void> initApp(
-      String applicationId, String androidApiKey, String iosApiKey) {
+      String applicationId, String androidApiKey, String iosApiKey, String jsApiKey) {
     String apiKey;
-    if (Platform.isAndroid)
-      apiKey = androidApiKey;
+    if (kIsWeb) apiKey = jsApiKey;
+    else if (Platform.isAndroid) apiKey = androidApiKey;
     else if (Platform.isIOS) apiKey = iosApiKey;
 
     _prefs.initPreferences(applicationId, apiKey);

@@ -22,16 +22,16 @@ class CacheCallHandler {
       // case "Backendless.Cache.expireIn":
       //   expireIn(call, result);
       //   break;
-      // case "Backendless.Cache.get":
-      //   get(call, result);
-      //   break;
+      case "Backendless.Cache.get":
+        return promiseToFuture(
+          get(call.arguments['key']));
       case "Backendless.Cache.put":
         return promiseToFuture(
           put(call.arguments['key'], call.arguments['object']));
       default:
         throw PlatformException(
           code: 'Unimplemented',
-          details: "The url_launcher plugin for web doesn't implement "
+          details: "Backendless plugin for web doesn't implement "
               "the method '${call.method}'");
     }
 
@@ -43,3 +43,6 @@ external bool contains(String key);
 
 @JS('Backendless.Cache.put')
 external dynamic put(String key, String object);
+
+@JS('Backendless.Cache.get')
+external dynamic get(String key);
