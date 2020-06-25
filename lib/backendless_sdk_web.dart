@@ -5,6 +5,7 @@ import 'backendless_sdk.dart';
 import 'src/web/call_handlers/backendless.dart';
 import 'src/web/call_handlers/cache.dart';
 import 'src/web/call_handlers/counters.dart';
+import 'src/web/call_handlers/custom_service.dart';
 
 class BackendlessWeb {
 
@@ -36,9 +37,11 @@ class BackendlessWeb {
       registrar.messenger);
     countersChannel.setMethodCallHandler(CountersCallHandler().handleMethodCall);
 
-      // final MethodChannel customServiceChannel = new MethodChannel("backendless/custom_service",
-      //     new StandardMethodCodec(new BackendlessMessageCodec()), registrar.messenger);
-      // customServiceChannel.setMethodCallHandler(new CustomServiceCallHandler());
+    final MethodChannel customServiceChannel = MethodChannel(
+      "backendless/custom_service",
+      StandardMethodCodec(BackendlessMessageCodec()), 
+      registrar.messenger);
+    customServiceChannel.setMethodCallHandler(CustomServiceCallHandler().handleMethodCall);
 
       // final MethodChannel eventsChannel = new MethodChannel("backendless/events",
       //     new StandardMethodCodec(new BackendlessMessageCodec()), registrar.messenger);
