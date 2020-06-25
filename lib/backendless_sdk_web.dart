@@ -1,6 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
+import 'backendless_sdk.dart';
 import 'src/web/call_handlers/backendless.dart';
 import 'src/web/call_handlers/cache.dart';
 
@@ -9,14 +10,14 @@ class BackendlessWeb {
   static void registerWith(Registrar registrar) {    
       final MethodChannel cacheChannel = MethodChannel(
         "backendless/cache",
-        const StandardMethodCodec(), 
+        const StandardMethodCodec(BackendlessMessageCodec()), 
         registrar.messenger);
       cacheChannel.setMethodCallHandler(CacheCallHandler().handleMethodCall);
 
     
     final MethodChannel backendlessChannel = MethodChannel(
       "backendless", 
-      const StandardMethodCodec(), 
+      const StandardMethodCodec(BackendlessMessageCodec()), 
       registrar.messenger);
       backendlessChannel.setMethodCallHandler(BackendlessCallHandler().handleMethodCall);
 
