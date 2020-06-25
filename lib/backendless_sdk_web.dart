@@ -4,22 +4,23 @@ import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'backendless_sdk.dart';
 import 'src/web/call_handlers/backendless.dart';
 import 'src/web/call_handlers/cache.dart';
+import 'src/web/call_handlers/counters.dart';
 
 class BackendlessWeb {
 
   static void registerWith(Registrar registrar) {    
-      final MethodChannel cacheChannel = MethodChannel(
-        "backendless/cache",
-        const StandardMethodCodec(BackendlessMessageCodec()), 
-        registrar.messenger);
-      cacheChannel.setMethodCallHandler(CacheCallHandler().handleMethodCall);
+    final MethodChannel cacheChannel = MethodChannel(
+      "backendless/cache",
+      const StandardMethodCodec(BackendlessMessageCodec()), 
+      registrar.messenger);
+    cacheChannel.setMethodCallHandler(CacheCallHandler().handleMethodCall);
 
     
     final MethodChannel backendlessChannel = MethodChannel(
       "backendless", 
       const StandardMethodCodec(BackendlessMessageCodec()), 
       registrar.messenger);
-      backendlessChannel.setMethodCallHandler(BackendlessCallHandler().handleMethodCall);
+    backendlessChannel.setMethodCallHandler(BackendlessCallHandler().handleMethodCall);
 
       //   final MethodChannel dataChannel = new MethodChannel("backendless/data",
       //       new StandardMethodCodec(new BackendlessMessageCodec()), registrar.messenger);
@@ -29,8 +30,11 @@ class BackendlessWeb {
       //     new StandardMethodCodec(new BackendlessMessageCodec()), registrar.messenger);
       // commerceChannel.setMethodCallHandler(new CommerceCallHandler());
 
-      // final MethodChannel countersChannel = new MethodChannel("backendless/counters", registrar.messenger);
-      // countersChannel.setMethodCallHandler(new CountersCallHandler());
+    final MethodChannel countersChannel = MethodChannel(
+      "backendless/counters", 
+      const StandardMethodCodec(), 
+      registrar.messenger);
+    countersChannel.setMethodCallHandler(CountersCallHandler().handleMethodCall);
 
       // final MethodChannel customServiceChannel = new MethodChannel("backendless/custom_service",
       //     new StandardMethodCodec(new BackendlessMessageCodec()), registrar.messenger);
