@@ -1,3 +1,8 @@
+# 6.0.0
+
+* Introduce Transactions API
+* Bump the plugin version to match the Backendless v.6 release
+
 # 1.1.8
 
 * Fixed error handling for iOS
