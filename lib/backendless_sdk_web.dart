@@ -8,6 +8,7 @@ import 'src/web/call_handlers/counters.dart';
 import 'src/web/call_handlers/custom_service.dart';
 import 'src/web/call_handlers/files.dart';
 import 'src/web/call_handlers/logging.dart';
+import 'src/web/call_handlers/users.dart';
 
 class BackendlessWeb {
 
@@ -66,9 +67,11 @@ class BackendlessWeb {
     //     new StandardMethodCodec(new BackendlessMessageCodec()), registrar.messenger);
     // rtChannel.setMethodCallHandler(new RtCallHandler(rtChannel));
 
-    // final MethodChannel userServiceChannel = new MethodChannel("backendless/user_service",
-    //     new StandardMethodCodec(new BackendlessMessageCodec()), registrar.messenger);
-    // userServiceChannel.setMethodCallHandler(new UserServiceCallHandler());
+    final MethodChannel userServiceChannel = MethodChannel(
+      "backendless/user_service",
+      const StandardMethodCodec(BackendlessMessageCodec()),
+      registrar.messenger);
+    userServiceChannel.setMethodCallHandler(UserServiceCallHandler().handleMethodCall);
 
     // final MethodChannel testChannel = new MethodChannel("backendless/test",
     //     new StandardMethodCodec(new BackendlessMessageCodec()), registrar.messenger());
