@@ -9,7 +9,7 @@ class BackendlessPrefs {
   factory BackendlessPrefs() => _instance;
 
   BackendlessPrefs._internal() {
-    headers = { HttpHeaders.contentTypeHeader: 'application/json' };
+    headers = {HttpHeaders.contentTypeHeader: 'application/json'};
     url = "https://api.backendless.com";
   }
 
@@ -18,7 +18,7 @@ class BackendlessPrefs {
   }
 
   get appId => authKeys.applicationId;
-  
+
   get apiKey => authKeys.apiKey;
 }
 

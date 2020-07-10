@@ -8,11 +8,13 @@ class Invoker {
     final url = _getUrl(methodName);
     final headers = prefs.headers;
 
-    return http.post(
+    return http
+        .post(
       url,
       headers: headers,
       body: encodedBody,
-    ).then((response) {
+    )
+        .then((response) {
       if (response.statusCode >= 400) {
         try {
           throw new BackendlessException.fromJson(jsonDecode(response.body));
@@ -24,7 +26,6 @@ class Invoker {
     });
   }
 
-  static String _getUrl(String methodName) => 
-    "${prefs.url}/${prefs.appId}/${prefs.apiKey}/$methodName";
-  
+  static String _getUrl(String methodName) =>
+      "${prefs.url}/${prefs.appId}/${prefs.apiKey}/$methodName";
 }

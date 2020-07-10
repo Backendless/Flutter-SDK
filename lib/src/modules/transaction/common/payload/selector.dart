@@ -7,12 +7,13 @@ class Selector {
   Selector(this.conditional, this.unconditional);
 
   @override
-  String toString()
-  {
+  String toString() {
     return "Selector{" +
-            "conditional='" + conditional + '\'' +
-            ", unconditional=" + unconditional +
-            '}';
+        "conditional='" +
+        conditional +
+        '\'' +
+        ", unconditional=" +
+        unconditional +
+        '}';
   }
-
 }

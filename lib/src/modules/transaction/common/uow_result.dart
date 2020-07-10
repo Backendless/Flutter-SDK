@@ -9,7 +9,9 @@ class UnitOfWorkResult {
 
   UnitOfWorkResult.fromJson(Map json) {
     this.success = json['success'];
-    this.error = json['error'] != null ? TransactionOperationError.fromJson(json['error']) : null;
+    this.error = json['error'] != null
+        ? TransactionOperationError.fromJson(json['error'])
+        : null;
     if (json['results'] == null) return;
 
     results = Map();
@@ -19,11 +21,8 @@ class UnitOfWorkResult {
   }
 
   @override
-   String toString()
-  {
+  String toString() {
     String error = this.error != null ? this.error.toString() : "error=null";
     return "UnitOfWorkResult{success=$success, $error, results=$results}";
   }
-
-
 }

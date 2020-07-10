@@ -26,7 +26,7 @@ class Backendless {
     else if (Platform.isIOS) apiKey = iosApiKey;
 
     _prefs.initPreferences(applicationId, apiKey);
-    
+
     return _channel.invokeMethod('Backendless.initApp',
         <String, dynamic>{'applicationId': applicationId, 'apiKey': apiKey});
   }
@@ -45,7 +45,7 @@ class Backendless {
   static Future<void> setUrl(String url) {
     _prefs.url = url;
     return _channel
-      .invokeMethod("Backendless.setUrl", <String, dynamic>{"url": url});
+        .invokeMethod("Backendless.setUrl", <String, dynamic>{"url": url});
   }
 
   static Future<Map<String, String>> getHeaders() async =>

@@ -13,7 +13,7 @@ class Reflector extends Reflectable {
     Map<String, dynamic> result = Map();
 
     ClassMirror classMirror;
-    
+
     try {
       classMirror = reflectType(T);
     } on NoSuchCapabilityError {

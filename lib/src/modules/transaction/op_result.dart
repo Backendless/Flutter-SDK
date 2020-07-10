@@ -10,7 +10,8 @@ class OpResult {
   OpResult(this.tableName, this.operationType, this._opResultId);
 
   OpResultValueReference resolveTo({int resultIndex, String propName}) {
-    return OpResultValueReference(this, resultIndex: resultIndex, propName: propName);
+    return OpResultValueReference(this,
+        resultIndex: resultIndex, propName: propName);
   }
 
   Map makeReference() {
@@ -22,12 +23,12 @@ class OpResult {
 
   void setOpResultId(UnitOfWork unitOfWork, String newOpResultId) {
     if (unitOfWork.opResultIdStrings.contains(newOpResultId))
-      throw new ArgumentError("This opResultId already present. OpResultId must be unique");
+      throw new ArgumentError(
+          "This opResultId already present. OpResultId must be unique");
 
-    for( Operation operation in unitOfWork.operations )
-      if( operation.opResultId == _opResultId )
-      {
-        operation.opResultId = newOpResultId ;
+    for (Operation operation in unitOfWork.operations)
+      if (operation.opResultId == _opResultId) {
+        operation.opResultId = newOpResultId;
         break;
       }
 
@@ -35,32 +36,26 @@ class OpResult {
   }
 }
 
-class OpResultIdGenerator
-{
+class OpResultIdGenerator {
   List<String> opResultIdStrings;
   final Map<String, int> opResultIdMaps = new Map();
 
-  OpResultIdGenerator( List<String> opResultIdStrings )
-  {
+  OpResultIdGenerator(List<String> opResultIdStrings) {
     this.opResultIdStrings = opResultIdStrings;
   }
 
-  String generateOpResultId( OperationType operationType, String tableName )
-  {
+  String generateOpResultId(OperationType operationType, String tableName) {
     String opResultIdGenerated;
-    final String key =  operationType.operationName + tableName;
-    if( opResultIdMaps.containsKey( key ) )
-    {
+    final String key = operationType.operationName + tableName;
+    if (opResultIdMaps.containsKey(key)) {
       int count = opResultIdMaps[key];
-      opResultIdMaps[key] =  ++count;
+      opResultIdMaps[key] = ++count;
       opResultIdGenerated = key + count.toString();
-    }
-    else
-    {
+    } else {
       opResultIdMaps[key] = 1;
       opResultIdGenerated = key + "1";
     }
-    opResultIdStrings.add( opResultIdGenerated );
+    opResultIdStrings.add(opResultIdGenerated);
     return opResultIdGenerated;
   }
 }
@@ -72,20 +67,18 @@ class OpResultValueReference {
 
   OpResultValueReference(this.opResult, {this.resultIndex, this.propName});
 
-   OpResultValueReference resolveTo( String propName )
-  {
-    return new OpResultValueReference( this.opResult, resultIndex: this.resultIndex, propName: propName );
+  OpResultValueReference resolveTo(String propName) {
+    return new OpResultValueReference(this.opResult,
+        resultIndex: this.resultIndex, propName: propName);
   }
 
-  Map makeReference()
-  {
+  Map makeReference() {
     Map referenceMap = opResult.makeReference();
 
-    if( resultIndex != null )
+    if (resultIndex != null)
       referenceMap[UnitOfWork.RESULT_INDEX] = resultIndex;
 
-    if( propName != null )
-      referenceMap[UnitOfWork.PROP_NAME] = propName ;
+    if (propName != null) referenceMap[UnitOfWork.PROP_NAME] = propName;
 
     return referenceMap;
   }

@@ -12,11 +12,11 @@ abstract class Operation<T> {
       this.operationType, this.table, this.opResultId, this.payload);
 
   Map toJson() => {
-    "operationType": describeEnum(operationType),
-    "table": table, 
-    "payload" : payload,
-    "opResultId": opResultId,
-  };
+        "operationType": describeEnum(operationType),
+        "table": table,
+        "payload": payload,
+        "opResultId": opResultId,
+      };
 
   @override
   String toString() {
@@ -120,4 +120,3 @@ class OperationSetRelation extends Operation<Relation> {
 
   OperationSetRelation.fromJson(Map json) : super.fromJson(json);
 }
-
