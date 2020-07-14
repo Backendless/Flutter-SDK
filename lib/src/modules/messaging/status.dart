@@ -7,10 +7,16 @@ class MessageStatus implements Comparable<MessageStatus> {
 
   MessageStatus();
 
-  MessageStatus.fromJson(Map json)
-      : messageId = json['messageId'],
-        errorMessage = json['errorMessage'],
-        status = PublishStatusEnum.values[json['status']];
+  MessageStatus.fromJson(Map json) {
+    messageId = json['messageId'];
+    errorMessage = json['errorMessage'];
+    final jsonStatus = json['status'];
+
+    if (jsonStatus is int)
+      status = PublishStatusEnum.values[jsonStatus];
+    else
+      status = stringToEnum(PublishStatusEnum.values, jsonStatus);
+  }
 
   Map toJson() => {
         'messageId': messageId,

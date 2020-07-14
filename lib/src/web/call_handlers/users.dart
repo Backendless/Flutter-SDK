@@ -7,7 +7,7 @@ import 'package:js/js.dart';
 import 'package:js/js_util.dart';
 
 import '../../../backendless_sdk.dart';
-import '../js_map.dart';
+import '../js_util.dart';
 
 class UserServiceCallHandler {
 
@@ -48,7 +48,7 @@ class UserServiceCallHandler {
       case "Backendless.UserService.register":
         BackendlessUser user = call.arguments['user'];
         return promiseToFuture(
-          register(mapToJs(user.properties['properties']))
+          register(convertToJs(user.properties['properties']))
         ).then((value) => BackendlessUser.fromJson(jsToMap(value)));
       case "Backendless.UserService.resendEmailConfirmation":
         return promiseToFuture(
@@ -61,7 +61,7 @@ class UserServiceCallHandler {
       case "Backendless.UserService.update":
         BackendlessUser user = call.arguments['user'];
         return promiseToFuture(
-          update(mapToJs(user.properties['properties']))
+          update(convertToJs(user.properties['properties']))
         ).then((value) => BackendlessUser.fromJson(jsToMap(value)));
       case "Backendless.UserService.getUserToken":
         return Future(() =>

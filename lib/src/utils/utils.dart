@@ -18,8 +18,9 @@ void checkArguments(
 }
 
 T stringToEnum<T>(Iterable<T> enumValues, String stringValue) {
+  if (stringValue == null) return null;
   return enumValues.firstWhere(
-      (type) => type.toString().split(".").last == stringValue,
+      (type) => type.toString().split(".").last.toLowerCase() == stringValue.toLowerCase(),
       orElse: () => null);
 }
 
