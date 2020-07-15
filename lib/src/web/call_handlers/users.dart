@@ -15,7 +15,7 @@ class UserServiceCallHandler {
     switch (call.method) {    
       case "Backendless.UserService.currentUser":
         return Future(() =>
-          BackendlessUser.fromJson(jsToMap(currentUser()))
+          BackendlessUser.fromJson(convertFromJs(currentUser()))
         );
       case "Backendless.UserService.describeUserClass":
         return promiseToFuture(
@@ -24,7 +24,7 @@ class UserServiceCallHandler {
       case "Backendless.UserService.findById":
         return promiseToFuture(
           findById(call.arguments['id'])
-        ).then((value) => BackendlessUser.fromJson(jsToMap(value)));
+        ).then((value) => BackendlessUser.fromJson(convertFromJs(value)));
       case "Backendless.UserService.getUserRoles":
         return promiseToFuture(
           getUserRoles()
@@ -40,7 +40,7 @@ class UserServiceCallHandler {
       case "Backendless.UserService.login":
         return promiseToFuture(
           login(call.arguments['login'], call.arguments['password'], call.arguments['stayLoggedIn'])
-        ).then((value) => BackendlessUser.fromJson(jsToMap(value)));
+        ).then((value) => BackendlessUser.fromJson(convertFromJs(value)));
       case "Backendless.UserService.logout":
         return promiseToFuture(
           logout()
@@ -49,7 +49,7 @@ class UserServiceCallHandler {
         BackendlessUser user = call.arguments['user'];
         return promiseToFuture(
           register(convertToJs(user.properties['properties']))
-        ).then((value) => BackendlessUser.fromJson(jsToMap(value)));
+        ).then((value) => BackendlessUser.fromJson(convertFromJs(value)));
       case "Backendless.UserService.resendEmailConfirmation":
         return promiseToFuture(
           resendEmailConfirmation(call.arguments['email'])
@@ -62,7 +62,7 @@ class UserServiceCallHandler {
         BackendlessUser user = call.arguments['user'];
         return promiseToFuture(
           update(convertToJs(user.properties['properties']))
-        ).then((value) => BackendlessUser.fromJson(jsToMap(value)));
+        ).then((value) => BackendlessUser.fromJson(convertFromJs(value)));
       case "Backendless.UserService.getUserToken":
         return Future(() =>
           getUserToken()
@@ -74,7 +74,7 @@ class UserServiceCallHandler {
       case "Backendless.UserService.loginAsGuest":
         return promiseToFuture(
           loginAsGuest(call.arguments['stayLoggedIn'])
-        ).then((value) => BackendlessUser.fromJson(jsToMap(value)));
+        ).then((value) => BackendlessUser.fromJson(convertFromJs(value)));
       
       default:
         throw PlatformException(

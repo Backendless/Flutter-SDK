@@ -19,11 +19,11 @@ class MessagingCallHandler {
       case "Backendless.Messaging.cancel":
         return promiseToFuture(
           cancel(call.arguments['messageId'])
-        ).then((value) => MessageStatus.fromJson(jsToMap(value)));
+        ).then((value) => MessageStatus.fromJson(convertFromJs(value)));
       case "Backendless.Messaging.getMessageStatus":
         return promiseToFuture(
           getMessageStatus(call.arguments['messageId'])
-        ).then((value) => MessageStatus.fromJson(jsToMap(value)));
+        ).then((value) => MessageStatus.fromJson(convertFromJs(value)));
       case "Backendless.Messaging.publish":
       PublishOptions publishOptions = call.arguments['publishOptions'];
       DeliveryOptions deliveryOptions = call.arguments['deliveryOptions'];
@@ -32,11 +32,11 @@ class MessagingCallHandler {
           call.arguments['message'],
           convertToJs(publishOptions?.toJson()),
           convertToJs(deliveryOptions?.toJson()))
-        ).then((value) => MessageStatus.fromJson(jsToMap(value)));
+        ).then((value) => MessageStatus.fromJson(convertFromJs(value)));
       case "Backendless.Messaging.pushWithTemplate":
         return promiseToFuture(
           pushWithTemplate(call.arguments['templateName'])
-        ).then((value) => MessageStatus.fromJson(jsToMap(value)));
+        ).then((value) => MessageStatus.fromJson(convertFromJs(value)));
       case "Backendless.Messaging.sendEmail":
         return promiseToFuture(
           sendEmail(
@@ -45,7 +45,7 @@ class MessagingCallHandler {
             convertToJs(call.arguments['recipients']),
             convertToJs(call.arguments['attachments'])
             )
-        ).then((value) => MessageStatus.fromJson(jsToMap(value)));
+        ).then((value) => MessageStatus.fromJson(convertFromJs(value)));
       case "Backendless.Messaging.sendHTMLEmail":
         return promiseToFuture(
           sendEmail(
@@ -53,7 +53,7 @@ class MessagingCallHandler {
             convertToJs({'htmlmessage': call.arguments['messageBody']}), 
             convertToJs(call.arguments['recipients']),
             null)
-        ).then((value) => MessageStatus.fromJson(jsToMap(value)));
+        ).then((value) => MessageStatus.fromJson(convertFromJs(value)));
       case "Backendless.Messaging.sendTextEmail":
         return promiseToFuture(
           sendEmail(
@@ -61,7 +61,7 @@ class MessagingCallHandler {
             convertToJs({'textmessage': call.arguments['messageBody']}), 
             convertToJs(call.arguments['recipients']),
             null)
-        ).then((value) => MessageStatus.fromJson(jsToMap(value)));
+        ).then((value) => MessageStatus.fromJson(convertFromJs(value)));
       case "Backendless.Messaging.sendEmailFromTemplate":
         EmailEnvelope emailEnvelope = call.arguments['envelope'];
         final emailEnvelopeMap = {
@@ -76,7 +76,7 @@ class MessagingCallHandler {
             EmailEnvelopeJs(  convertToJs(emailEnvelopeMap)   ),
             convertToJs(call.arguments['templateValues']),
             )
-        ).then((value) => MessageStatus.fromJson(jsToMap(value)));
+        ).then((value) => MessageStatus.fromJson(convertFromJs(value)));
       
       default:
         throw PlatformException(

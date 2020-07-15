@@ -6,25 +6,50 @@ import 'dart:collection';
 import 'package:js/js.dart';
 import 'package:js/js_util.dart';
 
-Map jsToMap(jsObject) {
-  return new Map.fromIterable(
-    _getKeysOfObject(jsObject),
-    value: (key) => getProperty(jsObject, key),
-  );
+Object convertFromJs(jsObject) {
+  if (jsObject == null) return null;
+  if (jsObject.toString() != '[object Object]' && !isArray(jsObject)) {
+    throw ArgumentError("Js element must be an object or array");
+  }
+  return _convertDataTreeFromJs(jsObject);  
 }
 
-@JS('Object.keys')
-external List<String> _getKeysOfObject(jsObject);
+Object _convertDataTreeFromJs(data) {
+  var _convertedObjects = HashMap.identity();
+
+  Object _convert(Object o) {
+    if (_convertedObjects.containsKey(o)) {
+      return _convertedObjects[o];
+    }    
+    if (o.toString() == '[object Object]') {
+      final convertedMap = Map();
+      _convertedObjects[o] = convertedMap;
+      for (var key in _getKeysOfObject(o)) {
+        convertedMap[key] = _convert(getProperty(o, key));
+      }
+      return convertedMap;      
+    } else if (isArray(o)) {
+      var convertedList = [];
+      _convertedObjects[o] = convertedList;
+      convertedList.addAll((o as List).map(_convert));
+      return convertedList;
+    } else {
+      return o;
+    }
+  }
+
+  return _convert(data);
+}
 
 dynamic convertToJs(Object object) {
   if (object == null) return null;
   if ((object is! Map) && (object is! Iterable)) {
     throw ArgumentError("object must be a Map or Iterable");
   }
-  return _convertDataTree(object);
+  return _convertDataTreeToJs(object);
 }
 
-Object _convertDataTree(Object data) {
+Object _convertDataTreeToJs(Object data) {
   var _convertedObjects = HashMap.identity();
 
   Object _convert(Object o) {
@@ -52,3 +77,9 @@ Object _convertDataTree(Object data) {
 
   return _convert(data);
 }
+
+@JS('Object.keys')
+external List<String> _getKeysOfObject(jsObject);
+
+@JS('Array.isArray')
+external bool isArray(dynamic object);
