@@ -47,9 +47,6 @@ class BackendlessData {
               <String, dynamic>{'tableName': tableName}))
           .cast<ObjectProperty>();
 
-  Future<List<Object>> find(Type entity, DataQueryBuilder queryBuilder) =>
-      throw new UnimplementedError();
-
   Future<Map<String, Object>> getView(
           String viewName, DataQueryBuilder queryBuilder) async =>
       (await _channel.invokeMethod(
@@ -58,10 +55,6 @@ class BackendlessData {
         'queryBuilder': queryBuilder
       }))
           .cast<String, Object>();
-
-  Future<List<Object>> loadRelations(String parentType, String objectId,
-          LoadRelationsQueryBuilder queryBuilder, Type relatedType) =>
-      throw new UnimplementedError();
 
   void mapTableToClass(String tableName, Type type) =>
       Types.addClientClassMapping(tableName, type);
