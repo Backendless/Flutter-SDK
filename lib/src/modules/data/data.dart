@@ -18,12 +18,12 @@ class BackendlessData {
           case ("Backendless.Data.RT.EventResponse"):
             int handle = arguments["handle"];
             var response = arguments["response"];
-            _subscriptions[handle].handleResponse(response);
+            _subscriptions[handle]?.handleResponse(response);
             break;
           case ("Backendless.Data.RT.EventFault"):
             int handle = arguments["handle"];
             String fault = call.arguments["fault"];
-            _subscriptions[handle].handleFault(fault);
+            _subscriptions[handle]?.handleFault(fault);
             break;
         }
       }
