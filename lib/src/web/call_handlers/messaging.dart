@@ -11,6 +11,9 @@ import '../js_util.dart';
 
 class MessagingCallHandler {
   MethodChannel _channel;
+  Map<int, ChannelJs> channels = Map();
+  Map<int, Function> messageCallbacks = Map();
+  int _nextMessageHandle = 0;
 
   MessagingCallHandler(this._channel);
 
@@ -77,13 +80,53 @@ class MessagingCallHandler {
             convertToJs(call.arguments['templateValues']),
             )
         ).then((value) => MessageStatus.fromJson(convertFromJs(value)));
-      
+
+      case "Backendless.Messaging.subscribe":
+        ChannelJs channel = subscribe(call.arguments['channelName']);
+        channels[call.arguments['channelHandle']] = channel;
+        return null;
+      case "Backendless.Messaging.Channel.addMessageListener":
+        return Future(() => addMessageListener(call));
       default:
         throw PlatformException(
           code: 'Unimplemented',
           details: "Backendless plugin for web doesn't implement "
               "the method '${call.method}'");
     }
+  }
+
+  int addMessageListener(MethodCall call) {
+        int channelHandle = call.arguments["channelHandle"];
+        String selector = call.arguments["selector"];
+        String messageType = call.arguments["messageType"];
+
+        int messageHandle = _nextMessageHandle++;
+
+        ChannelJs channel = channels[channelHandle];
+
+        Function callback = getCallback("Message", messageHandle, messageType);
+        channel.addMessageListener(selector, allowInterop(callback));
+        messageCallbacks[messageHandle] = callback;
+        return messageHandle;
+    }
+
+    Function getCallback(String method, int handle, String messageType) {
+    return (jsResponse) {
+      Map response = convertFromJs(jsResponse);
+      Map args = {"handle": handle};
+      switch (messageType) {
+        case 'String':
+          args["response"] = response['message'];
+          break;
+        case 'PublishMessageInfo':
+          args["response"] = PublishMessageInfo.fromJson(response);
+          break;
+        case 'Map':
+          args["response"] = response;
+          break;
+      }
+      _channel.invokeMethod("Backendless.Messaging.Channel.$method.EventResponse", args);
+    };
   }
 }
 
@@ -105,7 +148,18 @@ external dynamic sendEmail(String subject, dynamic bodyParts, dynamic recipients
 @JS('Backendless.Messaging.sendEmailFromTemplate')
 external dynamic sendEmailFromTemplate(String templateName, dynamic envelope, dynamic templateValues);
 
+@JS('Backendless.Messaging.subscribe')
+external ChannelJs subscribe(String channelName);
+
 @JS('Backendless.Messaging.EmailEnvelope')
 class EmailEnvelopeJs {
   external factory EmailEnvelopeJs(dynamic data);
+}
+
+@JS('Backendless.Messaging.Channel')
+class ChannelJs {
+  external factory ChannelJs(options, app);
+
+  @JS()
+  external dynamic addMessageListener(selector, callback);
 }
