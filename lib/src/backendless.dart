@@ -19,16 +19,26 @@ class Backendless {
   static const MethodChannel _channel = const MethodChannel('backendless');
 
   static Future<void> initApp(
-      String applicationId, String androidApiKey, String iosApiKey, String jsApiKey) {
+      String applicationId, String androidApiKey, String iosApiKey) async {
+    if (kIsWeb) return;
     String apiKey;
-    if (kIsWeb) apiKey = jsApiKey;
-    else if (Platform.isAndroid) apiKey = androidApiKey;
+    if (Platform.isAndroid) apiKey = androidApiKey;
     else if (Platform.isIOS) apiKey = iosApiKey;
 
     _prefs.initPreferences(applicationId, apiKey);
     
     return _channel.invokeMethod('Backendless.initApp',
         <String, dynamic>{'applicationId': applicationId, 'apiKey': apiKey});
+  }
+
+  static Future<void> initWebApp(
+      String applicationId, String jsApiKey) async {
+    if (!kIsWeb) return;
+    
+    _prefs.initPreferences(applicationId, jsApiKey);
+    
+    return _channel.invokeMethod('Backendless.initApp',
+        <String, dynamic>{'applicationId': applicationId, 'apiKey': jsApiKey});
   }
 
   static Future<String> getApiKey() =>

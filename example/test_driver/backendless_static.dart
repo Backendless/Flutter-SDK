@@ -24,7 +24,7 @@ class TestStatic {
         final androidKey = "8A61E955-D8D6-CBF3-FFF8-FE53DEE02800";
         final iosKey = "6CBB8265-045A-C493-FF70-FD0908D51200";
 
-        await Backendless.initApp(appId, androidKey, iosKey, null);
+        await Backendless.initApp(appId, androidKey, iosKey);
 
         expect(await Backendless.getApplicationId(), appId);
 
