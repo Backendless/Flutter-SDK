@@ -106,7 +106,7 @@ class EventHandler<T> {
     BackendlessData._subscriptions.forEach((handle, subscription) {
       if (subscription.event == event &&
           (whereClause == null || whereClause == subscription.whereClause) &&
-          (callback == null || callback == subscription.handleResponse)) {
+          (callback == null || callback == subscription._handleResponse)) {
         toRemove.add(handle);
       }
     });

@@ -8,11 +8,22 @@ class EmailEnvelope {
 
   EmailEnvelope();
 
-  EmailEnvelope.fromJson(Map json)
-      : query = json['query'],
-        to = Set<String>.from(json['to']),
-        cc = Set<String>.from(json['cc']),
-        bcc = Set<String>.from(json['bcc']);
+  EmailEnvelope.fromJson(Map json) {
+    query = json['query'];
+    to = Set<String>.from(json['to']);
+    
+    final jsonCc = json['cc'];
+    if (jsonCc == null)
+      cc = null;
+    else 
+      cc = Set<String>.from(jsonCc);
+
+    final jsonBcc = json['bcc'];
+    if (jsonBcc == null)
+      bcc = null;
+    else
+      bcc = Set<String>.from(jsonBcc);
+  }
 
   Map toJson() => {
         'query': query,

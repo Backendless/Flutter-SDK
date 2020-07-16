@@ -13,6 +13,9 @@ dependencies:
   collection: ^1.14.11
   reflectable: ^2.2.1
   http: ^0.12.1
+  flutter_web_plugins:
+    sdk: flutter
+  js: ^0.6.2
 
 dev_dependencies:
   flutter_test:
@@ -33,3 +36,6 @@ flutter:
         pluginClass: BackendlessSdkPlugin
       ios:
         pluginClass: BackendlessSdkPlugin
+      web:
+        pluginClass: BackendlessWeb
+        fileName: backendless_sdk_web.dart
