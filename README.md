@@ -57,8 +57,59 @@ testObject["foo"] = "bar";
 Backendless.data.of("TestTable").save(testObject).then(
   (response) => print("Object is saved in Backendless. Please check in the console."));
 ```
+
+## Enable Web support
+Run the following commands to enable web support
+```dart
+flutter channel dev
+flutter upgrade
+flutter config --enable-web 
+```
+Once web is enabled, you can:
+
+Create a new project with web support using the following commands:
+```dart
+flutter create myapp
+cd myapp
+```
+
+or add web support to an existing project by running:
+```dart
+flutter create .
+```
+After that you can launch your app in the Chrome browser using your favorite IDE or this command:
+```dart
+flutter run -d chrome
+```
+For more information, see the [official documentation](https://flutter.dev/docs/get-started/web).
+
+### Getting Started with Backendless Flutter Web
+Follow the steps below to get started with Backendless Flutter SDK for Web:
+
+1. Make sure you incude the latest version of `backendless_sdk` plugin in your `pubspec.yaml` file.
+2. Open your `web/index.html` file and reference the Backendless JS library at the end of the `head` tag like that:
+```html
+<head>
+  ...
+  <script src="https://api.backendless.com/sdk/js/latest/backendless.min.js"></script>
+</head>
+```
+3. Initialize the Backendless SDK for Web. Use the following call in your code:
+```dart
+@override
+void initState() {
+  super.initState();
+  Backendless.initWebApp(APP_ID, JS_KEY);
+}
+```
+The `APPLICATION_ID` and `JS_KEY` values must be obtained in Backendless Console.
+
+If you want to add the Web support to your existing mobile Flutter application just add the `initWebApp` call next to the `initApp`.
+
+
+After that you can use Backendless SDK in your Web application the same as in mobile app.
+
 [0]: https://img.shields.io/pub/v/backendless_sdk.svg
 [1]: https://pub.dartlang.org/packages/backendless_sdk
-
 [2]: https://travis-ci.com/Backendless/Flutter-SDK.svg?branch=develop
 [3]: https://travis-ci.com/Backendless/Flutter-SDK
