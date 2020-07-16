@@ -1,10 +1,10 @@
 part of backendless_sdk;
 
 class TransactionHelper {
-  static final String LAST_LOGIN_COLUMN_NAME = "lastLogin";
-  static final String PASSWORD_KEY = "password";
-  static final String SOCIAL_ACCOUNT_COLUMN_NAME = "socialAccount";
-  static final String USER_STATUS_COLUMN_NAME = "userStatus";
+  static const String LAST_LOGIN_COLUMN_NAME = "lastLogin";
+  static const String PASSWORD_KEY = "password";
+  static const String SOCIAL_ACCOUNT_COLUMN_NAME = "socialAccount";
+  static const String USER_STATUS_COLUMN_NAME = "userStatus";
 
   static void removeSystemField(Map changes) {
     changes.remove(LAST_LOGIN_COLUMN_NAME);

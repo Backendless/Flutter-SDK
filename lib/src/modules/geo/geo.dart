@@ -177,7 +177,7 @@ class EntityDescription {
 
   EntityDescription();
 
-  EntityDescription._(String entityName, Map<String, Object> entity) {
+  EntityDescription.from(String entityName, Map<String, Object> entity) {
     name = entityName;
     if (entity != null) {
       fields = entity;

@@ -18,7 +18,7 @@ class Invoker {
       if (response.statusCode >= 400) {
         try {
           throw new BackendlessException.fromJson(jsonDecode(response.body));
-        } on FormatException catch (e) {
+        } on FormatException {
           throw new BackendlessException(response.body);
         }
       }
