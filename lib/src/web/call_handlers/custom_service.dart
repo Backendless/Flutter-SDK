@@ -9,21 +9,20 @@ import 'package:js/js.dart';
 import 'package:js/js_util.dart';
 
 class CustomServiceCallHandler {
-
   Future<dynamic> handleMethodCall(MethodCall call) {
-    switch (call.method) {    
+    switch (call.method) {
       case "Backendless.CustomService.invoke":
-        return promiseToFuture(
-          invoke(call.arguments['serviceName'], call.arguments['method'], jsonEncode(call.arguments['arguments']))
-        );
+        return promiseToFuture(invoke(call.arguments['serviceName'],
+            call.arguments['method'], jsonEncode(call.arguments['arguments'])));
       default:
         throw PlatformException(
-          code: 'Unimplemented',
-          details: "Backendless plugin for web doesn't implement "
-              "the method '${call.method}'");
+            code: 'Unimplemented',
+            details: "Backendless plugin for web doesn't implement "
+                "the method '${call.method}'");
     }
   }
 }
 
 @JS('Backendless.CustomServices.invoke')
-external dynamic invoke(String serviceName, String methodName, dynamic parameters);
+external dynamic invoke(
+    String serviceName, String methodName, dynamic parameters);

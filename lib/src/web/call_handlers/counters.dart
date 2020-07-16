@@ -7,50 +7,34 @@ import 'package:js/js.dart';
 import 'package:js/js_util.dart';
 
 class CountersCallHandler {
-
   Future<dynamic> handleMethodCall(MethodCall call) {
-    switch (call.method) {    
+    switch (call.method) {
       case "Backendless.Counters.addAndGet":
         return promiseToFuture(
-          addAndGet(call.arguments['counterName'], call.arguments['value'])
-        );
+            addAndGet(call.arguments['counterName'], call.arguments['value']));
       case "Backendless.Counters.compareAndSet":
-        return promiseToFuture(
-          compareAndSet(call.arguments['counterName'], call.arguments['expected'], call.arguments['updated'])
-        );
+        return promiseToFuture(compareAndSet(call.arguments['counterName'],
+            call.arguments['expected'], call.arguments['updated']));
       case "Backendless.Counters.decrementAndGet":
-        return promiseToFuture(
-          decrementAndGet(call.arguments['counterName'])
-        );
+        return promiseToFuture(decrementAndGet(call.arguments['counterName']));
       case "Backendless.Counters.get":
-        return promiseToFuture(
-          getValue(call.arguments['counterName'])
-        );
+        return promiseToFuture(getValue(call.arguments['counterName']));
       case "Backendless.Counters.getAndAdd":
         return promiseToFuture(
-          getAndAdd(call.arguments['counterName'], call.arguments['value'])
-        );
+            getAndAdd(call.arguments['counterName'], call.arguments['value']));
       case "Backendless.Counters.getAndDecrement":
-        return promiseToFuture(
-          getAndDecrement(call.arguments['counterName'])
-        );
+        return promiseToFuture(getAndDecrement(call.arguments['counterName']));
       case "Backendless.Counters.getAndIncrement":
-        return promiseToFuture(
-          getAndIncrement(call.arguments['counterName'])
-        );
+        return promiseToFuture(getAndIncrement(call.arguments['counterName']));
       case "Backendless.Counters.incrementAndGet":
-        return promiseToFuture(
-          incrementAndGet(call.arguments['counterName'])
-        );
+        return promiseToFuture(incrementAndGet(call.arguments['counterName']));
       case "Backendless.Counters.reset":
-        return promiseToFuture(
-          reset(call.arguments['counterName'])
-        );
+        return promiseToFuture(reset(call.arguments['counterName']));
       default:
         throw PlatformException(
-          code: 'Unimplemented',
-          details: "Backendless plugin for web doesn't implement "
-              "the method '${call.method}'");
+            code: 'Unimplemented',
+            details: "Backendless plugin for web doesn't implement "
+                "the method '${call.method}'");
     }
   }
 }

@@ -22,7 +22,8 @@ class Backendless {
       String applicationId, String androidApiKey, String iosApiKey) async {
     if (kIsWeb) return;
     String apiKey;
-    if (Platform.isAndroid) apiKey = androidApiKey;
+    if (Platform.isAndroid)
+      apiKey = androidApiKey;
     else if (Platform.isIOS) apiKey = iosApiKey;
 
     _prefs.initPreferences(applicationId, apiKey);
@@ -31,12 +32,11 @@ class Backendless {
         <String, dynamic>{'applicationId': applicationId, 'apiKey': apiKey});
   }
 
-  static Future<void> initWebApp(
-      String applicationId, String jsApiKey) async {
+  static Future<void> initWebApp(String applicationId, String jsApiKey) async {
     if (!kIsWeb) return;
-    
+
     _prefs.initPreferences(applicationId, jsApiKey);
-    
+
     return _channel.invokeMethod('Backendless.initApp',
         <String, dynamic>{'applicationId': applicationId, 'apiKey': jsApiKey});
   }

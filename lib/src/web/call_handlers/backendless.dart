@@ -6,12 +6,12 @@ import 'package:flutter/services.dart';
 import 'package:js/js.dart';
 
 class BackendlessCallHandler {
-
   Future<dynamic> handleMethodCall(MethodCall call) {
     switch (call.method) {
       case "Backendless.initApp":
         return Future<void>(() {
-          BackendlessJs.initApp(call.arguments['applicationId'], call.arguments['apiKey']);
+          BackendlessJs.initApp(
+              call.arguments['applicationId'], call.arguments['apiKey']);
         });
       case "Backendless.getApiKey":
         return Future(() => BackendlessJs.secretKey);
@@ -25,11 +25,10 @@ class BackendlessCallHandler {
         });
       default:
         throw PlatformException(
-          code: 'Unimplemented',
-          details: "Backendless plugin for web doesn't implement "
-              "the method '${call.method}'");
+            code: 'Unimplemented',
+            details: "Backendless plugin for web doesn't implement "
+                "the method '${call.method}'");
     }
-
   }
 }
 

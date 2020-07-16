@@ -11,7 +11,7 @@ Object convertFromJs(jsObject) {
   if (jsObject.toString() != '[object Object]' && !isArray(jsObject)) {
     throw ArgumentError("Js element must be an object or array");
   }
-  return _convertDataTreeFromJs(jsObject);  
+  return _convertDataTreeFromJs(jsObject);
 }
 
 Object _convertDataTreeFromJs(data) {
@@ -20,14 +20,14 @@ Object _convertDataTreeFromJs(data) {
   Object _convert(Object o) {
     if (_convertedObjects.containsKey(o)) {
       return _convertedObjects[o];
-    }    
+    }
     if (o.toString() == '[object Object]') {
       final convertedMap = Map();
       _convertedObjects[o] = convertedMap;
       for (var key in _getKeysOfObject(o)) {
         convertedMap[key] = _convert(getProperty(o, key));
       }
-      return convertedMap;      
+      return convertedMap;
     } else if (isArray(o)) {
       var convertedList = [];
       _convertedObjects[o] = convertedList;

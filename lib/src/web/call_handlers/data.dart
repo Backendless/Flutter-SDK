@@ -136,51 +136,53 @@ class DataCallHandler {
   }
 
   void removeListener(MethodCall call) {
-        int handle = call.arguments["handle"];
-        String event = call.arguments["event"];
-        String whereClause = call.arguments["whereClause"];
+    int handle = call.arguments["handle"];
+    String event = call.arguments["event"];
+    String whereClause = call.arguments["whereClause"];
 
-        RTHandlersJs rtHandler = getDataStore(call).rt();
+    RTHandlersJs rtHandler = getDataStore(call).rt();
 
-        Function callback = subscriptions[handle];
-        switch (event) {
-            case "RTDataEvent.CREATED":        
-                if (whereClause != null)
-                    rtHandler.removeCreateListeners(whereClause, allowInterop(callback));
-                else
-                    rtHandler.removeCreateListener(allowInterop(callback));
-                break;
-            case "RTDataEvent.UPDATED":
-                if (whereClause != null)
-                    rtHandler.removeUpdateListeners(whereClause, allowInterop(callback));
-                else
-                    rtHandler.removeUpdateListener(allowInterop(callback));
-                break;
-            case "RTDataEvent.DELETED":
-                if (whereClause != null)
-                    rtHandler.removeDeleteListeners(whereClause, allowInterop(callback));
-                else
-                    rtHandler.removeDeleteListener(allowInterop(callback));
-                break;
-            case "RTDataEvent.BULK_UPDATED":
-                if (whereClause != null)
-                    rtHandler.removeBulkUpdateListeners(whereClause, allowInterop(callback));
-                else
-                    rtHandler.removeBulkUpdateListener(allowInterop(callback));
-                break;
-            case "RTDataEvent.BULK_DELETED":
-                if (whereClause != null)
-                    rtHandler.removeBulkDeleteListeners(whereClause, allowInterop(callback));
-                else
-                    rtHandler.removeBulkDeleteListener(allowInterop(callback));
-                break;
-            default:
+    Function callback = subscriptions[handle];
+    switch (event) {
+      case "RTDataEvent.CREATED":
+        if (whereClause != null)
+          rtHandler.removeCreateListeners(whereClause, allowInterop(callback));
+        else
+          rtHandler.removeCreateListener(allowInterop(callback));
+        break;
+      case "RTDataEvent.UPDATED":
+        if (whereClause != null)
+          rtHandler.removeUpdateListeners(whereClause, allowInterop(callback));
+        else
+          rtHandler.removeUpdateListener(allowInterop(callback));
+        break;
+      case "RTDataEvent.DELETED":
+        if (whereClause != null)
+          rtHandler.removeDeleteListeners(whereClause, allowInterop(callback));
+        else
+          rtHandler.removeDeleteListener(allowInterop(callback));
+        break;
+      case "RTDataEvent.BULK_UPDATED":
+        if (whereClause != null)
+          rtHandler.removeBulkUpdateListeners(
+              whereClause, allowInterop(callback));
+        else
+          rtHandler.removeBulkUpdateListener(allowInterop(callback));
+        break;
+      case "RTDataEvent.BULK_DELETED":
+        if (whereClause != null)
+          rtHandler.removeBulkDeleteListeners(
+              whereClause, allowInterop(callback));
+        else
+          rtHandler.removeBulkDeleteListener(allowInterop(callback));
+        break;
+      default:
         throw PlatformException(
             code: 'Unimplemented',
             details:
                 "Backendless plugin for web doesn't implement the method '${call.method}'");
-        }
     }
+  }
 
   Function getCallback(int handle, [bool bulk = false]) {
     return (jsResponse) {

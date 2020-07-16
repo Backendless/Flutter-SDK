@@ -18,53 +18,49 @@ class MessagingCallHandler {
   MessagingCallHandler(this._channel);
 
   Future<dynamic> handleMethodCall(MethodCall call) {
-    switch (call.method) {    
+    switch (call.method) {
       case "Backendless.Messaging.cancel":
-        return promiseToFuture(
-          cancel(call.arguments['messageId'])
-        ).then((value) => MessageStatus.fromJson(convertFromJs(value)));
+        return promiseToFuture(cancel(call.arguments['messageId']))
+            .then((value) => MessageStatus.fromJson(convertFromJs(value)));
       case "Backendless.Messaging.getMessageStatus":
-        return promiseToFuture(
-          getMessageStatus(call.arguments['messageId'])
-        ).then((value) => MessageStatus.fromJson(convertFromJs(value)));
+        return promiseToFuture(getMessageStatus(call.arguments['messageId']))
+            .then((value) => MessageStatus.fromJson(convertFromJs(value)));
       case "Backendless.Messaging.publish":
-      PublishOptions publishOptions = call.arguments['publishOptions'];
-      DeliveryOptions deliveryOptions = call.arguments['deliveryOptions'];
-        return promiseToFuture(
-          publish(call.arguments['channelName'],
-          call.arguments['message'],
-          convertToJs(publishOptions?.toJson()),
-          convertToJs(deliveryOptions?.toJson()))
-        ).then((value) => MessageStatus.fromJson(convertFromJs(value)));
+        PublishOptions publishOptions = call.arguments['publishOptions'];
+        DeliveryOptions deliveryOptions = call.arguments['deliveryOptions'];
+        return promiseToFuture(publish(
+                call.arguments['channelName'],
+                call.arguments['message'],
+                convertToJs(publishOptions?.toJson()),
+                convertToJs(deliveryOptions?.toJson())))
+            .then((value) => MessageStatus.fromJson(convertFromJs(value)));
       case "Backendless.Messaging.pushWithTemplate":
-        return promiseToFuture(
-          pushWithTemplate(call.arguments['templateName'])
-        ).then((value) => MessageStatus.fromJson(convertFromJs(value)));
+        return promiseToFuture(pushWithTemplate(call.arguments['templateName']))
+            .then((value) => MessageStatus.fromJson(convertFromJs(value)));
       case "Backendless.Messaging.sendEmail":
-        return promiseToFuture(
-          sendEmail(
-            call.arguments['subject'],
-             convertToJs({'textmessage': call.arguments['textMessage'], 'htmlmessage': call.arguments['htmlMessage']}),
-            convertToJs(call.arguments['recipients']),
-            convertToJs(call.arguments['attachments'])
-            )
-        ).then((value) => MessageStatus.fromJson(convertFromJs(value)));
+        return promiseToFuture(sendEmail(
+                call.arguments['subject'],
+                convertToJs({
+                  'textmessage': call.arguments['textMessage'],
+                  'htmlmessage': call.arguments['htmlMessage']
+                }),
+                convertToJs(call.arguments['recipients']),
+                convertToJs(call.arguments['attachments'])))
+            .then((value) => MessageStatus.fromJson(convertFromJs(value)));
       case "Backendless.Messaging.sendHTMLEmail":
-        return promiseToFuture(
-          sendEmail(
-            call.arguments['subject'],
-            convertToJs({'htmlmessage': call.arguments['messageBody']}), 
-            convertToJs(call.arguments['recipients']),
-            null)
-        ).then((value) => MessageStatus.fromJson(convertFromJs(value)));
+        return promiseToFuture(sendEmail(
+                call.arguments['subject'],
+                convertToJs({'htmlmessage': call.arguments['messageBody']}),
+                convertToJs(call.arguments['recipients']),
+                null))
+            .then((value) => MessageStatus.fromJson(convertFromJs(value)));
       case "Backendless.Messaging.sendTextEmail":
-        return promiseToFuture(
-          sendEmail(
-            call.arguments['subject'],
-            convertToJs({'textmessage': call.arguments['messageBody']}), 
-            convertToJs(call.arguments['recipients']),
-            null)
-        ).then((value) => MessageStatus.fromJson(convertFromJs(value)));
+        return promiseToFuture(sendEmail(
+                call.arguments['subject'],
+                convertToJs({'textmessage': call.arguments['messageBody']}),
+                convertToJs(call.arguments['recipients']),
+                null))
+            .then((value) => MessageStatus.fromJson(convertFromJs(value)));
       case "Backendless.Messaging.sendEmailFromTemplate":
         EmailEnvelope emailEnvelope = call.arguments['envelope'];
         final emailEnvelopeMap = {
@@ -72,14 +68,11 @@ class MessagingCallHandler {
           'ccAddresses': emailEnvelope.cc,
           'bccAddresses': emailEnvelope.bcc,
         };
-        return promiseToFuture(
-          
-          sendEmailFromTemplate(
-            call.arguments['templateName'],
-            EmailEnvelopeJs(  convertToJs(emailEnvelopeMap)   ),
-            convertToJs(call.arguments['templateValues']),
-            )
-        ).then((value) => MessageStatus.fromJson(convertFromJs(value)));
+        return promiseToFuture(sendEmailFromTemplate(
+          call.arguments['templateName'],
+          EmailEnvelopeJs(convertToJs(emailEnvelopeMap)),
+          convertToJs(call.arguments['templateValues']),
+        )).then((value) => MessageStatus.fromJson(convertFromJs(value)));
 
       case "Backendless.Messaging.subscribe":
         ChannelJs channel = subscribe(call.arguments['channelName']);
@@ -89,28 +82,28 @@ class MessagingCallHandler {
         return Future(() => addMessageListener(call));
       default:
         throw PlatformException(
-          code: 'Unimplemented',
-          details: "Backendless plugin for web doesn't implement "
-              "the method '${call.method}'");
+            code: 'Unimplemented',
+            details: "Backendless plugin for web doesn't implement "
+                "the method '${call.method}'");
     }
   }
 
   int addMessageListener(MethodCall call) {
-        int channelHandle = call.arguments["channelHandle"];
-        String selector = call.arguments["selector"];
-        String messageType = call.arguments["messageType"];
+    int channelHandle = call.arguments["channelHandle"];
+    String selector = call.arguments["selector"];
+    String messageType = call.arguments["messageType"];
 
-        int messageHandle = _nextMessageHandle++;
+    int messageHandle = _nextMessageHandle++;
 
-        ChannelJs channel = channels[channelHandle];
+    ChannelJs channel = channels[channelHandle];
 
-        Function callback = getCallback("Message", messageHandle, messageType);
-        channel.addMessageListener(selector, allowInterop(callback));
-        messageCallbacks[messageHandle] = callback;
-        return messageHandle;
-    }
+    Function callback = getCallback("Message", messageHandle, messageType);
+    channel.addMessageListener(selector, allowInterop(callback));
+    messageCallbacks[messageHandle] = callback;
+    return messageHandle;
+  }
 
-    Function getCallback(String method, int handle, String messageType) {
+  Function getCallback(String method, int handle, String messageType) {
     return (jsResponse) {
       Map response = convertFromJs(jsResponse);
       Map args = {"handle": handle};
@@ -125,7 +118,8 @@ class MessagingCallHandler {
           args["response"] = response;
           break;
       }
-      _channel.invokeMethod("Backendless.Messaging.Channel.$method.EventResponse", args);
+      _channel.invokeMethod(
+          "Backendless.Messaging.Channel.$method.EventResponse", args);
     };
   }
 }
@@ -137,16 +131,19 @@ external dynamic cancel(String messageId);
 external dynamic getMessageStatus(String messageId);
 
 @JS('Backendless.Messaging.publish')
-external dynamic publish(String channelName, dynamic message, dynamic publishOptions, dynamic deliveryOptions);
+external dynamic publish(String channelName, dynamic message,
+    dynamic publishOptions, dynamic deliveryOptions);
 
 @JS('Backendless.Messaging.pushWithTemplate')
 external dynamic pushWithTemplate(String templateName);
 
 @JS('Backendless.Messaging.sendEmail')
-external dynamic sendEmail(String subject, dynamic bodyParts, dynamic recipients, dynamic attachments);
+external dynamic sendEmail(
+    String subject, dynamic bodyParts, dynamic recipients, dynamic attachments);
 
 @JS('Backendless.Messaging.sendEmailFromTemplate')
-external dynamic sendEmailFromTemplate(String templateName, dynamic envelope, dynamic templateValues);
+external dynamic sendEmailFromTemplate(
+    String templateName, dynamic envelope, dynamic templateValues);
 
 @JS('Backendless.Messaging.subscribe')
 external ChannelJs subscribe(String channelName);

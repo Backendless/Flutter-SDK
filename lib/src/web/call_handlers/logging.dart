@@ -7,27 +7,24 @@ import 'package:js/js.dart';
 import 'package:js/js_util.dart';
 
 class LoggingCallHandler {
-
   Future<dynamic> handleMethodCall(MethodCall call) {
-    switch (call.method) {    
+    switch (call.method) {
       case "Backendless.Logging.flush":
-        return promiseToFuture(
-          flush()
-        );
+        return promiseToFuture(flush());
       case "Backendless.Logging.setLogReportingPolicy":
-        return Future(() => setLogReportingPolicy(call.arguments['numOfMessages'], call.arguments['timeFrequencyInSeconds']));
+        return Future(() => setLogReportingPolicy(
+            call.arguments['numOfMessages'],
+            call.arguments['timeFrequencyInSeconds']));
       case "Backendless.Logging.Logger":
-        return Future(
-          () => push(
+        return Future(() => push(
             call.arguments['loggerName'],
-            (call.arguments['methodName'] as String).toUpperCase(), 
-            call.arguments['message'])
-        );
+            (call.arguments['methodName'] as String).toUpperCase(),
+            call.arguments['message']));
       default:
         throw PlatformException(
-          code: 'Unimplemented',
-          details: "Backendless plugin for web doesn't implement "
-              "the method '${call.method}'");
+            code: 'Unimplemented',
+            details: "Backendless plugin for web doesn't implement "
+                "the method '${call.method}'");
     }
   }
 }

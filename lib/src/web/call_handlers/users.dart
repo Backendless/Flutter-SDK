@@ -10,77 +10,56 @@ import '../../../backendless_sdk.dart';
 import '../js_util.dart';
 
 class UserServiceCallHandler {
-
   Future<dynamic> handleMethodCall(MethodCall call) {
-    switch (call.method) {    
+    switch (call.method) {
       case "Backendless.UserService.currentUser":
-        return Future(() =>
-          BackendlessUser.fromJson(convertFromJs(currentUser()))
-        );
+        return Future(
+            () => BackendlessUser.fromJson(convertFromJs(currentUser())));
       case "Backendless.UserService.describeUserClass":
-        return promiseToFuture(
-          describeUserClass()
-        );
+        return promiseToFuture(describeUserClass());
       case "Backendless.UserService.findById":
-        return promiseToFuture(
-          findById(call.arguments['id'])
-        ).then((value) => BackendlessUser.fromJson(convertFromJs(value)));
+        return promiseToFuture(findById(call.arguments['id']))
+            .then((value) => BackendlessUser.fromJson(convertFromJs(value)));
       case "Backendless.UserService.getUserRoles":
-        return promiseToFuture(
-          getUserRoles()
-        );
+        return promiseToFuture(getUserRoles());
       case "Backendless.UserService.isValidLogin":
-        return promiseToFuture(
-          isValidLogin()
-        );
+        return promiseToFuture(isValidLogin());
       case "Backendless.UserService.loggedInUser":
-        return Future(() =>
-          loggedInUser()
-        );
+        return Future(() => loggedInUser());
       case "Backendless.UserService.login":
-        return promiseToFuture(
-          login(call.arguments['login'], call.arguments['password'], call.arguments['stayLoggedIn'])
-        ).then((value) => BackendlessUser.fromJson(convertFromJs(value)));
+        return promiseToFuture(login(call.arguments['login'],
+                call.arguments['password'], call.arguments['stayLoggedIn']))
+            .then((value) => BackendlessUser.fromJson(convertFromJs(value)));
       case "Backendless.UserService.logout":
-        return promiseToFuture(
-          logout()
-        );
+        return promiseToFuture(logout());
       case "Backendless.UserService.register":
         BackendlessUser user = call.arguments['user'];
         return promiseToFuture(
-          register(convertToJs(user.properties['properties']))
-        ).then((value) => BackendlessUser.fromJson(convertFromJs(value)));
+                register(convertToJs(user.properties['properties'])))
+            .then((value) => BackendlessUser.fromJson(convertFromJs(value)));
       case "Backendless.UserService.resendEmailConfirmation":
         return promiseToFuture(
-          resendEmailConfirmation(call.arguments['email'])
-        );
+            resendEmailConfirmation(call.arguments['email']));
       case "Backendless.UserService.restorePassword":
-        return promiseToFuture(
-          restorePassword(call.arguments['identity'])
-        );
+        return promiseToFuture(restorePassword(call.arguments['identity']));
       case "Backendless.UserService.update":
         BackendlessUser user = call.arguments['user'];
         return promiseToFuture(
-          update(convertToJs(user.properties['properties']))
-        ).then((value) => BackendlessUser.fromJson(convertFromJs(value)));
+                update(convertToJs(user.properties['properties'])))
+            .then((value) => BackendlessUser.fromJson(convertFromJs(value)));
       case "Backendless.UserService.getUserToken":
-        return Future(() =>
-          getUserToken()
-        );
+        return Future(() => getUserToken());
       case "Backendless.UserService.setUserToken":
-        return Future(() =>
-          setUserToken(call.arguments['userToken'])
-        );
+        return Future(() => setUserToken(call.arguments['userToken']));
       case "Backendless.UserService.loginAsGuest":
-        return promiseToFuture(
-          loginAsGuest(call.arguments['stayLoggedIn'])
-        ).then((value) => BackendlessUser.fromJson(convertFromJs(value)));
-      
+        return promiseToFuture(loginAsGuest(call.arguments['stayLoggedIn']))
+            .then((value) => BackendlessUser.fromJson(convertFromJs(value)));
+
       default:
         throw PlatformException(
-          code: 'Unimplemented',
-          details: "Backendless plugin for web doesn't implement "
-              "the method '${call.method}'");
+            code: 'Unimplemented',
+            details: "Backendless plugin for web doesn't implement "
+                "the method '${call.method}'");
     }
   }
 }
