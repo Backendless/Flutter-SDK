@@ -58,7 +58,7 @@ class RelationOperation {
           "The children argument should be either List, OpResult or whereClause");
     }
 
-    _addOperation(
+    return _addOperation(
         operationType, _table, _parent, columnName, _whereClause, _children);
   }
 

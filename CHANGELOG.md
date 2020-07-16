@@ -1,3 +1,7 @@
+# 6.0.1
+
+* Add Web support
+
 # 6.0.0
 
 * Introduce Transactions API

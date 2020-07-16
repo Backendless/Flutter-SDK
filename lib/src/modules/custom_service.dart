@@ -11,7 +11,7 @@ class BackendlessCustomService {
 
   /// This method does not support passing custom classes as arguments for now
   Future<dynamic> invoke(
-          String serviceName, String method, List<Object> arguments) =>
+          String serviceName, String method, dynamic arguments) =>
       _channel.invokeMethod(
           "Backendless.CustomService.invoke", <String, dynamic>{
         "serviceName": serviceName,

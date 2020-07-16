@@ -19,7 +19,11 @@ class ObjectProperty extends AbstractProperty {
     defaultValue = json['defaultValue'];
     name = json['name'];
     this.required = json['required'];
-    type = DataTypeEnum.values[json['type']];
+    var jsonType = json['type'];
+    if (jsonType is int)
+      type = DataTypeEnum.values[jsonType];
+    else
+      type = stringToEnum(DataTypeEnum.values, jsonType);
   }
 
   Map toJson() => {

@@ -89,8 +89,8 @@ class LoadRelationsQueryBuilder<R> {
     relationName = json['relationName'];
     pageSize = json['pageSize'];
     offset = json['offset'];
-    properties = json['properties'].cast<String>();
-    sortBy = json['sortBy'].cast<String>();
+    properties = json['properties']?.cast<String>();
+    sortBy = json['sortBy']?.cast<String>();
   }
 
   Map toJson() => {
