@@ -199,7 +199,8 @@ DataStoreJs getDataStore(MethodCall call) => of(call.arguments['tableName']);
 
 dynamic getQueryBuilder(MethodCall call) {
   Map queryMap = Map();
-  queryMap.addAll(call.arguments['queryBuilder']?.toJson());
+  var queryBuilder = call.arguments['queryBuilder']?.toJson();
+  if (queryBuilder != null) queryMap.addAll(queryBuilder);
 
   queryMap['relations'] = call.arguments['relations'];
   queryMap['relationsDepth'] = call.arguments['relationsDepth'];
