@@ -12,8 +12,10 @@ class CustomServiceCallHandler {
   Future<dynamic> handleMethodCall(MethodCall call) {
     switch (call.method) {
       case "Backendless.CustomService.invoke":
-        return promiseToFuture(invoke(call.arguments['serviceName'],
-            call.arguments['method'], convertToJs(call.arguments['arguments'])));
+        return promiseToFuture(invoke(
+            call.arguments['serviceName'],
+            call.arguments['method'],
+            convertToJs(call.arguments['arguments'])));
       default:
         throw PlatformException(
             code: 'Unimplemented',

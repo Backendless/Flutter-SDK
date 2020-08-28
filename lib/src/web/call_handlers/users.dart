@@ -34,8 +34,7 @@ class UserServiceCallHandler {
         return promiseToFuture(logout());
       case "Backendless.UserService.register":
         BackendlessUser user = call.arguments['user'];
-        return promiseToFuture(
-                register(convertToJs(user.properties)))
+        return promiseToFuture(register(convertToJs(user.properties)))
             .then((value) => getUser(value));
       case "Backendless.UserService.resendEmailConfirmation":
         return promiseToFuture(
@@ -44,8 +43,7 @@ class UserServiceCallHandler {
         return promiseToFuture(restorePassword(call.arguments['identity']));
       case "Backendless.UserService.update":
         BackendlessUser user = call.arguments['user'];
-        return promiseToFuture(
-                update(convertToJs(user.properties)))
+        return promiseToFuture(update(convertToJs(user.properties)))
             .then((value) => getUser(value));
       case "Backendless.UserService.getUserToken":
         return Future(() => getUserToken());
@@ -55,20 +53,23 @@ class UserServiceCallHandler {
         return promiseToFuture(loginAsGuest(call.arguments['stayLoggedIn']))
             .then((value) => getUser(value));
       case "Backendless.UserService.loginWithGoogle":
-        return promiseToFuture(
-          loginWithGooglePlus(call.arguments['accessToken'], 
-            convertToJs(call.arguments['fieldsMapping']), call.arguments['stayLoggedIn'])
-        ).then((value) => getUser(value));
+        return promiseToFuture(loginWithGooglePlus(
+                call.arguments['accessToken'],
+                convertToJs(call.arguments['fieldsMapping']),
+                call.arguments['stayLoggedIn']))
+            .then((value) => getUser(value));
       case "Backendless.UserService.loginWithFacebook":
-        return promiseToFuture(
-          loginWithFacebook(call.arguments['accessToken'], 
-            convertToJs(call.arguments['fieldsMapping']), call.arguments['stayLoggedIn'])
-        ).then((value) => getUser(value));
+        return promiseToFuture(loginWithFacebook(
+                call.arguments['accessToken'],
+                convertToJs(call.arguments['fieldsMapping']),
+                call.arguments['stayLoggedIn']))
+            .then((value) => getUser(value));
       case "Backendless.UserService.loginWithTwitter":
-        return promiseToFuture(
-          loginWithTwitter(call.arguments['accessToken'], 
-            convertToJs(call.arguments['fieldsMapping']), call.arguments['stayLoggedIn'])
-        ).then((value) => getUser(value));
+        return promiseToFuture(loginWithTwitter(
+                call.arguments['accessToken'],
+                convertToJs(call.arguments['fieldsMapping']),
+                call.arguments['stayLoggedIn']))
+            .then((value) => getUser(value));
       default:
         throw PlatformException(
             code: 'Unimplemented',
@@ -77,8 +78,8 @@ class UserServiceCallHandler {
     }
   }
 
-  BackendlessUser getUser(dynamic jsObject) => 
-    BackendlessUser.fromJson(convertFromJs(jsObject));
+  BackendlessUser getUser(dynamic jsObject) =>
+      BackendlessUser.fromJson(convertFromJs(jsObject));
 }
 
 @JS('Backendless.UserService.getLocalCurrentUser')
@@ -127,10 +128,13 @@ external dynamic setUserToken(String userToken);
 external dynamic loginAsGuest([bool stayLoggedIn]);
 
 @JS('Backendless.UserService.loginWithGooglePlusSdk')
-external dynamic loginWithGooglePlus(String accessToken, dynamic fieldsMapping, bool stayLoggedIn);
+external dynamic loginWithGooglePlus(
+    String accessToken, dynamic fieldsMapping, bool stayLoggedIn);
 
 @JS('Backendless.UserService.loginWithFacebookSdk')
-external dynamic loginWithFacebook(String accessToken, dynamic fieldsMapping, bool stayLoggedIn);
+external dynamic loginWithFacebook(
+    String accessToken, dynamic fieldsMapping, bool stayLoggedIn);
 
 @JS('Backendless.UserService.loginWithTwitter')
-external dynamic loginWithTwitter(String accessToken, dynamic fieldsMapping, bool stayLoggedIn);
+external dynamic loginWithTwitter(
+    String accessToken, dynamic fieldsMapping, bool stayLoggedIn);
