@@ -2,18 +2,18 @@
 
 library backendless_custom_service_web;
 
-import 'dart:convert';
-
 import 'package:flutter/services.dart';
 import 'package:js/js.dart';
 import 'package:js/js_util.dart';
+
+import '../js_util.dart';
 
 class CustomServiceCallHandler {
   Future<dynamic> handleMethodCall(MethodCall call) {
     switch (call.method) {
       case "Backendless.CustomService.invoke":
         return promiseToFuture(invoke(call.arguments['serviceName'],
-            call.arguments['method'], jsonEncode(call.arguments['arguments'])));
+            call.arguments['method'], convertToJs(call.arguments['arguments'])));
       default:
         throw PlatformException(
             code: 'Unimplemented',
