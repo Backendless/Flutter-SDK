@@ -8,8 +8,12 @@ class BackendlessUser {
 
   BackendlessUser();
 
-  BackendlessUser.fromJson(Map json)
-      : _properties = json.cast<String, dynamic>();
+  BackendlessUser.fromJson(Map json) {
+    if (json.containsKey('properties'))
+      _properties = json['properties'].cast<String, dynamic>();
+    else
+      _properties = json.cast<String, dynamic>();
+  }
 
   Map toJson() => {"properties": _properties};
 
