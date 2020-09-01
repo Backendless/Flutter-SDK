@@ -1,6 +1,9 @@
-# 6.0.2
+# 6.0.3
 
 * Fix Custom Service invocation for Web
+
+# 6.0.2
+
 * Implement social logins for Web
 * Minor fixes for Web platform
 
