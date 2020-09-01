@@ -5,7 +5,6 @@ import 'backendless_sdk.dart';
 import 'src/web/call_handlers/backendless.dart';
 import 'src/web/call_handlers/cache.dart';
 import 'src/web/call_handlers/counters.dart';
-import 'src/web/call_handlers/custom_service.dart';
 import 'src/web/call_handlers/data.dart';
 import 'src/web/call_handlers/files.dart';
 import 'src/web/call_handlers/logging.dart';
@@ -38,13 +37,6 @@ class BackendlessWeb {
         const StandardMethodCodec(), registrar.messenger);
     countersChannel
         .setMethodCallHandler(CountersCallHandler().handleMethodCall);
-
-    final MethodChannel customServiceChannel = MethodChannel(
-        "backendless/custom_service",
-        StandardMethodCodec(BackendlessMessageCodec()),
-        registrar.messenger);
-    customServiceChannel
-        .setMethodCallHandler(CustomServiceCallHandler().handleMethodCall);
 
     final MethodChannel filesChannel = MethodChannel(
         "backendless/files",
