@@ -53,22 +53,23 @@ class Reflector extends Reflectable {
 
       // if property is a Map
       if (value is Map) {
-        instanceMirror.invokeSetter(propertyName, _deserializeInnerMap(value, columnName, declarations));
-      // if property is a List
+        instanceMirror.invokeSetter(propertyName,
+            _deserializeInnerMap(value, columnName, declarations));
+        // if property is a List
       } else if (value is List) {
         // empty list
         if (value.isEmpty) {
           instanceMirror.invokeSetter(propertyName, List());
           // list of objects
         } else if (value.first is Map) {
-          var deserializedList = List.from(value
-              .map((listItem) => _deserializeInnerMap(listItem, columnName, declarations)));
+          var deserializedList = List.from(value.map((listItem) =>
+              _deserializeInnerMap(listItem, columnName, declarations)));
           instanceMirror.invokeSetter(propertyName, deserializedList);
-        // list of primitives
+          // list of primitives
         } else {
           instanceMirror.invokeSetter(propertyName, value);
         }
-      // if property is a standard object
+        // if property is a standard object
       } else {
         VariableMirror variableMirror = classMirror.declarations[propertyName];
         Type variableType = variableMirror.dynamicReflectedType;
@@ -84,7 +85,8 @@ class Reflector extends Reflectable {
     return object;
   }
 
-  Object _deserializeInnerMap(Map value, String columnName, Map<String, DeclarationMirror> declarations) {
+  Object _deserializeInnerMap(Map value, String columnName,
+      Map<String, DeclarationMirror> declarations) {
     var classMirror = _getClassMirror(columnName, value, declarations);
     if (classMirror != null) {
       return _deserialize(value, classMirror);
@@ -100,14 +102,15 @@ class Reflector extends Reflectable {
     return null;
   }
 
-  ClassMirror _getClassMirror(String columnName, Map map, Map<String, DeclarationMirror> declarations) {
+  ClassMirror _getClassMirror(
+      String columnName, Map map, Map<String, DeclarationMirror> declarations) {
     // get object type from server's ___class field if exists
     if (map.containsKey("___class")) {
       String clientClassName = Types.getMappedClientClass(map["___class"]);
       return annotatedClasses.firstWhere(
           (annotatedClass) => annotatedClass.simpleName == clientClassName,
           orElse: () => null);
-    // else get user-defined variable type
+      // else get user-defined variable type
     } else {
       var declarationMirror = declarations[columnName];
       if (declarationMirror != null) {
@@ -117,8 +120,9 @@ class Reflector extends Reflectable {
           } on NoSuchCapabilityError {
             return null;
           }
-        // if object is a list, user should declare public getter for it
-        } else if (declarationMirror is MethodMirror && declarationMirror.hasReflectedReturnType) {
+          // if object is a list, user should declare public getter for it
+        } else if (declarationMirror is MethodMirror &&
+            declarationMirror.hasReflectedReturnType) {
           // get object type from getter's return type
           var variableType = declarationMirror.reflectedReturnType.toString();
           if (variableType.startsWith("List<")) {

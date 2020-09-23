@@ -1,3 +1,7 @@
+# 6.1.0
+
+* Added JSON API
+
 # 6.0.3
 
 * Fix Custom Service invocation for Web

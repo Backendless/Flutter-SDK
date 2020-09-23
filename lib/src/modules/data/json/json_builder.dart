@@ -17,11 +17,13 @@ class JSONUpdateBuilder {
   }
 
   static GeneralArgHolder insert() {
-    return new GeneralArgHolder._(new JSONUpdateBuilder._(JsonOperation.INSERT));
+    return new GeneralArgHolder._(
+        new JSONUpdateBuilder._(JsonOperation.INSERT));
   }
 
   static GeneralArgHolder replace() {
-    return new GeneralArgHolder._(new JSONUpdateBuilder._(JsonOperation.REPLACE));
+    return new GeneralArgHolder._(
+        new JSONUpdateBuilder._(JsonOperation.REPLACE));
   }
 
   static GeneralArgHolder arrayAppend() {
