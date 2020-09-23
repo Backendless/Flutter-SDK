@@ -3,7 +3,7 @@ part of backendless_sdk;
 class Reflector extends Reflectable {
   const Reflector()
       : super(declarationsCapability, invokingCapability, metadataCapability,
-            reflectedTypeCapability);
+            reflectedTypeCapability, reflectedTypeCapability);
 
   Map<String, dynamic> serialize<T>(T object) {
     if (object == null) return null;
@@ -51,20 +51,25 @@ class Reflector extends Reflectable {
           Types.getPropertyNameForColumn(columnName, declarations);
       if (propertyName == null) return;
 
+      // if property is a Map
       if (value is Map) {
-        instanceMirror.invokeSetter(
-            propertyName, _deserialize(value, _getClassMirror(value)));
+        instanceMirror.invokeSetter(propertyName,
+            _deserializeInnerMap(value, columnName, declarations));
+        // if property is a List
       } else if (value is List) {
+        // empty list
         if (value.isEmpty) {
           instanceMirror.invokeSetter(propertyName, List());
+          // list of objects
         } else if (value.first is Map) {
-          ClassMirror listItemClassMirror = _getClassMirror(value.first);
-          var deserializedList = List.from(value
-              .map((listItem) => _deserialize(listItem, listItemClassMirror)));
+          var deserializedList = List.from(value.map((listItem) =>
+              _deserializeInnerMap(listItem, columnName, declarations)));
           instanceMirror.invokeSetter(propertyName, deserializedList);
+          // list of primitives
         } else {
           instanceMirror.invokeSetter(propertyName, value);
         }
+        // if property is a standard object
       } else {
         VariableMirror variableMirror = classMirror.declarations[propertyName];
         Type variableType = variableMirror.dynamicReflectedType;
@@ -80,6 +85,16 @@ class Reflector extends Reflectable {
     return object;
   }
 
+  Object _deserializeInnerMap(Map value, String columnName,
+      Map<String, DeclarationMirror> declarations) {
+    var classMirror = _getClassMirror(columnName, value, declarations);
+    if (classMirror != null) {
+      return _deserialize(value, classMirror);
+    } else {
+      return value;
+    }
+  }
+
   DateTime _deserializeDateTime(dynamic value) {
     if (value == null) return null;
     if (value is DateTime) return value;
@@ -87,12 +102,38 @@ class Reflector extends Reflectable {
     return null;
   }
 
-  ClassMirror _getClassMirror(Map map) {
+  ClassMirror _getClassMirror(
+      String columnName, Map map, Map<String, DeclarationMirror> declarations) {
+    // get object type from server's ___class field if exists
     if (map.containsKey("___class")) {
       String clientClassName = Types.getMappedClientClass(map["___class"]);
       return annotatedClasses.firstWhere(
           (annotatedClass) => annotatedClass.simpleName == clientClassName,
           orElse: () => null);
+      // else get user-defined variable type
+    } else {
+      var declarationMirror = declarations[columnName];
+      if (declarationMirror != null) {
+        if (declarationMirror is VariableMirror) {
+          try {
+            return declarationMirror.type;
+          } on NoSuchCapabilityError {
+            return null;
+          }
+          // if object is a list, user should declare public getter for it
+        } else if (declarationMirror is MethodMirror &&
+            declarationMirror.hasReflectedReturnType) {
+          // get object type from getter's return type
+          var variableType = declarationMirror.reflectedReturnType.toString();
+          if (variableType.startsWith("List<")) {
+            for (var annotatedClass in annotatedClasses) {
+              if (variableType == "List<${annotatedClass.simpleName}>") {
+                return annotatedClass;
+              }
+            }
+          }
+        }
+      }
     }
     return null;
   }
