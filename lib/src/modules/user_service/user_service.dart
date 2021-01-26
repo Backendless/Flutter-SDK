@@ -67,26 +67,27 @@ class BackendlessUserService {
       _channel.invokeMethod("Backendless.UserService.loginAsGuest",
           <String, dynamic>{"stayLoggedIn": stayLoggedIn});
 
-  Future<BackendlessUser> loginWithOauth2(String providerName, String token, Map<String, String> fieldsMapping, 
-    bool stayLoggedIn, [BackendlessUser guestUser] ) async {
-      return Invoker.invoke("users/social/$providerName/login", {
-        "accessToken": token,
-        "fieldsMapping": fieldsMapping,
-        "guestUser": guestUser,
-      }).then((value) => BackendlessUser.fromJson(value));
-    }
-  
-  Future<BackendlessUser> loginWithOauth1(String providerName, String token, String tokenSecret, 
-    Map<String, String> fieldsMapping, bool stayLoggedIn, [BackendlessUser guestUser] ) {
-      if (providerName != "twitter") throw ArgumentError("OAuth authentication for provider $providerName is not available");
-      return Invoker.invoke("users/social/twitter/login", {
-        "accessToken": token,
-        "accessTokenSecret": tokenSecret,
-        "fieldsMapping": fieldsMapping,
-        "guestUser": guestUser,
-      }).then((value) => BackendlessUser.fromJson(value));
-    }
+  Future<BackendlessUser> loginWithOauth1(String providerCode, String token,
+      String tokenSecret, Map<String, String> fieldsMapping, bool stayLoggedIn,
+      [BackendlessUser guestUser]) {
+    if (providerCode != "twitter")
+      throw ArgumentError(
+          "OAuth authentication for provider $providerCode is not available");
+    return Invoker.invoke("users/social/twitter/login", {
+      "accessToken": token,
+      "accessTokenSecret": tokenSecret,
+      "fieldsMapping": fieldsMapping,
+      "guestUser": guestUser,
+    }).then((value) => BackendlessUser.fromJson(value));
+  }
 
-  
-  
+  Future<BackendlessUser> loginWithOauth2(String providerCode, String token,
+      Map<String, String> fieldsMapping, bool stayLoggedIn,
+      [BackendlessUser guestUser]) async {
+    return Invoker.invoke("users/social/$providerCode/login", {
+      "accessToken": token,
+      "fieldsMapping": fieldsMapping,
+      "guestUser": guestUser,
+    }).then((value) => BackendlessUser.fromJson(value));
+  }
 }
