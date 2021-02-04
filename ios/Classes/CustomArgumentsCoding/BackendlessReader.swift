@@ -58,21 +58,33 @@ class BackendlessReader: FlutterStandardReader {
     // MARK: - Read Point
     private func readPoint() -> BLPoint? {
         guard let wkt = readValue() as? String else { return nil }
-        return try? BLPoint.fromWkt(wkt)
+        if let point = try? BLPoint.fromWkt(wkt) {
+            return point
+        } else {
+            return nil
+        }
     }
 
     // MARK: -
     // MARK: - Read LineString
     private func readLineString() -> BLLineString? {
         guard let wkt = readValue() as? String else { return nil }
-        return try? BLLineString.fromWkt(wkt)
+        if let lineString = try? BLLineString.fromWkt(wkt) {
+            return lineString
+        } else {
+            return nil
+        }
     }
 
     // MARK: -
     // MARK: - Read Polygon
     private func readPolygon() -> BLPolygon? {
         guard let wkt = readValue() as? String else { return nil }
-        return try? BLPolygon.fromWkt(wkt)
+        if let polygon = try? BLPolygon.fromWkt(wkt) {
+            return polygon
+        } else {
+            return nil
+        }
     }
     
     // MARK: -

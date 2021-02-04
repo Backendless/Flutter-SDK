@@ -239,7 +239,7 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
             return
         }
         
-        userService.resendEmailConfirmation(email: email,
+        userService.resendEmailConfirmation(identity: email,
             responseHandler: {
                 result(nil)
             },
