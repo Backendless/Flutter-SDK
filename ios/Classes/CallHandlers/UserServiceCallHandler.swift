@@ -90,12 +90,6 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
             getUserToken(arguments, result)
         case Methods.loginAsGuest:
             loginAsGuest(arguments, result)
-        case Methods.loginWithFacebook:
-            loginWithFacebook(arguments, result)
-        case Methods.loginWithTwitter:
-            loginWithTwitter(arguments, result)
-        case Methods.loginWithGoogle:
-            loginWithGoogle(arguments, result)
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -323,101 +317,5 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
                 result(FlutterError($0))
             })
         }
-    }
-
-    // MARK: -
-    // MARK: - Login With Facebook
-    private func loginWithFacebook(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        guard let accessToken: String = arguments[Args.accessToken].flatMap(cast) else {
-            result(FlutterError.noRequiredArguments)
-            return
-        }
-        let fieldsMapping: [String: String] = arguments[Args.fieldsMapping].flatMap(cast) ?? [:]
-        let stayLoggedIn = arguments[Args.stayLoggedIn].flatMap(cast) ?? false
-        userService.stayLoggedIn = stayLoggedIn        
-        let guestUser: BackendlessUser? = arguments[Args.guestUser].flatMap(cast)
-        if guestUser != nil {
-            userService.loginWithFacebook(accessToken: accessToken, guestUser: guestUser!, fieldsMapping: fieldsMapping,
-            responseHandler: {
-                result($0)
-            },
-            errorHandler: {
-                result(FlutterError($0))
-            })
-        }   
-        else {
-            userService.logingWithFacebook(accessToken: accessToken, fieldsMapping: fieldsMapping,
-            responseHandler: {
-                result($0)
-            },
-            errorHandler: {
-                result(FlutterError($0))
-            })
-        }   
-    }
-
-    // MARK: -
-    // MARK: - Login With Twitter
-    private func loginWithTwitter(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        guard
-            let authToken: String = arguments[Args.authToken].flatMap(cast),
-            let authTokenSecret: String = arguments[Args.authTokenSecret].flatMap(cast)
-        else {
-            result(FlutterError.noRequiredArguments)
-            return
-        }
-        let fieldsMapping: [String: String] = arguments[Args.fieldsMapping].flatMap(cast) ?? [:]
-        let stayLoggedIn = arguments[Args.stayLoggedIn].flatMap(cast) ?? false
-        userService.stayLoggedIn = stayLoggedIn
-        let guestUser: BackendlessUser? = arguments[Args.guestUser].flatMap(cast)
-        if guestUser != nil {
-            userService.loginWithTwitter(authToken: authToken, authTokenSecret: authTokenSecret, guestUser: guestUser!, fieldsMapping: fieldsMapping,
-            responseHandler: {
-                result($0)
-            },
-            errorHandler: {
-                result(FlutterError($0))
-            })
-        }
-        else {
-            userService.loginWithTwitter(authToken: authToken, authTokenSecret: authTokenSecret, fieldsMapping: fieldsMapping,
-            responseHandler: {
-                result($0)
-            },
-            errorHandler: {
-                result(FlutterError($0))
-            })            
-        }        
-    }
-
-    // MARK: -
-    // MARK: - Login With Google
-    private func loginWithGoogle(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        guard let accessToken: String = arguments[Args.accessToken].flatMap(cast) else {
-            result(FlutterError.noRequiredArguments)
-            return
-        }
-        let fieldsMapping: [String: String] = arguments[Args.fieldsMapping].flatMap(cast) ?? [:]
-        let stayLoggedIn = arguments[Args.stayLoggedIn].flatMap(cast) ?? false
-        userService.stayLoggedIn = stayLoggedIn
-        let guestUser: BackendlessUser? = arguments[Args.guestUser].flatMap(cast)
-        if guestUser != nil {
-            userService.loginWithGoogle(accessToken: accessToken, guestUser: guestUser!, fieldsMapping: fieldsMapping,
-            responseHandler: {
-                result($0)
-            },
-            errorHandler: {
-                result(FlutterError($0))
-            })
-        }
-        else {
-            userService.loginWithGoogle(accessToken: accessToken, fieldsMapping: fieldsMapping,
-            responseHandler: {
-                result($0)
-            },
-            errorHandler: {
-                result(FlutterError($0))
-            })
-        }        
     }
 }
