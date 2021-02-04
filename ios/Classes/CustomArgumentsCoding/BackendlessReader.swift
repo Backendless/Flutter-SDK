@@ -21,8 +21,6 @@ class BackendlessReader: FlutterStandardReader {
         switch code {
         case .dateTime:
             value = readDate()
-        case .geoQuery:
-            value = readGeoQuery()
         case .point:
             value = readPoint()
         case .lineString:
@@ -55,15 +53,6 @@ class BackendlessReader: FlutterStandardReader {
             .flatMap(cast)
             .map { Date(timeIntervalSince1970: $0 / 1000) }
     }
-    
-    // MARK: -
-    // MARK: - Read Geo Query
-    private func readGeoQuery() -> BackendlessGeoQuery? {
-        guard let json: [String: Any] = readValue().flatMap(cast) else { return nil }
-        let jsonToDecode = prepareGeoQueryJson(from: json)
-        guard let jsonData = try? JSONSerialization.data(withJSONObject: jsonToDecode, options: []) else { return nil }
-        return try? JSONDecoder().decode(BackendlessGeoQuery.self, from: jsonData)
-    }
 
     // MARK: -
     // MARK: - Read Point
@@ -84,50 +73,6 @@ class BackendlessReader: FlutterStandardReader {
     private func readPolygon() -> BLPolygon? {
         guard let wkt = readValue() as? String else { return nil }
         return try? BLPolygon.fromWkt(wkt)
-    }
-
-    private func prepareGeoQueryJson(from json: [String: Any]) -> [String: Any] {
-        var result: [String: Any] = [:]
-        var geoPoint: [String: Any] = [:]
-        var rectangleSource: [Double] = []
-        
-        let geopointKeys = ["latitude", "longitude"]
-        
-        json.forEach {
-            if geopointKeys.contains($0.key) {
-                geoPoint[$0.key] = $0.value
-            } else if $0.key == "searchRectangle" {
-                if let data = ($0.value as? FlutterStandardTypedData)?.data {
-                    rectangleSource = data.withUnsafeBytes { (pointer: UnsafePointer<Double>) -> [Double] in
-                        let buffer = UnsafeBufferPointer(start: pointer,
-                                                         count: data.count / 8)
-                        return Array<Double>(buffer)
-                    }
-                }
-            } else if $0.key == "categories" {
-                guard
-                    let categories = $0.value as? [String],
-                    !categories.isEmpty
-                    else {
-                        return
-                }
-                result[$0.key] = $0.value
-            } else {
-                result[$0.key] = $0.value
-            }
-        }
-        
-        result["geoPoint"] = geoPoint
-        
-        if !rectangleSource.isEmpty {
-            var rectJson: [String: Any] = [:]
-            let northWest = ["latitude": rectangleSource[0], "longitude": rectangleSource[1]]
-            let southEast = ["latitude": rectangleSource[2], "longitude": rectangleSource[3]]
-            rectJson = ["nordWestPoint": northWest, "southEastPoint": southEast]
-            result["rectangle"] = rectJson
-        }
-        
-        return result
     }
     
     // MARK: -
@@ -216,66 +161,58 @@ class BackendlessReader: FlutterStandardReader {
         guard let jsonData = try? JSONSerialization.data(withJSONObject: json, options: []) else { return nil }
 
         switch code {
-        case .dateTime:
-            return nil
-        case .geoPoint:
-            return try? JSONDecoder().decode(GeoPoint.self, from: jsonData)
-        case .dataQueryBuilder:
-            return try? JSONDecoder().decode(DataQueryBuilder.self, from: jsonData)
-        case .loadRelationsQueryBuilder:
-            return try? JSONDecoder().decode(LoadRelationsQueryBuilder.self, from: jsonData)
-        case .objectProperty:
-            return try? JSONDecoder().decode(ObjectProperty.self, from: jsonData)
-        case .googlePlaySubscriptionStatus:
-            return nil
-        case .googlePlayPurchaseStatus:
-            return nil
-        case .fileInfo:
-            return try? JSONDecoder().decode(BackendlessFileInfo.self, from: jsonData)
-        case .geoCategory:
-            return try? JSONDecoder().decode(GeoCategory.self, from: jsonData)
-        case .geoQuery:
-            return try? JSONDecoder().decode(BackendlessGeoQuery.self, from: jsonData)
-        case .geoCluster:
-            return try? JSONDecoder().decode(GeoCluster.self, from: jsonData)
-        case .searchMatchesResult:
-            return try? JSONDecoder().decode(SearchMatchesResult.self, from: jsonData)
-        case .messageStatus:
-            return try? JSONDecoder().decode(MessageStatus.self, from: jsonData)
-        case .deviceRegistration:
-            return try? JSONDecoder().decode(DeviceRegistration.self, from: jsonData)
-        case .message:
-            return nil
-        case .publishOptions:
-            return try? JSONDecoder().decode(PublishOptions.self, from: jsonData)
-        case .deliveryOptions:
-            return try? JSONDecoder().decode(DeliveryOptions.self, from: jsonData)
-        case .publishMessageInfo:
-            return try? JSONDecoder().decode(PublishMessageInfo.self, from: jsonData)
-        case .deviceRegistrationResult:
-            return try? JSONDecoder().decode(DeviceRegistrationResult.self, from: jsonData)
-        case .command:
-            return CommandObject.decodeFromJson(json)
-        case .userInfo:
-            return try? JSONDecoder().decode(UserInfo.self, from: jsonData)
-        case .userStatusResponse:
-            return userStatus(fromJson: json)
-        case .reconnectAttempt:
-            return try? JSONDecoder().decode(ReconnectAttemptObject.self, from: jsonData)
-        case .backendlessUser:
-            return try? JSONDecoder().decode(BackendlessUser.self, from: jsonData)
-        case .userProperty:
-            return try? JSONDecoder().decode(UserProperty.self, from: jsonData)
-        case .bulkEvent:
-            return try? JSONDecoder().decode(BulkEvent.self, from: jsonData)
-        case .emailEnvelope:
-            return try? JSONDecoder().decode(EmailEnvelope.self, from: jsonData)
-        case .point:
-            return nil
-        case .lineString:
-            return nil
-        case .polygon:
-            return nil
+            case .dateTime:
+                return nil
+            case .dataQueryBuilder:
+                return try? JSONDecoder().decode(DataQueryBuilder.self, from: jsonData)
+            case .loadRelationsQueryBuilder:
+                return try? JSONDecoder().decode(LoadRelationsQueryBuilder.self, from: jsonData)
+            case .objectProperty:
+                return try? JSONDecoder().decode(ObjectProperty.self, from: jsonData)
+            case .googlePlaySubscriptionStatus:
+                return nil
+            case .googlePlayPurchaseStatus:
+                return nil
+            case .fileInfo:
+                return try? JSONDecoder().decode(BackendlessFileInfo.self, from: jsonData)
+            case .messageStatus:
+                return try? JSONDecoder().decode(MessageStatus.self, from: jsonData)
+            case .deviceRegistration:
+                return try? JSONDecoder().decode(DeviceRegistration.self, from: jsonData)
+            case .message:
+                return nil
+            case .publishOptions:
+                return try? JSONDecoder().decode(PublishOptions.self, from: jsonData)
+            case .deliveryOptions:
+                return try? JSONDecoder().decode(DeliveryOptions.self, from: jsonData)
+            case .publishMessageInfo:
+                return try? JSONDecoder().decode(PublishMessageInfo.self, from: jsonData)
+            case .deviceRegistrationResult:
+                return try? JSONDecoder().decode(DeviceRegistrationResult.self, from: jsonData)
+            case .command:
+                return CommandObject.decodeFromJson(json)
+            case .userInfo:
+                return try? JSONDecoder().decode(UserInfo.self, from: jsonData)
+            case .userStatusResponse:
+                return userStatus(fromJson: json)
+            case .reconnectAttempt:
+                return try? JSONDecoder().decode(ReconnectAttemptObject.self, from: jsonData)
+            case .backendlessUser:
+                return try? JSONDecoder().decode(BackendlessUser.self, from: jsonData)
+            case .userProperty:
+                return try? JSONDecoder().decode(UserProperty.self, from: jsonData)
+            case .bulkEvent:
+                return try? JSONDecoder().decode(BulkEvent.self, from: jsonData)
+            case .emailEnvelope:
+                return try? JSONDecoder().decode(EmailEnvelope.self, from: jsonData)
+            case .point:
+                return nil
+            case .lineString:
+                return nil
+            case .polygon:
+                return nil
+            default:
+                return nil
         }
     }
     

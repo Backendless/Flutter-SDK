@@ -4,18 +4,12 @@ import com.backendless.BackendlessUser;
 import com.backendless.DeviceRegistration;
 import com.backendless.backendless_sdk.utils.codec.mixins.CommandMixin;
 import com.backendless.backendless_sdk.utils.codec.mixins.DataQueryBuilderMixin;
-import com.backendless.backendless_sdk.utils.codec.mixins.GeoPointMixin;
 import com.backendless.backendless_sdk.utils.codec.mixins.LoadRelationsQueryBuilderMixin;
 import com.backendless.backendless_sdk.utils.codec.mixins.ObjectPropertyMixin;
 import com.backendless.backendless_sdk.utils.codec.mixins.ReconnectAttemptMixin;
 import com.backendless.commerce.GooglePlayPurchaseStatus;
 import com.backendless.commerce.GooglePlaySubscriptionStatus;
 import com.backendless.files.FileInfo;
-import com.backendless.geo.BackendlessGeoQuery;
-import com.backendless.geo.GeoCategory;
-import com.backendless.geo.GeoCluster;
-import com.backendless.geo.GeoPoint;
-import com.backendless.geo.SearchMatchesResult;
 import com.backendless.messaging.DeliveryOptions;
 import com.backendless.messaging.EmailEnvelope;
 import com.backendless.messaging.Message;
@@ -37,6 +31,7 @@ import com.backendless.rt.data.BulkEvent;
 import com.backendless.rt.users.UserInfo;
 import com.backendless.rt.users.UserStatusResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
@@ -46,7 +41,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.fasterxml.jackson.databind.SerializationFeature;
 import io.flutter.plugin.common.StandardMessageCodec;
 
 public final class BackendlessMessageCodec extends StandardMessageCodec {
@@ -90,7 +84,6 @@ public final class BackendlessMessageCodec extends StandardMessageCodec {
         objectMapper.addMixIn(LoadRelationsQueryBuilder.class, LoadRelationsQueryBuilderMixin.class);
         objectMapper.addMixIn(Command.class, CommandMixin.class);
         objectMapper.addMixIn(ReconnectAttempt.class, ReconnectAttemptMixin.class);
-        objectMapper.addMixIn(GeoPoint.class, GeoPointMixin.class);
     }
 
     @Override
@@ -98,9 +91,6 @@ public final class BackendlessMessageCodec extends StandardMessageCodec {
         if (value instanceof Date) {
             stream.write(DATE_TIME);
             writeValue(stream, ((Date) value).getTime());
-        } else if (value instanceof GeoPoint && !(value instanceof GeoCluster)) {
-            stream.write(GEO_POINT);
-            writeValue(stream, objectMapper.convertValue(value, Map.class));
         } else if (value instanceof DataQueryBuilder) {
             stream.write(DATA_QUERY_BUILDER);
             Map<String, Object> result = new HashMap<>();
@@ -138,18 +128,6 @@ public final class BackendlessMessageCodec extends StandardMessageCodec {
             writeValue(stream, objectMapper.convertValue(value, Map.class));
         } else if (value instanceof FileInfo) {
             stream.write(FILE_INFO);
-            writeValue(stream, objectMapper.convertValue(value, Map.class));
-        } else if (value instanceof GeoCategory) {
-            stream.write(GEO_CATEGORY);
-            writeValue(stream, objectMapper.convertValue(value, Map.class));
-        } else if (value instanceof BackendlessGeoQuery) {
-            stream.write(GEO_QUERY);
-            writeValue(stream, objectMapper.convertValue(value, Map.class));
-        } else if (value instanceof GeoCluster) {
-            stream.write(GEO_CLUSTER);
-            writeValue(stream, objectMapper.convertValue(value, Map.class));
-        } else if (value instanceof SearchMatchesResult) {
-            stream.write(SEARCH_MATCHES_RESULT);
             writeValue(stream, objectMapper.convertValue(value, Map.class));
         } else if (value instanceof MessageStatus) {
             stream.write(MESSAGE_STATUS);
@@ -219,8 +197,6 @@ public final class BackendlessMessageCodec extends StandardMessageCodec {
         switch (type) {
             case DATE_TIME:
                 return new Date((Long) readValue(buffer));
-            case GEO_POINT:
-                return objectMapper.convertValue(readValue(buffer), GeoPoint.class);
             case DATA_QUERY_BUILDER:
                 return objectMapper.convertValue(readValue(buffer), DataQueryBuilder.class);
             case LOAD_RELATIONS_QUERY_BUILDER:
@@ -233,14 +209,6 @@ public final class BackendlessMessageCodec extends StandardMessageCodec {
                 return objectMapper.convertValue(readValue(buffer), GooglePlayPurchaseStatus.class);
             case FILE_INFO:
                 return objectMapper.convertValue(readValue(buffer), FileInfo.class);
-            case GEO_CATEGORY:
-                return objectMapper.convertValue(readValue(buffer), GeoCategory.class);
-            case GEO_QUERY:
-                return objectMapper.convertValue(readValue(buffer), BackendlessGeoQuery.class);
-            case GEO_CLUSTER:
-                return objectMapper.convertValue(readValue(buffer), GeoCluster.class);
-            case SEARCH_MATCHES_RESULT:
-                return objectMapper.convertValue(readValue(buffer), SearchMatchesResult.class);
             case MESSAGE_STATUS:
                 return objectMapper.convertValue(readValue(buffer), MessageStatus.class);
             case DEVICE_REGISTRATION:

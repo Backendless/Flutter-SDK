@@ -13,7 +13,6 @@ fileprivate enum FlutterPluginChannels: String, CaseIterable {
     case eventsChannel = "backendless/events"
     case customService = "backendless/custom_service"
     case filesChannel = "backendless/files"
-    case geoChannel = "backendless/geo"
     case loggingChannel = "backendless/logging"
     case messagingChannel = "backendless/messaging"
     case userServiceChannel = "backendless/user_service"
@@ -73,9 +72,6 @@ public class SwiftBackendlessSdkPlugin: NSObject, FlutterPlugin {
                 case .filesChannel:
                     channel = FlutterMethodChannel(name: pluginChannel.rawValue, binaryMessenger: messenger, codec: codec)
                     handler = FilesCallHandler()
-                case .geoChannel:
-                    channel = FlutterMethodChannel(name: pluginChannel.rawValue, binaryMessenger: messenger, codec: codec)
-                    handler = GeoCallHandler(methodChannel: channel)
                 case .loggingChannel:
                     channel = FlutterMethodChannel(name: pluginChannel.rawValue, binaryMessenger: messenger, codec: codec)
                     handler = LoggingCallHandler()

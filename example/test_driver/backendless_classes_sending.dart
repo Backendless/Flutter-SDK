@@ -20,21 +20,6 @@ class TestClassesSending {
         expect(receivedValue, date);
       });
 
-      test("GeoPoint", () async {
-        final geoPoint = GeoPoint()
-          ..addCategory("test_category")
-          ..addField("test_field", "test_value")
-          ..addMetadata("test_metadata", "test_value")
-          ..latitude = 42.4242
-          ..longitude = 42.4242
-          ..name = "test_name"
-          ..objectId = "OBJECT_ID";
-
-        GeoPoint receivedValue = await sendValue(geoPoint);
-
-        expect(receivedValue.toJson(), geoPoint.toJson());
-      });
-
       test("DataQueryBuilder", () async {
         final queryBuilder = DataQueryBuilder()
           ..groupBy = ["test_first", "test_second"]
@@ -90,88 +75,6 @@ class TestClassesSending {
         FileInfo receivedValue = await sendValue(info);
 
         expect(receivedValue.toJson(), info.toJson());
-      });
-
-      test("GeoCategory", () async {
-        final category = GeoCategory()
-          ..name = "test_name"
-          ..objectId = "TEST_OBJECT_ID"
-          ..size = 4242;
-
-        GeoCategory receivedValue = await sendValue(category);
-
-        expect(receivedValue.toJson(), category.toJson());
-      });
-
-      test("BackendlessGeoQuery", () async {
-        final query = BackendlessGeoQuery()
-          ..addCategory("test_first_category")
-          ..addCategory("test_second_category")
-          ..clusterGridSize = 42
-          ..dpp = 4.242
-          ..includeMeta = true
-          ..latitude = 21.2121
-          ..longitude = 63.6363
-          ..metadata = {"test_key_first": "test_value", "test_key_second": 42}
-          ..offset = 21
-          ..pageSize = 4242
-          ..radius = 42.2121
-          ..relativeFindMetadata = {
-            "test_key_first": "test_value",
-            "test_key_second": "42"
-          }
-          ..searchRectangle = [1, 2, 3, 4]
-          ..sortBy = ["test_sort"]
-          ..units = Units.METERS
-          ..whereClause = "test where clause";
-
-        BackendlessGeoQuery receivedValue = await sendValue(query);
-
-        expect(receivedValue.categories, query.categories);
-        expect(receivedValue.clusterGridSize, query.clusterGridSize);
-        expect(receivedValue.dpp, query.dpp);
-        expect(receivedValue.includeMeta, query.includeMeta);
-        expect(receivedValue.latitude, query.latitude);
-        expect(receivedValue.longitude, query.longitude);
-        expect(receivedValue.metadata, query.metadata);
-        expect(receivedValue.offset, query.offset);
-        expect(receivedValue.pageSize, query.pageSize);
-        expect(receivedValue.radius, query.radius);
-        expect(receivedValue.units, query.units);
-        expect(receivedValue.relativeFindMetadata, query.relativeFindMetadata);
-        expect(receivedValue.searchRectangle, query.searchRectangle);
-        expect(receivedValue.sortBy, query.sortBy);
-        expect(receivedValue.units, query.units);
-        expect(receivedValue.whereClause, query.whereClause);
-      });
-
-      test("GeoCluster", () async {
-        final cluster = GeoCluster()
-          ..addCategory("test_first_category")
-          ..addCategory("test_second_category")
-          ..addMetadata("test_key_first", "test_value")
-          ..addMetadata("test_key_second", 42)
-          ..totalPoints = 42
-          ..latitude = 21.2121
-          ..longitude = 66.4242;
-
-        GeoCluster receivedValue = await sendValue(cluster);
-
-        expect(receivedValue.toJson(), cluster.toJson());
-      });
-
-      test("SearchMatchesResult", () async {
-        final point = GeoPoint()
-          ..latitude = 0.2142
-          ..longitude = 112.12
-          ..addCategory("test_category");
-        final matchesResult = SearchMatchesResult()
-          ..geoPoint = point
-          ..matches = 0.4242;
-
-        SearchMatchesResult receivedValue = await sendValue(matchesResult);
-
-        expect(receivedValue.toJson(), matchesResult.toJson());
       });
 
       test("MessageStatus", () async {

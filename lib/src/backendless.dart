@@ -8,7 +8,6 @@ class Backendless {
   static final customService = new BackendlessCustomService();
   static final events = new BackendlessEvents();
   static final files = new BackendlessFiles();
-  static final geo = new BackendlessGeo();
   static final logging = new BackendlessLogging();
   static final messaging = new BackendlessMessaging();
   static final rt = new BackendlessRT();
