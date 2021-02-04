@@ -114,6 +114,8 @@ public final class BackendlessMessageCodec extends StandardMessageCodec {
             result.put("sortBy", dataQuery.getQueryOptions().getSortBy());
             result.put("related", dataQuery.getQueryOptions().getRelated());
             result.put("relationsDepth", dataQuery.getQueryOptions().getRelationsDepth());
+            result.put("relationsPageSize", dataQuery.getQueryOptions().getRelationsPageSize());
+            result.put("distinct", dataQuery.getDistinct());
             writeValue(stream, result);
         } else if (value instanceof LoadRelationsQueryBuilder) {
             stream.write(LOAD_RELATIONS_QUERY_BUILDER);

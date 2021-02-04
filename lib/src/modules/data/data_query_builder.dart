@@ -12,6 +12,7 @@ class DataQueryBuilder {
   List<String> related;
   int relationsDepth;
   int relationsPageSize;
+  bool distinct;
 
   DataQueryBuilder() {
     properties = new List();
@@ -22,6 +23,7 @@ class DataQueryBuilder {
     sortBy = new List();
     related = new List();
     relationsDepth = DEFAULT_RELATIONS_DEPTH;
+    distinct = false;
   }
 
   DataQueryBuilder.fromJson(Map json) {
@@ -39,6 +41,7 @@ class DataQueryBuilder {
     else
       relationsDepth = DEFAULT_RELATIONS_DEPTH;
     relationsPageSize = json['relationsPageSize'];
+    distinct = json['distinct'];
   }
 
   Map toJson() => {
@@ -52,7 +55,8 @@ class DataQueryBuilder {
         'sortBy': sortBy,
         'related': related,
         'relationsDepth': relationsDepth,
-        'relationsPageSize': relationsPageSize
+        'relationsPageSize': relationsPageSize,
+        'distinct': distinct,
       };
 
   set pageSize(int pageSize) => _pagedQueryBuilder.pageSize = pageSize;
