@@ -4,17 +4,12 @@ class BackendlessMessageCodec extends StandardMessageCodec {
   const BackendlessMessageCodec();
 
   static const int _kDateTime = 128;
-  static const int _kGeoPoint = 129;
   static const int _kDataQueryBuilder = 130;
   static const int _kLoadRelationsQueryBuilder = 131;
   static const int _kObjectProperty = 132;
   static const int _kGooglePlaySubscriptionStatus = 133;
   static const int _kGooglePlayPurchaseStatus = 134;
   static const int _kFileInfo = 135;
-  static const int _kGeoCategory = 136;
-  static const int _kGeoQuery = 137;
-  static const int _kGeoCluster = 138;
-  static const int _kSearchMatchesResult = 139;
   static const int _kMessageStatus = 140;
   static const int _kDeviceRegistration = 141;
   static const int _kPublishOptions = 143;
