@@ -1,3 +1,14 @@
+# 6.2.0
+
+> Note: This release has breaking changes.
+
+ * Add `distinct` parameter to `DataQueryBuilder`
+ * Fix relationsPageSize parameter on Android
+ * Rename `providerName` parameter to `providerCode`. 
+ * Add new oauth login methods: `loginWithOauth1` & `loginWithOauth2`
+ * **BREAKING** Remove old social login methods: `loginWithGoogle`, `loginWithFacebook` & `loginWithTwitter`
+ * **BREAKING** Remove deprecated geo service. You should use new spatial data types
+
 # 6.1.0
 
 * Added JSON API
