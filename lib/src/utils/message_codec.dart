@@ -4,17 +4,12 @@ class BackendlessMessageCodec extends StandardMessageCodec {
   const BackendlessMessageCodec();
 
   static const int _kDateTime = 128;
-  static const int _kGeoPoint = 129;
   static const int _kDataQueryBuilder = 130;
   static const int _kLoadRelationsQueryBuilder = 131;
   static const int _kObjectProperty = 132;
   static const int _kGooglePlaySubscriptionStatus = 133;
   static const int _kGooglePlayPurchaseStatus = 134;
   static const int _kFileInfo = 135;
-  static const int _kGeoCategory = 136;
-  static const int _kGeoQuery = 137;
-  static const int _kGeoCluster = 138;
-  static const int _kSearchMatchesResult = 139;
   static const int _kMessageStatus = 140;
   static const int _kDeviceRegistration = 141;
   static const int _kPublishOptions = 143;
@@ -38,9 +33,6 @@ class BackendlessMessageCodec extends StandardMessageCodec {
     if (value is DateTime) {
       buffer.putUint8(_kDateTime);
       writeValue(buffer, value.millisecondsSinceEpoch);
-    } else if (value is GeoPoint && !(value is GeoCluster)) {
-      buffer.putUint8(_kGeoPoint);
-      writeValue(buffer, value.toJson());
     } else if (value is DataQueryBuilder) {
       buffer.putUint8(_kDataQueryBuilder);
       writeValue(buffer, value.toJson());
@@ -58,18 +50,6 @@ class BackendlessMessageCodec extends StandardMessageCodec {
       writeValue(buffer, value.toJson());
     } else if (value is FileInfo) {
       buffer.putUint8(_kFileInfo);
-      writeValue(buffer, value.toJson());
-    } else if (value is GeoCategory) {
-      buffer.putUint8(_kGeoCategory);
-      writeValue(buffer, value.toJson());
-    } else if (value is BackendlessGeoQuery) {
-      buffer.putUint8(_kGeoQuery);
-      writeValue(buffer, value.toJson());
-    } else if (value is GeoCluster) {
-      buffer.putUint8(_kGeoCluster);
-      writeValue(buffer, value.toJson());
-    } else if (value is SearchMatchesResult) {
-      buffer.putUint8(_kSearchMatchesResult);
       writeValue(buffer, value.toJson());
     } else if (value is MessageStatus) {
       buffer.putUint8(_kMessageStatus);
@@ -134,8 +114,6 @@ class BackendlessMessageCodec extends StandardMessageCodec {
     switch (type) {
       case _kDateTime:
         return DateTime.fromMillisecondsSinceEpoch(readValue(buffer));
-      case _kGeoPoint:
-        return GeoPoint.fromJson(readValue(buffer));
       case _kDataQueryBuilder:
         return DataQueryBuilder.fromJson(readValue(buffer));
       case _kLoadRelationsQueryBuilder:
@@ -148,14 +126,6 @@ class BackendlessMessageCodec extends StandardMessageCodec {
         return GooglePlayPurchaseStatus.fromJson(readValue(buffer));
       case _kFileInfo:
         return FileInfo.fromJson(readValue(buffer));
-      case _kGeoCategory:
-        return GeoCategory.fromJson(readValue(buffer));
-      case _kGeoQuery:
-        return BackendlessGeoQuery.fromJson(readValue(buffer));
-      case _kGeoCluster:
-        return GeoCluster.fromJson(readValue(buffer));
-      case _kSearchMatchesResult:
-        return SearchMatchesResult.fromJson(readValue(buffer));
       case _kMessageStatus:
         return MessageStatus.fromJson(readValue(buffer));
       case _kDeviceRegistration:

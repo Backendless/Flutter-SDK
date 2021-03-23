@@ -178,7 +178,6 @@ bool _isSdkType(Object object) =>
 const List<Type> nativeTypes = [String, DateTime, int, double, bool];
 const List<Type> sdkSerializableTypes = [
   BackendlessUser,
-  GeoPoint,
   Point,
   LineString,
   Polygon

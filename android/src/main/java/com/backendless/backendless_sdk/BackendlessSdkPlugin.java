@@ -8,7 +8,6 @@ import com.backendless.backendless_sdk.call_handlers.CustomServiceCallHandler;
 import com.backendless.backendless_sdk.call_handlers.DataCallHandler;
 import com.backendless.backendless_sdk.call_handlers.EventsCallHandler;
 import com.backendless.backendless_sdk.call_handlers.FilesCallHandler;
-import com.backendless.backendless_sdk.call_handlers.GeoCallHandler;
 import com.backendless.backendless_sdk.call_handlers.LoggingCallHandler;
 import com.backendless.backendless_sdk.call_handlers.MessagingCallHandler;
 import com.backendless.backendless_sdk.call_handlers.RtCallHandler;
@@ -56,10 +55,6 @@ public class BackendlessSdkPlugin {
       final MethodChannel filesChannel = new MethodChannel(registrar.messenger(), "backendless/files",
           new StandardMethodCodec(BackendlessMessageCodec.INSTANCE));
       filesChannel.setMethodCallHandler(new FilesCallHandler(filesChannel));
-
-      final MethodChannel geoChannel = new MethodChannel(registrar.messenger(), "backendless/geo",
-          new StandardMethodCodec(BackendlessMessageCodec.INSTANCE));
-      geoChannel.setMethodCallHandler(new GeoCallHandler(geoChannel));
 
       final MethodChannel loggingChannel = new MethodChannel(registrar.messenger(), "backendless/logging");
       loggingChannel.setMethodCallHandler(new LoggingCallHandler());

@@ -66,15 +66,6 @@ public class UserServiceCallHandler implements MethodChannel.MethodCallHandler {
             case "Backendless.UserService.setUserToken":
                 setUserToken(call, result);
                 break;
-            case "Backendless.UserService.loginWithFacebook":
-                loginWithFacebook(call, result);
-                break;
-            case "Backendless.UserService.loginWithTwitter":
-                loginWithTwitter(call, result);
-                break;
-            case "Backendless.UserService.loginWithGoogle":
-                loginWithGoogle(call, result);
-                break;
             default:
                 result.notImplemented();
         }
@@ -163,81 +154,5 @@ public class UserServiceCallHandler implements MethodChannel.MethodCallHandler {
         String userToken = call.argument("userToken");
         HeadersManager.getInstance().addHeader(HeadersManager.HeadersEnum.USER_TOKEN_KEY, userToken);
         result.success(null);
-    }
-
-    private void loginWithFacebook(MethodCall call, MethodChannel.Result result) {
-        String accessToken = call.argument("accessToken");
-        Map<String, String> fieldsMapping = call.argument("fieldsMapping");
-        Boolean stayLoggedIn = call.argument("stayLoggedIn");
-        BackendlessUser guestUser = call.argument("guestUser");
-
-        FlutterCallback<BackendlessUser> callback = new FlutterCallback<>(result);
-
-        if (guestUser != null) {
-            Backendless.UserService.loginWithFacebookSdk(accessToken, guestUser, fieldsMapping, callback, stayLoggedIn != null ? stayLoggedIn : false);
-        } else {
-            if (fieldsMapping != null) {
-                if (stayLoggedIn != null) {
-                    Backendless.UserService.loginWithFacebookSdk(accessToken, fieldsMapping, callback, stayLoggedIn);
-                } else {
-                    Backendless.UserService.loginWithFacebookSdk(accessToken, fieldsMapping, callback);
-                }
-            } else if (stayLoggedIn != null) {
-                Backendless.UserService.loginWithFacebookSdk(accessToken, callback, stayLoggedIn);
-            } else {
-                Backendless.UserService.loginWithFacebookSdk(accessToken, callback);
-            }
-        }
-    }
-
-    private void loginWithTwitter(MethodCall call, MethodChannel.Result result) {
-        String authToken = call.argument("authToken");
-        String authTokenSecret = call.argument("authTokenSecret");
-        Map<String, String> fieldsMapping = call.argument("fieldsMapping");
-        Boolean stayLoggedIn = call.argument("stayLoggedIn");
-        BackendlessUser guestUser = call.argument("guestUser");
-
-        FlutterCallback<BackendlessUser> callback = new FlutterCallback<>(result);
-
-        if (guestUser != null) {
-            Backendless.UserService.loginWithTwitterSdk(authToken, guestUser, authTokenSecret, fieldsMapping, callback, stayLoggedIn != null ? stayLoggedIn : false);
-        } else {
-            if (fieldsMapping != null) {
-                if (stayLoggedIn != null) {
-                    Backendless.UserService.loginWithTwitterSdk(authToken, authTokenSecret, fieldsMapping, callback, stayLoggedIn);
-                } else {
-                    Backendless.UserService.loginWithTwitterSdk(authToken, authTokenSecret, fieldsMapping, callback);
-                }
-            } else if (stayLoggedIn != null) {
-                Backendless.UserService.loginWithTwitterSdk(authToken, authTokenSecret, callback, stayLoggedIn);
-            } else {
-                Backendless.UserService.loginWithTwitterSdk(authToken, authTokenSecret, callback);
-            }
-        }
-    }
-
-    private void loginWithGoogle(MethodCall call, MethodChannel.Result result) {
-        String accessToken = call.argument("accessToken");
-        Map<String, String> fieldsMapping = call.argument("fieldsMapping");
-        Boolean stayLoggedIn = call.argument("stayLoggedIn");
-        BackendlessUser guestUser = call.argument("guestUser");
-
-        FlutterCallback<BackendlessUser> callback = new FlutterCallback<>(result);
-
-        if (guestUser != null) {
-            Backendless.UserService.loginWithGooglePlusSdk(accessToken, guestUser, fieldsMapping, callback, stayLoggedIn != null ? stayLoggedIn : false);
-        } else {
-            if (fieldsMapping != null) {
-                if (stayLoggedIn != null) {
-                    Backendless.UserService.loginWithGooglePlusSdk(accessToken, fieldsMapping, callback, stayLoggedIn);
-                } else {
-                    Backendless.UserService.loginWithGooglePlusSdk(accessToken, fieldsMapping, callback);
-                }
-            } else if (stayLoggedIn != null) {
-                Backendless.UserService.loginWithGooglePlusSdk(accessToken, callback, stayLoggedIn);
-            } else {
-                Backendless.UserService.loginWithGooglePlusSdk(accessToken, callback);
-            }
-        }
     }
 }

@@ -19,9 +19,8 @@ class BackendlessWtiter: FlutterStandardWriter {
         switch value {
         case is Date:
             writeDate(value as! Date)
-        case is GeoPoint, is DataQueryBuilder, is LoadRelationsQueryBuilder, is ObjectProperty,
-             is BackendlessFileInfo, is GeoCategory, is BackendlessGeoQuery, is GeoCluster,
-             is SearchMatchesResult, is MessageStatus, is DeviceRegistration, is PublishOptions,
+        case is DataQueryBuilder, is LoadRelationsQueryBuilder, is ObjectProperty,
+             is BackendlessFileInfo, is MessageStatus, is DeviceRegistration, is PublishOptions,
              is DeliveryOptions, is PublishMessageInfo, is DeviceRegistrationResult,
              is UserInfo, is ReconnectAttemptObject, is BackendlessUser, is UserProperty,
              is BulkEvent, is EmailEnvelope:
@@ -47,9 +46,6 @@ class BackendlessWtiter: FlutterStandardWriter {
                 super.writeValue(jsonToWrite)
             } else if value is BackendlessUser {
                 let jsonToWrite = prepareJsonForBackendlessUser(json)
-                super.writeValue(jsonToWrite)
-            } else if value is BackendlessGeoQuery {
-                let jsonToWrite = prepareJsonForBackendlessGeoQuery(json)
                 super.writeValue(jsonToWrite)
             } else {
                 super.writeValue(json)
@@ -95,10 +91,6 @@ class BackendlessWtiter: FlutterStandardWriter {
     // MARK: - DataFromValue
     private func dataFromValue(_ value: Any) -> Data? {
         switch value {
-        case is GeoCluster:
-            return try? JSONEncoder().encode(value as! GeoCluster)
-        case is GeoPoint:
-            return try? JSONEncoder().encode(value as! GeoPoint)
         case is DataQueryBuilder:
             return try? JSONEncoder().encode(value as! DataQueryBuilder)
         case is LoadRelationsQueryBuilder:
@@ -109,12 +101,6 @@ class BackendlessWtiter: FlutterStandardWriter {
             return try? JSONEncoder().encode(value as! ObjectProperty)
         case is BackendlessFileInfo:
             return try? JSONEncoder().encode(value as! BackendlessFileInfo)
-        case is GeoCategory:
-            return try? JSONEncoder().encode(value as! GeoCategory)
-        case is BackendlessGeoQuery:
-            return try? JSONEncoder().encode(value as! BackendlessGeoQuery)
-        case is SearchMatchesResult:
-            return try? JSONEncoder().encode(value as! SearchMatchesResult)
         case is MessageStatus:
             return try? JSONEncoder().encode(value as! MessageStatus)
         case is DeviceRegistration:
@@ -146,10 +132,6 @@ class BackendlessWtiter: FlutterStandardWriter {
     // MARK: - WriteCodeForValue
     private func writeCode(for value: Any) {
         switch value {
-        case is GeoCluster:
-            writeByte(FlutterTypeCode.geoCluster.rawValue)
-        case is GeoPoint:
-            writeByte(FlutterTypeCode.geoPoint.rawValue)
         case is DataQueryBuilder:
             writeByte(FlutterTypeCode.dataQueryBuilder.rawValue)
         case is LoadRelationsQueryBuilder:
@@ -160,12 +142,6 @@ class BackendlessWtiter: FlutterStandardWriter {
             writeByte(FlutterTypeCode.objectProperty.rawValue)
         case is BackendlessFileInfo:
             writeByte(FlutterTypeCode.fileInfo.rawValue)
-        case is GeoCategory:
-            writeByte(FlutterTypeCode.geoCategory.rawValue)
-        case is BackendlessGeoQuery:
-            writeByte(FlutterTypeCode.geoQuery.rawValue)
-        case is SearchMatchesResult:
-            writeByte(FlutterTypeCode.searchMatchesResult.rawValue)
         case is MessageStatus:
             writeByte(FlutterTypeCode.messageStatus.rawValue)
         case is DeviceRegistration:
@@ -297,39 +273,6 @@ class BackendlessWtiter: FlutterStandardWriter {
                 properties.forEach { (key, value) in
                     result[key] = value
                 }
-            } else {
-                result[key] = value
-            }
-        }
-        
-        return result
-    }
-    
-    private func prepareJsonForBackendlessGeoQuery(_ json: Any) -> [String: Any] {
-        guard let inputDict = json as? [String: Any] else { return [:] }
-        var result: [String: Any] = [:]
-        
-        inputDict.forEach { (key, value) in
-            if key == "geoPoint" {
-                guard let geoPointJSON = value as? [String: Any] else { return }
-                geoPointJSON
-                    .filter { (key, _) in ["latitude", "longitude"].contains(key) }
-                    .forEach { result[$0] = $1 }
-            } else if key == "rectangle" {
-                guard
-                    let rectangleJSON = value as? [String: Any],
-                    let nordWestPointJSON = rectangleJSON["nordWestPoint"] as? [String: Any],
-                    let southEastPointJSON = rectangleJSON["southEastPoint"] as? [String: Any],
-                    let firstCoordinate = nordWestPointJSON["latitude"] as? Double,
-                    let secondCoordinate = nordWestPointJSON["longitude"] as? Double,
-                    let thirdCoordinate = southEastPointJSON["latitude"] as? Double,
-                    let fourthCoordinate = southEastPointJSON["longitude"] as? Double
-                else {
-                    return
-                }
-                
-                let rectangleToWrite = [firstCoordinate, secondCoordinate, thirdCoordinate, fourthCoordinate]
-                result["searchRectangle"] = rectangleToWrite
             } else {
                 result[key] = value
             }

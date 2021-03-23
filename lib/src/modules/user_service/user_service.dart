@@ -67,41 +67,27 @@ class BackendlessUserService {
       _channel.invokeMethod("Backendless.UserService.loginAsGuest",
           <String, dynamic>{"stayLoggedIn": stayLoggedIn});
 
-  Future<BackendlessUser> loginWithFacebook(String accessToken,
-          {Map<String, String> fieldsMapping,
-          bool stayLoggedIn,
-          BackendlessUser guestUser}) =>
-      _channel.invokeMethod(
-          "Backendless.UserService.loginWithFacebook", <String, dynamic>{
-        "accessToken": accessToken,
-        "fieldsMapping": fieldsMapping,
-        "stayLoggedIn": stayLoggedIn,
-        "guestUser": guestUser
-      });
+  Future<BackendlessUser> loginWithOauth1(String providerCode, String token,
+      String tokenSecret, Map<String, String> fieldsMapping, bool stayLoggedIn,
+      [BackendlessUser guestUser]) {
+    if (providerCode != "twitter")
+      throw ArgumentError(
+          "OAuth authentication for provider $providerCode is not available");
+    return Invoker.invoke("users/social/twitter/login", {
+      "accessToken": token,
+      "accessTokenSecret": tokenSecret,
+      "fieldsMapping": fieldsMapping,
+      "guestUser": guestUser,
+    }).then((value) => BackendlessUser.fromJson(value));
+  }
 
-  Future<BackendlessUser> loginWithTwitter(
-          String authToken, String authTokenSecret,
-          {Map<String, String> fieldsMapping,
-          bool stayLoggedIn,
-          BackendlessUser guestUser}) =>
-      _channel.invokeMethod(
-          "Backendless.UserService.loginWithTwitter", <String, dynamic>{
-        "authToken": authToken,
-        "authTokenSecret": authTokenSecret,
-        "fieldsMapping": fieldsMapping,
-        "stayLoggedIn": stayLoggedIn,
-        "guestUser": guestUser
-      });
-
-  Future<BackendlessUser> loginWithGoogle(String accessToken,
-          {Map<String, String> fieldsMapping,
-          bool stayLoggedIn,
-          BackendlessUser guestUser}) =>
-      _channel.invokeMethod(
-          "Backendless.UserService.loginWithGoogle", <String, dynamic>{
-        "accessToken": accessToken,
-        "fieldsMapping": fieldsMapping,
-        "stayLoggedIn": stayLoggedIn,
-        "guestUser": guestUser
-      });
+  Future<BackendlessUser> loginWithOauth2(String providerCode, String token,
+      Map<String, String> fieldsMapping, bool stayLoggedIn,
+      [BackendlessUser guestUser]) async {
+    return Invoker.invoke("users/social/$providerCode/login", {
+      "accessToken": token,
+      "fieldsMapping": fieldsMapping,
+      "guestUser": guestUser,
+    }).then((value) => BackendlessUser.fromJson(value));
+  }
 }
