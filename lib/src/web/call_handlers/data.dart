@@ -119,6 +119,9 @@ class DataCallHandler {
       case "RTDataEvent.DELETED":
         rtHandler.addDeleteListener(whereClause, allowInterop(callback));
         break;
+      case "RTDataEvent.BULK_CREATED":
+        rtHandler.addBulkCreateListener(allowInterop(callback));
+        break;
       case "RTDataEvent.BULK_UPDATED":
         rtHandler.addBulkUpdateListener(whereClause, allowInterop(callback));
         break;
@@ -162,6 +165,12 @@ class DataCallHandler {
         else
           rtHandler.removeDeleteListener(allowInterop(callback));
         break;
+      case "RTDataEvent.BULK_CREATED":
+        if (whereClause != null)
+          rtHandler.removeBulkCreateListener(allowInterop(callback));
+        else
+          rtHandler.removeBulkCreateListener(allowInterop(callback));
+        break;
       case "RTDataEvent.BULK_UPDATED":
         if (whereClause != null)
           rtHandler.removeBulkUpdateListeners(
@@ -187,7 +196,7 @@ class DataCallHandler {
   Function getCallback(int handle, [bool bulk = false]) {
     return (jsResponse) {
       var response = convertFromJs(jsResponse);
-      if (bulk) response = BulkEvent.fromJson(response);
+      if (bulk && response is Map) response = BulkEvent.fromJson(response);
       Map args = {"handle": handle};
       args["response"] = response;
       _channel.invokeMethod("Backendless.Data.RT.EventResponse", args);
@@ -283,6 +292,9 @@ class RTHandlersJs {
   external dynamic addDeleteListener(whereClause, callback);
 
   @JS()
+  external dynamic addBulkCreateListener(callback);
+
+  @JS()
   external dynamic addBulkUpdateListener(whereClause, callback);
 
   @JS()
@@ -305,6 +317,9 @@ class RTHandlersJs {
 
   @JS()
   external dynamic removeDeleteListener(callback);
+
+  @JS()
+  external dynamic removeBulkCreateListener(callback);
 
   @JS()
   external dynamic removeBulkUpdateListeners(whereClause, callback);

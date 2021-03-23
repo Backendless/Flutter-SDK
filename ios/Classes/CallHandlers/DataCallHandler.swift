@@ -55,6 +55,7 @@ class DataCallHandler: FlutterCallHandlerProtocol {
     }
     
     private enum DataRTEvents {
+        static let bulkCreated = "RTDataEvent.BULK_CREATED"
         static let bulkUpdated = "RTDataEvent.BULK_UPDATED"
         static let bulkDeleted = "RTDataEvent.BULK_DELETED"
         static let created = "RTDataEvent.CREATED"
@@ -587,6 +588,15 @@ class DataCallHandler: FlutterCallHandlerProtocol {
             }
             
             switch event {
+            case DataRTEvents.bulkCreated:
+                let bulkCreateEventHandler: ([String]) -> Void = { [weak self] in
+                    var response: [String: Any] = [:]
+                    response[Args.handle] = currentHandle
+                    response[Args.response] = $0
+                    
+                    self?.methodChannel.invokeMethod(CallbackEvents.eventResponse, arguments: response)
+                }
+                subscription = data.ofTable(tableName).rt.addBulkCreateListener(responseHandler: bulkCreateEventHandler, errorHandler: errorHandler)
             case DataRTEvents.bulkUpdated:
                 if let whereClause = whereClause {
                     subscription = data.ofTable(tableName).rt.addBulkUpdateListener(whereClause: whereClause, responseHandler: bulkEventHandler, errorHandler: errorHandler)
