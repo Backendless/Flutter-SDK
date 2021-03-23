@@ -119,8 +119,8 @@ public class UserServiceCallHandler implements MethodChannel.MethodCallHandler {
     }
 
     private void resendEmailConfirmation(MethodCall call, MethodChannel.Result result) {
-        String email = call.argument("email");
-        Backendless.UserService.resendEmailConfirmation(email, new FlutterCallback<Void>(result));
+        String identity = call.argument("identity");
+        Backendless.UserService.resendEmailConfirmation(identity, new FlutterCallback<Void>(result));
     }
 
     private void restorePassword(MethodCall call, MethodChannel.Result result) {
