@@ -11,7 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   collection: ^1.14.11
-  reflectable: ^2.2.1
+  reflectable: ^3.0.1
   http: ^0.12.1
   flutter_web_plugins:
     sdk: flutter
