@@ -40,13 +40,11 @@ class Backendless {
         <String, dynamic>{'applicationId': applicationId, 'apiKey': jsApiKey});
   }
 
-  static Future<String> getApiKey() =>
-      _channel.invokeMethod("Backendless.getApiKey");
+  static String getApiKey() => _prefs.apiKey;
 
-  static Future<String> getApplicationId() =>
-      _channel.invokeMethod("Backendless.getApplicationId");
+  static String getApplicationId() => _prefs.appId;
 
-  static Future<String> getUrl() => _channel.invokeMethod("Backendless.getUrl");
+  static String getUrl() => _prefs.url;
 
   static Future<bool> isInitialized() =>
       _channel.invokeMethod("Backendless.isInitialized");
