@@ -290,13 +290,25 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
             return
         }
         
-        messaging.pushWithTemplate(templateName: template,
-            responseHandler: {
-                result($0)
-            },
-            errorHandler: {
-                result(FlutterError($0))
-            })
+        let templateValues: [String: String]? = arguments[Args.templateValues].flatMap(cast)
+        
+        if let templateValues = templateValues {
+            messaging.pushWithTemplate(templateName: template, templateValues: templateValues,
+                responseHandler: {
+                    result($0)
+                },
+                errorHandler: {
+                    result(FlutterError($0))
+                })
+        } else {
+            messaging.pushWithTemplate(templateName: template,
+                responseHandler: {
+                    result($0)
+                },
+                errorHandler: {
+                    result(FlutterError($0))
+                })
+        }
     }
     
     // MARK: -
