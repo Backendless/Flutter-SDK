@@ -21,18 +21,19 @@ Object _convertDataTreeFromJs(data) {
     if (_convertedObjects.containsKey(o)) {
       return _convertedObjects[o];
     }
-    if (o.toString() == '[object Object]') {
+    if (isArray(o)) {
+      var convertedList = [];
+      _convertedObjects[o] = convertedList;
+      convertedList.addAll((o as List).map(_convert));
+      return convertedList;
+    } else if (o.toString() == '[object Object]' ||
+        o.runtimeType.toString() == "NativeJavaScriptObject") {
       final convertedMap = Map();
       _convertedObjects[o] = convertedMap;
       for (var key in _getKeysOfObject(o)) {
         convertedMap[key] = _convert(getProperty(o, key));
       }
       return convertedMap;
-    } else if (isArray(o)) {
-      var convertedList = [];
-      _convertedObjects[o] = convertedList;
-      convertedList.addAll((o as List).map(_convert));
-      return convertedList;
     } else {
       return o;
     }
