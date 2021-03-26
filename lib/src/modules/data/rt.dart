@@ -57,6 +57,22 @@ class EventHandler<T> {
   void removeDeleteListener(void callback(T response)) {
     _removeListeners(RTDataEvent.DELETED, null, callback);
   }
+// Bulk Create
+
+  void addBulkCreateListener(void callback(List response),
+      {void onError(String error)}) {
+    DataSubscription subscription = new DataSubscription<T>(
+        RTDataEvent.BULK_CREATED, _tableName, callback, onError);
+    addEventListener(subscription);
+  }
+
+  void removeBulkCreateListeners([String whereClause]) {
+    _removeListeners(RTDataEvent.BULK_CREATED, whereClause);
+  }
+
+  void removeBulkCreateListener(void callback(BulkEvent response)) {
+    _removeListeners(RTDataEvent.BULK_CREATED, null, callback);
+  }
 
 // Bulk Update
 

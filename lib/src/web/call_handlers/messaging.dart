@@ -35,7 +35,8 @@ class MessagingCallHandler {
                 convertToJs(deliveryOptions?.toJson())))
             .then((value) => MessageStatus.fromJson(convertFromJs(value)));
       case "Backendless.Messaging.pushWithTemplate":
-        return promiseToFuture(pushWithTemplate(call.arguments['templateName']))
+        return promiseToFuture(pushWithTemplate(call.arguments['templateName'],
+                convertToJs(call.arguments['templateValues'])))
             .then((value) => MessageStatus.fromJson(convertFromJs(value)));
       case "Backendless.Messaging.sendEmail":
         return promiseToFuture(sendEmail(
@@ -135,7 +136,7 @@ external dynamic publish(String channelName, dynamic message,
     dynamic publishOptions, dynamic deliveryOptions);
 
 @JS('Backendless.Messaging.pushWithTemplate')
-external dynamic pushWithTemplate(String templateName);
+external dynamic pushWithTemplate(String templateName, dynamic templateValues);
 
 @JS('Backendless.Messaging.sendEmail')
 external dynamic sendEmail(

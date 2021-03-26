@@ -14,7 +14,7 @@ class LineString extends Geometry {
   int get hashCode => hashValues(points, srs);
 
   LineString({this.points, SpatialReferenceSystem srs}) : super(srs: srs) {
-    this.points = points != null ? points : List<Point>();
+    this.points = points != null ? points : <Point>[];
   }
 
   @override

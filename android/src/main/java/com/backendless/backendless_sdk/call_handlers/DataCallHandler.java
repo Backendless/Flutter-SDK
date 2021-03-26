@@ -283,6 +283,10 @@ public class DataCallHandler implements MethodChannel.MethodCallHandler {
         if (event.contains("BULK")) {
             DataEventAsyncCallback<BulkEvent> bulkCallback = new DataEventAsyncCallback<>(handle);
             switch (event) {
+                case "RTDataEvent.BULK_CREATED":
+                    DataEventAsyncCallback<List> bulkCreateCallback = new DataEventAsyncCallback<>(handle);
+                    Backendless.Data.of(tableName).rt().addBulkCreateListener(bulkCreateCallback);
+                    break;
                 case "RTDataEvent.BULK_UPDATED":
                     if (whereClause != null)
                         Backendless.Data.of(tableName).rt().addBulkUpdateListener(whereClause, bulkCallback);
@@ -357,6 +361,9 @@ public class DataCallHandler implements MethodChannel.MethodCallHandler {
                     Backendless.Data.of(tableName).rt().removeDeleteListener(whereClause, callback);
                 else
                     Backendless.Data.of(tableName).rt().removeDeleteListener(callback);
+                break;
+            case "RTDataEvent.BULK_CREATED":
+                Backendless.Data.of(tableName).rt().removeBulkCreateListener(callback);
                 break;
             case "RTDataEvent.BULK_UPDATED":
                 if (whereClause != null)

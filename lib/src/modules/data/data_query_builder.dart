@@ -15,13 +15,13 @@ class DataQueryBuilder {
   bool distinct;
 
   DataQueryBuilder() {
-    properties = new List();
-    excludeProperties = new List();
+    properties = [];
+    excludeProperties = [];
     whereClause = "";
-    groupBy = new List();
+    groupBy = [];
     havingClause = "";
-    sortBy = new List();
-    related = new List();
+    sortBy = [];
+    related = [];
     relationsDepth = DEFAULT_RELATIONS_DEPTH;
     distinct = false;
   }

@@ -55,7 +55,7 @@ class PublishOptions {
 
 class DeliveryOptions {
   int pushBroadcast;
-  List<String> pushSinglecast = new List();
+  List<String> pushSinglecast = [];
   String segmentQuery;
   PublishPolicyEnum publishPolicy = PublishPolicyEnum.BOTH;
   DateTime publishAt;

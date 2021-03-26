@@ -182,7 +182,8 @@ public class MessagingCallHandler implements MethodChannel.MethodCallHandler {
 
     private void pushWithTemplate(MethodCall call, MethodChannel.Result result) {
         String templateName = call.argument("templateName");
-        Backendless.Messaging.pushWithTemplate(templateName, new FlutterCallback<MessageStatus>(result));
+        Map templateValues = call.argument("templateValues");
+        Backendless.Messaging.pushWithTemplate(templateName, templateValues, new FlutterCallback<MessageStatus>(result));
     }
 
     private void registerDevice(MethodCall call, MethodChannel.Result result) {

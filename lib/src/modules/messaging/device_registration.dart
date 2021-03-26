@@ -7,7 +7,7 @@ class DeviceRegistration {
   String os;
   String _osVersion;
   DateTime expiration;
-  List<String> channels = new List<String>();
+  List<String> channels = <String>[];
 
   DeviceRegistration();
 

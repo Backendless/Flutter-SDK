@@ -52,9 +52,13 @@ class BackendlessMessaging {
         "deliveryOptions": deliveryOptions
       });
 
-  Future<MessageStatus> pushWithTemplate(String templateName) =>
-      _messagingChannel.invokeMethod("Backendless.Messaging.pushWithTemplate",
-          <String, dynamic>{"templateName": templateName});
+  Future<MessageStatus> pushWithTemplate(String templateName,
+          [Map templateValues]) =>
+      _messagingChannel.invokeMethod(
+          "Backendless.Messaging.pushWithTemplate", <String, dynamic>{
+        "templateName": templateName,
+        "templateValues": templateValues
+      });
 
   Future<DeviceRegistrationResult> registerDevice(
       [List<String> channels, DateTime expiration, MessageHandler onMessage]) {
