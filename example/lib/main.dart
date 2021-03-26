@@ -47,7 +47,7 @@ class _MyAppState extends State<MyApp> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            RaisedButton(child: Text("Press"), onPressed: buttonPressed)
+            ElevatedButton(child: Text("Press"), onPressed: buttonPressed)
           ],
         )),
       ),
