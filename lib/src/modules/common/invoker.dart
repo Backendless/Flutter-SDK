@@ -4,7 +4,7 @@ class Invoker {
   static BackendlessPrefs prefs = new BackendlessPrefs();
 
   static Future invoke(String methodName, body) {
-    final encodedBody = jsonEncode(body);
+    final encodedBody = _encodeBody(body);
     final url = _getUrl(methodName);
     final headers = prefs.headers;
 
@@ -28,4 +28,13 @@ class Invoker {
 
   static String _getUrl(String methodName) =>
       "${prefs.url}/${prefs.appId}/${prefs.apiKey}/$methodName";
+
+  static String _encodeBody(dynamic body) {
+    return jsonEncode(body, toEncodable: (dynamic nonEncodable) {
+      if (nonEncodable is DateTime)
+        return nonEncodable.toIso8601String();
+      else
+        return nonEncodable.toJson();
+    });
+  }
 }
