@@ -1,3 +1,10 @@
+# 6.3.0
+
+* Add BulkCreateListener for Data RT
+* Enable template values for `pushWithTemplate` method
+* Support spatial data types for Web
+* Fixes and optimizations
+
 # 6.2.0
 
 > Note: This release has breaking changes.
