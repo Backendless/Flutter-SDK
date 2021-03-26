@@ -13,57 +13,49 @@ import 'src/web/call_handlers/users.dart';
 
 class BackendlessWeb {
   static void registerWith(Registrar registrar) {
-    final MethodChannel cacheChannel = MethodChannel(
-        "backendless/cache",
-        const StandardMethodCodec(BackendlessMessageCodec()),
-        registrar.messenger);
+    final MethodChannel cacheChannel = MethodChannel("backendless/cache",
+        const StandardMethodCodec(BackendlessMessageCodec()), registrar);
     cacheChannel.setMethodCallHandler(CacheCallHandler().handleMethodCall);
 
-    final MethodChannel backendlessChannel = MethodChannel(
-        "backendless",
-        const StandardMethodCodec(BackendlessMessageCodec()),
-        registrar.messenger);
+    final MethodChannel backendlessChannel = MethodChannel("backendless",
+        const StandardMethodCodec(BackendlessMessageCodec()), registrar);
     backendlessChannel
         .setMethodCallHandler(BackendlessCallHandler().handleMethodCall);
 
-    final MethodChannel dataChannel = MethodChannel(
-        "backendless/data",
-        const StandardMethodCodec(BackendlessMessageCodec()),
-        registrar.messenger);
+    final MethodChannel dataChannel = MethodChannel("backendless/data",
+        const StandardMethodCodec(BackendlessMessageCodec()), registrar);
     dataChannel
         .setMethodCallHandler(DataCallHandler(dataChannel).handleMethodCall);
 
-    final MethodChannel countersChannel = MethodChannel("backendless/counters",
-        const StandardMethodCodec(), registrar.messenger);
+    final MethodChannel countersChannel = MethodChannel(
+        "backendless/counters", const StandardMethodCodec(), registrar);
     countersChannel
         .setMethodCallHandler(CountersCallHandler().handleMethodCall);
 
-    final MethodChannel filesChannel = MethodChannel(
-        "backendless/files",
-        const StandardMethodCodec(BackendlessMessageCodec()),
-        registrar.messenger);
+    final MethodChannel filesChannel = MethodChannel("backendless/files",
+        const StandardMethodCodec(BackendlessMessageCodec()), registrar);
     filesChannel.setMethodCallHandler(FilesCallHandler().handleMethodCall);
 
-    final MethodChannel loggingChannel = MethodChannel("backendless/logging",
-        const StandardMethodCodec(), registrar.messenger);
+    final MethodChannel loggingChannel = MethodChannel(
+        "backendless/logging", const StandardMethodCodec(), registrar);
     loggingChannel.setMethodCallHandler(LoggingCallHandler().handleMethodCall);
 
     final MethodChannel messagingChannel = MethodChannel(
         "backendless/messaging",
         const StandardMethodCodec(BackendlessMessageCodec()),
-        registrar.messenger);
+        registrar);
     messagingChannel.setMethodCallHandler(
         MessagingCallHandler(messagingChannel).handleMethodCall);
 
     final MethodChannel userServiceChannel = MethodChannel(
         "backendless/user_service",
         const StandardMethodCodec(BackendlessMessageCodec()),
-        registrar.messenger);
+        registrar);
     userServiceChannel
         .setMethodCallHandler(UserServiceCallHandler().handleMethodCall);
 
     // final MethodChannel testChannel = new MethodChannel("backendless/test",
-    //     new StandardMethodCodec(new BackendlessMessageCodec()), registrar.messenger());
+    //     new StandardMethodCodec(new BackendlessMessageCodec()), registrar());
     //     testChannel.setMethodCallHandler(new TestCallHandler());
   }
 }

@@ -59,7 +59,7 @@ class Reflector extends Reflectable {
       } else if (value is List) {
         // empty list
         if (value.isEmpty) {
-          instanceMirror.invokeSetter(propertyName, List());
+          instanceMirror.invokeSetter(propertyName, []);
           // list of objects
         } else if (value.first is Map) {
           var deserializedList = List.from(value.map((listItem) =>

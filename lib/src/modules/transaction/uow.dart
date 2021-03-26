@@ -18,8 +18,8 @@ class UnitOfWork {
   List<String> _opResultIdStrings;
 
   UnitOfWork() {
-    _operations = new List();
-    _opResultIdStrings = new List();
+    _operations = [];
+    _opResultIdStrings = [];
     OpResultIdGenerator opResultIdGenerator =
         new OpResultIdGenerator(_opResultIdStrings);
     _unitOfWorkCreate = new UnitOfWorkCreate(_operations, opResultIdGenerator);

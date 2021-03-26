@@ -11,7 +11,7 @@ class Polygon extends Geometry {
       {LineString boundary, List<LineString> holes, SpatialReferenceSystem srs})
       : super(srs: srs) {
     this.boundary = boundary != null ? boundary : LineString();
-    this.holes = holes != null ? holes : List<LineString>();
+    this.holes = holes != null ? holes : <LineString>[];
   }
 
   @override

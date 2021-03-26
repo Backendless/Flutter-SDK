@@ -26,10 +26,10 @@ class TestStatic {
 
         await Backendless.initApp(appId, androidKey, iosKey);
 
-        expect(await Backendless.getApplicationId(), appId);
+        expect(Backendless.getApplicationId(), appId);
 
         final expectedKey = Platform.isIOS ? iosKey : androidKey;
-        final key = await Backendless.getApiKey();
+        final key = Backendless.getApiKey();
 
         expect(key, expectedKey);
       });
@@ -43,7 +43,7 @@ class TestStatic {
 
       // --
       test('Default URL', () async {
-        expect(await Backendless.getUrl(), defaultUrl);
+        expect(Backendless.getUrl(), defaultUrl);
       });
 
       // --
@@ -51,11 +51,11 @@ class TestStatic {
         final customUrl = "https://just.testing.url";
         await Backendless.setUrl(customUrl);
 
-        expect(await Backendless.getUrl(), customUrl);
+        expect(Backendless.getUrl(), customUrl);
 
         await Backendless.setUrl(defaultUrl);
 
-        expect(await Backendless.getUrl(), defaultUrl);
+        expect(Backendless.getUrl(), defaultUrl);
       });
 
       // --
