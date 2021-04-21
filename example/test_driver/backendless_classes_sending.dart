@@ -28,8 +28,7 @@ class TestClassesSending {
           ..properties = ["test_property"]
           ..related = ["test_related_first", "test_related_second"]
           ..relationsDepth = 42
-          // TODO: add this field when Android implementation will be ready
-          // ..relationsPageSize = 21
+          ..relationsPageSize = 21
           ..sortBy = ["test_sort_by"]
           ..whereClause = "testing where_clause";
 
@@ -96,7 +95,7 @@ class TestClassesSending {
           ..expiration = DateTime.now()
           ..id = "TEST_ID"
           ..os = "TEST_OS"
-          ..osVersion = 10;
+          ..osVersion = "10";
 
         DeviceRegistration receivedValue = await sendValue(registration);
 

@@ -1,9 +1,9 @@
 part of backendless_sdk;
 
 class MessageStatus implements Comparable<MessageStatus> {
-  String messageId;
-  String errorMessage;
-  PublishStatusEnum status;
+  String? messageId;
+  String? errorMessage;
+  PublishStatusEnum? status;
 
   MessageStatus();
 
@@ -46,13 +46,13 @@ class MessageStatus implements Comparable<MessageStatus> {
     } else {
       int statusDiff = this.status == null
           ? (other.status == null ? 0 : -1)
-          : this.status.index.compareTo(other.status.index);
+          : this.status!.index.compareTo(other.status!.index);
       if (statusDiff != 0) {
         return statusDiff;
       } else {
         return this.messageId == null
             ? (other.messageId == null ? 0 : -1)
-            : this.messageId.compareTo(other.messageId);
+            : this.messageId!.compareTo(other.messageId!);
       }
     }
   }

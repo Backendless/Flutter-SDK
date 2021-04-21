@@ -1,19 +1,19 @@
 part of backendless_sdk;
 
 class DeviceRegistration {
-  String id = "";
-  String deviceToken = "";
-  String deviceId = "";
-  String os;
-  String _osVersion;
-  DateTime expiration;
-  List<String> channels = <String>[];
+  String? id = "";
+  String? deviceToken = "";
+  String? deviceId = "";
+  String? os;
+  String? _osVersion;
+  DateTime? expiration;
+  List<String>? channels = <String>[];
 
   DeviceRegistration();
 
-  set osVersion(int value) => _osVersion = value.toString();
+  set osVersion(String? value) => _osVersion = value.toString();
 
-  get osVersion => _osVersion;
+  String? get osVersion => _osVersion;
 
   DeviceRegistration.fromJson(Map json)
       : id = json['id'],
@@ -38,8 +38,8 @@ class DeviceRegistration {
 }
 
 class DeviceRegistrationResult {
-  String _deviceToken;
-  Map<String, String> _channelRegistrations;
+  String? _deviceToken;
+  Map<String, String>? _channelRegistrations;
 
   DeviceRegistrationResult();
 

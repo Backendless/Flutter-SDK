@@ -1,16 +1,16 @@
 part of backendless_sdk;
 
 abstract class AbstractProperty {
-  String name;
+  String? name;
   bool required;
-  DataTypeEnum type;
+  DataTypeEnum? type;
 
   AbstractProperty({this.name, this.required = false, this.type});
 }
 
 class ObjectProperty extends AbstractProperty {
-  String relatedTable;
-  Object defaultValue;
+  String? relatedTable;
+  Object? defaultValue;
 
   ObjectProperty();
 

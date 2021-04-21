@@ -14,7 +14,7 @@ enum OperationType {
 }
 
 extension OperationTypeExt on OperationType {
-  String get operationName => const {
+  String? get operationName => const {
         OperationType.CREATE: "create",
         OperationType.CREATE_BULK: "createBulk",
         OperationType.UPDATE: "update",

@@ -1,11 +1,11 @@
 part of backendless_sdk;
 
 class FileInfo {
-  String name;
-  int createdOn;
-  String publicUrl;
-  String url;
-  int size;
+  String? name;
+  int? createdOn;
+  String? publicUrl;
+  String? url;
+  int? size;
 
   FileInfo();
 

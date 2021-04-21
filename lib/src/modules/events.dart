@@ -9,7 +9,7 @@ class BackendlessEvents {
   BackendlessEvents._internal();
 
   /// This method does not support passing custom classes as arguments for now
-  Future<Map> dispatch(String eventName, Map eventArgs) =>
+  Future<Map?> dispatch(String eventName, Map eventArgs) =>
       _channel.invokeMethod("Backendless.Events.dispatch",
           <String, dynamic>{"eventName": eventName, "eventArgs": eventArgs});
 }

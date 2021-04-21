@@ -4,7 +4,7 @@ class LineString extends Geometry {
   static const String geoJsonType = "LineString";
   static const String wktType = "LINESTRING";
 
-  List<Point> points;
+  late List<Point> points;
 
   @override
   bool operator ==(other) =>
@@ -13,7 +13,8 @@ class LineString extends Geometry {
   @override
   int get hashCode => hashValues(points, srs);
 
-  LineString({this.points, SpatialReferenceSystem srs}) : super(srs: srs) {
+  LineString({List<Point>? points, SpatialReferenceSystem? srs})
+      : super(srs: srs) {
     this.points = points != null ? points : <Point>[];
   }
 

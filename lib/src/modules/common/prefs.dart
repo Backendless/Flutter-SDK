@@ -1,9 +1,9 @@
 part of backendless_sdk;
 
 class BackendlessPrefs {
-  AuthKeys authKeys;
-  Map<String, String> headers;
-  String url;
+  AuthKeys? authKeys;
+  late Map<String, String> headers;
+  late String url;
   static final BackendlessPrefs _instance = BackendlessPrefs._internal();
 
   factory BackendlessPrefs() => _instance;
@@ -17,9 +17,9 @@ class BackendlessPrefs {
     authKeys = new AuthKeys(applicationId, apiKey);
   }
 
-  get appId => authKeys.applicationId;
+  get appId => authKeys?.applicationId;
 
-  get apiKey => authKeys.apiKey;
+  get apiKey => authKeys?.apiKey;
 }
 
 class AuthKeys {

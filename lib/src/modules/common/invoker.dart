@@ -26,8 +26,8 @@ class Invoker {
     });
   }
 
-  static String _getUrl(String methodName) =>
-      "${prefs.url}/${prefs.appId}/${prefs.apiKey}/$methodName";
+  static Uri _getUrl(String methodName) =>
+      Uri.parse("${prefs.url}/${prefs.appId}/${prefs.apiKey}/$methodName");
 
   static String _encodeBody(dynamic body) {
     return jsonEncode(body, toEncodable: (dynamic nonEncodable) {

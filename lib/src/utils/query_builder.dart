@@ -9,7 +9,7 @@ class PagedQueryBuilder {
   PagedQueryBuilder(
       [this._pageSize = DEFAULT_PAGE_SIZE, this._offset = DEFAULT_OFFSET]);
 
-  set pageSize(int pageSize) {
+  set pageSize(int? pageSize) {
     _validatePageSize(pageSize);
     if (pageSize != null)
       _pageSize = pageSize;
@@ -17,9 +17,9 @@ class PagedQueryBuilder {
       _pageSize = DEFAULT_PAGE_SIZE;
   }
 
-  get pageSize => _pageSize;
+  int get pageSize => _pageSize;
 
-  set offset(int offset) {
+  set offset(int? offset) {
     _validateOffset(offset);
     if (offset != null)
       _offset = offset;
@@ -27,7 +27,7 @@ class PagedQueryBuilder {
       _offset = DEFAULT_OFFSET;
   }
 
-  get offset => _offset;
+  int get offset => _offset;
 
   void prepareNextPage() {
     int newOffset = _offset + _pageSize;
@@ -42,12 +42,12 @@ class PagedQueryBuilder {
   }
 }
 
-void _validateOffset(int offset) {
+void _validateOffset(int? offset) {
   if (offset != null && offset < 0)
     throw new ArgumentError("Offset cannot have a negative value.");
 }
 
-void _validatePageSize(int pageSize) {
+void _validatePageSize(int? pageSize) {
   if (pageSize != null && pageSize <= 0)
     throw new ArgumentError("Page size cannot have a negative value.");
 }

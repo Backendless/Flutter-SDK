@@ -8,13 +8,13 @@ class BackendlessCache {
   static final BackendlessCache _instance = new BackendlessCache._internal();
   BackendlessCache._internal();
 
-  Future<bool> contains(String key) => _channel.invokeMethod(
+  Future<bool?> contains(String key) => _channel.invokeMethod(
       "Backendless.Cache.contains", <String, dynamic>{"key": key});
 
   Future<void> delete(String key) => _channel
       .invokeMethod("Backendless.Cache.delete", <String, dynamic>{"key": key});
 
-  Future<void> expireAt(String key, {DateTime date, int timestamp}) {
+  Future<void> expireAt(String key, {DateTime? date, int? timestamp}) {
     checkArguments({"date": date}, {"timestamp": timestamp});
     return _channel.invokeMethod("Backendless.Cache.expireAt",
         <String, dynamic>{"key": key, "date": date, "timestamp": timestamp});
@@ -24,7 +24,7 @@ class BackendlessCache {
       "Backendless.Cache.expireIn",
       <String, dynamic>{"key": key, "seconds": seconds});
 
-  Future<T> get<T>(String key) async {
+  Future<T?> get<T>(String key) async {
     var result = await _channel
         .invokeMethod("Backendless.Cache.get", <String, dynamic>{"key": key});
 
@@ -35,7 +35,7 @@ class BackendlessCache {
     }
   }
 
-  Future<void> put<T>(String key, T object, [int timeToLive]) =>
+  Future<void> put<T>(String key, T object, [int? timeToLive]) =>
       _channel.invokeMethod("Backendless.Cache.put", <String, dynamic>{
         "key": key,
         "object": reflector.isCustomClass(object)

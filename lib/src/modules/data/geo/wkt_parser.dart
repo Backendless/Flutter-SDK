@@ -4,32 +4,30 @@ class WKTParser {
   static const _SPACE = " ";
   static const _POINT_COORDINATED_LEN = 2;
 
-  SpatialReferenceSystem srs;
+  SpatialReferenceSystem? srs;
 
-  WKTParser({SpatialReferenceSystem srs}) {
-    this.srs = srs != null ? srs : SpatialReferenceManager.defaultSrs;
-  }
+  WKTParser({this.srs = SpatialReferenceManager.defaultSrs});
 
   T read<T extends Geometry>(String wellKnownText) {
     final formatterWKT = wellKnownText.toUpperCase();
 
     if (formatterWKT.startsWith(Point.wktType))
-      return _readPoint(formatterWKT);
+      return _readPoint(formatterWKT) as T;
     else if (formatterWKT.startsWith(LineString.wktType))
-      return _readLineString(formatterWKT);
+      return _readLineString(formatterWKT) as T;
     else if (formatterWKT.startsWith(Polygon.wktType))
-      return _readPolygon(formatterWKT);
+      return _readPolygon(formatterWKT) as T;
     else
       throw ArgumentError("Unknown geometry type: $wellKnownText");
   }
 
-  Geometry _readPoint(String wellKnownText) {
+  Geometry? _readPoint(String wellKnownText) {
     final cleanedFromType = wellKnownText.replaceAll(Point.wktType, "").trim();
     final rawPoint = cleanedFromType.substring(1, cleanedFromType.length - 1);
     return _getPoint(rawPoint);
   }
 
-  Point _getPoint(String rawPoint) {
+  Point? _getPoint(String rawPoint) {
     final rawCoordinates = rawPoint.trim().split(WKTParser._SPACE);
     if (rawCoordinates.length != _POINT_COORDINATED_LEN) {
       return null;
@@ -51,7 +49,7 @@ class WKTParser {
 
   LineString _getLineString(String rawLineString) {
     final rawPoints = rawLineString.split(",");
-    final points = rawPoints.map(_getPoint).toList();
+    final points = rawPoints.map(_getPoint).toList() as List<Point>;
 
     return LineString(points: points, srs: srs);
   }

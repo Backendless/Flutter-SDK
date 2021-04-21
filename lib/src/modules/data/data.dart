@@ -34,7 +34,7 @@ class BackendlessData {
 
   IDataStore<T> withClass<T>() => new ClassDrivenDataStore<T>();
 
-  Future<Map> callStoredProcedure(
+  Future<Map?> callStoredProcedure(
           String procedureName, Map<String, Object> arguments) =>
       _channel.invokeMethod(
           "Backendless.Data.callStoredProcedure", <String, dynamic>{

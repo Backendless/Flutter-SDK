@@ -1,9 +1,9 @@
 part of backendless_sdk;
 
 class SpatialReferenceManager {
-  static SpatialReferenceSystem get defaultSrs => SpatialReferenceSystem.WGS84;
+  static const SpatialReferenceSystem defaultSrs = SpatialReferenceSystem.WGS84;
 
-  static int getSrsId(SpatialReferenceSystem srs) {
+  static int? getSrsId(SpatialReferenceSystem srs) {
     switch (srs) {
       case SpatialReferenceSystem.CARTESIAN:
         return (0);
@@ -25,7 +25,7 @@ class SpatialReferenceManager {
     }
   }
 
-  static String getSrsName(SpatialReferenceSystem srs) {
+  static String? getSrsName(SpatialReferenceSystem srs) {
     switch (srs) {
       case SpatialReferenceSystem.CARTESIAN:
         return ("Cartesian");
@@ -47,7 +47,7 @@ class SpatialReferenceManager {
     }
   }
 
-  static SpatialReferenceSystem srsById(int id) {
+  static SpatialReferenceSystem? srsById(int id) {
     for (SpatialReferenceSystem srs in SpatialReferenceSystem.values) {
       if (SpatialReferenceManager.getSrsId(srs) == id) {
         return (srs);
@@ -57,9 +57,6 @@ class SpatialReferenceManager {
   }
 
   static String srsToString(SpatialReferenceSystem srs) {
-    return SpatialReferenceManager.getSrsName(srs) +
-        "(" +
-        "${SpatialReferenceManager.getSrsId(srs)}" +
-        ")";
+    return "${SpatialReferenceManager.getSrsName(srs)}(${SpatialReferenceManager.getSrsId(srs)})";
   }
 }

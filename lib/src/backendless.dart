@@ -23,7 +23,10 @@ class Backendless {
     String apiKey;
     if (Platform.isAndroid)
       apiKey = androidApiKey;
-    else if (Platform.isIOS) apiKey = iosApiKey;
+    else if (Platform.isIOS)
+      apiKey = iosApiKey;
+    else
+      return;
 
     _prefs.initPreferences(applicationId, apiKey);
 
@@ -46,7 +49,7 @@ class Backendless {
 
   static String getUrl() => _prefs.url;
 
-  static Future<bool> isInitialized() =>
+  static Future<bool?> isInitialized() =>
       _channel.invokeMethod("Backendless.isInitialized");
 
   static Future<void> setUrl(String url) {
@@ -60,9 +63,9 @@ class Backendless {
           .cast<String, String>();
 
   static Future<void> setHeader(String value,
-      {String stringKey, HeadersEnum enumKey}) {
+      {String? stringKey, HeadersEnum? enumKey}) {
     checkArguments({"stringKey": stringKey}, {"enumKey": enumKey});
-    _prefs.headers[value] = (stringKey != null) ? stringKey : enumKey.header;
+    _prefs.headers[value] = (stringKey != null) ? stringKey : enumKey!.header!;
     return _channel.invokeMethod("Backendless.setHeader", <String, dynamic>{
       "value": value,
       "stringKey": stringKey,
@@ -70,9 +73,9 @@ class Backendless {
     });
   }
 
-  static Future<void> removeHeader({String stringKey, HeadersEnum enumKey}) {
+  static Future<void> removeHeader({String? stringKey, HeadersEnum? enumKey}) {
     checkArguments({"stringKey": stringKey}, {"enumKey": enumKey});
-    String key = (stringKey != null) ? stringKey : enumKey.header;
+    String key = (stringKey != null) ? stringKey : enumKey!.header!;
     _prefs.headers.remove(key);
     return _channel.invokeMethod("Backendless.removeHeader", <String, dynamic>{
       "stringKey": stringKey,

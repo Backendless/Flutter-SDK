@@ -1,7 +1,7 @@
 part of backendless_sdk;
 
 class PublishOptions {
-  String publisherId;
+  String? publisherId;
   Map<String, String> headers = new Map();
   static const String TEMPLATE_NAME = "template_name";
   static const String ANDROID_IMMEDIATE_PUSH = "android_immediate_push";
@@ -54,13 +54,13 @@ class PublishOptions {
 }
 
 class DeliveryOptions {
-  int pushBroadcast;
+  int? pushBroadcast;
   List<String> pushSinglecast = [];
-  String segmentQuery;
-  PublishPolicyEnum publishPolicy = PublishPolicyEnum.BOTH;
-  DateTime publishAt;
-  int repeatEvery;
-  DateTime repeatExpiresAt;
+  String? segmentQuery;
+  PublishPolicyEnum? publishPolicy = PublishPolicyEnum.BOTH;
+  DateTime? publishAt;
+  int? repeatEvery;
+  DateTime? repeatExpiresAt;
 
   DeliveryOptions();
 
@@ -91,18 +91,18 @@ class DeliveryOptions {
     this.publishPolicy = PublishPolicyEnum.BOTH;
     this.pushBroadcast = PushBroadcastMask.toIntMask(info.pushBroadcast);
     this.segmentQuery = info.query;
-    if (info.publishAt > 0)
-      this.publishAt = new DateTime.fromMillisecondsSinceEpoch(info.publishAt);
-    if (info.repeatEvery > 0) this.repeatEvery = info.repeatEvery;
-    if (info.repeatExpiresAt > 0)
+    if (info.publishAt! > 0)
+      this.publishAt = new DateTime.fromMillisecondsSinceEpoch(info.publishAt!);
+    if (info.repeatEvery! > 0) this.repeatEvery = info.repeatEvery;
+    if (info.repeatExpiresAt! > 0)
       this.repeatExpiresAt =
-          new DateTime.fromMillisecondsSinceEpoch(info.repeatExpiresAt);
-    if (info.pushSinglecast != null && info.pushSinglecast.length > 0)
-      this.pushSinglecast = info.pushSinglecast;
+          new DateTime.fromMillisecondsSinceEpoch(info.repeatExpiresAt!);
+    if (info.pushSinglecast != null && info.pushSinglecast!.length > 0)
+      this.pushSinglecast = info.pushSinglecast!;
     if (info.publishPolicy != null) {
       try {
         this.publishPolicy = stringToEnum(
-            PublishPolicyEnum.values, info.publishPolicy.toUpperCase());
+            PublishPolicyEnum.values, info.publishPolicy!.toUpperCase());
       } catch (e) {
         this.publishPolicy = PublishPolicyEnum.BOTH;
       }
@@ -116,18 +116,18 @@ class DeliveryOptions {
 }
 
 class PublishMessageInfo {
-  String messageId;
-  int timestamp;
-  Object message;
-  String publisherId;
-  String subtopic;
-  List<String> pushSinglecast;
-  String pushBroadcast;
-  String publishPolicy;
-  String query;
-  int publishAt;
-  int repeatEvery;
-  int repeatExpiresAt;
+  String? messageId;
+  int? timestamp;
+  Object? message;
+  String? publisherId;
+  String? subtopic;
+  List<String>? pushSinglecast;
+  String? pushBroadcast;
+  String? publishPolicy;
+  String? query;
+  int? publishAt;
+  int? repeatEvery;
+  int? repeatExpiresAt;
   Map<String, String> headers = new Map();
 
   PublishMessageInfo();
@@ -172,7 +172,7 @@ class PushBroadcastMask {
   static const int OSX = 8;
   static const int ALL = 15;
 
-  static int toIntMask(String pushBroadcast) {
+  static int toIntMask(String? pushBroadcast) {
     if (pushBroadcast == null) {
       return 0;
     } else {

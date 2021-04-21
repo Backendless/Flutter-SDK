@@ -4,13 +4,11 @@ class GeoJSONParser {
   static const _TYPE = "type";
   static const _COORDINATES = "coordinates";
 
-  SpatialReferenceSystem srs;
+  SpatialReferenceSystem? srs;
 
-  GeoJSONParser({SpatialReferenceSystem srs}) {
-    this.srs = srs != null ? srs : SpatialReferenceManager.defaultSrs;
-  }
+  GeoJSONParser({this.srs = SpatialReferenceManager.defaultSrs});
 
-  T read<T extends Geometry>(String geoJson) {
+  T? read<T extends Geometry>(String geoJson) {
     Map jsonMap = json.decode(geoJson);
 
     final type = jsonMap[GeoJSONParser._TYPE];
@@ -18,11 +16,11 @@ class GeoJSONParser {
 
     switch (type) {
       case Point.geoJsonType:
-        return _readPoint(rawCoordinates);
+        return _readPoint(rawCoordinates) as T;
       case LineString.geoJsonType:
-        return _readLineString(rawCoordinates);
+        return _readLineString(rawCoordinates) as T;
       case Polygon.geoJsonType:
-        return _readPolygon(rawCoordinates);
+        return _readPolygon(rawCoordinates) as T;
       default:
         return null;
     }

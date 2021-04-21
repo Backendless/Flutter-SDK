@@ -1,10 +1,10 @@
 part of backendless_sdk;
 
 abstract class Operation<T> {
-  OperationType operationType;
-  String table;
-  String opResultId;
-  T payload;
+  OperationType? operationType;
+  String? table;
+  String? opResultId;
+  T? payload;
 
   Operation(this.operationType, this.table, this.opResultId);
 
@@ -12,7 +12,7 @@ abstract class Operation<T> {
       this.operationType, this.table, this.opResultId, this.payload);
 
   Map toJson() => {
-        "operationType": describeEnum(operationType),
+        "operationType": describeEnum(operationType!),
         "table": table,
         "payload": payload,
         "opResultId": opResultId,

@@ -4,14 +4,16 @@ class Polygon extends Geometry {
   static const String geoJsonType = "Polygon";
   static const String wktType = "POLYGON";
 
-  LineString boundary;
-  List<LineString> holes;
+  late LineString boundary;
+  late List<LineString> holes;
 
   Polygon(
-      {LineString boundary, List<LineString> holes, SpatialReferenceSystem srs})
+      {LineString? boundary,
+      List<LineString>? holes,
+      SpatialReferenceSystem? srs})
       : super(srs: srs) {
     this.boundary = boundary != null ? boundary : LineString();
-    this.holes = holes != null ? holes : <LineString>[];
+    this.holes = holes != null ? holes : [];
   }
 
   @override

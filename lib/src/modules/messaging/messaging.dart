@@ -16,7 +16,7 @@ class BackendlessMessaging {
   static final Map<int, EventCallback> _userStatusCallbacks =
       <int, EventCallback>{};
   int _channelHandle = 0;
-  MessageHandler _onMessage;
+  MessageHandler? _onMessage;
 
   factory BackendlessMessaging() => _instance;
   static final BackendlessMessaging _instance =
@@ -27,21 +27,21 @@ class BackendlessMessaging {
     _fcmServiceChannel.setMethodCallHandler(_handleMethod);
   }
 
-  Future<MessageStatus> cancel(String messageId) =>
+  Future<MessageStatus?> cancel(String messageId) =>
       _messagingChannel.invokeMethod("Backendless.Messaging.cancel",
           <String, dynamic>{"messageId": messageId});
 
-  Future<DeviceRegistration> getDeviceRegistration() => _messagingChannel
+  Future<DeviceRegistration?> getDeviceRegistration() => _messagingChannel
       .invokeMethod("Backendless.Messaging.getDeviceRegistration");
 
-  Future<MessageStatus> getMessageStatus(String messageId) =>
+  Future<MessageStatus?> getMessageStatus(String messageId) =>
       _messagingChannel.invokeMethod("Backendless.Messaging.getMessageStatus",
           <String, dynamic>{"messageId": messageId});
 
-  Future<MessageStatus> publish<T>(T message,
-          {String channelName,
-          PublishOptions publishOptions,
-          DeliveryOptions deliveryOptions}) =>
+  Future<MessageStatus?> publish<T>(T message,
+          {String? channelName,
+          PublishOptions? publishOptions,
+          DeliveryOptions? deliveryOptions}) =>
       _messagingChannel
           .invokeMethod("Backendless.Messaging.publish", <String, dynamic>{
         "message": reflector.isCustomClass(message)
@@ -52,25 +52,27 @@ class BackendlessMessaging {
         "deliveryOptions": deliveryOptions
       });
 
-  Future<MessageStatus> pushWithTemplate(String templateName,
-          [Map templateValues]) =>
+  Future<MessageStatus?> pushWithTemplate(String templateName,
+          [Map? templateValues]) =>
       _messagingChannel.invokeMethod(
           "Backendless.Messaging.pushWithTemplate", <String, dynamic>{
         "templateName": templateName,
         "templateValues": templateValues
       });
 
-  Future<DeviceRegistrationResult> registerDevice(
-      [List<String> channels, DateTime expiration, MessageHandler onMessage]) {
+  Future<DeviceRegistrationResult?> registerDevice(
+      [List<String>? channels,
+      DateTime? expiration,
+      MessageHandler? onMessage]) {
     _onMessage = onMessage;
     return _messagingChannel.invokeMethod(
         "Backendless.Messaging.registerDevice",
         <String, dynamic>{"channels": channels, "expiration": expiration});
   }
 
-  Future<MessageStatus> sendEmail(
+  Future<MessageStatus?> sendEmail(
           String subject, BodyParts bodyParts, List<String> recipients,
-          [List<String> attachments]) =>
+          [List<String>? attachments]) =>
       _messagingChannel
           .invokeMethod("Backendless.Messaging.sendEmail", <String, dynamic>{
         "textMessage": bodyParts.textMessage,
@@ -80,7 +82,7 @@ class BackendlessMessaging {
         "attachments": attachments
       });
 
-  Future<MessageStatus> sendHTMLEmail(
+  Future<MessageStatus?> sendHTMLEmail(
           String subject, String messageBody, List<String> recipients) =>
       _messagingChannel.invokeMethod(
           "Backendless.Messaging.sendHTMLEmail", <String, dynamic>{
@@ -89,7 +91,7 @@ class BackendlessMessaging {
         "recipients": recipients
       });
 
-  Future<MessageStatus> sendTextEmail(
+  Future<MessageStatus?> sendTextEmail(
           String subject, String messageBody, List<String> recipients) =>
       _messagingChannel.invokeMethod(
           "Backendless.Messaging.sendTextEmail", <String, dynamic>{
@@ -98,13 +100,13 @@ class BackendlessMessaging {
         "recipients": recipients
       });
 
-  Future<int> unregisterDevice([List<String> channels]) =>
+  Future<int?> unregisterDevice([List<String>? channels]) =>
       _messagingChannel.invokeMethod("Backendless.Messaging.unregisterDevice",
           <String, dynamic>{"channels": channels});
 
-  Future<MessageStatus> sendEmailFromTemplate(
+  Future<MessageStatus?> sendEmailFromTemplate(
           String templateName, EmailEnvelope envelope,
-          [Map<String, String> templateValues]) =>
+          [Map<String, String>? templateValues]) =>
       _messagingChannel.invokeMethod(
           "Backendless.Messaging.sendEmailFromTemplate", <String, dynamic>{
         "templateName": templateName,
@@ -112,7 +114,8 @@ class BackendlessMessaging {
         "templateValues": templateValues
       });
 
-  Future<Channel> subscribe([String channelName = DEFAULT_CHANNEL_NAME]) async {
+  Future<Channel?> subscribe(
+      [String channelName = DEFAULT_CHANNEL_NAME]) async {
     int handle = _channelHandle++;
     return _messagingChannel.invokeMethod(
         "Backendless.Messaging.subscribe", <String, dynamic>{
@@ -128,7 +131,7 @@ class BackendlessMessaging {
     });
   }
 
-  Future<dynamic> _handleMethod(MethodCall call) async {
+  Future<dynamic?> _handleMethod(MethodCall call) async {
     if (call.method.contains("EventResponse")) {
       Map<dynamic, dynamic> arguments = call.arguments;
       int handle = arguments["handle"];
@@ -136,16 +139,16 @@ class BackendlessMessaging {
 
       switch (call.method) {
         case ("Backendless.Messaging.Channel.Join.EventResponse"):
-          _joinCallbacks[handle].handleResponse();
+          _joinCallbacks[handle]?.handleResponse();
           break;
         case ("Backendless.Messaging.Channel.Message.EventResponse"):
-          _messageCallbacks[handle].handleResponse(response);
+          _messageCallbacks[handle]?.handleResponse(response);
           break;
         case ("Backendless.Messaging.Channel.Command.EventResponse"):
-          _commandCallbacks[handle].handleResponse(response);
+          _commandCallbacks[handle]?.handleResponse(response);
           break;
         case ("Backendless.Messaging.Channel.UserStatus.EventResponse"):
-          _userStatusCallbacks[handle].handleResponse(response);
+          _userStatusCallbacks[handle]?.handleResponse(response);
           break;
       }
     } else if (call.method.contains("EventFault")) {
@@ -154,21 +157,21 @@ class BackendlessMessaging {
 
       switch (call.method) {
         case ("Backendless.Messaging.Channel.Join.EventFault"):
-          _joinCallbacks[handle].handleFault(fault);
+          _joinCallbacks[handle]?.handleFault(fault);
           break;
         case ("Backendless.Messaging.Channel.Message.EventFault"):
-          _messageCallbacks[handle].handleFault(fault);
+          _messageCallbacks[handle]?.handleFault(fault);
           break;
         case ("Backendless.Messaging.Channel.Command.EventFault"):
-          _commandCallbacks[handle].handleFault(fault);
+          _commandCallbacks[handle]?.handleFault(fault);
           break;
         case ("Backendless.Messaging.Channel.UserStatus.EventFault"):
-          _userStatusCallbacks[handle].handleFault(fault);
+          _userStatusCallbacks[handle]?.handleFault(fault);
           break;
       }
     } else if (call.method == "onMessage") {
       if (_onMessage != null) {
-        _onMessage(call.arguments.cast<String, dynamic>());
+        _onMessage!(call.arguments.cast<String, dynamic>());
       }
     }
   }

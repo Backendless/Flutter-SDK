@@ -20,24 +20,27 @@ class MessagingCallHandler {
   Future<dynamic> handleMethodCall(MethodCall call) {
     switch (call.method) {
       case "Backendless.Messaging.cancel":
-        return promiseToFuture(cancel(call.arguments['messageId']))
-            .then((value) => MessageStatus.fromJson(convertFromJs(value)));
+        return promiseToFuture(cancel(call.arguments['messageId'])).then(
+            (value) => MessageStatus.fromJson(convertFromJs(value) as Map));
       case "Backendless.Messaging.getMessageStatus":
         return promiseToFuture(getMessageStatus(call.arguments['messageId']))
-            .then((value) => MessageStatus.fromJson(convertFromJs(value)));
+            .then(
+                (value) => MessageStatus.fromJson(convertFromJs(value) as Map));
       case "Backendless.Messaging.publish":
-        PublishOptions publishOptions = call.arguments['publishOptions'];
-        DeliveryOptions deliveryOptions = call.arguments['deliveryOptions'];
+        PublishOptions? publishOptions = call.arguments['publishOptions'];
+        DeliveryOptions? deliveryOptions = call.arguments['deliveryOptions'];
         return promiseToFuture(publish(
                 call.arguments['channelName'],
                 call.arguments['message'],
-                convertToJs(publishOptions?.toJson()),
-                convertToJs(deliveryOptions?.toJson())))
-            .then((value) => MessageStatus.fromJson(convertFromJs(value)));
+                convertToJs(publishOptions?.toJson() as Map),
+                convertToJs(deliveryOptions?.toJson() as Map)))
+            .then(
+                (value) => MessageStatus.fromJson(convertFromJs(value) as Map));
       case "Backendless.Messaging.pushWithTemplate":
         return promiseToFuture(pushWithTemplate(call.arguments['templateName'],
                 convertToJs(call.arguments['templateValues'])))
-            .then((value) => MessageStatus.fromJson(convertFromJs(value)));
+            .then(
+                (value) => MessageStatus.fromJson(convertFromJs(value) as Map));
       case "Backendless.Messaging.sendEmail":
         return promiseToFuture(sendEmail(
                 call.arguments['subject'],
@@ -47,21 +50,24 @@ class MessagingCallHandler {
                 }),
                 convertToJs(call.arguments['recipients']),
                 convertToJs(call.arguments['attachments'])))
-            .then((value) => MessageStatus.fromJson(convertFromJs(value)));
+            .then(
+                (value) => MessageStatus.fromJson(convertFromJs(value) as Map));
       case "Backendless.Messaging.sendHTMLEmail":
         return promiseToFuture(sendEmail(
                 call.arguments['subject'],
                 convertToJs({'htmlmessage': call.arguments['messageBody']}),
                 convertToJs(call.arguments['recipients']),
                 null))
-            .then((value) => MessageStatus.fromJson(convertFromJs(value)));
+            .then(
+                (value) => MessageStatus.fromJson(convertFromJs(value) as Map));
       case "Backendless.Messaging.sendTextEmail":
         return promiseToFuture(sendEmail(
                 call.arguments['subject'],
                 convertToJs({'textmessage': call.arguments['messageBody']}),
                 convertToJs(call.arguments['recipients']),
                 null))
-            .then((value) => MessageStatus.fromJson(convertFromJs(value)));
+            .then(
+                (value) => MessageStatus.fromJson(convertFromJs(value) as Map));
       case "Backendless.Messaging.sendEmailFromTemplate":
         EmailEnvelope emailEnvelope = call.arguments['envelope'];
         final emailEnvelopeMap = {
@@ -73,12 +79,12 @@ class MessagingCallHandler {
           call.arguments['templateName'],
           EmailEnvelopeJs(convertToJs(emailEnvelopeMap)),
           convertToJs(call.arguments['templateValues']),
-        )).then((value) => MessageStatus.fromJson(convertFromJs(value)));
+        )).then((value) => MessageStatus.fromJson(convertFromJs(value) as Map));
 
       case "Backendless.Messaging.subscribe":
         ChannelJs channel = subscribe(call.arguments['channelName']);
         channels[call.arguments['channelHandle']] = channel;
-        return null;
+        return Future(() => null);
       case "Backendless.Messaging.Channel.addMessageListener":
         return Future(() => addMessageListener(call));
       default:
@@ -96,7 +102,7 @@ class MessagingCallHandler {
 
     int messageHandle = _nextMessageHandle++;
 
-    ChannelJs channel = channels[channelHandle];
+    ChannelJs channel = channels[channelHandle]!;
 
     Function callback = getCallback("Message", messageHandle, messageType);
     channel.addMessageListener(selector, allowInterop(callback));
@@ -106,7 +112,7 @@ class MessagingCallHandler {
 
   Function getCallback(String method, int handle, String messageType) {
     return (jsResponse) {
-      Map response = convertFromJs(jsResponse);
+      Map response = convertFromJs(jsResponse) as Map;
       Map args = {"handle": handle};
       switch (messageType) {
         case 'String':

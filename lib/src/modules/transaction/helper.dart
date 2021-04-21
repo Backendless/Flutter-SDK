@@ -21,7 +21,7 @@ class TransactionHelper {
     return new OpResult(tableName, operationType, operationResultId);
   }
 
-  static List<Map> convertInstancesToMaps<E>(List<E> instances) {
+  static List<Map?> convertInstancesToMaps<E>(List<E?> instances) {
     if (reflector.canReflectType(E))
       return instances.map((e) => reflector.serialize(e)).toList();
     throw ArgumentError("Serialization error. Cannot serialize $E");
@@ -57,8 +57,8 @@ class TransactionHelper {
     return referenceToObjectId;
   }
 
-  static void makeReferenceToValueFromOpResult(Map map) {
-    map.forEach((key, value) {
+  static void makeReferenceToValueFromOpResult(Map? map) {
+    map?.forEach((key, value) {
       if (value is OpResult) {
         if (OperationTypeExt.supportIntResultType
             .contains(value.operationType)) {

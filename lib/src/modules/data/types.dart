@@ -10,7 +10,7 @@ class Types {
     serverMappings[serverClassName] = clientClassName;
   }
 
-  static String getMappedClientClass(String serverClassName) {
+  static String? getMappedClientClass(String serverClassName) {
     if (serverMappings.containsKey(serverClassName)) {
       return serverMappings[serverClassName];
     } else {
@@ -18,7 +18,7 @@ class Types {
     }
   }
 
-  static String getMappedServerClass(String clientClassName) {
+  static String? getMappedServerClass(String clientClassName) {
     if (clientMappings.containsKey(clientClassName)) {
       return clientMappings[clientClassName];
     } else {
@@ -37,7 +37,7 @@ class Types {
     return columnName;
   }
 
-  static String getPropertyNameForColumn(
+  static String? getPropertyNameForColumn(
       String columnName, Map<String, DeclarationMirror> declarations) {
     for (var entry in declarations.entries) {
       if (entry.value is VariableMirror) {

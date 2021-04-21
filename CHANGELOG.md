@@ -1,3 +1,8 @@
+# 6.4.0
+
+* Support null safety
+* Change minimum SDK constraint to 2.12.0
+
 # 6.3.0
 
 * Add BulkCreateListener for Data RT

@@ -14,22 +14,22 @@ class BackendlessFiles {
       if (call.method == "Backendless.Data.UploadCallback") {
         int handle = call.arguments["handle"];
         int progress = call.arguments["progress"];
-        _uploadCallbacks[handle].onProgressUpdate(progress);
+        _uploadCallbacks[handle]?.onProgressUpdate(progress);
       }
     });
   }
 
-  Future<String> copyFile(String sourcePathName, String targetPath) =>
+  Future<String?> copyFile(String sourcePathName, String targetPath) =>
       _channel.invokeMethod("Backendless.Files.copyFile", <String, dynamic>{
         "sourcePathName": sourcePathName,
         "targetPath": targetPath
       });
 
-  Future<bool> exists(String path) => _channel.invokeMethod(
+  Future<bool?> exists(String path) => _channel.invokeMethod(
       "Backendless.Files.exists", <String, dynamic>{"path": path});
 
-  Future<int> getFileCount(String path,
-          [String pattern, bool recursive, bool countDirectories]) =>
+  Future<int?> getFileCount(String path,
+          [String? pattern, bool? recursive, bool? countDirectories]) =>
       _channel.invokeMethod("Backendless.Files.getFileCount", <String, dynamic>{
         "path": path,
         "pattern": pattern,
@@ -37,8 +37,8 @@ class BackendlessFiles {
         "countDirectories": countDirectories
       });
 
-  Future<List<FileInfo>> listing(String path,
-      [String pattern, bool recursive, int pagesize, int offset]) async {
+  Future<List<FileInfo>?> listing(String path,
+      [String? pattern, bool? recursive, int? pagesize, int? offset]) async {
     if (pattern != null && recursive == null)
       throw new ArgumentError(
           "Argument 'pattern' should be defined with argument 'recursive'");
@@ -54,20 +54,20 @@ class BackendlessFiles {
       "pagesize": pagesize,
       "offset": offset
     }))
-        .cast<FileInfo>();
+        ?.cast<FileInfo>();
   }
 
-  Future<String> moveFile(String sourcePathName, String targetPath) =>
+  Future<String?> moveFile(String sourcePathName, String targetPath) =>
       _channel.invokeMethod("Backendless.Files.moveFile", <String, dynamic>{
         "sourcePathName": sourcePathName,
         "targetPath": targetPath
       });
 
-  Future<int> remove(String fileUrl) async => _channel.invokeMethod(
+  Future<int?> remove(String fileUrl) async => _channel.invokeMethod(
       "Backendless.Files.remove", <String, dynamic>{"fileUrl": fileUrl});
 
-  Future<int> removeDirectory(String directoryPath,
-      [String pattern, bool recursive]) {
+  Future<int?> removeDirectory(String directoryPath,
+      [String? pattern, bool? recursive]) {
     if (pattern != null && recursive == null)
       throw new ArgumentError(
           "Argument 'pattern' should be defined with argument 'recursive'");
@@ -80,14 +80,14 @@ class BackendlessFiles {
     });
   }
 
-  Future<String> renameFile(String oldPathName, String newName) =>
+  Future<String?> renameFile(String oldPathName, String newName) =>
       _channel.invokeMethod("Backendless.Files.renameFile",
           <String, dynamic>{"oldPathName": oldPathName, "newName": newName});
 
-  Future<String> saveFile(Uint8List fileContent,
-      {String path,
-      String fileName,
-      String filePathName,
+  Future<String?> saveFile(Uint8List fileContent,
+      {String? path,
+      String? fileName,
+      String? filePathName,
       bool overwrite = false}) {
     checkArguments(
         {"path": path, "fileName": fileName}, {"filePathName": filePathName});
@@ -102,8 +102,8 @@ class BackendlessFiles {
     });
   }
 
-  Future<String> upload(File file, String path,
-      {bool overwrite, void onProgressUpdate(int progress)}) {
+  Future<String?> upload(File file, String path,
+      {bool? overwrite, void onProgressUpdate(int progress)?}) {
     Map<String, dynamic> args = <String, dynamic>{
       "filePath": file.path,
       "path": path,

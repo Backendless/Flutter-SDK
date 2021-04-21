@@ -10,13 +10,13 @@ class Logger {
 
   Future<void> info(String message) => _invokeLoggerMethod("info", message);
 
-  Future<void> warn(String message, [Exception e]) => _invokeLoggerMethod(
+  Future<void> warn(String message, [Exception? e]) => _invokeLoggerMethod(
       "warn", message + (e != null ? " : ${e.toString()}" : ""));
 
-  Future<void> error(String message, [Exception e]) => _invokeLoggerMethod(
+  Future<void> error(String message, [Exception? e]) => _invokeLoggerMethod(
       "error", message + (e != null ? " : ${e.toString()}" : ""));
 
-  Future<void> fatal(String message, [Exception e]) => _invokeLoggerMethod(
+  Future<void> fatal(String message, [Exception? e]) => _invokeLoggerMethod(
       "fatal", message + (e != null ? " : ${e.toString()}" : ""));
 
   Future<void> trace(String message) => _invokeLoggerMethod("trace", message);

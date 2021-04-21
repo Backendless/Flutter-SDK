@@ -1,8 +1,8 @@
 part of backendless_sdk;
 
 class TransactionOperationError {
-  Operation operation;
-  String message;
+  Operation? operation;
+  String? message;
 
   TransactionOperationError(this.operation, this.message);
 
@@ -10,9 +10,7 @@ class TransactionOperationError {
   String toString() {
     return "TransactionOperationError{operation=" +
         operation.toString() +
-        ", message=" +
-        message +
-        "}";
+        ", message=$message}";
   }
 
   TransactionOperationError.fromJson(Map json) {
