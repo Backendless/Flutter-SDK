@@ -1,4 +1,4 @@
-# 6.4.0
+# 7.0.0-nullsafety.0
 
 * Support null safety
 * Change minimum SDK constraint to 2.12.0
