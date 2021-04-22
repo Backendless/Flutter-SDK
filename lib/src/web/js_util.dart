@@ -42,7 +42,7 @@ Object _convertDataTreeFromJs(data) {
   return _convert(data);
 }
 
-dynamic convertToJs(Object object) {
+dynamic convertToJs(Object? object) {
   if (object == null) return null;
   if ((object is! Map) && (object is! Iterable)) {
     throw ArgumentError("object must be a Map or Iterable");

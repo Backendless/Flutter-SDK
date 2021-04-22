@@ -7,19 +7,14 @@ class SpatialReferenceManager {
     switch (srs) {
       case SpatialReferenceSystem.CARTESIAN:
         return (0);
-        break;
       case SpatialReferenceSystem.PULKOVO_1995:
         return (4200);
-        break;
       case SpatialReferenceSystem.WGS84:
         return (4326);
-        break;
       case SpatialReferenceSystem.WGS84_PSEUDO_MERCATOR:
         return (3857);
-        break;
       case SpatialReferenceSystem.WGS84_WORLD_MERCATOR:
         return (3395);
-        break;
       default:
         return null;
     }
@@ -29,19 +24,14 @@ class SpatialReferenceManager {
     switch (srs) {
       case SpatialReferenceSystem.CARTESIAN:
         return ("Cartesian");
-        break;
       case SpatialReferenceSystem.PULKOVO_1995:
         return ("Pulkovo 1995");
-        break;
       case SpatialReferenceSystem.WGS84:
         return ("WGS 84");
-        break;
       case SpatialReferenceSystem.WGS84_PSEUDO_MERCATOR:
         return ("WGS 84 / Pseudo-Mercator");
-        break;
       case SpatialReferenceSystem.WGS84_WORLD_MERCATOR:
         return ("WGS 84 / World Mercator");
-        break;
       default:
         return null;
     }

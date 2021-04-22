@@ -6,7 +6,7 @@ class UnitOfWorkExecutor {
   UnitOfWorkExecutor(this.unitOfWork);
 
   Future<UnitOfWorkResult> execute() async {
-    if (unitOfWork.operations == null || unitOfWork.operations.isEmpty)
+    if (unitOfWork.operations.isEmpty)
       throw new ArgumentError(
           "List of operations in unitOfWork can not be null or empty");
 

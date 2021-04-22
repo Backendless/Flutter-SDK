@@ -30,13 +30,11 @@ class Polygon extends Geometry {
     result += boundary.getWktCoordinatePairs();
     result += "),";
 
-    if (holes != null) {
-      holes.forEach((h) {
-        result += "(";
-        result += h.getWktCoordinatePairs();
-        result += "),";
-      });
-    }
+    holes.forEach((h) {
+      result += "(";
+      result += h.getWktCoordinatePairs();
+      result += "),";
+    });
 
     result = result.substring(0, result.length - 1);
 
@@ -51,12 +49,10 @@ class Polygon extends Geometry {
     result += boundary.getJsonCoordinatePairs();
     result += ",";
 
-    if (holes != null) {
-      holes.forEach((h) {
-        result += h.getJsonCoordinatePairs();
-        result += "),";
-      });
-    }
+    holes.forEach((h) {
+      result += h.getJsonCoordinatePairs();
+      result += "),";
+    });
 
     result = result.substring(0, result.length - 1);
     result += "]";

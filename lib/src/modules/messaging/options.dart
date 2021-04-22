@@ -47,9 +47,7 @@ class PublishOptions {
 
   PublishOptions.from(PublishMessageInfo info) {
     this.publisherId = info.publisherId;
-    if (info.headers != null) {
-      this.headers.addAll(info.headers);
-    }
+    this.headers.addAll(info.headers);
   }
 }
 
