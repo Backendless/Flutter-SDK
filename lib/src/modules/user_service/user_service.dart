@@ -77,7 +77,7 @@ class BackendlessUserService {
       "accessToken": token,
       "accessTokenSecret": tokenSecret,
       "fieldsMapping": fieldsMapping,
-      "guestUser": guestUser.properties,
+      "guestUser": guestUser?.properties,
     }).then((value) => BackendlessUser.fromJson(value));
   }
 
@@ -87,7 +87,7 @@ class BackendlessUserService {
     return Invoker.invoke("users/social/$providerCode/login", {
       "accessToken": token,
       "fieldsMapping": fieldsMapping,
-      "guestUser": guestUser.properties,
+      "guestUser": guestUser?.properties,
     }).then((value) => BackendlessUser.fromJson(value));
   }
 }

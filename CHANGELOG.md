@@ -1,3 +1,7 @@
+# 6.3.2
+
+* Fixes and improvements.
+
 # 6.3.1
 
 * Fix social login with guest user
