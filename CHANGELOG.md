@@ -1,3 +1,7 @@
+# 6.3.1
+
+* Fix social login with guest user
+
 # 6.3.0
 
 * Add BulkCreateListener for Data RT
