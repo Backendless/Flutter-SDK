@@ -9,13 +9,10 @@ class BackendlessUser {
   BackendlessUser();
 
   BackendlessUser.fromJson(Map json) {
-    if (json.containsKey('properties'))
-      _properties = json['properties'].cast<String, dynamic>();
-    else
-      _properties = json.cast<String, dynamic>();
+    _properties = json.cast<String, dynamic>();
   }
 
-  Map toJson() => {"properties": _properties};
+  Map toJson() => _properties;
 
   get properties => Map.from(_properties);
 
