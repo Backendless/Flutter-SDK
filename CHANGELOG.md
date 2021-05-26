@@ -3,6 +3,20 @@
 * Support null safety
 * Change minimum SDK constraint to 2.12.0
 
+# 6.3.3
+
+* Handle `stayLoggedIn` parameter for `loginWithOauth` methods
+* Fix `BackendlessUser` encoding
+* Add `setCurrentUser()` method. `currentUser()` method renamed to `getCurrentUser()`
+
+# 6.3.2
+
+* Fixes and improvements.
+
+# 6.3.1
+
+* Fix social login with guest user
+
 # 6.3.0
 
 * Add BulkCreateListener for Data RT

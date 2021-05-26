@@ -104,15 +104,11 @@ class BackendlessReader: FlutterStandardReader {
     // MARK: -
     // MARK: - Map User
     private func mapUser(_ json: [String: Any]) -> [String: Any] {
-        guard let jsonFromProperties = json["properties"] as? [String: Any] else {
-            return [:]
-        }
-        
         var result: [String: Any] = [:]
         var properties: [String: Any] = [:]
         let userFields = ["email", "name", "objectId", "userToken", "password"]
         
-        jsonFromProperties.forEach { (key, value) in
+        json.forEach { (key, value) in
             if userFields.contains(key) {
                 result[key] = value
                 if key == "objectId" {

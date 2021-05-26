@@ -58,7 +58,7 @@ class TestUserService {
       });
 
       test("Default Current User", () async {
-        final user = await userService.currentUser();
+        final user = await userService.getCurrentUser();
         expect(user, null);
       });
 
@@ -111,7 +111,7 @@ class TestUserService {
       });
 
       test("Update User", () async {
-        final userToUpdate = await userService.currentUser();
+        final userToUpdate = await userService.getCurrentUser();
         userToUpdate.email = updatedEmail;
         userToUpdate.password = updatedPass;
 
@@ -121,7 +121,7 @@ class TestUserService {
 
       test("Logout First", () async {
         await userService.logout();
-        final user = await userService.currentUser();
+        final user = await userService.getCurrentUser();
 
         expect(user, null);
       });
@@ -134,7 +134,7 @@ class TestUserService {
       });
 
       test("Current User After Login", () async {
-        final user = await userService.currentUser();
+        final user = await userService.getCurrentUser();
 
         expect(user, isNotNull);
       });
@@ -172,7 +172,7 @@ class TestUserService {
 
       test("Logout Second", () async {
         await userService.logout();
-        final user = await userService.currentUser();
+        final user = await userService.getCurrentUser();
 
         expect(user, null);
       });
