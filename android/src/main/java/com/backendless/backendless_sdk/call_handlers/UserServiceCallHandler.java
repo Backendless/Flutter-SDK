@@ -66,6 +66,12 @@ public class UserServiceCallHandler implements MethodChannel.MethodCallHandler {
             case "Backendless.UserService.setUserToken":
                 setUserToken(call, result);
                 break;
+            case "Backendless.UserService.loginWithOauth1":
+                loginWithOauth1(call, result);
+                break;
+            case "Backendless.UserService.loginWithOauth2":
+                loginWithOauth2(call, result);
+                break;
             default:
                 result.notImplemented();
         }
@@ -154,5 +160,36 @@ public class UserServiceCallHandler implements MethodChannel.MethodCallHandler {
         String userToken = call.argument("userToken");
         HeadersManager.getInstance().addHeader(HeadersManager.HeadersEnum.USER_TOKEN_KEY, userToken);
         result.success(null);
+    }
+
+    private void loginWithOauth1(MethodCall call, MethodChannel.Result result) {
+        String authProviderCode = call.argument("authProviderCode");
+        String authToken = call.argument("authToken");
+        String authTokenSecret = call.argument("authTokenSecret");
+        Map fieldsMappings = call.argument("fieldsMappings");
+        boolean stayLoggedIn = call.argument("stayLoggedIn");
+        BackendlessUser guestUser = call.argument("guestUser");
+
+        FlutterCallback<BackendlessUser> callback = new FlutterCallback<>(result);
+
+        if (guestUser != null)
+            Backendless.UserService.loginWithOAuth1(authProviderCode, authToken, authTokenSecret, guestUser, fieldsMappings, callback, stayLoggedIn);
+        else
+            Backendless.UserService.loginWithOAuth1(authProviderCode, authToken, authTokenSecret, fieldsMappings, callback, stayLoggedIn);
+    }
+
+    private void loginWithOauth2(MethodCall call, MethodChannel.Result result) {
+        String authProviderCode = call.argument("authProviderCode");
+        String accessToken = call.argument("accessToken");
+        Map fieldsMappings = call.argument("fieldsMappings");
+        boolean stayLoggedIn = call.argument("stayLoggedIn");
+        BackendlessUser guestUser = call.argument("guestUser");
+
+        FlutterCallback<BackendlessUser> callback = new FlutterCallback<>(result);
+
+        if (guestUser != null)
+            Backendless.UserService.loginWithOAuth2(authProviderCode, accessToken, guestUser, fieldsMappings, callback, stayLoggedIn);
+        else
+            Backendless.UserService.loginWithOAuth2(authProviderCode, accessToken, fieldsMappings, callback, stayLoggedIn);
     }
 }

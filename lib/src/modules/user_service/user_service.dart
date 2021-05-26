@@ -67,27 +67,37 @@ class BackendlessUserService {
       _channel.invokeMethod("Backendless.UserService.loginAsGuest",
           <String, dynamic>{"stayLoggedIn": stayLoggedIn});
 
-  Future<BackendlessUser> loginWithOauth1(String providerCode, String token,
-      String tokenSecret, Map<String, String> fieldsMapping, bool stayLoggedIn,
+  Future<BackendlessUser> loginWithOauth1(
+      String authProviderCode,
+      String authToken,
+      String authTokenSecret,
+      Map<String, String> fieldsMappings,
+      bool stayLoggedIn,
       [BackendlessUser guestUser]) {
-    if (providerCode != "twitter")
+    if (authProviderCode != "twitter")
       throw ArgumentError(
-          "OAuth authentication for provider $providerCode is not available");
-    return Invoker.invoke("users/social/twitter/login", {
-      "accessToken": token,
-      "accessTokenSecret": tokenSecret,
-      "fieldsMapping": fieldsMapping,
-      "guestUser": guestUser?.properties,
-    }).then((value) => BackendlessUser.fromJson(value));
+          "OAuth authentication for provider $authProviderCode is not available");
+    return _channel.invokeMethod("Backendless.UserService.loginWithOauth1", {
+      "authProviderCode": authProviderCode,
+      "authToken": authToken,
+      "authTokenSecret": authTokenSecret,
+      "fieldsMappings": fieldsMappings,
+      "stayLoggedIn": stayLoggedIn,
+      "guestUser": guestUser,
+    });
   }
 
-  Future<BackendlessUser> loginWithOauth2(String providerCode, String token,
-      Map<String, String> fieldsMapping, bool stayLoggedIn,
-      [BackendlessUser guestUser]) async {
-    return Invoker.invoke("users/social/$providerCode/login", {
-      "accessToken": token,
-      "fieldsMapping": fieldsMapping,
-      "guestUser": guestUser?.properties,
-    }).then((value) => BackendlessUser.fromJson(value));
-  }
+  Future<BackendlessUser> loginWithOauth2(
+          String authProviderCode,
+          String accessToken,
+          Map<String, String> fieldsMappings,
+          bool stayLoggedIn,
+          [BackendlessUser guestUser]) =>
+      _channel.invokeMethod("Backendless.UserService.loginWithOauth2", {
+        "authProviderCode": authProviderCode,
+        "accessToken": accessToken,
+        "fieldsMappings": fieldsMappings,
+        "stayLoggedIn": stayLoggedIn,
+        "guestUser": guestUser,
+      });
 }

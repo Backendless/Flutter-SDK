@@ -32,6 +32,8 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
         static let loginWithFacebook = "Backendless.UserService.loginWithFacebook"
         static let loginWithTwitter = "Backendless.UserService.loginWithTwitter"
         static let loginWithGoogle = "Backendless.UserService.loginWithGoogle"
+        static let loginWithOauth1 = "Backendless.UserService.loginWithOauth1"
+        static let loginWithOauth2 = "Backendless.UserService.loginWithOauth2"
     }
     
     private enum Args {
@@ -44,10 +46,11 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
         static let email = "email"
         static let userToken = "userToken"
         static let accessToken = "accessToken"
-        static let fieldsMapping = "fieldsMapping"
+        static let fieldsMappings = "fieldsMappings"
         static let authToken = "authToken"
         static let authTokenSecret = "authTokenSecret"
         static let guestUser = "guestUser"
+        static let authProviderCode = "authProviderCode"
     }
     
     // MARK: -
@@ -90,6 +93,10 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
             getUserToken(arguments, result)
         case Methods.loginAsGuest:
             loginAsGuest(arguments, result)
+        case Methods.loginWithOauth1:
+            loginWithOauth1(arguments, result)
+        case Methods.loginWithOauth2:
+            loginWithOauth2(arguments, result)
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -314,6 +321,71 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
             userService.loginAsGuest(responseHandler: {
                 result($0)
             }, errorHandler: {
+                result(FlutterError($0))
+            })
+        }
+    }
+    
+    private func loginWithOauth1(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
+        guard
+            let authProviderCode: String = arguments[Args.authProviderCode].flatMap(cast),
+            let authToken: String = arguments[Args.authToken].flatMap(cast),
+            let authTokenSecret: String = arguments[Args.authTokenSecret].flatMap(cast),
+            let fieldsMappings: [String: String] = arguments[Args.fieldsMappings].flatMap(cast),
+            let stayLoggedIn: Bool = arguments[Args.stayLoggedIn].flatMap(cast)
+        else {
+            result(FlutterError.noRequiredArguments)
+            
+            return
+        }
+        
+        let guestUser: BackendlessUser? = arguments[Args.guestUser].flatMap(cast)
+        
+        
+        if let guestUser = guestUser {
+            userService.loginWithOauth1(providerCode: authProviderCode, token: authToken, tokenSecret: authTokenSecret, guestUser: guestUser, fieldsMapping: fieldsMappings, stayLoggedIn: stayLoggedIn, responseHandler: {
+                result($0)
+            },
+            errorHandler: {
+                result(FlutterError($0))
+            })
+        } else {
+            userService.loginWithOauth1(providerCode: authProviderCode, token: authToken, tokenSecret: authTokenSecret, fieldsMapping: fieldsMappings, stayLoggedIn: stayLoggedIn, responseHandler: {
+                result($0)
+            },
+            errorHandler: {
+                result(FlutterError($0))
+            })
+        }
+    }
+    
+    private func loginWithOauth2(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
+        guard
+            let authProviderCode: String = arguments[Args.authProviderCode].flatMap(cast),
+            let accessToken: String = arguments[Args.accessToken].flatMap(cast),
+            let fieldsMappings: [String: String] = arguments[Args.fieldsMappings].flatMap(cast),
+            let stayLoggedIn: Bool = arguments[Args.stayLoggedIn].flatMap(cast)
+        else {
+            result(FlutterError.noRequiredArguments)
+            
+            return
+        }
+        
+        let guestUser: BackendlessUser? = arguments[Args.guestUser].flatMap(cast)
+        
+        
+        if let guestUser = guestUser {
+            userService.loginWithOauth2(providerCode: authProviderCode, token: accessToken, guestUser: guestUser, fieldsMapping: fieldsMappings, stayLoggedIn: stayLoggedIn, responseHandler: {
+                result($0)
+            },
+            errorHandler: {
+                result(FlutterError($0))
+            })
+        } else {
+            userService.loginWithOauth2(providerCode: authProviderCode, token: accessToken, fieldsMapping: fieldsMappings, stayLoggedIn: stayLoggedIn, responseHandler: {
+                result($0)
+            },
+            errorHandler: {
                 result(FlutterError($0))
             })
         }
