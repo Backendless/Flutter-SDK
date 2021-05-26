@@ -10,8 +10,13 @@ class BackendlessUserService {
       new BackendlessUserService._internal();
   BackendlessUserService._internal();
 
-  Future<BackendlessUser> currentUser() =>
-      _channel.invokeMethod("Backendless.UserService.currentUser");
+  Future<BackendlessUser> getCurrentUser() =>
+      _channel.invokeMethod("Backendless.UserService.getCurrentUser");
+
+  Future<void> setCurrentUser(BackendlessUser currentUser) =>
+      _channel.invokeMethod("Backendless.UserService.setCurrentUser", {
+        "currentUser": currentUser,
+      });
 
   Future<List<UserProperty>> describeUserClass() async =>
       (await _channel.invokeMethod("Backendless.UserService.describeUserClass"))

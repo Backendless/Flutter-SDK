@@ -21,8 +21,11 @@ public class UserServiceCallHandler implements MethodChannel.MethodCallHandler {
     @Override
     public void onMethodCall(MethodCall call, MethodChannel.Result result) {
         switch (call.method) {
-            case "Backendless.UserService.currentUser":
-                currentUser(result);
+            case "Backendless.UserService.getCurrentUser":
+                getCurrentUser(result);
+                break;
+            case "Backendless.UserService.setCurrentUser":
+                setCurrentUser(call, result);
                 break;
             case "Backendless.UserService.describeUserClass":
                 describeUserClass(result);
@@ -77,8 +80,14 @@ public class UserServiceCallHandler implements MethodChannel.MethodCallHandler {
         }
     }
 
-    private void currentUser(MethodChannel.Result result) {
+    private void getCurrentUser(MethodChannel.Result result) {
         result.success(Backendless.UserService.CurrentUser());
+    }
+
+    private void setCurrentUser(MethodCall call, MethodChannel.Result result) {
+        BackendlessUser currentUser = call.argument("currentUser");
+        Backendless.UserService.setCurrentUser(currentUser);
+        result.success(null);
     }
 
     private void describeUserClass(MethodChannel.Result result) {

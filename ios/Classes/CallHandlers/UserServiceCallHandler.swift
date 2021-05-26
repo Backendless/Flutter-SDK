@@ -14,7 +14,8 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Constants
     private enum Methods {
-        static let currentUser = "Backendless.UserService.currentUser"
+        static let getCurrentUser = "Backendless.UserService.getCurrentUser"
+        static let setCurrentUser = "Backendless.UserService.setCurrentUser"
         static let describeUserClass = "Backendless.UserService.describeUserClass"
         static let findById = "Backendless.UserService.findById"
         static let getUserRoles = "Backendless.UserService.getUserRoles"
@@ -51,6 +52,7 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
         static let authTokenSecret = "authTokenSecret"
         static let guestUser = "guestUser"
         static let authProviderCode = "authProviderCode"
+        static let currentUser = "currentUser"
     }
     
     // MARK: -
@@ -63,8 +65,10 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
         let arguments: [String: Any] = call.arguments.flatMap(cast) ?? [:]
         
         switch call.method {
-        case Methods.currentUser:
-            currentUser(arguments, result)
+        case Methods.getCurrentUser:
+            getCurrentUser(arguments, result)
+        case Methods.setCurrentUser:
+            setCurrentUser(arguments, result)
         case Methods.describeUserClass:
             describeUserClass(arguments, result)
         case Methods.findById:
@@ -103,11 +107,24 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
     }
     
     // MARK: -
-    // MARK: - Current user
-    private func currentUser(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        let currentUser = userService.getCurrentUser()
+    // MARK: - Get current user
+    private func getCurrentUser(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
+        let currentUser = userService.currentUser
         
         result(currentUser)
+    }
+    
+    // MARK: -
+    // MARK: - Set current user
+    private func setCurrentUser(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
+        guard let currentUser: BackendlessUser = arguments[Args.currentUser].flatMap(cast) else {
+            result(FlutterError.noRequiredArguments)
+            
+            return
+        }
+        
+        userService.currentUser = currentUser
+        result(nil)
     }
     
     // MARK: -
@@ -168,7 +185,7 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Logged In User
     private func loggedInUser(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        guard let user = userService.getCurrentUser() else {
+        guard let user = userService.currentUser else {
             result("")
             
             return
