@@ -1,3 +1,7 @@
+# 7.0.0-nullsafety.1
+
+* Fix codec errors
+
 # 7.0.0-nullsafety.0
 
 * Support null safety
