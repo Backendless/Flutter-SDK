@@ -1,3 +1,9 @@
+# 6.3.3
+
+* Handle `stayLoggedIn` parameter for `loginWithOauth` methods
+* Fix `BackendlessUser` encoding
+* Add `setCurrentUser()` method. `currentUser()` method renamed to `getCurrentUser()`
+
 # 6.3.2
 
 * Fixes and improvements.
