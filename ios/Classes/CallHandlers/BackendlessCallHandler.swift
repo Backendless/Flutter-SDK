@@ -17,9 +17,6 @@ class BackendlessCallHandler: FlutterCallHandlerProtocol {
     // MARK: - Constants
     private enum Methods {
         static let initApp = "Backendless.initApp"
-        static let getApiKey = "Backendless.getApiKey"
-        static let getApplicationId = "Backendless.getApplicationId"
-        static let getUrl = "Backendless.getUrl"
         static let isInitialized = "Backendless.isInitialized"
         static let setUrl = "Backendless.setUrl"
         static let getHeaders = "Backendless.getHeaders"
@@ -35,6 +32,7 @@ class BackendlessCallHandler: FlutterCallHandlerProtocol {
         static let value = "value"
         static let stringKey = "stringKey"
         static let enumKey = "enumKey"
+        static let customDomain = "customDomain"
     }
     
     // MARK: - 
@@ -49,12 +47,6 @@ class BackendlessCallHandler: FlutterCallHandlerProtocol {
         switch call.method {
         case Methods.initApp:
             initApp(arguments, result)
-        case Methods.getApiKey:
-            getApiKey(arguments, result)
-        case Methods.getApplicationId:
-            getApplicationId(arguments, result)
-        case Methods.getUrl:
-            getUrl(arguments, result)
         case Methods.isInitialized:
             isInitialized(arguments, result)
         case Methods.setUrl:
@@ -73,38 +65,23 @@ class BackendlessCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - InitApp
     private func initApp(_ arguments: [String: Any], _ result: FlutterResult) {
+        let customDomain: String? = arguments[Args.customDomain].flatMap(cast)
+        if let customDomain = customDomain {
+            backendless.initApp(customDomain: customDomain)
+            result(nil)
+            return
+        }
+        
         guard
             let applicationId: String = arguments[Args.applicationId].flatMap(cast),
             let apiKey: String = arguments[Args.apiKey].flatMap(cast)
         else {
             result(FlutterError.noRequiredArguments)
-            
             return
         }
         
         backendless.initApp(applicationId: applicationId, apiKey: apiKey)
         result(nil)
-    }
-    
-    // MARK: -
-    // MARK: - Get ApiKey
-    private func getApiKey(_ arguments: [String: Any], _ result: FlutterResult) {
-        let apiKey = backendless.getApiKey()
-        result(apiKey)
-    }
-    
-    // MARK: -
-    // MARK: - Get Application Id
-    private func getApplicationId(_ arguments: [String: Any], _ result: FlutterResult) {
-        let id = backendless.getApplictionId()
-        result(id)
-    }
-    
-    // MARK: -
-    // MARK: - Get URL
-    private func getUrl(_ arguments: [String: Any], _ result: FlutterResult) {
-        let url = backendless.hostUrl
-        result(url)
     }
     
     // MARK: -
