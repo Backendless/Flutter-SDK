@@ -7,7 +7,7 @@ class RelationOperation {
   RelationOperation(this.operations, this.opResultIdGenerator);
 
   OpResult? addOperation(OperationType operationType, dynamic parent,
-      String? columnName, dynamic? children,
+      String? columnName, dynamic children,
       [String? parentTable]) {
     dynamic _parent;
     String _table;

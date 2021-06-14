@@ -1,11 +1,11 @@
-# 7.0.0-nullsafety.1
+# 7.0.0
 
-* Fix codec errors
+> Note: This release has breaking changes.
 
-# 7.0.0-nullsafety.0
-
-* Support null safety
-* Change minimum SDK constraint to 2.12.0
+* Enable null safety
+* Require Dart 2.12 or greater
+* App initialization with custom domain
+* **BREAKING** Update `initApp` method signature with named parameters
 
 # 6.3.3
 

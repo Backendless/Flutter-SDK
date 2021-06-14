@@ -131,7 +131,7 @@ class BackendlessMessaging {
     });
   }
 
-  Future<dynamic?> _handleMethod(MethodCall call) async {
+  Future<dynamic> _handleMethod(MethodCall call) async {
     if (call.method.contains("EventResponse")) {
       Map<dynamic, dynamic> arguments = call.arguments;
       int handle = arguments["handle"];
