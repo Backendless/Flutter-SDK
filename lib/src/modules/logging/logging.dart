@@ -10,7 +10,7 @@ class BackendlessLogging {
   BackendlessLogging._internal();
 
   Logger getLogger(String loggerName) {
-    if (loggerName == null || loggerName.trim().isEmpty)
+    if (loggerName.trim().isEmpty)
       throw new ArgumentError("Log name cannot be empty");
     return new Logger._(_channel, loggerName);
   }

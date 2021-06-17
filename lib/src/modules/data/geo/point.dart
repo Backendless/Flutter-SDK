@@ -22,10 +22,8 @@ class Point extends Geometry {
   @override
   int get hashCode => hashValues(x, y, srs);
 
-  Point({this.x, this.y, SpatialReferenceSystem srs}) : super(srs: srs) {
-    this.x = x != null ? x : 0.0;
-    this.y = y != null ? y : 0.0;
-  }
+  Point({this.x = 0.0, this.y = 0.0, SpatialReferenceSystem? srs})
+      : super(srs: srs);
 
   @override
   String getWktType() => Point.wktType;

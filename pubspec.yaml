@@ -1,32 +1,32 @@
 name: backendless_sdk
 description: Flutter plugin for Backendless SDK. It provides access to the Backendless services that enable the server-side functionality for developing and running mobile and desktop apps.
-version: 6.3.0
+version: 7.0.0
 homepage: https://backendless.com
 
 environment:
-  sdk: ">=2.6.0 <3.0.0"
+  sdk: ">=2.12.0 <3.0.0"
   flutter: ">=1.10.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  collection: ^1.14.11
-  reflectable: ^3.0.1
-  http: ^0.12.1
+  collection: ^1.15.0
+  reflectable: ^3.0.2
+  http: ^0.13.3
   flutter_web_plugins:
     sdk: flutter
-  js: ^0.6.2
+  js: ^0.6.3
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  build_runner: ^1.0.0
+  build_runner: ^2.0.4
   flutter_driver:
     sdk: flutter
-  test: any
-  path: any
-  path_provider:
-  intl:
+  test: ^1.16.8
+  path: ^1.8.0
+  path_provider: ^2.0.2
+  intl: ^0.17.0
 
 flutter:
   plugin:

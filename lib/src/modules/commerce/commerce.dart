@@ -18,7 +18,7 @@ class BackendlessCommerce {
         "token": token
       });
 
-  Future<GooglePlaySubscriptionStatus> getPlaySubscriptionsStatus(
+  Future<GooglePlaySubscriptionStatus?> getPlaySubscriptionsStatus(
           String packageName, String subscriptionId, String token) =>
       _channel.invokeMethod(
           "Backendless.Commerce.getPlaySubscriptionsStatus", <String, dynamic>{
@@ -27,7 +27,7 @@ class BackendlessCommerce {
         "token": token
       });
 
-  Future<GooglePlayPurchaseStatus> validatePlayPurchase(
+  Future<GooglePlayPurchaseStatus?> validatePlayPurchase(
           String packageName, String productId, String token) =>
       _channel.invokeMethod(
           "Backendless.Commerce.validatePlayPurchase", <String, dynamic>{

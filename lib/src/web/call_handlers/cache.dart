@@ -16,7 +16,7 @@ class CacheCallHandler {
       case "Backendless.Cache.delete":
         return promiseToFuture(delete(call.arguments['key']));
       case "Backendless.Cache.expireAt":
-        int timestamp = call.arguments['timestamp'];
+        int? timestamp = call.arguments['timestamp'];
         if (timestamp == null)
           timestamp =
               (call.arguments['date'] as DateTime).millisecondsSinceEpoch;

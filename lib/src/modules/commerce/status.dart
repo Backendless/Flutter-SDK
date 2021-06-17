@@ -1,10 +1,10 @@
 part of backendless_sdk;
 
 class GooglePlaySubscriptionStatus {
-  bool autoRenewing;
-  int startTimeMillis;
-  String kind;
-  int expiryTimeMillis;
+  bool? autoRenewing;
+  int? startTimeMillis;
+  String? kind;
+  int? expiryTimeMillis;
 
   GooglePlaySubscriptionStatus();
 
@@ -23,11 +23,11 @@ class GooglePlaySubscriptionStatus {
 }
 
 class GooglePlayPurchaseStatus {
-  String kind;
-  int purchaseTimeMillis;
-  int purchaseState;
-  int consumptionState;
-  String developerPayload;
+  String? kind;
+  int? purchaseTimeMillis;
+  int? purchaseState;
+  int? consumptionState;
+  String? developerPayload;
 
   GooglePlayPurchaseStatus();
 

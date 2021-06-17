@@ -14,7 +14,8 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Constants
     private enum Methods {
-        static let currentUser = "Backendless.UserService.currentUser"
+        static let getCurrentUser = "Backendless.UserService.getCurrentUser"
+        static let setCurrentUser = "Backendless.UserService.setCurrentUser"
         static let describeUserClass = "Backendless.UserService.describeUserClass"
         static let findById = "Backendless.UserService.findById"
         static let getUserRoles = "Backendless.UserService.getUserRoles"
@@ -32,6 +33,8 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
         static let loginWithFacebook = "Backendless.UserService.loginWithFacebook"
         static let loginWithTwitter = "Backendless.UserService.loginWithTwitter"
         static let loginWithGoogle = "Backendless.UserService.loginWithGoogle"
+        static let loginWithOauth1 = "Backendless.UserService.loginWithOauth1"
+        static let loginWithOauth2 = "Backendless.UserService.loginWithOauth2"
     }
     
     private enum Args {
@@ -44,10 +47,12 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
         static let email = "email"
         static let userToken = "userToken"
         static let accessToken = "accessToken"
-        static let fieldsMapping = "fieldsMapping"
+        static let fieldsMappings = "fieldsMappings"
         static let authToken = "authToken"
         static let authTokenSecret = "authTokenSecret"
         static let guestUser = "guestUser"
+        static let authProviderCode = "authProviderCode"
+        static let currentUser = "currentUser"
     }
     
     // MARK: -
@@ -60,8 +65,10 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
         let arguments: [String: Any] = call.arguments.flatMap(cast) ?? [:]
         
         switch call.method {
-        case Methods.currentUser:
-            currentUser(arguments, result)
+        case Methods.getCurrentUser:
+            getCurrentUser(arguments, result)
+        case Methods.setCurrentUser:
+            setCurrentUser(arguments, result)
         case Methods.describeUserClass:
             describeUserClass(arguments, result)
         case Methods.findById:
@@ -90,17 +97,34 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
             getUserToken(arguments, result)
         case Methods.loginAsGuest:
             loginAsGuest(arguments, result)
+        case Methods.loginWithOauth1:
+            loginWithOauth1(arguments, result)
+        case Methods.loginWithOauth2:
+            loginWithOauth2(arguments, result)
         default:
             result(FlutterMethodNotImplemented)
         }
     }
     
     // MARK: -
-    // MARK: - Current user
-    private func currentUser(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        let currentUser = userService.getCurrentUser()
+    // MARK: - Get current user
+    private func getCurrentUser(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
+        let currentUser = userService.currentUser
         
         result(currentUser)
+    }
+    
+    // MARK: -
+    // MARK: - Set current user
+    private func setCurrentUser(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
+        guard let currentUser: BackendlessUser = arguments[Args.currentUser].flatMap(cast) else {
+            result(FlutterError.noRequiredArguments)
+            
+            return
+        }
+        
+        userService.currentUser = currentUser
+        result(nil)
     }
     
     // MARK: -
@@ -161,7 +185,7 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Logged In User
     private func loggedInUser(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        guard let user = userService.getCurrentUser() else {
+        guard let user = userService.currentUser else {
             result("")
             
             return
@@ -314,6 +338,71 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
             userService.loginAsGuest(responseHandler: {
                 result($0)
             }, errorHandler: {
+                result(FlutterError($0))
+            })
+        }
+    }
+    
+    private func loginWithOauth1(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
+        guard
+            let authProviderCode: String = arguments[Args.authProviderCode].flatMap(cast),
+            let authToken: String = arguments[Args.authToken].flatMap(cast),
+            let authTokenSecret: String = arguments[Args.authTokenSecret].flatMap(cast),
+            let fieldsMappings: [String: String] = arguments[Args.fieldsMappings].flatMap(cast),
+            let stayLoggedIn: Bool = arguments[Args.stayLoggedIn].flatMap(cast)
+        else {
+            result(FlutterError.noRequiredArguments)
+            
+            return
+        }
+        
+        let guestUser: BackendlessUser? = arguments[Args.guestUser].flatMap(cast)
+        
+        
+        if let guestUser = guestUser {
+            userService.loginWithOauth1(providerCode: authProviderCode, token: authToken, tokenSecret: authTokenSecret, guestUser: guestUser, fieldsMapping: fieldsMappings, stayLoggedIn: stayLoggedIn, responseHandler: {
+                result($0)
+            },
+            errorHandler: {
+                result(FlutterError($0))
+            })
+        } else {
+            userService.loginWithOauth1(providerCode: authProviderCode, token: authToken, tokenSecret: authTokenSecret, fieldsMapping: fieldsMappings, stayLoggedIn: stayLoggedIn, responseHandler: {
+                result($0)
+            },
+            errorHandler: {
+                result(FlutterError($0))
+            })
+        }
+    }
+    
+    private func loginWithOauth2(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
+        guard
+            let authProviderCode: String = arguments[Args.authProviderCode].flatMap(cast),
+            let accessToken: String = arguments[Args.accessToken].flatMap(cast),
+            let fieldsMappings: [String: String] = arguments[Args.fieldsMappings].flatMap(cast),
+            let stayLoggedIn: Bool = arguments[Args.stayLoggedIn].flatMap(cast)
+        else {
+            result(FlutterError.noRequiredArguments)
+            
+            return
+        }
+        
+        let guestUser: BackendlessUser? = arguments[Args.guestUser].flatMap(cast)
+        
+        
+        if let guestUser = guestUser {
+            userService.loginWithOauth2(providerCode: authProviderCode, token: accessToken, guestUser: guestUser, fieldsMapping: fieldsMappings, stayLoggedIn: stayLoggedIn, responseHandler: {
+                result($0)
+            },
+            errorHandler: {
+                result(FlutterError($0))
+            })
+        } else {
+            userService.loginWithOauth2(providerCode: authProviderCode, token: accessToken, fieldsMapping: fieldsMappings, stayLoggedIn: stayLoggedIn, responseHandler: {
+                result($0)
+            },
+            errorHandler: {
                 result(FlutterError($0))
             })
         }

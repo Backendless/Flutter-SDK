@@ -2,9 +2,9 @@ part of backendless_sdk;
 
 class UpdateBulkPayload<T> extends Selector {
   Map changes;
-  T query;
+  T? query;
 
-  UpdateBulkPayload(String conditional, Object unconditional, this.changes)
+  UpdateBulkPayload(String? conditional, Object? unconditional, this.changes)
       : super(conditional, unconditional);
 
   UpdateBulkPayload.fromJson(Map json)
@@ -19,7 +19,7 @@ class UpdateBulkPayload<T> extends Selector {
 }
 
 class DeleteBulkPayload extends Selector {
-  DeleteBulkPayload(String conditional, Object unconditional)
+  DeleteBulkPayload(String? conditional, Object? unconditional)
       : super(conditional, unconditional);
 
   DeleteBulkPayload.fromJson(Map json)

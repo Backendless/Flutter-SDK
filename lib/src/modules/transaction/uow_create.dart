@@ -6,16 +6,16 @@ class UnitOfWorkCreate {
 
   UnitOfWorkCreate(this.operations, this.opResultIdGenerator);
 
-  OpResult create<T>(T instance, [String tableName]) {
+  OpResult create<T>(T instance, [String? tableName]) {
     if (instance is Map)
-      return _createMapInstance(tableName, instance);
+      return _createMapInstance(tableName!, instance);
     else
       return _createClassInstance(instance);
   }
 
   OpResult _createClassInstance<E>(E instance) {
-    Map entityMap = reflector.serialize(instance);
-    String tableName = reflector.getServerName(E);
+    Map entityMap = reflector.serialize(instance)!;
+    String tableName = reflector.getServerName(E)!;
 
     return _createMapInstance(tableName, entityMap);
   }
@@ -34,25 +34,25 @@ class UnitOfWorkCreate {
         tableName, operationResultId, OperationType.CREATE);
   }
 
-  OpResult bulkCreate<T>(List<T> instances, [String tableName]) {
+  OpResult bulkCreate<T>(List<T> instances, [String? tableName]) {
     if (instances[0] is Map)
-      return _bulkCreateMapInstances(tableName, instances.cast<Map>());
+      return _bulkCreateMapInstances(tableName!, instances.cast<Map>());
     else
       return _bulkCreateClassInstances(instances);
   }
 
-  OpResult _bulkCreateClassInstances<E>(List<E> instances) {
-    List<Map> serializedEntities =
+  OpResult _bulkCreateClassInstances<E>(List<E?> instances) {
+    List<Map?> serializedEntities =
         TransactionHelper.convertInstancesToMaps(instances);
 
-    String tableName = reflector.getServerName(E);
+    String tableName = reflector.getServerName(E)!;
 
     return _bulkCreateMapInstances(tableName, serializedEntities);
   }
 
   OpResult _bulkCreateMapInstances(
-      String tableName, List<Map> arrayOfObjectMaps) {
-    for (Map mapObject in arrayOfObjectMaps)
+      String tableName, List<Map?> arrayOfObjectMaps) {
+    for (Map? mapObject in arrayOfObjectMaps)
       TransactionHelper.makeReferenceToValueFromOpResult(mapObject);
 
     String operationResultId = opResultIdGenerator.generateOpResultId(

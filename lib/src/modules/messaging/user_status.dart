@@ -1,8 +1,8 @@
 part of backendless_sdk;
 
 class UserStatusResponse {
-  UserStatus status;
-  List<UserInfo> data;
+  UserStatus? status;
+  List<UserInfo>? data;
 
   UserStatusResponse();
 
@@ -15,7 +15,7 @@ class UserStatusResponse {
 
   Map toJson() {
     List<Map> userInfos = [];
-    data.forEach((userInfo) => userInfos.add(userInfo.toJson()));
+    data?.forEach((userInfo) => userInfos.add(userInfo.toJson()));
     return {
       'status': status?.index,
       'data': userInfos,
@@ -27,8 +27,8 @@ class UserStatusResponse {
 }
 
 class UserInfo {
-  String connectionId;
-  String userId;
+  String? connectionId;
+  String? userId;
 
   UserInfo();
 

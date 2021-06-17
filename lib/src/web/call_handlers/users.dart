@@ -13,8 +13,8 @@ class UserServiceCallHandler {
   Future<dynamic> handleMethodCall(MethodCall call) {
     switch (call.method) {
       case "Backendless.UserService.currentUser":
-        return Future(
-            () => BackendlessUser.fromJson(convertFromJs(currentUser())));
+        return Future(() =>
+            BackendlessUser.fromJson(convertFromJs(currentUser()) as Map));
       case "Backendless.UserService.describeUserClass":
         return promiseToFuture(describeUserClass());
       case "Backendless.UserService.findById":
@@ -79,7 +79,7 @@ class UserServiceCallHandler {
   }
 
   BackendlessUser getUser(dynamic jsObject) =>
-      BackendlessUser.fromJson(convertFromJs(jsObject));
+      BackendlessUser.fromJson(convertFromJs(jsObject) as Map);
 }
 
 @JS('Backendless.UserService.getLocalCurrentUser')

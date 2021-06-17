@@ -8,7 +8,7 @@ enum IsolationLevelEnum {
 }
 
 extension IsolationLevelExt on IsolationLevelEnum {
-  int get operationId => const {
+  int? get operationId => const {
         IsolationLevelEnum.READ_UNCOMMITTED: 1,
         IsolationLevelEnum.READ_COMMITTED: 2,
         IsolationLevelEnum.REPEATABLE_READ: 4,

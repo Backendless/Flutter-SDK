@@ -1,9 +1,9 @@
 part of backendless_sdk;
 
 class BackendlessPrefs {
-  AuthKeys authKeys;
-  Map<String, String> headers;
-  String url;
+  AuthKeys? authKeys;
+  late Map<String, String> headers;
+  late String url;
   static final BackendlessPrefs _instance = BackendlessPrefs._internal();
 
   factory BackendlessPrefs() => _instance;
@@ -13,18 +13,25 @@ class BackendlessPrefs {
     url = "https://api.backendless.com";
   }
 
-  void initPreferences(String applicationId, String apiKey) {
-    authKeys = new AuthKeys(applicationId, apiKey);
+  void initPreferences({String? appId, String? apiKey, String? customDomain}) {
+    if (customDomain != null) {
+      if (customDomain.startsWith("http"))
+        url = customDomain;
+      else
+        url = "http://$customDomain";
+    } else {
+      authKeys = new AuthKeys(appId!, apiKey!);
+    }
   }
 
-  get appId => authKeys.applicationId;
+  get appId => authKeys?.appId;
 
-  get apiKey => authKeys.apiKey;
+  get apiKey => authKeys?.apiKey;
 }
 
 class AuthKeys {
-  String applicationId;
+  String appId;
   String apiKey;
 
-  AuthKeys(this.applicationId, this.apiKey);
+  AuthKeys(this.appId, this.apiKey);
 }

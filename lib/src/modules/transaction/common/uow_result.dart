@@ -1,9 +1,9 @@
 part of backendless_sdk;
 
 class UnitOfWorkResult {
-  bool success;
-  TransactionOperationError error;
-  Map<String, OperationResult> results;
+  bool? success;
+  TransactionOperationError? error;
+  Map<String, OperationResult>? results;
 
   UnitOfWorkResult(this.success, this.error);
 
@@ -16,7 +16,7 @@ class UnitOfWorkResult {
 
     results = Map();
     (json['results'] as Map).forEach((key, value) {
-      results[key] = OperationResult.fromJson(value);
+      results![key] = OperationResult.fromJson(value);
     });
   }
 

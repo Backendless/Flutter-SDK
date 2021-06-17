@@ -113,53 +113,53 @@ class BackendlessMessageCodec extends StandardMessageCodec {
   dynamic readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
       case _kDateTime:
-        return DateTime.fromMillisecondsSinceEpoch(readValue(buffer));
+        return DateTime.fromMillisecondsSinceEpoch(readValue(buffer) as int);
       case _kDataQueryBuilder:
-        return DataQueryBuilder.fromJson(readValue(buffer));
+        return DataQueryBuilder.fromJson(readValue(buffer) as Map);
       case _kLoadRelationsQueryBuilder:
-        return LoadRelationsQueryBuilder.fromJson(readValue(buffer));
+        return LoadRelationsQueryBuilder.fromJson(readValue(buffer) as Map);
       case _kObjectProperty:
-        return ObjectProperty.fromJson(readValue(buffer));
+        return ObjectProperty.fromJson(readValue(buffer) as Map);
       case _kGooglePlaySubscriptionStatus:
-        return GooglePlaySubscriptionStatus.fromJson(readValue(buffer));
+        return GooglePlaySubscriptionStatus.fromJson(readValue(buffer) as Map);
       case _kGooglePlayPurchaseStatus:
-        return GooglePlayPurchaseStatus.fromJson(readValue(buffer));
+        return GooglePlayPurchaseStatus.fromJson(readValue(buffer) as Map);
       case _kFileInfo:
-        return FileInfo.fromJson(readValue(buffer));
+        return FileInfo.fromJson(readValue(buffer) as Map);
       case _kMessageStatus:
-        return MessageStatus.fromJson(readValue(buffer));
+        return MessageStatus.fromJson(readValue(buffer) as Map);
       case _kDeviceRegistration:
-        return DeviceRegistration.fromJson(readValue(buffer));
+        return DeviceRegistration.fromJson(readValue(buffer) as Map);
       case _kPublishOptions:
-        return PublishOptions.fromJson(readValue(buffer));
+        return PublishOptions.fromJson(readValue(buffer) as Map);
       case _kDeliveryOptions:
-        return DeliveryOptions.fromJson(readValue(buffer));
+        return DeliveryOptions.fromJson(readValue(buffer) as Map);
       case _kPublishMessageInfo:
-        return PublishMessageInfo.fromJson(readValue(buffer));
+        return PublishMessageInfo.fromJson(readValue(buffer) as Map);
       case _kDeviceRegistrationResult:
-        return DeviceRegistrationResult.fromJson(readValue(buffer));
+        return DeviceRegistrationResult.fromJson(readValue(buffer) as Map);
       case _kCommand:
-        return Command.fromJson(readValue(buffer));
+        return Command.fromJson(readValue(buffer) as Map);
       case _kUserInfo:
-        return UserInfo.fromJson(readValue(buffer));
+        return UserInfo.fromJson(readValue(buffer) as Map);
       case _kUserStatusResponse:
-        return UserStatusResponse.fromJson(readValue(buffer));
+        return UserStatusResponse.fromJson(readValue(buffer) as Map);
       case _kReconnectAttempt:
-        return ReconnectAttempt.fromJson(readValue(buffer));
+        return ReconnectAttempt.fromJson(readValue(buffer) as Map);
       case _kBackendlessUser:
-        return BackendlessUser.fromJson(readValue(buffer));
+        return BackendlessUser.fromJson(readValue(buffer) as Map);
       case _kUserProperty:
-        return UserProperty.fromJson(readValue(buffer));
+        return UserProperty.fromJson(readValue(buffer) as Map);
       case _kBulkEvent:
-        return BulkEvent.fromJson(readValue(buffer));
+        return BulkEvent.fromJson(readValue(buffer) as Map);
       case _kEmailEnvelope:
-        return EmailEnvelope.fromJson(readValue(buffer));
+        return EmailEnvelope.fromJson(readValue(buffer) as Map);
       case _kPoint:
-        return Geometry.fromWKT(readValue(buffer));
+        return Geometry.fromWKT(readValue(buffer) as String);
       case _kLineString:
-        return Geometry.fromWKT(readValue(buffer));
+        return Geometry.fromWKT(readValue(buffer) as String);
       case _kPolygon:
-        return Geometry.fromWKT(readValue(buffer));
+        return Geometry.fromWKT(readValue(buffer) as String);
       default:
         return super.readValueOfType(type, buffer);
     }

@@ -1,7 +1,7 @@
 part of backendless_sdk;
 
 class UserProperty extends AbstractProperty {
-  bool identity;
+  bool? identity;
 
   UserProperty();
 

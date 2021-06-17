@@ -10,28 +10,33 @@ class BackendlessUserService {
       new BackendlessUserService._internal();
   BackendlessUserService._internal();
 
-  Future<BackendlessUser> currentUser() =>
-      _channel.invokeMethod("Backendless.UserService.currentUser");
+  Future<BackendlessUser?> getCurrentUser() =>
+      _channel.invokeMethod("Backendless.UserService.getCurrentUser");
+
+  Future<void> setCurrentUser(BackendlessUser currentUser) =>
+      _channel.invokeMethod("Backendless.UserService.setCurrentUser", {
+        "currentUser": currentUser,
+      });
 
   Future<List<UserProperty>> describeUserClass() async =>
       (await _channel.invokeMethod("Backendless.UserService.describeUserClass"))
           .cast<UserProperty>();
 
-  Future<BackendlessUser> findById(String id) => _channel.invokeMethod(
+  Future<BackendlessUser?> findById(String id) => _channel.invokeMethod(
       "Backendless.UserService.findById", <String, dynamic>{"id": id});
 
-  Future<List<String>> getUserRoles() async =>
+  Future<List<String>?> getUserRoles() async =>
       (await _channel.invokeMethod("Backendless.UserService.getUserRoles"))
           .cast<String>();
 
-  Future<bool> isValidLogin() =>
+  Future<bool?> isValidLogin() =>
       _channel.invokeMethod("Backendless.UserService.isValidLogin");
 
-  Future<String> loggedInUser() =>
+  Future<String?> loggedInUser() =>
       _channel.invokeMethod("Backendless.UserService.loggedInUser");
 
-  Future<BackendlessUser> login(String login, String password,
-          [bool stayLoggedIn]) =>
+  Future<BackendlessUser?> login(String login, String password,
+          [bool stayLoggedIn = false]) =>
       _channel.invokeMethod("Backendless.UserService.login", <String, dynamic>{
         "login": login,
         "password": password,
@@ -41,7 +46,7 @@ class BackendlessUserService {
   Future<void> logout() =>
       _channel.invokeMethod("Backendless.UserService.logout");
 
-  Future<BackendlessUser> register(BackendlessUser user) =>
+  Future<BackendlessUser?> register(BackendlessUser user) =>
       _channel.invokeMethod(
           "Backendless.UserService.register", <String, dynamic>{"user": user});
 
@@ -53,41 +58,52 @@ class BackendlessUserService {
       "Backendless.UserService.restorePassword",
       <String, dynamic>{"identity": identity});
 
-  Future<BackendlessUser> update(BackendlessUser user) => _channel.invokeMethod(
-      "Backendless.UserService.update", <String, dynamic>{"user": user});
+  Future<BackendlessUser?> update(BackendlessUser user) =>
+      _channel.invokeMethod(
+          "Backendless.UserService.update", <String, dynamic>{"user": user});
 
-  Future<String> getUserToken() =>
+  Future<String?> getUserToken() =>
       _channel.invokeMethod("Backendless.UserService.getUserToken");
 
   Future<void> setUserToken(String userToken) => _channel.invokeMethod(
       "Backendless.UserService.setUserToken",
       <String, dynamic>{"userToken": userToken});
 
-  Future<BackendlessUser> loginAsGuest([bool stayLoggedIn]) =>
+  Future<BackendlessUser?> loginAsGuest([bool stayLoggedIn = false]) =>
       _channel.invokeMethod("Backendless.UserService.loginAsGuest",
           <String, dynamic>{"stayLoggedIn": stayLoggedIn});
 
-  Future<BackendlessUser> loginWithOauth1(String providerCode, String token,
-      String tokenSecret, Map<String, String> fieldsMapping, bool stayLoggedIn,
-      [BackendlessUser guestUser]) {
-    if (providerCode != "twitter")
+  Future<BackendlessUser?> loginWithOauth1(
+      String authProviderCode,
+      String authToken,
+      String authTokenSecret,
+      Map<String, String> fieldsMappings,
+      bool stayLoggedIn,
+      [BackendlessUser? guestUser]) {
+    if (authProviderCode != "twitter")
       throw ArgumentError(
-          "OAuth authentication for provider $providerCode is not available");
-    return Invoker.invoke("users/social/twitter/login", {
-      "accessToken": token,
-      "accessTokenSecret": tokenSecret,
-      "fieldsMapping": fieldsMapping,
+          "OAuth authentication for provider $authProviderCode is not available");
+    return _channel.invokeMethod("Backendless.UserService.loginWithOauth1", {
+      "authProviderCode": authProviderCode,
+      "authToken": authToken,
+      "authTokenSecret": authTokenSecret,
+      "fieldsMappings": fieldsMappings,
+      "stayLoggedIn": stayLoggedIn,
       "guestUser": guestUser,
-    }).then((value) => BackendlessUser.fromJson(value));
+    });
   }
 
-  Future<BackendlessUser> loginWithOauth2(String providerCode, String token,
-      Map<String, String> fieldsMapping, bool stayLoggedIn,
-      [BackendlessUser guestUser]) async {
-    return Invoker.invoke("users/social/$providerCode/login", {
-      "accessToken": token,
-      "fieldsMapping": fieldsMapping,
-      "guestUser": guestUser,
-    }).then((value) => BackendlessUser.fromJson(value));
-  }
+  Future<BackendlessUser?> loginWithOauth2(
+          String authProviderCode,
+          String accessToken,
+          Map<String, String> fieldsMappings,
+          bool stayLoggedIn,
+          [BackendlessUser? guestUser]) =>
+      _channel.invokeMethod("Backendless.UserService.loginWithOauth2", {
+        "authProviderCode": authProviderCode,
+        "accessToken": accessToken,
+        "fieldsMappings": fieldsMappings,
+        "stayLoggedIn": stayLoggedIn,
+        "guestUser": guestUser,
+      });
 }

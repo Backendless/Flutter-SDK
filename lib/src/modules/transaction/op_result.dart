@@ -9,7 +9,7 @@ class OpResult {
 
   OpResult(this.tableName, this.operationType, this._opResultId);
 
-  OpResultValueReference resolveTo({int resultIndex, String propName}) {
+  OpResultValueReference resolveTo({int? resultIndex, String? propName}) {
     return OpResultValueReference(this,
         resultIndex: resultIndex, propName: propName);
   }
@@ -40,15 +40,13 @@ class OpResultIdGenerator {
   List<String> opResultIdStrings;
   final Map<String, int> opResultIdMaps = new Map();
 
-  OpResultIdGenerator(List<String> opResultIdStrings) {
-    this.opResultIdStrings = opResultIdStrings;
-  }
+  OpResultIdGenerator(this.opResultIdStrings);
 
   String generateOpResultId(OperationType operationType, String tableName) {
     String opResultIdGenerated;
-    final String key = operationType.operationName + tableName;
+    final String key = "${operationType.operationName}$tableName";
     if (opResultIdMaps.containsKey(key)) {
-      int count = opResultIdMaps[key];
+      int count = opResultIdMaps[key]!;
       opResultIdMaps[key] = ++count;
       opResultIdGenerated = key + count.toString();
     } else {
@@ -62,8 +60,8 @@ class OpResultIdGenerator {
 
 class OpResultValueReference {
   final OpResult opResult;
-  final int resultIndex;
-  final String propName;
+  final int? resultIndex;
+  final String? propName;
 
   OpResultValueReference(this.opResult, {this.resultIndex, this.propName});
 

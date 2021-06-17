@@ -10,7 +10,7 @@ enum HeadersEnum {
 }
 
 extension HeadersEnumExt on HeadersEnum {
-  String get header => const {
+  String? get header => const {
         HeadersEnum.USER_TOKEN_KEY: "user-token",
         HeadersEnum.LOGGED_IN_KEY: "logged-in",
         HeadersEnum.SESSION_TIME_OUT_KEY: "session-time-out",

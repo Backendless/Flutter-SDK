@@ -6,7 +6,7 @@ import 'dart:collection';
 import 'package:js/js.dart';
 import 'package:js/js_util.dart';
 
-Object convertFromJs(jsObject) {
+Object? convertFromJs(jsObject) {
   if (jsObject == null) return null;
   if (jsObject.toString() != '[object Object]' && !isArray(jsObject)) {
     throw ArgumentError("Js element must be an object or array");
@@ -24,7 +24,7 @@ Object _convertDataTreeFromJs(data) {
     if (isArray(o)) {
       var convertedList = [];
       _convertedObjects[o] = convertedList;
-      convertedList.addAll((o as List).map(_convert));
+      convertedList.addAll((o as List).map(_convert as dynamic));
       return convertedList;
     } else if (o.toString() == '[object Object]' ||
         o.runtimeType.toString() == "NativeJavaScriptObject") {
@@ -42,7 +42,7 @@ Object _convertDataTreeFromJs(data) {
   return _convert(data);
 }
 
-dynamic convertToJs(Object object) {
+dynamic convertToJs(Object? object) {
   if (object == null) return null;
   if ((object is! Map) && (object is! Iterable)) {
     throw ArgumentError("object must be a Map or Iterable");
@@ -67,7 +67,7 @@ Object _convertDataTreeToJs(Object data) {
     } else if (o is Iterable) {
       var convertedList = [];
       _convertedObjects[o] = convertedList;
-      convertedList.addAll(o.map(_convert));
+      convertedList.addAll(o.map(_convert as dynamic));
       return convertedList;
     } else if (o is DateTime) {
       return o.millisecondsSinceEpoch;

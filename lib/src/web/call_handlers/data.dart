@@ -58,7 +58,7 @@ class DataCallHandler {
                 getDataStore(call).findLast(getQueryBuilder(call)))
             .then((value) => convertFromJs(value));
       case "Backendless.Data.of.getObjectCount":
-        DataQueryBuilder queryBuilder = call.arguments['queryBuilder'];
+        DataQueryBuilder? queryBuilder = call.arguments['queryBuilder'];
         return promiseToFuture(getDataStore(call).getObjectCount(
             queryBuilder != null ? queryBuilder.whereClause : ''));
       case "Backendless.Data.of.loadRelations":
@@ -91,7 +91,7 @@ class DataCallHandler {
         return Future(() => addListener(call));
       case "Backendless.Data.RT.removeListener":
         removeListener(call);
-        return null;
+        return Future(() => null);
       default:
         throw PlatformException(
             code: 'Unimplemented',
@@ -141,11 +141,11 @@ class DataCallHandler {
   void removeListener(MethodCall call) {
     int handle = call.arguments["handle"];
     String event = call.arguments["event"];
-    String whereClause = call.arguments["whereClause"];
+    String? whereClause = call.arguments["whereClause"];
 
     RTHandlersJs rtHandler = getDataStore(call).rt();
 
-    Function callback = subscriptions[handle];
+    Function callback = subscriptions[handle]!;
     switch (event) {
       case "RTDataEvent.CREATED":
         if (whereClause != null)

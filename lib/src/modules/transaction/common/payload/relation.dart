@@ -1,15 +1,15 @@
 part of backendless_sdk;
 
 class Relation extends Selector {
-  Object parentObject;
-  String relationColumn;
-  List<String> objectIds;
-  String relationTableName;
-  bool columnUnique;
+  Object? parentObject;
+  String? relationColumn;
+  List<String>? objectIds;
+  String? relationTableName;
+  bool? columnUnique;
 
   Relation(
-      [String conditional,
-      Object unconditional,
+      [String? conditional,
+      Object? unconditional,
       this.parentObject,
       this.relationColumn,
       this.objectIds,
@@ -26,19 +26,7 @@ class Relation extends Selector {
 
   @override
   String toString() {
-    return "Relation{" +
-        "parentObject=" +
-        parentObject +
-        '\'' +
-        ", relationColumn='" +
-        relationColumn +
-        '\'' +
-        ", conditional='" +
-        this.conditional +
-        '\'' +
-        ", unconditional=" +
-        this.unconditional +
-        '}';
+    return "Relation{parentObject=$parentObject, relationColumn=$relationColumn, conditional=${this.conditional}, unconditional=${this.unconditional}}";
   }
 
   Map toJson() => {

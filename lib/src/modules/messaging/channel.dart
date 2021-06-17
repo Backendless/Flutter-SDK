@@ -15,12 +15,12 @@ class Channel {
       "Backendless.Messaging.Channel.leave",
       <String, dynamic>{"channelHandle": _channelHandle});
 
-  Future<bool> isJoined() => _methodChannel.invokeMethod(
+  Future<bool?> isJoined() => _methodChannel.invokeMethod(
       "Backendless.Messaging.Channel.isJoined",
       <String, dynamic>{"channelHandle": _channelHandle});
 
   Future<void> addJoinListener(Function callback,
-          {void onError(String error)}) =>
+          {void onError(String error)?}) =>
       _methodChannel.invokeMethod(
           "Backendless.Messaging.Channel.addJoinListener", {
         "channelHandle": _channelHandle
@@ -39,8 +39,8 @@ class Channel {
     });
   }
 
-  Future<void> addMessageListener<T>(void callback(T response),
-      {void onError(String error), String selector}) {
+  Future<void> addMessageListener<T>(void callback(T? response),
+      {void onError(String error)?, String? selector}) {
     String messageType;
     Function handleResponse;
 
@@ -69,11 +69,11 @@ class Channel {
             new EventCallback(handleResponse, onError, args));
   }
 
-  void removeMessageListeners({String selector, Function callback}) {
+  void removeMessageListeners({String? selector, Function? callback}) {
     List<int> handles = _findCallbacks(
         BackendlessMessaging._messageCallbacks,
         (eventCallback) => ((selector == null ||
-                selector == eventCallback.args["selector"]) &&
+                selector == eventCallback.args?["selector"]) &&
             (callback == null || callback == eventCallback.handleResponse)));
 
     handles.forEach((handle) {
@@ -94,7 +94,7 @@ class Channel {
   }
 
   Future<void> addCommandListener(void callback(Command<String> response),
-          {void onError(String error)}) =>
+          {void onError(String error)?}) =>
       _methodChannel.invokeMethod(
           "Backendless.Messaging.Channel.addCommandListener", {
         "channelHandle": _channelHandle
@@ -122,7 +122,7 @@ class Channel {
       });
 
   Future<void> addUserStatusListener(void callback(UserStatusResponse response),
-          {void onError(String error)}) =>
+          {void onError(String error)?}) =>
       _methodChannel.invokeMethod(
           "Backendless.Messaging.Channel.addUserStatusListener", {
         "channelHandle": _channelHandle

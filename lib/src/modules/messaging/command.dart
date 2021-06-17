@@ -1,10 +1,10 @@
 part of backendless_sdk;
 
 class Command<T> {
-  Type dataType;
-  String type;
-  T data;
-  UserInfo userInfo;
+  late Type dataType;
+  String? type;
+  T? data;
+  UserInfo? userInfo;
 
   Command._(this.dataType);
 
@@ -20,7 +20,7 @@ class Command<T> {
   Map toJson() => {
         'type': type,
         'data': data,
-        'userInfo': userInfo.toJson(),
+        'userInfo': userInfo?.toJson(),
       };
 
   @override

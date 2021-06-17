@@ -232,7 +232,9 @@ public final class BackendlessMessageCodec extends StandardMessageCodec {
             case RECONNECT_ATTEMPT:
                 return objectMapper.convertValue(readValue(buffer), ReconnectAttempt.class);
             case BACKENDLESS_USER:
-                return objectMapper.convertValue(readValue(buffer), BackendlessUser.class);
+                Map<String, Object> user = new HashMap<>();
+                user.put("properties", readValue(buffer));
+                return objectMapper.convertValue(user, BackendlessUser.class);
             case USER_PROPERTY:
                 return objectMapper.convertValue(readValue(buffer), UserProperty.class);
             case BULK_EVENT:

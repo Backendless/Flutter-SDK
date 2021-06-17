@@ -3,16 +3,16 @@ part of backendless_sdk;
 class DataQueryBuilder {
   static const int DEFAULT_RELATIONS_DEPTH = 0;
   PagedQueryBuilder _pagedQueryBuilder = new PagedQueryBuilder();
-  List<String> properties;
-  List<String> excludeProperties;
-  String whereClause;
-  List<String> groupBy;
-  String havingClause;
-  List<String> sortBy;
-  List<String> related;
-  int relationsDepth;
-  int relationsPageSize;
-  bool distinct;
+  late List<String> properties;
+  late List<String> excludeProperties;
+  late String whereClause;
+  late List<String> groupBy;
+  late String havingClause;
+  late List<String> sortBy;
+  late List<String> related;
+  late int relationsDepth;
+  int? relationsPageSize;
+  late bool distinct;
 
   DataQueryBuilder() {
     properties = [];
@@ -61,11 +61,11 @@ class DataQueryBuilder {
 
   set pageSize(int pageSize) => _pagedQueryBuilder.pageSize = pageSize;
 
-  get pageSize => _pagedQueryBuilder.pageSize;
+  int get pageSize => _pagedQueryBuilder.pageSize;
 
   set offset(int offset) => _pagedQueryBuilder.offset = offset;
 
-  get offset => _pagedQueryBuilder.offset;
+  int get offset => _pagedQueryBuilder.offset;
 
   void prepareNextPage() => _pagedQueryBuilder.prepareNextPage();
 
@@ -77,9 +77,9 @@ class DataQueryBuilder {
 /// This class does not support relation types other than Map for now.
 class LoadRelationsQueryBuilder<R> {
   PagedQueryBuilder pagedQueryBuilder = new PagedQueryBuilder();
-  String relationName;
-  List<String> properties;
-  List<String> sortBy;
+  late String relationName;
+  List<String>? properties;
+  List<String>? sortBy;
 
   LoadRelationsQueryBuilder._(this.relationName);
 
@@ -107,11 +107,11 @@ class LoadRelationsQueryBuilder<R> {
 
   set pageSize(int pageSize) => pagedQueryBuilder.pageSize = pageSize;
 
-  get pageSize => pagedQueryBuilder.pageSize;
+  int get pageSize => pagedQueryBuilder.pageSize;
 
   set offset(int offset) => pagedQueryBuilder.offset = offset;
 
-  get offset => pagedQueryBuilder.offset;
+  int get offset => pagedQueryBuilder.offset;
 
   void prepareNextPage() => pagedQueryBuilder.prepareNextPage();
 

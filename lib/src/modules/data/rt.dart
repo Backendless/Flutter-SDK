@@ -10,13 +10,13 @@ class EventHandler<T> {
 // Create
 
   void addCreateListener(void callback(T response),
-      {void onError(String error), String whereClause}) {
+      {void onError(String error)?, String? whereClause}) {
     DataSubscription<T> subscription = new DataSubscription<T>(
         RTDataEvent.CREATED, _tableName, callback, onError, whereClause);
     addEventListener(subscription);
   }
 
-  void removeCreateListeners([String whereClause]) {
+  void removeCreateListeners([String? whereClause]) {
     _removeListeners(RTDataEvent.CREATED, whereClause);
   }
 
@@ -27,13 +27,13 @@ class EventHandler<T> {
 // Update
 
   void addUpdateListener(void callback(T response),
-      {void onError(String error), String whereClause}) {
+      {void onError(String error)?, String? whereClause}) {
     DataSubscription subscription = new DataSubscription<T>(
         RTDataEvent.UPDATED, _tableName, callback, onError, whereClause);
     addEventListener(subscription);
   }
 
-  void removeUpdateListeners([String whereClause]) {
+  void removeUpdateListeners([String? whereClause]) {
     _removeListeners(RTDataEvent.UPDATED, whereClause);
   }
 
@@ -44,13 +44,13 @@ class EventHandler<T> {
 // Delete
 
   void addDeleteListener(void callback(T response),
-      {void onError(String error), String whereClause}) {
+      {void onError(String error)?, String? whereClause}) {
     DataSubscription subscription = new DataSubscription<T>(
         RTDataEvent.DELETED, _tableName, callback, onError, whereClause);
     addEventListener(subscription);
   }
 
-  void removeDeleteListeners([String whereClause]) {
+  void removeDeleteListeners([String? whereClause]) {
     _removeListeners(RTDataEvent.DELETED, whereClause);
   }
 
@@ -60,13 +60,13 @@ class EventHandler<T> {
 // Bulk Create
 
   void addBulkCreateListener(void callback(List response),
-      {void onError(String error)}) {
+      {void onError(String error)?}) {
     DataSubscription subscription = new DataSubscription<T>(
         RTDataEvent.BULK_CREATED, _tableName, callback, onError);
     addEventListener(subscription);
   }
 
-  void removeBulkCreateListeners([String whereClause]) {
+  void removeBulkCreateListeners([String? whereClause]) {
     _removeListeners(RTDataEvent.BULK_CREATED, whereClause);
   }
 
@@ -77,13 +77,13 @@ class EventHandler<T> {
 // Bulk Update
 
   void addBulkUpdateListener(void callback(BulkEvent response),
-      {void onError(String error), String whereClause}) {
+      {void onError(String error)?, String? whereClause}) {
     DataSubscription subscription = new DataSubscription<T>(
         RTDataEvent.BULK_UPDATED, _tableName, callback, onError, whereClause);
     addEventListener(subscription);
   }
 
-  void removeBulkUpdateListeners([String whereClause]) {
+  void removeBulkUpdateListeners([String? whereClause]) {
     _removeListeners(RTDataEvent.BULK_UPDATED, whereClause);
   }
 
@@ -94,13 +94,13 @@ class EventHandler<T> {
 // Bulk Delete
 
   void addBulkDeleteListener(void callback(BulkEvent response),
-      {void onError(String error), String whereClause}) {
+      {void onError(String error)?, String? whereClause}) {
     DataSubscription subscription = new DataSubscription<T>(
         RTDataEvent.BULK_DELETED, _tableName, callback, onError, whereClause);
     addEventListener(subscription);
   }
 
-  void removeBulkDeleteListeners([String whereClause]) {
+  void removeBulkDeleteListeners([String? whereClause]) {
     _removeListeners(RTDataEvent.BULK_DELETED, whereClause);
   }
 
@@ -117,7 +117,7 @@ class EventHandler<T> {
   }
 
   void _removeListeners(RTDataEvent event,
-      [String whereClause, Function callback]) {
+      [String? whereClause, Function? callback]) {
     List<int> toRemove = [];
     BackendlessData._subscriptions.forEach((handle, subscription) {
       if (subscription.event == event &&
@@ -141,8 +141,8 @@ class EventHandler<T> {
 }
 
 class BulkEvent {
-  String whereClause;
-  int count;
+  String? whereClause;
+  int? count;
 
   BulkEvent();
 
@@ -163,8 +163,8 @@ class DataSubscription<T> {
   RTDataEvent event;
   String tableName;
   Function _handleResponse;
-  void Function(String fault) _handleFault;
-  String whereClause;
+  void Function(String fault)? _handleFault;
+  String? whereClause;
 
   DataSubscription(
       this.event, this.tableName, this._handleResponse, this._handleFault,
@@ -179,7 +179,7 @@ class DataSubscription<T> {
   }
 
   void handleFault(String fault) {
-    if (_handleFault != null) _handleFault(fault);
+    if (_handleFault != null) _handleFault!(fault);
   }
 }
 

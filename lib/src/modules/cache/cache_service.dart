@@ -1,7 +1,7 @@
 part of backendless_sdk;
 
 abstract class ICache {
-  Future<bool> contains();
+  Future<bool?> contains();
 
   Future<void> delete();
 
@@ -18,18 +18,16 @@ class CacheService implements ICache {
   BackendlessCache _cache = new BackendlessCache();
   String _key;
 
-  CacheService(String key) {
-    _key = key;
-  }
+  CacheService(this._key);
 
   @override
-  Future<bool> contains() => _cache.contains(_key);
+  Future<bool?> contains() => _cache.contains(_key);
 
   @override
   Future<void> delete() => _cache.delete(_key);
 
   @override
-  Future<void> expireAt({DateTime date, int timestamp}) =>
+  Future<void> expireAt({DateTime? date, int? timestamp}) =>
       _cache.expireAt(_key, date: date, timestamp: timestamp);
 
   @override
@@ -39,6 +37,6 @@ class CacheService implements ICache {
   Future<dynamic> get() => _cache.get(_key);
 
   @override
-  Future<void> put(Object object, [int timeToLive]) =>
+  Future<void> put(Object object, [int? timeToLive]) =>
       _cache.put(_key, object, timeToLive);
 }

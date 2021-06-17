@@ -1,3 +1,5 @@
+import 'package:collection/collection.dart' show IterableExtension;
+
 // Check that either first or second list of arguments is completely defined
 void checkArguments(
     Map<String, dynamic> firstArgs, Map<String, dynamic> secondArgs,
@@ -17,25 +19,23 @@ void checkArguments(
   }
 }
 
-T stringToEnum<T>(Iterable<T> enumValues, String stringValue) {
+T? stringToEnum<T>(Iterable<T> enumValues, String? stringValue) {
   if (stringValue == null) return null;
-  return enumValues.firstWhere(
-      (type) =>
-          type.toString().split(".").last.toLowerCase() ==
-          stringValue.toLowerCase(),
-      orElse: () => null);
+  return enumValues.firstWhereOrNull((type) =>
+      type.toString().split(".").last.toLowerCase() ==
+      stringValue.toLowerCase());
 }
 
 // Wrapper that contains callbacks for events
 class EventCallback {
   Function handleResponse;
-  void Function(String fault) _handleFault;
-  Map<String, dynamic> args;
+  void Function(String fault)? _handleFault;
+  Map<String, dynamic>? args;
 
   EventCallback(this.handleResponse, this._handleFault, [this.args]);
 
   void handleFault(String fault) {
-    if (_handleFault != null) _handleFault(fault);
+    if (_handleFault != null) _handleFault!(fault);
   }
 }
 

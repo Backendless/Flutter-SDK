@@ -19,16 +19,16 @@ class BackendlessRT {
 
         switch (call.method) {
           case ("Backendless.RT.Connect.EventResponse"):
-            _connectCallbacks[handle].handle();
+            _connectCallbacks[handle]?.handle();
             break;
           case ("Backendless.RT.ReconnectAttempt.EventResponse"):
-            _reconnectCallbacks[handle].handle(result);
+            _reconnectCallbacks[handle]?.handle(result);
             break;
           case ("Backendless.RT.ConnectError.EventResponse"):
-            _connectErrorCallbacks[handle].handle(result);
+            _connectErrorCallbacks[handle]?.handle(result);
             break;
           case ("Backendless.RT.Disconnect.EventResponse"):
-            _disconnectCallbacks[handle].handle(result);
+            _disconnectCallbacks[handle]?.handle(result);
             break;
         }
       }

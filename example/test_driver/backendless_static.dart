@@ -24,12 +24,13 @@ class TestStatic {
         final androidKey = "8A61E955-D8D6-CBF3-FFF8-FE53DEE02800";
         final iosKey = "6CBB8265-045A-C493-FF70-FD0908D51200";
 
-        await Backendless.initApp(appId, androidKey, iosKey);
+        await Backendless.initApp(
+            applicationId: appId, androidApiKey: androidKey, iosApiKey: iosKey);
 
-        expect(Backendless.getApplicationId(), appId);
+        expect(Backendless.applicationId, appId);
 
         final expectedKey = Platform.isIOS ? iosKey : androidKey;
-        final key = Backendless.getApiKey();
+        final key = Backendless.apiKey;
 
         expect(key, expectedKey);
       });
@@ -43,7 +44,7 @@ class TestStatic {
 
       // --
       test('Default URL', () async {
-        expect(Backendless.getUrl(), defaultUrl);
+        expect(Backendless.url, defaultUrl);
       });
 
       // --
@@ -51,11 +52,11 @@ class TestStatic {
         final customUrl = "https://just.testing.url";
         await Backendless.setUrl(customUrl);
 
-        expect(Backendless.getUrl(), customUrl);
+        expect(Backendless.url, customUrl);
 
         await Backendless.setUrl(defaultUrl);
 
-        expect(Backendless.getUrl(), defaultUrl);
+        expect(Backendless.url, defaultUrl);
       });
 
       // --

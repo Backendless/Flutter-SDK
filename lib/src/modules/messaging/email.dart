@@ -1,10 +1,10 @@
 part of backendless_sdk;
 
 class EmailEnvelope {
-  String query;
-  Set<String> to;
-  Set<String> cc;
-  Set<String> bcc;
+  String? query;
+  Set<String>? to;
+  Set<String>? cc;
+  Set<String>? bcc;
 
   EmailEnvelope();
 

@@ -5,7 +5,7 @@ class Invoker {
 
   static Future invoke(String methodName, body) {
     final encodedBody = _encodeBody(body);
-    final url = _getUrl(methodName);
+    final url = Uri.parse(_getApplicationUrl() + "/$methodName");
     final headers = prefs.headers;
 
     return http
@@ -26,8 +26,12 @@ class Invoker {
     });
   }
 
-  static String _getUrl(String methodName) =>
-      "${prefs.url}/${prefs.appId}/${prefs.apiKey}/$methodName";
+  static String _getApplicationUrl() {
+    if (prefs.appId == null)
+      return "${prefs.url}/api";
+    else
+      return "${prefs.url}/${prefs.appId}/${prefs.apiKey}";
+  }
 
   static String _encodeBody(dynamic body) {
     return jsonEncode(body, toEncodable: (dynamic nonEncodable) {

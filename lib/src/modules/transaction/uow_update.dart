@@ -20,8 +20,8 @@ class UnitOfWorkUpdate {
   }
 
   OpResult _updateClassInstance<E>(E instance) {
-    Map entityMap = reflector.serialize(instance);
-    String tableName = reflector.getServerName(E);
+    Map entityMap = reflector.serialize(instance)!;
+    String tableName = reflector.getServerName(E)!;
 
     return _updateMapInstance(tableName, entityMap);
   }
@@ -70,11 +70,11 @@ class UnitOfWorkUpdate {
     return _updateMapInstance(result.opResult.tableName, changes);
   }
 
-  OpResult bulkUpdate(Map changes, dynamic identifier, [String tableName]) {
+  OpResult bulkUpdate(Map changes, dynamic identifier, [String? tableName]) {
     if (identifier is String)
-      return _bulkUpdateWithQuery(tableName, identifier, changes);
+      return _bulkUpdateWithQuery(tableName!, identifier, changes);
     else if (identifier is List)
-      return _bulkUpdateByIds(tableName, identifier, changes);
+      return _bulkUpdateByIds(tableName!, identifier.cast<String>(), changes);
     else if (identifier is OpResult)
       return _bulkUpdateOpResult(identifier, changes);
     else
@@ -104,8 +104,8 @@ class UnitOfWorkUpdate {
         objectIdsForChanges.makeReference(), changes);
   }
 
-  OpResult _bulkUpdate(String tableName, String whereClause,
-      Object objectsForChanges, Map changes) {
+  OpResult _bulkUpdate(String tableName, String? whereClause,
+      Object? objectsForChanges, Map changes) {
     TransactionHelper.removeSystemField(changes);
 
     TransactionHelper.makeReferenceToValueFromOpResult(changes);

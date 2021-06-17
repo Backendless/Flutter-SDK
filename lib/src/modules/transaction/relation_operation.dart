@@ -6,20 +6,20 @@ class RelationOperation {
 
   RelationOperation(this.operations, this.opResultIdGenerator);
 
-  OpResult addOperation(OperationType operationType, dynamic parent,
-      String columnName, dynamic children,
-      [String parentTable]) {
+  OpResult? addOperation(OperationType operationType, dynamic parent,
+      String? columnName, dynamic children,
+      [String? parentTable]) {
     dynamic _parent;
     String _table;
     dynamic _children;
-    String _whereClause;
+    String? _whereClause;
 
     if (parent is Map) {
       _parent = parent['objectId'];
-      _table = parentTable;
+      _table = parentTable!;
     } else if (parent is String) {
       _parent = parent;
-      _table = parentTable;
+      _table = parentTable!;
     } else if (parent is OpResult) {
       _parent = parent.resolveTo(propName: 'objectId').makeReference();
       _table = parent.tableName;
@@ -29,7 +29,7 @@ class RelationOperation {
       _table = parent.opResult.tableName;
     } else if (reflector.canReflect(parent)) {
       _parent = parent.objectId;
-      _table = reflector.getServerName(parent.runtimeType);
+      _table = reflector.getServerName(parent.runtimeType)!;
     } else {
       throw ArgumentError(
           "The value should be either Custom class object, Map, Id, OpResult or OpResultValueReference");
@@ -62,13 +62,13 @@ class RelationOperation {
         operationType, _table, _parent, columnName, _whereClause, _children);
   }
 
-  OpResult _addOperation(
+  OpResult? _addOperation(
       OperationType operationType,
       String parentTable,
       Object parentObject,
-      String columnName,
-      String whereClauseForChildren,
-      Object children) {
+      String? columnName,
+      String? whereClauseForChildren,
+      Object? children) {
     String operationResultId =
         opResultIdGenerator.generateOpResultId(operationType, parentTable);
 
