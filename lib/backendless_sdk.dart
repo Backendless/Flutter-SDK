@@ -35,6 +35,7 @@ part 'src/modules/data/reflector.dart';
 part 'src/modules/data/map_to_property.dart';
 part 'src/modules/data/types.dart';
 part 'src/modules/data/json/json_builder.dart';
+part 'src/modules/data/relation_status.dart';
 part 'src/modules/events.dart';
 part 'src/modules/files/files.dart';
 part 'src/modules/files/file_info.dart';

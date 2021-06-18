@@ -11,6 +11,7 @@ import com.backendless.persistence.LoadRelationsQueryBuilder;
 import com.backendless.backendless_sdk.utils.FlutterCallback;
 import com.backendless.property.ObjectProperty;
 import com.backendless.rt.data.BulkEvent;
+import com.backendless.rt.data.RelationStatus;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -304,6 +305,34 @@ public class DataCallHandler implements MethodChannel.MethodCallHandler {
                     return;
             }
             subscriptions.put(handle, bulkCallback);
+        } else if (event.contains("RELATIONS")) {
+            DataEventAsyncCallback<RelationStatus> relationsCallback = new DataEventAsyncCallback<>(handle);
+            String relationColumnName = call.argument("relationColumnName");
+            List<String> parentObjects = call.argument("parentObjects");
+            switch (event) {
+                case "RTDataEvent.RELATIONS_SET":
+                    if (parentObjects != null)
+                        Backendless.Data.of(tableName).rt().addSetRelationListener(relationColumnName, parentObjects, relationsCallback);
+                    else
+                        Backendless.Data.of(tableName).rt().addSetRelationListener(relationColumnName, relationsCallback);
+                    break;
+                case "RTDataEvent.RELATIONS_ADDED":
+                    if (parentObjects != null)
+                        Backendless.Data.of(tableName).rt().addAddRelationListener(relationColumnName, parentObjects, relationsCallback);
+                    else
+                        Backendless.Data.of(tableName).rt().addAddRelationListener(relationColumnName, relationsCallback);
+                    break;
+                case "RTDataEvent.RELATIONS_REMOVED":
+                    if (parentObjects != null)
+                        Backendless.Data.of(tableName).rt().addDeleteRelationListener(relationColumnName, parentObjects, relationsCallback);
+                    else
+                        Backendless.Data.of(tableName).rt().addDeleteRelationListener(relationColumnName, relationsCallback);
+                    break;
+                default:
+                    result.notImplemented();
+                    return;
+            }
+            subscriptions.put(handle, relationsCallback);
         } else {
             DataEventAsyncCallback<Map> mapCallback = new DataEventAsyncCallback<>(handle);
             switch (event) {
@@ -325,8 +354,6 @@ public class DataCallHandler implements MethodChannel.MethodCallHandler {
                     else
                         Backendless.Data.of(tableName).rt().addDeleteListener(mapCallback);
                     break;
-
-
                 default:
                     result.notImplemented();
                     return;
@@ -376,6 +403,15 @@ public class DataCallHandler implements MethodChannel.MethodCallHandler {
                     Backendless.Data.of(tableName).rt().removeBulkDeleteListener(whereClause, callback);
                 else
                     Backendless.Data.of(tableName).rt().removeBulkDeleteListener(callback);
+                break;
+            case "RTDataEvent.RELATIONS_SET":
+                Backendless.Data.of(tableName).rt().removeSetRelationListeners();
+                break;
+            case "RTDataEvent.RELATIONS_ADDED":
+                Backendless.Data.of(tableName).rt().removeAddRelationListeners();
+                break;
+            case "RTDataEvent.RELATIONS_REMOVED":
+                Backendless.Data.of(tableName).rt().removeDeleteRelationListeners();
                 break;
             default:
                 result.notImplemented();

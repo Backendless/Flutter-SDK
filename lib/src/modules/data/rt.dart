@@ -12,8 +12,12 @@ class EventHandler<T> {
   void addCreateListener(void callback(T response),
       {void onError(String error)?, String? whereClause}) {
     DataSubscription<T> subscription = new DataSubscription<T>(
-        RTDataEvent.CREATED, _tableName, callback, onError, whereClause);
-    addEventListener(subscription);
+        RTDataEvent.CREATED,
+        _tableName,
+        callback,
+        onError,
+        {'whereClause': whereClause});
+    _addEventListener(subscription);
   }
 
   void removeCreateListeners([String? whereClause]) {
@@ -28,9 +32,9 @@ class EventHandler<T> {
 
   void addUpdateListener(void callback(T response),
       {void onError(String error)?, String? whereClause}) {
-    DataSubscription subscription = new DataSubscription<T>(
-        RTDataEvent.UPDATED, _tableName, callback, onError, whereClause);
-    addEventListener(subscription);
+    DataSubscription subscription = new DataSubscription<T>(RTDataEvent.UPDATED,
+        _tableName, callback, onError, {'whereClause': whereClause});
+    _addEventListener(subscription);
   }
 
   void removeUpdateListeners([String? whereClause]) {
@@ -45,9 +49,9 @@ class EventHandler<T> {
 
   void addDeleteListener(void callback(T response),
       {void onError(String error)?, String? whereClause}) {
-    DataSubscription subscription = new DataSubscription<T>(
-        RTDataEvent.DELETED, _tableName, callback, onError, whereClause);
-    addEventListener(subscription);
+    DataSubscription subscription = new DataSubscription<T>(RTDataEvent.DELETED,
+        _tableName, callback, onError, {'whereClause': whereClause});
+    _addEventListener(subscription);
   }
 
   void removeDeleteListeners([String? whereClause]) {
@@ -63,7 +67,7 @@ class EventHandler<T> {
       {void onError(String error)?}) {
     DataSubscription subscription = new DataSubscription<T>(
         RTDataEvent.BULK_CREATED, _tableName, callback, onError);
-    addEventListener(subscription);
+    _addEventListener(subscription);
   }
 
   void removeBulkCreateListeners([String? whereClause]) {
@@ -79,8 +83,12 @@ class EventHandler<T> {
   void addBulkUpdateListener(void callback(BulkEvent response),
       {void onError(String error)?, String? whereClause}) {
     DataSubscription subscription = new DataSubscription<T>(
-        RTDataEvent.BULK_UPDATED, _tableName, callback, onError, whereClause);
-    addEventListener(subscription);
+        RTDataEvent.BULK_UPDATED,
+        _tableName,
+        callback,
+        onError,
+        {'whereClause': whereClause});
+    _addEventListener(subscription);
   }
 
   void removeBulkUpdateListeners([String? whereClause]) {
@@ -96,8 +104,12 @@ class EventHandler<T> {
   void addBulkDeleteListener(void callback(BulkEvent response),
       {void onError(String error)?, String? whereClause}) {
     DataSubscription subscription = new DataSubscription<T>(
-        RTDataEvent.BULK_DELETED, _tableName, callback, onError, whereClause);
-    addEventListener(subscription);
+        RTDataEvent.BULK_DELETED,
+        _tableName,
+        callback,
+        onError,
+        {'whereClause': whereClause});
+    _addEventListener(subscription);
   }
 
   void removeBulkDeleteListeners([String? whereClause]) {
@@ -108,12 +120,76 @@ class EventHandler<T> {
     _removeListeners(RTDataEvent.BULK_DELETED, null, callback);
   }
 
-  void addEventListener(DataSubscription subscription) {
-    _channel.invokeMethod("Backendless.Data.RT.addListener", <String, dynamic>{
+  void addSetRelationListener(
+      String relationColumnName, void callback(RelationStatus status),
+      {List<String>? parentObjects, void onError(String error)?}) {
+    DataSubscription subscription = new DataSubscription(
+      RTDataEvent.RELATIONS_SET,
+      _tableName,
+      callback,
+      onError,
+      {
+        'relationColumnName': relationColumnName,
+        'parentObjects': parentObjects,
+      },
+    );
+    _addEventListener(subscription);
+  }
+
+  void removeSetRelationListeners() {
+    _removeListeners(RTDataEvent.RELATIONS_SET);
+  }
+
+  void addAddRelationListener(
+      String relationColumnName, void callback(RelationStatus status),
+      {List<String>? parentObjects, void onError(String error)?}) {
+    DataSubscription subscription = new DataSubscription(
+      RTDataEvent.RELATIONS_ADDED,
+      _tableName,
+      callback,
+      onError,
+      {
+        'relationColumnName': relationColumnName,
+        'parentObjects': parentObjects,
+      },
+    );
+    _addEventListener(subscription);
+  }
+
+  void removeAddRelationListeners() {
+    _removeListeners(RTDataEvent.RELATIONS_ADDED);
+  }
+
+  void addDeleteRelationListener(
+      String relationColumnName, void callback(RelationStatus status),
+      {List<String>? parentObjects, void onError(String error)?}) {
+    DataSubscription subscription = new DataSubscription(
+      RTDataEvent.RELATIONS_REMOVED,
+      _tableName,
+      callback,
+      onError,
+      {
+        'relationColumnName': relationColumnName,
+        'parentObjects': parentObjects,
+      },
+    );
+    _addEventListener(subscription);
+  }
+
+  void removeDeleteRelationListeners() {
+    _removeListeners(RTDataEvent.RELATIONS_REMOVED);
+  }
+
+// General
+
+  void _addEventListener(DataSubscription subscription) {
+    Map arguments = {
       "event": subscription.event.toString(),
       "tableName": subscription.tableName,
-      "whereClause": subscription.whereClause
-    }).then((handle) => BackendlessData._subscriptions[handle] = subscription);
+    };
+    arguments.addAll(subscription.options);
+    _channel.invokeMethod("Backendless.Data.RT.addListener", arguments).then(
+        (handle) => BackendlessData._subscriptions[handle] = subscription);
   }
 
   void _removeListeners(RTDataEvent event,
@@ -121,7 +197,8 @@ class EventHandler<T> {
     List<int> toRemove = [];
     BackendlessData._subscriptions.forEach((handle, subscription) {
       if (subscription.event == event &&
-          (whereClause == null || whereClause == subscription.whereClause) &&
+          (whereClause == null ||
+              whereClause == subscription.options['whereClause']) &&
           (callback == null || callback == subscription._handleResponse)) {
         toRemove.add(handle);
       }
@@ -164,11 +241,11 @@ class DataSubscription<T> {
   String tableName;
   Function _handleResponse;
   void Function(String fault)? _handleFault;
-  String? whereClause;
+  Map options;
 
   DataSubscription(
       this.event, this.tableName, this._handleResponse, this._handleFault,
-      [this.whereClause]);
+      [this.options = const {}]);
 
   void handleResponse(dynamic response) {
     if ((T != Map) && (response is Map)) {
@@ -189,5 +266,8 @@ enum RTDataEvent {
   UPDATED,
   BULK_UPDATED,
   DELETED,
-  BULK_DELETED
+  BULK_DELETED,
+  RELATIONS_SET,
+  RELATIONS_ADDED,
+  RELATIONS_REMOVED,
 }
