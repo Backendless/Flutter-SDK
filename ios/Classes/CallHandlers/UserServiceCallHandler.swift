@@ -25,6 +25,7 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
         static let logout = "Backendless.UserService.logout"
         static let register = "Backendless.UserService.register"
         static let resendEmailConfirmation = "Backendless.UserService.resendEmailConfirmation"
+        static let createEmailConfirmationURL = "Backendless.UserService.createEmailConfirmationURL"
         static let restorePassword = "Backendless.UserService.restorePassword"
         static let update = "Backendless.UserService.update"
         static let setUserToken = "Backendless.UserService.setUserToken"
@@ -87,6 +88,8 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
             register(arguments, result)
         case Methods.resendEmailConfirmation:
             resendEmailConfirmation(arguments, result)
+        case Methods.createEmailConfirmationURL:
+            createEmailConfirmationURL(arguments, result)
         case Methods.restorePassword:
             restorePassword(arguments, result)
         case Methods.update:
@@ -251,15 +254,33 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Resend Email Confirmation
     private func resendEmailConfirmation(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
-        guard let email: String = arguments[Args.email].flatMap(cast) else {
+        guard let identity: String = arguments[Args.identity].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
             
             return
         }
         
-        userService.resendEmailConfirmation(identity: email,
+        userService.resendEmailConfirmation(identity: identity,
             responseHandler: {
                 result(nil)
+            },
+            errorHandler: {
+                result(FlutterError($0))
+            })
+    }
+    
+    // MARK: -
+    // MARK: - Create Email Confirmation URL
+    private func createEmailConfirmationURL(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
+        guard let identity: String = arguments[Args.identity].flatMap(cast) else {
+            result(FlutterError.noRequiredArguments)
+
+            return
+        }
+        
+        userService.createEmailConfirmation(identity: identity,
+            responseHandler: {
+                result($0["confirmationURL"])
             },
             errorHandler: {
                 result(FlutterError($0))
@@ -271,7 +292,7 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
     private func restorePassword(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
         guard let identity: String = arguments[Args.identity].flatMap(cast) else {
             result(FlutterError.noRequiredArguments)
-            
+
             return
         }
         

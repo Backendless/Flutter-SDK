@@ -54,6 +54,9 @@ public class UserServiceCallHandler implements MethodChannel.MethodCallHandler {
             case "Backendless.UserService.resendEmailConfirmation":
                 resendEmailConfirmation(call, result);
                 break;
+          case "Backendless.UserService.createEmailConfirmationURL":
+                createEmailConfirmationURL(call, result);
+                break;
             case "Backendless.UserService.restorePassword":
                 restorePassword(call, result);
                 break;
@@ -136,6 +139,11 @@ public class UserServiceCallHandler implements MethodChannel.MethodCallHandler {
     private void resendEmailConfirmation(MethodCall call, MethodChannel.Result result) {
         String identity = call.argument("identity");
         Backendless.UserService.resendEmailConfirmation(identity, new FlutterCallback<Void>(result));
+    }
+
+    private void createEmailConfirmationURL(MethodCall call, MethodChannel.Result result) {
+        String identity = call.argument("identity");
+        Backendless.UserService.createEmailConfirmationURL(identity, new FlutterCallback<String>(result));
     }
 
     private void restorePassword(MethodCall call, MethodChannel.Result result) {
