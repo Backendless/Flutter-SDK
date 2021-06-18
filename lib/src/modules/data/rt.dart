@@ -123,7 +123,7 @@ class EventHandler<T> {
   void addSetRelationListener(
       String relationColumnName, void callback(RelationStatus status),
       {List<String>? parentObjects, void onError(String error)?}) {
-    DataSubscription subscription = new DataSubscription(
+    DataSubscription subscription = new DataSubscription<T>(
       RTDataEvent.RELATIONS_SET,
       _tableName,
       callback,
@@ -143,7 +143,7 @@ class EventHandler<T> {
   void addAddRelationListener(
       String relationColumnName, void callback(RelationStatus status),
       {List<String>? parentObjects, void onError(String error)?}) {
-    DataSubscription subscription = new DataSubscription(
+    DataSubscription subscription = new DataSubscription<T>(
       RTDataEvent.RELATIONS_ADDED,
       _tableName,
       callback,
@@ -163,7 +163,7 @@ class EventHandler<T> {
   void addDeleteRelationListener(
       String relationColumnName, void callback(RelationStatus status),
       {List<String>? parentObjects, void onError(String error)?}) {
-    DataSubscription subscription = new DataSubscription(
+    DataSubscription subscription = new DataSubscription<T>(
       RTDataEvent.RELATIONS_REMOVED,
       _tableName,
       callback,

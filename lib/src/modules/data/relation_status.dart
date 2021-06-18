@@ -12,7 +12,7 @@ class RelationStatus {
     parentObjectId = json['parentObjectId'];
     isConditional = json['isConditional'];
     whereClause = json['whereClause'];
-    children = json['children']?.cast<String?>();
+    children = json['children']?.cast<String>();
   }
 
   Map toJson() => {
