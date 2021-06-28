@@ -29,6 +29,8 @@ abstract class IDataStore<E> {
 
   Future<E?> save(E entity);
 
+  Future<E?> deepSave(E entity);
+
   Future<int?> setRelation(String parentObjectId, String relationColumnName,
       {List<String>? childrenObjectIds, String? whereClause});
 
@@ -159,6 +161,12 @@ class MapDrivenDataStore implements IDataStore<Map> {
 
   Future<Map?> save(Map entity) =>
       _channel.invokeMethod("Backendless.Data.of.save", <String, dynamic>{
+        'tableName': _tableName,
+        'entity': entity,
+      });
+
+  Future<Map?> deepSave(Map entity) =>
+      _channel.invokeMethod("Backendless.Data.of.deepSave", <String, dynamic>{
         'tableName': _tableName,
         'entity': entity,
       });
@@ -328,6 +336,15 @@ class ClassDrivenDataStore<T> implements IDataStore<T> {
   Future<T?> save(T entity) async {
     Map mapObject = await _channel.invokeMethod(
         "Backendless.Data.of.save", <String, dynamic>{
+      'tableName': _tableName,
+      'entity': reflector.serialize(entity)
+    });
+    return reflector.deserialize<T>(mapObject);
+  }
+
+  Future<T?> deepSave(T entity) async {
+    Map mapObject = await _channel.invokeMethod(
+        "Backendless.Data.of.deepSave", <String, dynamic>{
       'tableName': _tableName,
       'entity': reflector.serialize(entity)
     });

@@ -26,6 +26,7 @@ class DataCallHandler: FlutterCallHandlerProtocol {
         static let loadRelations = "Backendless.Data.of.loadRelations"
         static let remove = "Backendless.Data.of.remove"
         static let save = "Backendless.Data.of.save"
+        static let deepSave = "Backendless.Data.of.deepSave"
         static let setRelation = "Backendless.Data.of.setRelation"
         static let update = "Backendless.Data.of.update"
         static let callStoredProcedure = "Backendless.Data.callStoredProcedure"
@@ -129,6 +130,8 @@ class DataCallHandler: FlutterCallHandlerProtocol {
             remove(tableName, arguments, result)
         case Methods.save:
             save(tableName, arguments, result)
+        case Methods.deepSave:
+            deepSave(tableName, arguments, result)
         case Methods.setRelation:
             setRelation(tableName, arguments, result)
         case Methods.update:
@@ -472,6 +475,23 @@ class DataCallHandler: FlutterCallHandlerProtocol {
                         result(FlutterError($0))
                     })
         }
+    }
+    
+    // MARK: -
+    // MARK: - Deep Save
+    private func deepSave(_ tableName: String, _ arguments: [String: Any], _ result: @escaping FlutterResult) {
+        guard let entity: [String: Any] = arguments[Args.entity].flatMap(cast) else {
+            result(FlutterError.noRequiredArguments)
+            return
+        }
+        data.ofTable(tableName)
+            .deepSave(entity: entity,
+                responseHandler: {
+                    result($0)
+                },
+                errorHandler: {
+                    result(FlutterError($0))
+                })
     }
     
     // MARK: -

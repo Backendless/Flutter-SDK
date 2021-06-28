@@ -75,6 +75,10 @@ class DataCallHandler {
         return promiseToFuture(
                 getDataStore(call).save(convertToJs(call.arguments['entity'])))
             .then((value) => convertFromJs(value));
+      case "Backendless.Data.of.deepSave":
+        return promiseToFuture(getDataStore(call)
+                .deepSave(convertToJs(call.arguments['entity'])))
+            .then((value) => convertFromJs(value));
       case "Backendless.Data.of.setRelation":
         var childrenObjectIds = call.arguments['childrenObjectIds'];
         var whereClause = call.arguments['whereClause'];
@@ -292,6 +296,9 @@ class DataStoreJs {
 
   @JS()
   external dynamic save(entity);
+
+  @JS()
+  external dynamic deepSave(entity);
 
   @JS()
   external int setRelation(

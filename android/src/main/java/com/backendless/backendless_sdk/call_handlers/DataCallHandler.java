@@ -67,6 +67,9 @@ public class DataCallHandler implements MethodChannel.MethodCallHandler {
             case "Backendless.Data.of.save":
                 save(tableName, call, result);
                 break;
+            case "Backendless.Data.of.deepSave":
+                deepSave(tableName, call, result);
+                break;
             case "Backendless.Data.of.setRelation":
                 setRelation(tableName, call, result);
                 break;
@@ -231,6 +234,11 @@ public class DataCallHandler implements MethodChannel.MethodCallHandler {
     private void save(String tableName, MethodCall call, MethodChannel.Result result) {
         Map entity = call.argument("entity");
         Backendless.Data.of(tableName).save(entity, new FlutterCallback<Map>(result));
+    }
+
+    private void deepSave(String tableName, MethodCall call, MethodChannel.Result result) {
+        Map entity = call.argument("entity");
+        Backendless.Data.of(tableName).deepSave(entity, new FlutterCallback<Map>(result));
     }
 
     private void setRelation(String tableName, MethodCall call, MethodChannel.Result result) {

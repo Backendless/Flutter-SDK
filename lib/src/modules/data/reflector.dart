@@ -3,7 +3,7 @@ part of backendless_sdk;
 class Reflector extends Reflectable {
   const Reflector()
       : super(declarationsCapability, invokingCapability, metadataCapability,
-            reflectedTypeCapability, reflectedTypeCapability);
+            reflectedTypeCapability, typeCapability);
 
   Map<String, dynamic>? serialize<T>(T? object) {
     if (object == null) return null;
@@ -24,9 +24,11 @@ class Reflector extends Reflectable {
     classMirror.declarations.forEach((propertyName, value) {
       if (value is VariableMirror) {
         var variable = instanceMirror.invokeGetter(propertyName);
+        var columnName = Types.getColumnNameForProperty(propertyName, value);
         if (_canSerializeObject(variable)) {
-          var columnName = Types.getColumnNameForProperty(propertyName, value);
           result[columnName] = variable;
+        } else if (isCustomClass(variable)) {
+          result[columnName] = serialize(variable);
         }
       }
     });
@@ -157,7 +159,14 @@ class Reflector extends Reflectable {
     } catch (e) {
       return false;
     }
-    ClassMirror classMirror = reflectType(T) as ClassMirror;
+
+    ClassMirror classMirror;
+    try {
+      classMirror = reflectType(T) as ClassMirror;
+    } on NoSuchCapabilityError {
+      classMirror = reflectType(object.runtimeType) as ClassMirror;
+    }
+
     for (Object metadata in classMirror.metadata) {
       if (metadata is Reflector) return true;
     }
