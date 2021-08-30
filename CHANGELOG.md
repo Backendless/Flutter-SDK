@@ -1,3 +1,10 @@
+# 7.1.0
+
+Add:
+* `createEmailConfirmationURL` method
+* RT listeners for relations
+* Deep save
+
 # 7.0.0
 
 > Note: This release has breaking changes.
