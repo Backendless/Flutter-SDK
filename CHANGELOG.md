@@ -1,3 +1,7 @@
+# 7.1.1
+
+* Bump Backendless Android SDK version to 6.3.1
+
 # 7.1.0
 
 Add:
