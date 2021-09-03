@@ -19,7 +19,7 @@ Follow the steps below to get started with Backendless Flutter SDK:
 To use this plugin in your Flutter project, add `backendless_sdk` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/):
 ```dart
 dependencies:
-  backendless_sdk: ^6.3.0
+  backendless_sdk: ^7.1.0
 ```
 #### STEP 2. Import the Backendless SDK:
 Add the following import to your Dart code
@@ -32,7 +32,10 @@ Use the following call in your code:
 @override
 void initState() {
   super.initState();
-  Backendless.initApp(APPLICATION_ID, ANDROID_API_KEY, IOS_API_KEY);
+  Backendless.initApp(
+      applicationId: APPLICATION_ID,
+      androidApiKey: ANDROID_API_KEY,
+      iosApiKey: IOS_API_KEY);
 }
 ```
 The `APPLICATION_ID`, `ANDROID_API_KEY` and `IOS_API_KEY` values must be obtained in Backendless Console:
@@ -44,7 +47,10 @@ The `APPLICATION_ID`, `ANDROID_API_KEY` and `IOS_API_KEY` values must be obtaine
 #### STEP 4. Use the Backendless APIs.
 For example, here is a sample code which stores an object in Backendless database:
 ```dart
-Backendless.initApp(APPLICATION_ID, ANDROID_API_KEY, IOS_API_KEY);
+Backendless.initApp(
+  applicationId: APPLICATION_ID,
+  androidApiKey: ANDROID_API_KEY,
+  iosApiKey: IOS_API_KEY);
 // create a Map object. This will become a record in a database table
 Map testObject = new Map();
 
@@ -99,12 +105,14 @@ Follow the steps below to get started with Backendless Flutter SDK for Web:
 @override
 void initState() {
   super.initState();
-  Backendless.initWebApp(APP_ID, JS_KEY);
+  Backendless.initApp(
+      applicationId: APPLICATION_ID,
+      jsApiKey: JS_API_KEY);
 }
 ```
-The `APPLICATION_ID` and `JS_KEY` values must be obtained in Backendless Console.
+The `APPLICATION_ID` and `JS_API_KEY` values must be obtained in Backendless Console.
 
-If you want to add the Web support to your existing mobile Flutter application just add the `initWebApp` call next to the `initApp`.
+If you want to add the Web support to your existing mobile Flutter application just specify the `jsApiKey` parameter in your `initApp` method.
 
 
 After that you can use Backendless SDK in your Web application the same as in mobile app.

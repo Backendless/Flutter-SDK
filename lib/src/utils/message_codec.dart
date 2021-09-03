@@ -27,6 +27,7 @@ class BackendlessMessageCodec extends StandardMessageCodec {
   static const int _kPoint = 155;
   static const int _kLineString = 156;
   static const int _kPolygon = 157;
+  static const int _kRelationStatus = 158;
 
   @override
   void writeValue(WriteBuffer buffer, dynamic value) {
@@ -102,6 +103,9 @@ class BackendlessMessageCodec extends StandardMessageCodec {
     } else if (value is Polygon) {
       buffer.putUint8(_kPolygon);
       writeValue(buffer, value.asWKT());
+    } else if (value is RelationStatus) {
+      buffer.putUint8(_kRelationStatus);
+      writeValue(buffer, value.toJson());
     } else if (value is Set) {
       writeValue(buffer, value.toList());
     } else {
@@ -160,6 +164,8 @@ class BackendlessMessageCodec extends StandardMessageCodec {
         return Geometry.fromWKT(readValue(buffer) as String);
       case _kPolygon:
         return Geometry.fromWKT(readValue(buffer) as String);
+      case _kRelationStatus:
+        return RelationStatus.fromJson(readValue(buffer) as Map);
       default:
         return super.readValueOfType(type, buffer);
     }

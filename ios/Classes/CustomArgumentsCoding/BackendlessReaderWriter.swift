@@ -32,6 +32,7 @@ enum FlutterTypeCode: UInt8 {
     case point
     case lineString
     case polygon
+    case relationStatus
 }
 
 // MARK: -

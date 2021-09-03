@@ -23,7 +23,7 @@ class BackendlessWtiter: FlutterStandardWriter {
              is BackendlessFileInfo, is MessageStatus, is DeviceRegistration, is PublishOptions,
              is DeliveryOptions, is PublishMessageInfo, is DeviceRegistrationResult,
              is UserInfo, is ReconnectAttemptObject, is BackendlessUser, is UserProperty,
-             is BulkEvent, is EmailEnvelope:
+             is BulkEvent, is EmailEnvelope, is RelationStatus:
             guard let jsonData = dataFromValue(value) else { return }
             guard let json = try? JSONSerialization.jsonObject(with: jsonData, options: []) else { return }
 
@@ -123,6 +123,8 @@ class BackendlessWtiter: FlutterStandardWriter {
             return try? JSONEncoder().encode(value as! BulkEvent)
         case is EmailEnvelope:
             return try? JSONEncoder().encode(value as! EmailEnvelope)
+        case is RelationStatus:
+            return try? JSONEncoder().encode(value as! RelationStatus)
         default:
             return nil
         }
@@ -174,6 +176,8 @@ class BackendlessWtiter: FlutterStandardWriter {
              writeByte(FlutterTypeCode.lineString.rawValue)
         case is BLPolygon:
              writeByte(FlutterTypeCode.polygon.rawValue)
+        case is RelationStatus:
+            writeByte(FlutterTypeCode.relationStatus.rawValue)
         default:
             break
         }

@@ -26,6 +26,7 @@ class DataCallHandler: FlutterCallHandlerProtocol {
         static let loadRelations = "Backendless.Data.of.loadRelations"
         static let remove = "Backendless.Data.of.remove"
         static let save = "Backendless.Data.of.save"
+        static let deepSave = "Backendless.Data.of.deepSave"
         static let setRelation = "Backendless.Data.of.setRelation"
         static let update = "Backendless.Data.of.update"
         static let callStoredProcedure = "Backendless.Data.callStoredProcedure"
@@ -52,6 +53,7 @@ class DataCallHandler: FlutterCallHandlerProtocol {
         static let changes = "changes"
         static let fault = "fault"
         static let response = "response"
+        static let parentObjects = "parentObjects"
     }
     
     private enum DataRTEvents {
@@ -61,6 +63,9 @@ class DataCallHandler: FlutterCallHandlerProtocol {
         static let created = "RTDataEvent.CREATED"
         static let updated = "RTDataEvent.UPDATED"
         static let deleted = "RTDataEvent.DELETED"
+        static let relations_set = "RTDataEvent.RELATIONS_SET"
+        static let relations_added = "RTDataEvent.RELATIONS_ADDED"
+        static let relations_removed = "RTDataEvent.RELATIONS_REMOVED"
     }
     
     private enum CallbackEvents {
@@ -125,6 +130,8 @@ class DataCallHandler: FlutterCallHandlerProtocol {
             remove(tableName, arguments, result)
         case Methods.save:
             save(tableName, arguments, result)
+        case Methods.deepSave:
+            deepSave(tableName, arguments, result)
         case Methods.setRelation:
             setRelation(tableName, arguments, result)
         case Methods.update:
@@ -471,6 +478,23 @@ class DataCallHandler: FlutterCallHandlerProtocol {
     }
     
     // MARK: -
+    // MARK: - Deep Save
+    private func deepSave(_ tableName: String, _ arguments: [String: Any], _ result: @escaping FlutterResult) {
+        guard let entity: [String: Any] = arguments[Args.entity].flatMap(cast) else {
+            result(FlutterError.noRequiredArguments)
+            return
+        }
+        data.ofTable(tableName)
+            .deepSave(entity: entity,
+                responseHandler: {
+                    result($0)
+                },
+                errorHandler: {
+                    result(FlutterError($0))
+                })
+    }
+    
+    // MARK: -
     // MARK: - Set Relation
     private func setRelation(_ tableName: String, _ arguments: [String: Any], _ result: @escaping FlutterResult) {        
         guard
@@ -608,6 +632,45 @@ class DataCallHandler: FlutterCallHandlerProtocol {
                     subscription = data.ofTable(tableName).rt.addBulkDeleteListener(whereClause: whereClause, responseHandler: bulkEventHandler, errorHandler: errorHandler)
                 } else {
                     subscription = data.ofTable(tableName).rt.addBulkDeleteListener(responseHandler: bulkEventHandler, errorHandler: errorHandler)
+                }
+            default:
+                result(FlutterMethodNotImplemented)
+                
+                return
+            }
+        } else if (event.contains("RELATIONS")) {
+            guard let relationColumnName: String = arguments[Args.relationColumnName].flatMap(cast) else {
+                result(FlutterError.noRequiredArguments)
+                return
+            }
+            let parentObjects: [String]? = arguments[Args.parentObjects].flatMap(cast)
+            
+            let relationsEventHandler: (RelationStatus) -> Void = { [weak self] in
+                var response: [String: Any] = [:]
+                response[Args.handle] = currentHandle
+                response[Args.response] = $0
+                
+                self?.methodChannel.invokeMethod(CallbackEvents.eventResponse, arguments: response)
+            }
+            
+            switch event {
+            case DataRTEvents.relations_set:
+                if let parentObjects = parentObjects {
+                    subscription = data.ofTable(tableName).rt.addSetRelationListener(relationColumnName: relationColumnName, parentObjectIds: parentObjects, responseHandler: relationsEventHandler, errorHandler: errorHandler)
+                } else {
+                    subscription = data.ofTable(tableName).rt.addSetRelationListener(relationColumnName: relationColumnName, responseHandler: relationsEventHandler, errorHandler: errorHandler)
+                }
+            case DataRTEvents.relations_added:
+                if let parentObjects = parentObjects {
+                    subscription = data.ofTable(tableName).rt.addAddRelationListener(relationColumnName: relationColumnName, parentObjectIds: parentObjects, responseHandler: relationsEventHandler, errorHandler: errorHandler)
+                } else {
+                    subscription = data.ofTable(tableName).rt.addAddRelationListener(relationColumnName: relationColumnName, responseHandler: relationsEventHandler, errorHandler: errorHandler)
+                }
+            case DataRTEvents.relations_removed:
+                if let parentObjects = parentObjects {
+                    subscription = data.ofTable(tableName).rt.addDeleteRelationListener(relationColumnName: relationColumnName, parentObjectIds: parentObjects, responseHandler: relationsEventHandler, errorHandler: errorHandler)
+                } else {
+                    subscription = data.ofTable(tableName).rt.addDeleteRelationListener(relationColumnName: relationColumnName, responseHandler: relationsEventHandler, errorHandler: errorHandler)
                 }
             default:
                 result(FlutterMethodNotImplemented)

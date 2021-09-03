@@ -75,6 +75,10 @@ class DataCallHandler {
         return promiseToFuture(
                 getDataStore(call).save(convertToJs(call.arguments['entity'])))
             .then((value) => convertFromJs(value));
+      case "Backendless.Data.of.deepSave":
+        return promiseToFuture(getDataStore(call)
+                .deepSave(convertToJs(call.arguments['entity'])))
+            .then((value) => convertFromJs(value));
       case "Backendless.Data.of.setRelation":
         var childrenObjectIds = call.arguments['childrenObjectIds'];
         var whereClause = call.arguments['whereClause'];
@@ -103,12 +107,14 @@ class DataCallHandler {
   int addListener(MethodCall call) {
     String event = call.arguments["event"];
     String whereClause = call.arguments["whereClause"];
+    String relationColumnName = call.arguments["relationColumnName"];
+    List parentObjects = call.arguments["parentObjects"];
 
     int handle = _nextHandle++;
 
     RTHandlersJs rtHandler = getDataStore(call).rt();
 
-    Function callback = getCallback(handle, event.contains("BULK"));
+    Function callback = getCallback(handle, event);
     switch (event) {
       case "RTDataEvent.CREATED":
         rtHandler.addCreateListener(whereClause, allowInterop(callback));
@@ -127,6 +133,18 @@ class DataCallHandler {
         break;
       case "RTDataEvent.BULK_DELETED":
         rtHandler.addBulkDeleteListener(whereClause, allowInterop(callback));
+        break;
+      case "RTDataEvent.RELATIONS_SET":
+        rtHandler.addSetRelationListener(
+            relationColumnName, parentObjects, allowInterop(callback));
+        break;
+      case "RTDataEvent.RELATIONS_ADDED":
+        rtHandler.addAddRelationListener(
+            relationColumnName, parentObjects, allowInterop(callback));
+        break;
+      case "RTDataEvent.RELATIONS_REMOVED":
+        rtHandler.addDeleteRelationListener(
+            relationColumnName, parentObjects, allowInterop(callback));
         break;
       default:
         throw PlatformException(
@@ -185,6 +203,15 @@ class DataCallHandler {
         else
           rtHandler.removeBulkDeleteListener(allowInterop(callback));
         break;
+      case "RTDataEvent.RELATIONS_SET":
+        rtHandler.removeSetRelationListener(allowInterop(callback));
+        break;
+      case "RTDataEvent.RELATIONS_ADDED":
+        rtHandler.removeAddRelationListener(allowInterop(callback));
+        break;
+      case "RTDataEvent.RELATIONS_REMOVED":
+        rtHandler.removeDeleteRelationListener(allowInterop(callback));
+        break;
       default:
         throw PlatformException(
             code: 'Unimplemented',
@@ -193,10 +220,13 @@ class DataCallHandler {
     }
   }
 
-  Function getCallback(int handle, [bool bulk = false]) {
+  Function getCallback(int handle, String eventName) {
     return (jsResponse) {
       var response = convertFromJs(jsResponse);
-      if (bulk && response is Map) response = BulkEvent.fromJson(response);
+      if (eventName.contains("BULK") && response is Map)
+        response = BulkEvent.fromJson(response);
+      if (eventName.contains("RELATIONS") && response is Map)
+        response = RelationStatus.fromJson(response);
       Map args = {"handle": handle};
       args["response"] = response;
       _channel.invokeMethod("Backendless.Data.RT.EventResponse", args);
@@ -268,6 +298,9 @@ class DataStoreJs {
   external dynamic save(entity);
 
   @JS()
+  external dynamic deepSave(entity);
+
+  @JS()
   external int setRelation(
       String parentObjectId, String relationColumnName, dynamic childen);
 
@@ -332,4 +365,25 @@ class RTHandlersJs {
 
   @JS()
   external dynamic removeBulkDeleteListener(callback);
+
+  @JS()
+  external dynamic addSetRelationListener(
+      relationColumnName, parentObjects, callback);
+
+  @JS()
+  external dynamic addAddRelationListener(
+      relationColumnName, parentObjects, callback);
+
+  @JS()
+  external dynamic addDeleteRelationListener(
+      relationColumnName, parentObjects, callback);
+
+  @JS()
+  external dynamic removeSetRelationListener(callback);
+
+  @JS()
+  external dynamic removeAddRelationListener(callback);
+
+  @JS()
+  external dynamic removeDeleteRelationListener(callback);
 }

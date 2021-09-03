@@ -54,6 +54,11 @@ class BackendlessUserService {
       _channel.invokeMethod("Backendless.UserService.resendEmailConfirmation",
           <String, dynamic>{"identity": identity});
 
+  Future<String?> createEmailConfirmationURL(String identity) =>
+      _channel.invokeMethod(
+          "Backendless.UserService.createEmailConfirmationURL",
+          {"identity": identity});
+
   Future<void> restorePassword(String identity) => _channel.invokeMethod(
       "Backendless.UserService.restorePassword",
       <String, dynamic>{"identity": identity});

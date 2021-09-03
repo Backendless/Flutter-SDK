@@ -1,5 +1,6 @@
 package com.backendless.backendless_sdk.utils.codec;
 
+import com.backendless.Backendless;
 import com.backendless.BackendlessUser;
 import com.backendless.DeviceRegistration;
 import com.backendless.backendless_sdk.utils.codec.mixins.CommandMixin;
@@ -28,6 +29,7 @@ import com.backendless.push.DeviceRegistrationResult;
 import com.backendless.rt.ReconnectAttempt;
 import com.backendless.rt.command.Command;
 import com.backendless.rt.data.BulkEvent;
+import com.backendless.rt.data.RelationStatus;
 import com.backendless.rt.users.UserInfo;
 import com.backendless.rt.users.UserStatusResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -77,6 +79,7 @@ public final class BackendlessMessageCodec extends StandardMessageCodec {
     private static final byte POINT = (byte) 155;
     private static final byte LINE_STRING = (byte) 156;
     private static final byte POLYGON = (byte) 157;
+    private static final byte RELATION_STATUS = (byte) 158;
 
     private BackendlessMessageCodec() {
         objectMapper.enable(SerializationFeature.WRITE_ENUMS_USING_INDEX);
@@ -183,6 +186,9 @@ public final class BackendlessMessageCodec extends StandardMessageCodec {
         } else if (value instanceof Polygon) {
             stream.write(POLYGON);
             writeValue(stream,  ((Polygon) value).asWKT());
+        } else if (value instanceof RelationStatus) {
+            stream.write(RELATION_STATUS);
+            writeValue(stream, objectMapper.convertValue(value, Map.class));
         } else if (value != null && value.getClass().isArray()) {
             Object[] array = (Object[]) value;
             List list = Arrays.asList(array);
@@ -247,6 +253,8 @@ public final class BackendlessMessageCodec extends StandardMessageCodec {
                 return LineString.<LineString>fromWKT((String) readValue(buffer));
             case POLYGON:
                 return Polygon.<Polygon>fromWKT((String) readValue(buffer));
+            case RELATION_STATUS:
+                return objectMapper.convertValue(readValue(buffer), RelationStatus.class);
             default:
                 return super.readValueOfType(type, buffer);
         }

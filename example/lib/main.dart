@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:backendless_sdk/backendless_sdk.dart';
+import 'package:flutter/material.dart';
 
 void main() {
   runApp(MyApp());
@@ -18,7 +18,8 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    Backendless.initApp(APP_ID, ANDROID_KEY, IOS_KEY);
+    Backendless.initApp(
+        applicationId: APP_ID, androidApiKey: ANDROID_KEY, iosApiKey: IOS_KEY);
   }
 
   void buttonPressed() {
