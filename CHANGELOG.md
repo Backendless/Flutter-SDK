@@ -1,3 +1,10 @@
+# 7.1.2
+
+* Added implementation for method findByRole
+* Added leave and removeAllMessageListeners methods
+* Fixed error with compile app for ios 
+* Upgrade Android embedding
+
 # 7.1.1
 
 * Bump Backendless Android SDK version to 6.3.1
