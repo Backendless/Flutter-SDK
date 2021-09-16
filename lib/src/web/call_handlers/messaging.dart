@@ -22,6 +22,8 @@ class MessagingCallHandler {
       case "Backendless.Messaging.cancel":
         return promiseToFuture(cancel(call.arguments['messageId'])).then(
             (value) => MessageStatus.fromJson(convertFromJs(value) as Map));
+      case "Backendless.Messaging.Channel.leave":
+        return Future(() => leave(call.arguments['channelHandle']));
       case "Backendless.Messaging.getMessageStatus":
         return promiseToFuture(getMessageStatus(call.arguments['messageId']))
             .then(
@@ -87,12 +89,26 @@ class MessagingCallHandler {
         return Future(() => null);
       case "Backendless.Messaging.Channel.addMessageListener":
         return Future(() => addMessageListener(call));
+      case "Backendless.Messaging.Channel.removeAllMessageListeners":
+        return Future(
+            () => removeAllListeners(call.arguments['channelHandle']));
       default:
         throw PlatformException(
             code: 'Unimplemented',
             details: "Backendless plugin for web doesn't implement "
                 "the method '${call.method}'");
     }
+  }
+
+  void leave(int channelHandle) {
+    ChannelJs channel = channels[channelHandle]!;
+    channel.leave();
+  }
+
+  void removeAllListeners(int channelHandle) {
+    messageCallbacks.clear();
+    ChannelJs channel = channels[channelHandle]!;
+    channel.removeAllMessageListeners();
   }
 
   int addMessageListener(MethodCall call) {
@@ -163,6 +179,12 @@ class EmailEnvelopeJs {
 @JS('Backendless.Messaging.Channel')
 class ChannelJs {
   external factory ChannelJs(options, app);
+
+  @JS()
+  external dynamic leave();
+
+  @JS()
+  external dynamic removeAllMessageListeners();
 
   @JS()
   external dynamic addMessageListener(selector, callback);

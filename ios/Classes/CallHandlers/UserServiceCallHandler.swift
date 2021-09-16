@@ -18,6 +18,7 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
         static let setCurrentUser = "Backendless.UserService.setCurrentUser"
         static let describeUserClass = "Backendless.UserService.describeUserClass"
         static let findById = "Backendless.UserService.findById"
+        static let findByRole = "Backendless.UserService.findByRole"
         static let getUserRoles = "Backendless.UserService.getUserRoles"
         static let isValidLogin = "Backendless.UserService.isValidLogin"
         static let loggedInUser = "Backendless.UserService.loggedInUser"
@@ -54,6 +55,9 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
         static let guestUser = "guestUser"
         static let authProviderCode = "authProviderCode"
         static let currentUser = "currentUser"
+        static let roleName = "roleName"
+        static let queryBuilder = "queryBuilder"
+        static let loadRoles = "loadRoles"
     }
     
     // MARK: -
@@ -74,6 +78,8 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
             describeUserClass(arguments, result)
         case Methods.findById:
             findById(arguments, result)
+        case Methods.findByRole:
+            findByRole(arguments, result )
         case Methods.getUserRoles:
             getUserRoles(arguments, result)
         case Methods.isValidLogin:
@@ -164,7 +170,29 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
                     result(FlutterError($0))
                 })
     }
-    
+
+     // MARK: -
+     // MARK: - Find by Role
+     private func findByRole(_ arguments:[String: Any], _ result: @escaping FlutterResult){
+        guard
+            let roleName: String = arguments[Args.roleName].flatMap(cast)
+        else {
+          result(FlutterError.noRequiredArguments)
+
+          return
+        }
+        let loadRoles: Bool = arguments[Args.loadRoles].flatMap(cast) ?? false
+        let queryBuilder: DataQueryBuilder = arguments[Args.queryBuilder].flatMap(cast) ?? DataQueryBuilder()
+
+        userService.findByRole( roleName: roleName, loadRoles: loadRoles, queryBuilder: queryBuilder,
+         responseHandler: {
+            result($0)
+         },
+         errorHandler: {
+            result(FlutterError($0))
+         })
+     }
+
     // MARK: -
     // MARK: - Get User Roles
     private func getUserRoles(_ arguments: [String: Any], _ result: @escaping FlutterResult) {
@@ -381,14 +409,14 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
         
         
         if let guestUser = guestUser {
-            userService.loginWithOauth1(providerCode: authProviderCode, token: authToken, tokenSecret: authTokenSecret, guestUser: guestUser, fieldsMapping: fieldsMappings, stayLoggedIn: stayLoggedIn, responseHandler: {
+            userService.loginWithOauth1(providerCode: authProviderCode, authToken: authToken, authTokenSecret: authTokenSecret, guestUser: guestUser, fieldsMapping: fieldsMappings, stayLoggedIn: stayLoggedIn, responseHandler: {
                 result($0)
             },
             errorHandler: {
                 result(FlutterError($0))
             })
         } else {
-            userService.loginWithOauth1(providerCode: authProviderCode, token: authToken, tokenSecret: authTokenSecret, fieldsMapping: fieldsMappings, stayLoggedIn: stayLoggedIn, responseHandler: {
+            userService.loginWithOauth1(providerCode: authProviderCode, authToken: authToken, tokenSecret: authTokenSecret, fieldsMapping: fieldsMappings, stayLoggedIn: stayLoggedIn, responseHandler: {
                 result($0)
             },
             errorHandler: {
@@ -413,14 +441,14 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
         
         
         if let guestUser = guestUser {
-            userService.loginWithOauth2(providerCode: authProviderCode, token: accessToken, guestUser: guestUser, fieldsMapping: fieldsMappings, stayLoggedIn: stayLoggedIn, responseHandler: {
+            userService.loginWithOauth2(providerCode: authProviderCode, accessToken: accessToken, guestUser: guestUser, fieldsMapping: fieldsMappings, stayLoggedIn: stayLoggedIn, responseHandler: {
                 result($0)
             },
             errorHandler: {
                 result(FlutterError($0))
             })
         } else {
-            userService.loginWithOauth2(providerCode: authProviderCode, token: accessToken, fieldsMapping: fieldsMappings, stayLoggedIn: stayLoggedIn, responseHandler: {
+            userService.loginWithOauth2(providerCode: authProviderCode, accessToken: accessToken, fieldsMapping: fieldsMappings, stayLoggedIn: stayLoggedIn, responseHandler: {
                 result($0)
             },
             errorHandler: {

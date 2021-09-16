@@ -20,6 +20,12 @@ class UserServiceCallHandler {
       case "Backendless.UserService.findById":
         return promiseToFuture(findById(call.arguments['id']))
             .then((value) => getUser(value));
+      case "Backendless.UserService.findByRole":
+        return promiseToFuture(findByRole(
+          call.arguments['roleName'],
+          call.arguments['loadRoles'],
+          call.arguments['queryBuilder'],
+        )).then((value) => getUsers(value));
       case "Backendless.UserService.getUserRoles":
         return promiseToFuture(getUserRoles());
       case "Backendless.UserService.isValidLogin":
@@ -80,6 +86,16 @@ class UserServiceCallHandler {
 
   BackendlessUser getUser(dynamic jsObject) =>
       BackendlessUser.fromJson(convertFromJs(jsObject) as Map);
+
+  List<BackendlessUser> getUsers(dynamic jsObject) {
+    List<BackendlessUser> users = [];
+
+    for (var user in jsObject) {
+      users.add(getUser(user));
+    }
+
+    return users;
+  }
 }
 
 @JS('Backendless.UserService.getLocalCurrentUser')
@@ -90,6 +106,9 @@ external List<UserProperty> describeUserClass();
 
 @JS('Backendless.UserService.findById')
 external dynamic findById(String id);
+
+@JS('Backendless.UserService.findByRole')
+external dynamic findByRole(roleName, loadRoles, queryBuilder);
 
 @JS('Backendless.UserService.getUserRoles')
 external List<String> getUserRoles();
