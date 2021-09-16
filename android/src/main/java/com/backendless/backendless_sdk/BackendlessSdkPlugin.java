@@ -1,5 +1,9 @@
 package com.backendless.backendless_sdk;
 
+import android.content.Context;
+
+import androidx.annotation.NonNull;
+
 import com.backendless.backendless_sdk.call_handlers.BackendlessCallHandler;
 import com.backendless.backendless_sdk.call_handlers.CacheCallHandler;
 import com.backendless.backendless_sdk.call_handlers.CommerceCallHandler;
@@ -16,66 +20,125 @@ import com.backendless.backendless_sdk.common.FlutterBackendlessFCMService;
 import com.backendless.backendless_sdk.call_handlers.TestCallHandler;
 import com.backendless.backendless_sdk.utils.codec.BackendlessMessageCodec;
 
+import io.flutter.embedding.engine.plugins.FlutterPlugin;
+import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodChannel;
-import io.flutter.plugin.common.PluginRegistry.Registrar;
+import io.flutter.plugin.common.PluginRegistry;
 import io.flutter.plugin.common.StandardMethodCodec;
 
-/** BackendlessSdkPlugin */
-public class BackendlessSdkPlugin {
-  /**
-     * Plugin registration.
-     */
-    public static void registerWith(Registrar registrar) {
-      final MethodChannel backendlessChannel = new MethodChannel(registrar.messenger(), "backendless");
-      backendlessChannel.setMethodCallHandler(new BackendlessCallHandler(registrar.context().getApplicationContext()));
+/**
+ * BackendlessSdkPlugin
+ */
+public class BackendlessSdkPlugin implements FlutterPlugin {
+    private MethodChannel backendlessChannel;
+    private MethodChannel dataChannel;
+    private MethodChannel cacheChannel;
+    private MethodChannel commerceChannel;
+    private MethodChannel countersChannel;
+    private MethodChannel customServiceChannel;
+    private MethodChannel eventsChannel;
+    private MethodChannel filesChannel;
+    private MethodChannel loggingChannel;
+    private MethodChannel messagingChannel;
+    private MethodChannel rtChannel;
+    private MethodChannel userServiceChannel;
+    private MethodChannel fcmServiceChannel;
+    private MethodChannel testChannel;
 
-      final MethodChannel dataChannel = new MethodChannel(registrar.messenger(), "backendless/data",
-          new StandardMethodCodec(BackendlessMessageCodec.INSTANCE));
-      dataChannel.setMethodCallHandler(new DataCallHandler(dataChannel));
+    @SuppressWarnings("deprecation")
+    public static void registerWith(PluginRegistry.Registrar registrar) {
+        BackendlessSdkPlugin plugin = new BackendlessSdkPlugin();
+        plugin.initInstance(registrar.messenger(), registrar.context().getApplicationContext());
+    }
 
-      final MethodChannel cacheChannel = new MethodChannel(registrar.messenger(), "backendless/cache",
-          new StandardMethodCodec(BackendlessMessageCodec.INSTANCE));
-      cacheChannel.setMethodCallHandler(new CacheCallHandler());
+    @Override
+    public void onAttachedToEngine(@NonNull FlutterPluginBinding binding) {
+        initInstance(binding.getBinaryMessenger(), binding.getApplicationContext());
+    }
 
-      final MethodChannel commerceChannel = new MethodChannel(registrar.messenger(), "backendless/commerce",
-          new StandardMethodCodec(BackendlessMessageCodec.INSTANCE));
-      commerceChannel.setMethodCallHandler(new CommerceCallHandler());
+    @Override
+    public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
+        backendlessChannel.setMethodCallHandler(null);
+        backendlessChannel = null;
+        dataChannel.setMethodCallHandler(null);
+        dataChannel = null;
+        cacheChannel.setMethodCallHandler(null);
+        cacheChannel = null;
+        commerceChannel.setMethodCallHandler(null);
+        commerceChannel = null;
+        countersChannel.setMethodCallHandler(null);
+        countersChannel = null;
+        customServiceChannel.setMethodCallHandler(null);
+        customServiceChannel = null;
+        eventsChannel.setMethodCallHandler(null);
+        eventsChannel = null;
+        filesChannel.setMethodCallHandler(null);
+        filesChannel = null;
+        loggingChannel.setMethodCallHandler(null);
+        loggingChannel = null;
+        messagingChannel.setMethodCallHandler(null);
+        messagingChannel = null;
+        rtChannel.setMethodCallHandler(null);
+        rtChannel = null;
+        userServiceChannel.setMethodCallHandler(null);
+        userServiceChannel = null;
+        fcmServiceChannel.setMethodCallHandler(null);
+        fcmServiceChannel = null;
+        testChannel.setMethodCallHandler(null);
+        testChannel = null;
+    }
 
-      final MethodChannel countersChannel = new MethodChannel(registrar.messenger(), "backendless/counters");
-      countersChannel.setMethodCallHandler(new CountersCallHandler());
+    private void initInstance(BinaryMessenger messenger, Context context) {
+        backendlessChannel = new MethodChannel(messenger, "backendless");
+        backendlessChannel.setMethodCallHandler(new BackendlessCallHandler(context));
 
-      final MethodChannel customServiceChannel = new MethodChannel(registrar.messenger(), "backendless/custom_service",
-          new StandardMethodCodec(BackendlessMessageCodec.INSTANCE));
-      customServiceChannel.setMethodCallHandler(new CustomServiceCallHandler());
+        dataChannel = new MethodChannel(messenger, "backendless/data",
+                new StandardMethodCodec(BackendlessMessageCodec.INSTANCE));
+        dataChannel.setMethodCallHandler(new DataCallHandler(dataChannel));
 
-      final MethodChannel eventsChannel = new MethodChannel(registrar.messenger(), "backendless/events",
-          new StandardMethodCodec(BackendlessMessageCodec.INSTANCE));
-      eventsChannel.setMethodCallHandler(new EventsCallHandler());
+        cacheChannel = new MethodChannel(messenger, "backendless/cache",
+                new StandardMethodCodec(BackendlessMessageCodec.INSTANCE));
+        cacheChannel.setMethodCallHandler(new CacheCallHandler());
 
-      final MethodChannel filesChannel = new MethodChannel(registrar.messenger(), "backendless/files",
-          new StandardMethodCodec(BackendlessMessageCodec.INSTANCE));
-      filesChannel.setMethodCallHandler(new FilesCallHandler(filesChannel));
+        commerceChannel = new MethodChannel(messenger, "backendless/commerce",
+                new StandardMethodCodec(BackendlessMessageCodec.INSTANCE));
+        commerceChannel.setMethodCallHandler(new CommerceCallHandler());
 
-      final MethodChannel loggingChannel = new MethodChannel(registrar.messenger(), "backendless/logging");
-      loggingChannel.setMethodCallHandler(new LoggingCallHandler());
+        countersChannel = new MethodChannel(messenger, "backendless/counters");
+        countersChannel.setMethodCallHandler(new CountersCallHandler());
 
-      final MethodChannel messagingChannel = new MethodChannel(registrar.messenger(), "backendless/messaging",
-          new StandardMethodCodec(BackendlessMessageCodec.INSTANCE));
-      messagingChannel.setMethodCallHandler(new MessagingCallHandler(messagingChannel));
+        customServiceChannel = new MethodChannel(messenger, "backendless/custom_service",
+                new StandardMethodCodec(BackendlessMessageCodec.INSTANCE));
+        customServiceChannel.setMethodCallHandler(new CustomServiceCallHandler());
 
-      final MethodChannel rtChannel = new MethodChannel(registrar.messenger(), "backendless/rt",
-          new StandardMethodCodec(BackendlessMessageCodec.INSTANCE));
-      rtChannel.setMethodCallHandler(new RtCallHandler(rtChannel));
+        eventsChannel = new MethodChannel(messenger, "backendless/events",
+                new StandardMethodCodec(BackendlessMessageCodec.INSTANCE));
+        eventsChannel.setMethodCallHandler(new EventsCallHandler());
 
-      final MethodChannel userServiceChannel = new MethodChannel(registrar.messenger(), "backendless/user_service",
-          new StandardMethodCodec(BackendlessMessageCodec.INSTANCE));
-      userServiceChannel.setMethodCallHandler(new UserServiceCallHandler());
+        filesChannel = new MethodChannel(messenger, "backendless/files",
+                new StandardMethodCodec(BackendlessMessageCodec.INSTANCE));
+        filesChannel.setMethodCallHandler(new FilesCallHandler(filesChannel));
 
-      final MethodChannel fcmServiceChannel = new MethodChannel(registrar.messenger(), "backendless/messaging/push");
-      FlutterBackendlessFCMService.setMethodChannel(fcmServiceChannel);
+        loggingChannel = new MethodChannel(messenger, "backendless/logging");
+        loggingChannel.setMethodCallHandler(new LoggingCallHandler());
 
-      final MethodChannel testChannel = new MethodChannel(registrar.messenger(), "backendless/test",
-          new StandardMethodCodec(BackendlessMessageCodec.INSTANCE));
-          testChannel.setMethodCallHandler(new TestCallHandler());
-  }
+        messagingChannel = new MethodChannel(messenger, "backendless/messaging",
+                new StandardMethodCodec(BackendlessMessageCodec.INSTANCE));
+        messagingChannel.setMethodCallHandler(new MessagingCallHandler(messagingChannel));
+
+        rtChannel = new MethodChannel(messenger, "backendless/rt",
+                new StandardMethodCodec(BackendlessMessageCodec.INSTANCE));
+        rtChannel.setMethodCallHandler(new RtCallHandler(rtChannel));
+
+        userServiceChannel = new MethodChannel(messenger, "backendless/user_service",
+                new StandardMethodCodec(BackendlessMessageCodec.INSTANCE));
+        userServiceChannel.setMethodCallHandler(new UserServiceCallHandler());
+
+        fcmServiceChannel = new MethodChannel(messenger, "backendless/messaging/push");
+        FlutterBackendlessFCMService.setMethodChannel(fcmServiceChannel);
+
+        testChannel = new MethodChannel(messenger, "backendless/test",
+                new StandardMethodCodec(BackendlessMessageCodec.INSTANCE));
+        testChannel.setMethodCallHandler(new TestCallHandler());
+    }
 }

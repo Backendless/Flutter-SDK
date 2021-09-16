@@ -25,6 +25,15 @@ class BackendlessUserService {
   Future<BackendlessUser?> findById(String id) => _channel.invokeMethod(
       "Backendless.UserService.findById", <String, dynamic>{"id": id});
 
+  Future<List<BackendlessUser>?> findByRole(roleName,
+          {bool? loadRoles, DataQueryBuilder? queryBuilder}) async =>
+      (await _channel.invokeMethod("Backendless.UserService.findByRole", {
+        "roleName": roleName,
+        "loadRoles": loadRoles,
+        "queryBuilder": queryBuilder,
+      }))
+          .cast<BackendlessUser?>();
+
   Future<List<String>?> getUserRoles() async =>
       (await _channel.invokeMethod("Backendless.UserService.getUserRoles"))
           .cast<String>();
