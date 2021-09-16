@@ -5,6 +5,7 @@ import com.backendless.BackendlessUser;
 import com.backendless.HeadersManager;
 import com.backendless.backendless_sdk.utils.FlutterCallback;
 import com.backendless.property.UserProperty;
+import com.backendless.persistence.DataQueryBuilder;
 
 import java.util.List;
 import java.util.Map;
@@ -32,6 +33,9 @@ public class UserServiceCallHandler implements MethodChannel.MethodCallHandler {
                 break;
             case "Backendless.UserService.findById":
                 findById(call, result);
+                break;
+            case "Backendless.UserService.findByRole":
+                findByRole(call, result);
                 break;
             case "Backendless.UserService.getUserRoles":
                 getUserRoles(result);
@@ -100,6 +104,14 @@ public class UserServiceCallHandler implements MethodChannel.MethodCallHandler {
     private void findById(MethodCall call, MethodChannel.Result result) {
         String id = call.argument("id");
         Backendless.UserService.findById(id, new FlutterCallback<BackendlessUser>(result));
+    }
+
+    private void findByRole(MethodCall call, MethodChannel.Result result){
+        String roleName = call.argument("roleName");
+        boolean loadRoles = call.argument("loadRoles");
+        DataQueryBuilder queryBuilder = call.argument("queryBuilder");
+
+        Backendless.UserService.findByRole(roleName, loadRoles, queryBuilder, new FlutterCallback<List<BackendlessUser>>(result));
     }
 
     private void getUserRoles(MethodChannel.Result result) {
