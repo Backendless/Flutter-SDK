@@ -22,7 +22,7 @@ class _MyAppState extends State<MyApp> {
         applicationId: APP_ID, androidApiKey: ANDROID_KEY, iosApiKey: IOS_KEY);
   }
 
-  void buttonPressed() {
+  void buttonPressed() async {
     // create a Map object. This will become a record in a database table
     Map testObject = new Map();
 
@@ -32,8 +32,15 @@ class _MyAppState extends State<MyApp> {
     testObject["foo"] = "bar";
 
     // Save the object in the database. The name of the database table is "TestTable".
+    /*
     Backendless.data.of("TestTable").save(testObject).then((response) =>
         print("Object is saved in Backendless. Please check in the console."));
+    */
+    DataQueryBuilder queryBuilder = DataQueryBuilder()..relationsDepth = 2;
+
+    List<Map> data =
+        await Backendless.data.of('Conversation').find(queryBuilder);
+    print(data);
   }
 
   @override

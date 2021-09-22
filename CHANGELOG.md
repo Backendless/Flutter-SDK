@@ -1,9 +1,17 @@
+# 7.1.4
+
+* Fixed a bug in the relationsDepth parameter for IOS
+* Now the minimum version of IOS is 10.
+
+# 7.1.3
+
+* Upgrade Android embedding
+
 # 7.1.2
 
 * Added implementation for method findByRole
 * Added leave and removeAllMessageListeners methods
-* Fixed error with compile app for ios 
-* Upgrade Android embedding
+* Fixed error with compile app for ios
 
 # 7.1.1
 

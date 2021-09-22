@@ -241,8 +241,10 @@ class DataCallHandler: FlutterCallHandlerProtocol {
     // MARK: - Find
     private func find(_ tableName: String, _ arguments: [String: Any], _ result: @escaping FlutterResult) {
         let queryBuilder: DataQueryBuilder? = arguments[Args.queryBuilder].flatMap(cast)
+        let relationsDepth : Int? = (arguments[Args.queryBuilder].flatMap(cast)! as DataQueryBuilder).relationsDepth
         
         if let queryBuilder = queryBuilder {
+            queryBuilder.relationsDepth = relationsDepth!
             data.ofTable(tableName)
                 .find(queryBuilder: queryBuilder,
                     responseHandler: {
@@ -274,10 +276,14 @@ class DataCallHandler: FlutterCallHandlerProtocol {
         let queryBuilder: DataQueryBuilder? = arguments[Args.queryBuilder].flatMap(cast)
         let relations: [String]? = arguments[Args.relations].flatMap(cast)
         let relationsDepth: Int? = arguments[Args.relationsDepth].flatMap(cast)
+        let relationsDepthFromBuilder : Int? = (arguments[Args.queryBuilder].flatMap(cast)! as DataQueryBuilder).relationsDepth
         
         if let queryBuilder = queryBuilder {
-            relations.map { queryBuilder.setRelated(related: $0) }
-            relationsDepth.map { queryBuilder.setRelationsDepth(relationsDepth: $0) }
+            relations.map { queryBuilder.related = $0 }
+            relationsDepth.map { queryBuilder.relationsDepth = $0 }
+            if(relationsDepthFromBuilder! > 0 && relationsDepthFromBuilder != nil) {
+                queryBuilder.relationsDepth = relationsDepthFromBuilder!
+            }
             
             data.ofTable(tableName)
                 .findById(objectId: id, queryBuilder: queryBuilder,
@@ -290,8 +296,8 @@ class DataCallHandler: FlutterCallHandlerProtocol {
         } else {
             if relations != nil || relationsDepth != nil {
                 let newQueryBuilder = DataQueryBuilder()
-                relations.map { newQueryBuilder.setRelated(related: $0) }
-                relationsDepth.map { newQueryBuilder.setRelationsDepth(relationsDepth: $0) }
+                relations.map { newQueryBuilder.related = $0 }
+                relationsDepth.map { newQueryBuilder.relationsDepth = $0 }
                 
                 data.ofTable(tableName)
                     .findById(objectId: id, queryBuilder: newQueryBuilder,
@@ -322,8 +328,8 @@ class DataCallHandler: FlutterCallHandlerProtocol {
         
         if relations != nil || relationsDepth != nil {
             let queryBuilder = DataQueryBuilder()
-            relations.map { queryBuilder.setRelated(related: $0) }
-            relationsDepth.map { queryBuilder.setRelationsDepth(relationsDepth: $0) }
+            relations.map { queryBuilder.related = $0 }
+            relationsDepth.map { queryBuilder.relationsDepth = $0 }
             
             data.ofTable(tableName)
                 .findFirst(queryBuilder: queryBuilder,
@@ -351,8 +357,8 @@ class DataCallHandler: FlutterCallHandlerProtocol {
         
         if relations != nil || relationsDepth != nil {
             let queryBuilder = DataQueryBuilder()
-            relations.map { queryBuilder.setRelated(related: $0) }
-            relationsDepth.map { queryBuilder.setRelationsDepth(relationsDepth: $0) }
+            relations.map { queryBuilder.related = $0 }
+            relationsDepth.map { queryBuilder.relationsDepth = $0 }
             
             data.ofTable(tableName)
                 .findLast(queryBuilder: queryBuilder,
