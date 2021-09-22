@@ -1,6 +1,7 @@
 # 7.1.4
 
-* Fixed a bug in the relationsDepth parameter
+* Fixed a bug in the relationsDepth parameter for IOS
+* Now the minimum version of IOS is 10.
 
 # 7.1.3
 
