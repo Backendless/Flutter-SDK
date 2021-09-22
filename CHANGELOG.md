@@ -23,27 +23,6 @@ Add:
 * RT listeners for relations
 * Deep save
 
-# 7.1.3
-
-* Upgrade Android embedding
-
-# 7.1.2
-
-* Added implementation for method findByRole
-* Added leave and removeAllMessageListeners methods
-* Fixed error with compile app for ios
-
-# 7.1.1
-
-* Bump Backendless Android SDK version to 6.3.1
-
-# 7.1.0
-
-Add:
-* `createEmailConfirmationURL` method
-* RT listeners for relations
-* Deep save
-
 # 7.0.0
 
 > Note: This release has breaking changes.
