@@ -241,7 +241,7 @@ class DataCallHandler: FlutterCallHandlerProtocol {
     // MARK: - Find
     private func find(_ tableName: String, _ arguments: [String: Any], _ result: @escaping FlutterResult) {
         let queryBuilder: DataQueryBuilder? = arguments[Args.queryBuilder].flatMap(cast)
-        
+
         if let queryBuilder = queryBuilder {
             data.ofTable(tableName)
                 .find(queryBuilder: queryBuilder,
