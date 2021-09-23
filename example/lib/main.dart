@@ -32,15 +32,8 @@ class _MyAppState extends State<MyApp> {
     testObject["foo"] = "bar";
 
     // Save the object in the database. The name of the database table is "TestTable".
-    /*
     Backendless.data.of("TestTable").save(testObject).then((response) =>
         print("Object is saved in Backendless. Please check in the console."));
-    */
-    DataQueryBuilder queryBuilder = DataQueryBuilder()..relationsDepth = 2;
-
-    List<Map> data =
-        await Backendless.data.of('Conversation').find(queryBuilder);
-    print(data);
   }
 
   @override
