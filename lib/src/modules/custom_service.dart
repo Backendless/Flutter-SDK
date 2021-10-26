@@ -8,7 +8,8 @@ class BackendlessCustomService {
 
   BackendlessCustomService._internal();
 
-  Future<dynamic> invoke(
-          String serviceName, String method, dynamic arguments) =>
-      Invoker.invoke("services/$serviceName/$method", arguments);
+  Future<dynamic> invoke(String serviceName, String method, dynamic arguments,
+          {InvokeOptions? options}) =>
+      Invoker.invoke("services/$serviceName/$method", arguments,
+          options: options);
 }
