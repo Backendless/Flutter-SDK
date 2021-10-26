@@ -242,7 +242,7 @@ class DataCallHandler: FlutterCallHandlerProtocol {
     private func find(_ tableName: String, _ arguments: [String: Any], _ result: @escaping FlutterResult) {
         let queryBuilder: DataQueryBuilder? = arguments[Args.queryBuilder].flatMap(cast)
         let relationsDepth : Int? = queryBuilder?.relationsDepth
-        
+
         if let queryBuilder = queryBuilder {
             queryBuilder.relationsDepth = relationsDepth!
             data.ofTable(tableName)
@@ -277,7 +277,7 @@ class DataCallHandler: FlutterCallHandlerProtocol {
         let relations: [String]? = arguments[Args.relations].flatMap(cast)
         let relationsDepth: Int? = arguments[Args.relationsDepth].flatMap(cast)
         let relationsDepthFromBuilder : Int? = queryBuilder?.relationsDepth
-        
+
         if let queryBuilder = queryBuilder {
             relations.map { queryBuilder.related = $0 }
             relationsDepth.map { queryBuilder.relationsDepth = $0 }

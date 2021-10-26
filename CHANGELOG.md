@@ -1,3 +1,12 @@
+#7.1.6
+
+* Fixed a bug due to which the user-token did not get into custom services
+* Added custom headers implementation to custom services
+
+# 7.1.5
+
+* Fixed bug with DataQueryBuilder
+
 # 7.1.4
 
 * Fixed a bug in the relationsDepth parameter for IOS

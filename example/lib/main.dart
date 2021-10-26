@@ -18,6 +18,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+    Backendless.setUrl('http://api.backendless.com');
     Backendless.initApp(
         applicationId: APP_ID, androidApiKey: ANDROID_KEY, iosApiKey: IOS_KEY);
   }
@@ -32,8 +33,12 @@ class _MyAppState extends State<MyApp> {
     testObject["foo"] = "bar";
 
     // Save the object in the database. The name of the database table is "TestTable".
+
     Backendless.data.of("TestTable").save(testObject).then((response) =>
         print("Object is saved in Backendless. Please check in the console."));
+
+    List<Map> data = await Backendless.data.of('TestTable').find();
+    print(data);
   }
 
   @override
