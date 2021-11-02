@@ -5,7 +5,7 @@ import 'package:backendless_sdk/backendless_sdk.dart';
 
 class TestRT {
   static void start() {
-    final dataStore = Backendless.data.of("MapDrivenTest");
+    final IDataStore<Map<dynamic, dynamic>?> dataStore = Backendless.data.of("MapDrivenTest");
     final rt = dataStore.rt();
 
     final firstFieldValue = "first_test";
@@ -20,7 +20,7 @@ class TestRT {
     final numberOfObjectsInBulk = 13;
     final whereClause = "objectId != null";
 
-    Map savedEntity;
+    Map? savedEntity;
 
     group("RT", () {
       test("Create", () async {
@@ -61,7 +61,7 @@ class TestRT {
         final updateCompleter = Completer();
 
         final updateListener = (entity) {
-          if (entity["objectId"] == savedEntity["objectId"] &&
+          if (entity["objectId"] == savedEntity!["objectId"] &&
               entity["first"] == firstFieldValueUpdated &&
               entity["fourth"] == fourthFieldValueUpdated) {
             updateCompleter.complete();
@@ -73,8 +73,8 @@ class TestRT {
         rt.addUpdateListener(updateListener);
         await Future.delayed(Duration(seconds: 4));
 
-        savedEntity["first"] = firstFieldValueUpdated;
-        savedEntity["fourth"] = fourthFieldValueUpdated;
+        savedEntity!["first"] = firstFieldValueUpdated;
+        savedEntity!["fourth"] = fourthFieldValueUpdated;
 
         await dataStore.save(savedEntity);
         await updateCompleter.future;
@@ -85,7 +85,7 @@ class TestRT {
         final deleteCompleter = Completer();
 
         final deleteListener = (entity) {
-          if (entity["objectId"] == savedEntity["objectId"]) {
+          if (entity["objectId"] == savedEntity!["objectId"]) {
             deleteCompleter.complete();
           } else {
             deleteCompleter.completeError("Delete Listener Error");

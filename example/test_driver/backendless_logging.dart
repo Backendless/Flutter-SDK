@@ -22,7 +22,7 @@ class TestLogging {
 
       final logCompleter = Completer<String>();
       Future<String> logFuture = logCompleter.future;
-      Logger testLogger;
+      late Logger testLogger;
 
       test("Set Reporting Police ", () async {
         await logging.setLogReportingPolicy(testMessagesNum, testFrequency);
@@ -53,12 +53,12 @@ class TestLogging {
         test("Get Logs File", () async {
           final logName =
               DateFormat("MMM dd yyyy").format(DateTime.now()) + ".log";
-          final files = await Backendless.files.listing("logging");
+          final files = await (Backendless.files.listing("logging") as FutureOr<List<FileInfo>>);
           final logUrl = files
               .where((file) => file.name == logName)
               .map((file) => file.publicUrl)
               .toList()
-              .first;
+              .first!;
 
           final uri = Uri.parse(logUrl);
           final request = await HttpClient().getUrl(uri);

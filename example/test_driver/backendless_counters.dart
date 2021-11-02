@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:test/test.dart';
 import 'package:backendless_sdk/backendless_sdk.dart';
 
@@ -52,7 +53,8 @@ class TestCounters {
       });
 
       test("Add And Get", () async {
-        final oldValue = await counters.getValue(counterName);
+        final oldValue =
+            await (counters.getValue(counterName) as FutureOr<int>);
         final valueToAdd = 21;
         final newValue = await counters.addAndGet(counterName, valueToAdd);
 
