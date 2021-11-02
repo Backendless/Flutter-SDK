@@ -69,11 +69,11 @@ external bool exists(String path);
 
 @JS('Backendless.Files.getFileCount')
 external int getFileCount(String path,
-    [String pattern, bool recursive, bool countDirectories]);
+    [String? pattern, bool? recursive, bool? countDirectories]);
 
 @JS('Backendless.Files.listing')
 external dynamic listing(String path,
-    [String pattern, bool recursive, int pagesize, int offset]);
+    [String? pattern, bool? recursive, int? pagesize, int? offset]);
 
 @JS('Backendless.Files.moveFile')
 external String moveFile(String sourcePathName, String targetPath);
@@ -83,7 +83,7 @@ external int remove(String fileUrl);
 
 @JS('Backendless.Files.removeDirectory')
 external int removeDirectory(String directoryPath,
-    [String pattern, bool recursive]);
+    [String? pattern, bool? recursive]);
 
 @JS('Backendless.Files.renameFile')
 external String renameFile(String oldPathName, String newName);

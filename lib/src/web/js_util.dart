@@ -6,7 +6,7 @@ import 'dart:collection';
 import 'package:js/js.dart';
 import 'package:js/js_util.dart';
 
-Object? convertFromJs(jsObject) {
+dynamic convertFromJs(dynamic jsObject) {
   if (jsObject == null) return null;
   if (jsObject.toString() != '[object Object]' && !isArray(jsObject)) {
     throw ArgumentError("Js element must be an object or array");
@@ -14,10 +14,10 @@ Object? convertFromJs(jsObject) {
   return _convertDataTreeFromJs(jsObject);
 }
 
-Object _convertDataTreeFromJs(data) {
+dynamic _convertDataTreeFromJs(dynamic data) {
   var _convertedObjects = HashMap.identity();
 
-  Object _convert(Object o) {
+  dynamic _convert(dynamic o) {
     if (_convertedObjects.containsKey(o)) {
       return _convertedObjects[o];
     }
@@ -42,7 +42,7 @@ Object _convertDataTreeFromJs(data) {
   return _convert(data);
 }
 
-dynamic convertToJs(Object? object) {
+dynamic convertToJs(dynamic object) {
   if (object == null) return null;
   if ((object is! Map) && (object is! Iterable)) {
     throw ArgumentError("object must be a Map or Iterable");
@@ -50,10 +50,10 @@ dynamic convertToJs(Object? object) {
   return _convertDataTreeToJs(object);
 }
 
-Object _convertDataTreeToJs(Object data) {
+dynamic _convertDataTreeToJs(dynamic data) {
   var _convertedObjects = HashMap.identity();
 
-  Object _convert(Object o) {
+  dynamic _convert(dynamic o) {
     if (_convertedObjects.containsKey(o)) {
       return _convertedObjects[o];
     }

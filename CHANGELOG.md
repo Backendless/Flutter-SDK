@@ -1,4 +1,9 @@
-#7.1.6
+# 7.1.7
+
+* Added support null safety for tests
+* Fixed a bug due to which the web project did not start
+
+# 7.1.6
 
 * Fixed a bug due to which the user-token did not get into custom services
 * Added custom headers implementation to custom services
