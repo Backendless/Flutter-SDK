@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:test/test.dart';
 import 'package:backendless_sdk/backendless_sdk.dart';
 import 'package:flutter/services.dart';
@@ -15,7 +16,8 @@ class TestClassesSending {
         final timestamp = 1569883362000;
         final date = DateTime.fromMillisecondsSinceEpoch(timestamp);
 
-        DateTime receivedValue = await sendValue(date);
+        DateTime? receivedValue =
+            await (sendValue(date) as FutureOr<DateTime?>);
 
         expect(receivedValue, date);
       });
@@ -32,7 +34,8 @@ class TestClassesSending {
           ..sortBy = ["test_sort_by"]
           ..whereClause = "testing where_clause";
 
-        DataQueryBuilder receivedValue = await sendValue(queryBuilder);
+        DataQueryBuilder receivedValue =
+            await (sendValue(queryBuilder) as FutureOr<DataQueryBuilder>);
 
         expect(receivedValue.toJson(), queryBuilder.toJson());
       });
@@ -45,7 +48,8 @@ class TestClassesSending {
           ..properties = ["test_first", "test_second"]
           ..sortBy = ["test_sort"];
 
-        LoadRelationsQueryBuilder receivedValue = await sendValue(queryBuilder);
+        LoadRelationsQueryBuilder receivedValue = await (sendValue(queryBuilder)
+            as FutureOr<LoadRelationsQueryBuilder<dynamic>>);
 
         expect(receivedValue.toJson(), queryBuilder.toJson());
       });
@@ -58,7 +62,8 @@ class TestClassesSending {
           ..required = true
           ..type = DataTypeEnum.COLLECTION;
 
-        ObjectProperty receivedValue = await sendValue(property);
+        ObjectProperty receivedValue =
+            await (sendValue(property) as FutureOr<ObjectProperty>);
 
         expect(receivedValue.toJson(), property.toJson());
       });
@@ -71,7 +76,7 @@ class TestClassesSending {
           ..size = 4242
           ..url = "test_url://url.net";
 
-        FileInfo receivedValue = await sendValue(info);
+        FileInfo receivedValue = await (sendValue(info) as FutureOr<FileInfo>);
 
         expect(receivedValue.toJson(), info.toJson());
       });
@@ -82,7 +87,8 @@ class TestClassesSending {
           ..messageId = "TEST_MESSAGE_ID"
           ..status = PublishStatusEnum.FAILED;
 
-        MessageStatus receivedValue = await sendValue(status);
+        MessageStatus receivedValue =
+            await (sendValue(status) as FutureOr<MessageStatus>);
 
         expect(receivedValue.toJson(), status.toJson());
       });
@@ -97,13 +103,14 @@ class TestClassesSending {
           ..os = "TEST_OS"
           ..osVersion = "10";
 
-        DeviceRegistration receivedValue = await sendValue(registration);
+        DeviceRegistration receivedValue =
+            await (sendValue(registration) as FutureOr<DeviceRegistration>);
 
         expect(receivedValue.channels, registration.channels);
         expect(receivedValue.deviceId, registration.deviceId);
         expect(receivedValue.deviceToken, registration.deviceToken);
-        expect(receivedValue.expiration.millisecondsSinceEpoch,
-            registration.expiration.millisecondsSinceEpoch);
+        expect(receivedValue.expiration!.millisecondsSinceEpoch,
+            registration.expiration!.millisecondsSinceEpoch);
         expect(receivedValue.id, registration.id);
         expect(receivedValue.os, registration.os);
         expect(receivedValue.osVersion, registration.osVersion);
@@ -114,7 +121,8 @@ class TestClassesSending {
           ..headers = {"test_key": "test_value", "test_2": "42"}
           ..publisherId = "TEST_PUBLISHER_ID";
 
-        PublishOptions receivedValue = await sendValue(options);
+        PublishOptions receivedValue =
+            await (sendValue(options) as FutureOr<PublishOptions>);
 
         expect(receivedValue.toJson(), options.toJson());
       });
@@ -129,16 +137,17 @@ class TestClassesSending {
           ..repeatExpiresAt = DateTime.now().add(Duration(minutes: 42))
           ..segmentQuery = "test_segment_query";
 
-        DeliveryOptions receivedValue = await sendValue(options);
+        DeliveryOptions receivedValue =
+            await (sendValue(options) as FutureOr<DeliveryOptions>);
 
-        expect(receivedValue.publishAt.millisecondsSinceEpoch,
-            options.publishAt.millisecondsSinceEpoch);
+        expect(receivedValue.publishAt!.millisecondsSinceEpoch,
+            options.publishAt!.millisecondsSinceEpoch);
         expect(receivedValue.publishPolicy, options.publishPolicy);
         expect(receivedValue.pushBroadcast, options.pushBroadcast);
         expect(receivedValue.pushSinglecast, options.pushSinglecast);
         expect(receivedValue.repeatEvery, options.repeatEvery);
-        expect(receivedValue.repeatExpiresAt.millisecondsSinceEpoch,
-            options.repeatExpiresAt.millisecondsSinceEpoch);
+        expect(receivedValue.repeatExpiresAt!.millisecondsSinceEpoch,
+            options.repeatExpiresAt!.millisecondsSinceEpoch);
         expect(receivedValue.segmentQuery, options.segmentQuery);
       });
 
@@ -158,7 +167,8 @@ class TestClassesSending {
           ..timestamp = (DateTime.now().millisecondsSinceEpoch / 1000).round()
           ..messageId = "TEST_MESSAGE_ID";
 
-        PublishMessageInfo receivedValue = await sendValue(info);
+        PublishMessageInfo receivedValue =
+            await (sendValue(info) as FutureOr<PublishMessageInfo>);
 
         expect(receivedValue.toJson(), info.toJson());
       });
@@ -172,7 +182,8 @@ class TestClassesSending {
             DeviceRegistrationResult.fromJson(jsonResult);
 
         DeviceRegistrationResult receivedValue =
-            await sendValue(registrationResult);
+            await (sendValue(registrationResult)
+                as FutureOr<DeviceRegistrationResult>);
 
         expect(receivedValue.toJson(), registrationResult.toJson());
       });
@@ -192,11 +203,13 @@ class TestClassesSending {
           ..type = "test_map_type"
           ..userInfo = userInfo;
 
-        Command<dynamic> receivedCommandString = await sendValue(commandString);
+        Command<dynamic> receivedCommandString =
+            await (sendValue(commandString) as FutureOr<Command<dynamic>>);
 
         expect(receivedCommandString.toJson(), commandString.toJson());
 
-        Command<dynamic> receivedCommandMap = await sendValue(commandMap);
+        Command<dynamic> receivedCommandMap =
+            await (sendValue(commandMap) as FutureOr<Command<dynamic>>);
 
         expect(receivedCommandMap.toJson(), commandMap.toJson());
       });
@@ -212,7 +225,8 @@ class TestClassesSending {
           ..data = [userInfoFirst, userInfoSecond]
           ..status = UserStatus.CONNECTED;
 
-        UserStatusResponse receivedValue = await sendValue(response);
+        UserStatusResponse receivedValue =
+            await (sendValue(response) as FutureOr<UserStatusResponse>);
 
         expect(receivedValue.toJson(), response.toJson());
       });
@@ -224,7 +238,8 @@ class TestClassesSending {
         };
         final attempt = ReconnectAttempt.fromJson(json);
 
-        ReconnectAttempt receivedValue = await sendValue(attempt);
+        ReconnectAttempt receivedValue =
+            await (sendValue(attempt) as FutureOr<ReconnectAttempt>);
 
         expect(receivedValue.toJson(), attempt.toJson());
       });
@@ -236,7 +251,8 @@ class TestClassesSending {
           ..setProperty("prop_1", "value")
           ..setProperty("prop_two", 42);
 
-        BackendlessUser receivedValue = await sendValue(user);
+        BackendlessUser receivedValue =
+            await (sendValue(user) as FutureOr<BackendlessUser>);
 
         expect(user.email, receivedValue.email);
         expect(user.password, receivedValue.password);
@@ -252,7 +268,8 @@ class TestClassesSending {
           ..required = true
           ..type = DataTypeEnum.DOUBLE;
 
-        UserProperty receivedValue = await sendValue(property);
+        UserProperty receivedValue =
+            await (sendValue(property) as FutureOr<UserProperty>);
 
         expect(receivedValue.toJson(), property.toJson());
       });
@@ -262,7 +279,8 @@ class TestClassesSending {
           ..count = 42
           ..whereClause = "test_where_clause";
 
-        BulkEvent receivedValue = await sendValue(event);
+        BulkEvent receivedValue =
+            await (sendValue(event) as FutureOr<BulkEvent>);
 
         expect(receivedValue.toJson(), event.toJson());
       });
@@ -275,7 +293,8 @@ class TestClassesSending {
           ..to = Set<String>.from(
               ["a_test@aa.co", "222_test@mmm.ug", "3_TEST@uu.aa"]);
 
-        EmailEnvelope receivedValue = await sendValue(envelope);
+        EmailEnvelope receivedValue =
+            await (sendValue(envelope) as FutureOr<EmailEnvelope>);
 
         expect(receivedValue.toJson(), envelope.toJson());
       });
@@ -284,7 +303,7 @@ class TestClassesSending {
           ..latitude = 42.42
           ..longitude = 1.01;
 
-        Point receivedValue = await sendValue(point);
+        Point receivedValue = await (sendValue(point) as FutureOr<Point>);
         expect(receivedValue.asWKT(), point.asWKT());
       });
       test("LineString", () async {
@@ -296,14 +315,15 @@ class TestClassesSending {
         ];
         lineString.points = points;
 
-        LineString receivedValue = await sendValue(lineString);
+        LineString receivedValue =
+            await (sendValue(lineString) as FutureOr<LineString>);
         expect(receivedValue.asWKT(), lineString.asWKT());
       });
       test("Polygon", () async {
         final polygon = Geometry.fromWKT<Polygon>(
             "POLYGON((0.5 0.5,5 0,5 5,0 5,0.5 0.5), (1.5 1,4 3,4 1,1.5 1))");
 
-        Polygon receivedValue = await sendValue(polygon);
+        Polygon receivedValue = await (sendValue(polygon) as FutureOr<Polygon>);
         expect(receivedValue.asWKT(), polygon.asWKT());
       });
     });

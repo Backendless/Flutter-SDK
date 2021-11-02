@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:test/test.dart';
 import 'package:backendless_sdk/backendless_sdk.dart';
 
@@ -5,8 +6,8 @@ class TestMessaging {
   static void start() {
     group("", () {
       final messaging = Backendless.messaging;
-      String publishedMessageId;
-      String delayedMessageId;
+      String? publishedMessageId;
+      String? delayedMessageId;
       String email = "test@backendless.consulting";
       String subject = "Test Subject";
 
@@ -23,7 +24,8 @@ class TestMessaging {
       String textMessage = "Test Text";
 
       test("Publish Without Delay", () async {
-        final messageStatus = await messaging.publish(textMessage);
+        final messageStatus =
+            await (messaging.publish(textMessage) as FutureOr<MessageStatus>);
         publishedMessageId = messageStatus.messageId;
 
         expect(messageStatus, isNotNull);
@@ -35,8 +37,8 @@ class TestMessaging {
       // That's why we need delay to get correct status
       test("Get Message Status", () async {
         final messageFuture = Future.delayed(Duration(seconds: 3),
-            () => messaging.getMessageStatus(publishedMessageId));
-        final messageStatus = await messageFuture;
+            () => messaging.getMessageStatus(publishedMessageId!));
+        final messageStatus = await (messageFuture as FutureOr<MessageStatus>);
 
         expect(messageStatus, isNotNull);
         expect(messageStatus.messageId, publishedMessageId);
@@ -46,8 +48,8 @@ class TestMessaging {
       test("Publish With Delay", () async {
         final dateToPublish = DateTime.now().add(Duration(minutes: 10));
         final deliveryOptions = DeliveryOptions()..publishAt = dateToPublish;
-        final messageStatus = await messaging.publish(textMessage,
-            deliveryOptions: deliveryOptions);
+        final messageStatus = await (messaging.publish(textMessage,
+            deliveryOptions: deliveryOptions) as FutureOr<MessageStatus>);
         delayedMessageId = messageStatus.messageId;
 
         expect(messageStatus, isNotNull);
@@ -56,7 +58,8 @@ class TestMessaging {
       });
 
       test("Cancel", () async {
-        final messageStatus = await messaging.cancel(delayedMessageId);
+        final messageStatus = await (messaging.cancel(delayedMessageId!)
+            as FutureOr<MessageStatus>);
 
         expect(messageStatus, isNotNull);
         expect(messageStatus.status, PublishStatusEnum.CANCELLED);
@@ -64,7 +67,8 @@ class TestMessaging {
       });
 
       test("Push With Template", () async {
-        final messageStatus = await messaging.pushWithTemplate("TestTemplate");
+        final messageStatus = await (messaging.pushWithTemplate("TestTemplate")
+            as FutureOr<MessageStatus>);
 
         expect(messageStatus, isNotNull);
         expect(messageStatus.status, PublishStatusEnum.SCHEDULED);
@@ -72,8 +76,8 @@ class TestMessaging {
 
       test("Send Email", () async {
         final bodyParts = BodyParts(textMessage, htmlMessage);
-        final messageStatus =
-            await messaging.sendEmail(subject, bodyParts, [email]);
+        final messageStatus = await (messaging
+            .sendEmail(subject, bodyParts, [email]) as FutureOr<MessageStatus>);
 
         expect(messageStatus, isNotNull);
         expect(messageStatus.status, PublishStatusEnum.SCHEDULED);
@@ -81,7 +85,8 @@ class TestMessaging {
 
       test("Send Text Email", () async {
         final messageStatus =
-            await messaging.sendTextEmail(subject, textMessage, [email]);
+            await (messaging.sendTextEmail(subject, textMessage, [email])
+                as FutureOr<MessageStatus>);
 
         expect(messageStatus, isNotNull);
         expect(messageStatus.status, PublishStatusEnum.SCHEDULED);
@@ -89,7 +94,8 @@ class TestMessaging {
 
       test("Send HTML Email", () async {
         final messageStatus =
-            await messaging.sendHTMLEmail(subject, htmlMessage, [email]);
+            await (messaging.sendHTMLEmail(subject, htmlMessage, [email])
+                as FutureOr<MessageStatus>);
 
         expect(messageStatus, isNotNull);
         expect(messageStatus.status, PublishStatusEnum.SCHEDULED);
@@ -101,8 +107,8 @@ class TestMessaging {
           ..cc = Set.from([email])
           ..bcc = Set.from([email]);
 
-        final messageStatus =
-            await messaging.sendEmailFromTemplate("TestTemplate", envelope);
+        final messageStatus = await (messaging.sendEmailFromTemplate(
+            "TestTemplate", envelope) as FutureOr<MessageStatus>);
 
         expect(messageStatus, isNotNull);
         expect(messageStatus.status, PublishStatusEnum.SCHEDULED);
@@ -110,7 +116,8 @@ class TestMessaging {
 
       test("Subscribe", () async {
         final channelName = "test_channel";
-        final channel = await messaging.subscribe(channelName);
+        final channel =
+            await (messaging.subscribe(channelName) as FutureOr<Channel>);
 
         expect(channel, isNotNull);
         expect(channel.channelName, channelName);

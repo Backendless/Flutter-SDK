@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:backendless_sdk/backendless_sdk.dart';
@@ -22,7 +23,7 @@ class TestUserService {
         "updated"
       ];
 
-      String registeredWithID;
+      String? registeredWithID;
 
       test("Describe User Class", () async {
         final properties = await userService.describeUserClass();
@@ -95,7 +96,8 @@ class TestUserService {
           ..email = testEmail
           ..password = testPass;
 
-        final registeredUser = await userService.register(newUser);
+        final registeredUser =
+            await (userService.register(newUser) as FutureOr<BackendlessUser>);
         registeredWithID = registeredUser.getObjectId();
 
         expect(registeredUser, isNotNull);
@@ -104,18 +106,21 @@ class TestUserService {
       });
 
       test("Login", () async {
-        final loggedUser = await userService.login(testEmail, testPass);
+        final loggedUser = await (userService.login(testEmail, testPass)
+            as FutureOr<BackendlessUser>);
 
         expect(loggedUser.getObjectId(), isNotNull);
         expect(loggedUser.email, testEmail);
       });
 
       test("Update User", () async {
-        final userToUpdate = await userService.getCurrentUser();
+        final userToUpdate =
+            await (userService.getCurrentUser() as FutureOr<BackendlessUser>);
         userToUpdate.email = updatedEmail;
         userToUpdate.password = updatedPass;
 
-        final updatedUser = await userService.update(userToUpdate);
+        final updatedUser = await (userService.update(userToUpdate)
+            as FutureOr<BackendlessUser>);
         expect(updatedUser.email, updatedEmail);
       });
 
@@ -127,7 +132,8 @@ class TestUserService {
       });
 
       test("Login With New Credentials", () async {
-        final loggedUser = await userService.login(updatedEmail, updatedPass);
+        final loggedUser = await (userService.login(updatedEmail, updatedPass)
+            as FutureOr<BackendlessUser>);
 
         expect(loggedUser.getObjectId(), isNotNull);
         expect(loggedUser.email, updatedEmail);
@@ -206,7 +212,8 @@ class TestUserService {
       });
 
       test("Find User By ID", () async {
-        final user = await userService.findById(registeredWithID);
+        final user = await (userService.findById(registeredWithID!)
+            as FutureOr<BackendlessUser>);
         expect(user, isNotNull);
         expect(user.getObjectId(), registeredWithID);
 

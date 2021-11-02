@@ -19,7 +19,7 @@ void main() {
   initializeReflectable();
   final Completer<String> completer = Completer<String>();
   enableFlutterDriverExtension(handler: (_) => completer.future);
-  tearDownAll(() => completer.complete(null));
+  tearDownAll(() => completer.complete(''));
 
   group("", () {
     TestStatic.start();

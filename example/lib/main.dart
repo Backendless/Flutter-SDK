@@ -11,16 +11,20 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  static const String APP_ID = "YOUR_APP_ID";
-  static const String ANDROID_KEY = "YOUR_ANDROID_KEY";
-  static const String IOS_KEY = "YOUR_IOS_KEY";
+  static const String APP_ID = 'YOUR_APP_ID';
+  static const String ANDROID_KEY = 'YOUR_ANDROID_KEY';
+  static const String IOS_KEY = 'YOUR_IOS_KEY';
+  static const String JS_KEY = 'YOUR_JS_KEY';
 
   @override
   void initState() {
     super.initState();
-    Backendless.setUrl('http://api.backendless.com');
+    Backendless.setUrl('https://api.backendless.com');
     Backendless.initApp(
-        applicationId: APP_ID, androidApiKey: ANDROID_KEY, iosApiKey: IOS_KEY);
+        applicationId: APP_ID,
+        androidApiKey: ANDROID_KEY,
+        iosApiKey: IOS_KEY,
+        jsApiKey: JS_KEY);
   }
 
   void buttonPressed() async {
@@ -37,7 +41,7 @@ class _MyAppState extends State<MyApp> {
     Backendless.data.of("TestTable").save(testObject).then((response) =>
         print("Object is saved in Backendless. Please check in the console."));
 
-    List<Map> data = await Backendless.data.of('TestTable').find();
+    var data = await Backendless.data.of('TestTable').find();
     print(data);
   }
 

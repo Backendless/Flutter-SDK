@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:test/test.dart';
 import 'package:backendless_sdk/backendless_sdk.dart';
 
@@ -26,11 +27,11 @@ class TestDataMapDriven {
     final fifthFieldValue = 42.42;
     final sixthFieldValue = false;
 
-    String firstEntityId;
-    String secondEntityId;
+    String? firstEntityId;
+    String? secondEntityId;
 
-    String firstChildId;
-    String secondChildId;
+    String? firstChildId;
+    String? secondChildId;
 
     final defaultPageSize = 10;
     final numberOfObjectsInBulk = 13;
@@ -98,10 +99,12 @@ class TestDataMapDriven {
           "sixth": sixthFieldValue
         };
 
-        final savedEntity = await dataStore.save(entityToSave);
+        final savedEntity = await (dataStore.save(entityToSave)
+            as FutureOr<Map<dynamic, dynamic>>);
         firstEntityId = savedEntity["objectId"];
 
-        final savedChild = await childStore.save(entityToSave);
+        final savedChild = await (childStore.save(entityToSave)
+            as FutureOr<Map<dynamic, dynamic>>);
         firstChildId = savedChild["objectId"];
 
         expect(savedEntity, isNotNull);
@@ -135,10 +138,12 @@ class TestDataMapDriven {
           "sixth": sixthFieldValue
         };
 
-        final savedEntity = await dataStore.save(entityToSave);
+        final savedEntity = await (dataStore.save(entityToSave)
+            as FutureOr<Map<dynamic, dynamic>>);
         secondEntityId = savedEntity["objectId"];
 
-        final savedChild = await childStore.save(entityToSave);
+        final savedChild = await (childStore.save(entityToSave)
+            as FutureOr<Map<dynamic, dynamic>>);
         secondChildId = savedChild["objectId"];
 
         expect(savedEntity, isNotNull);
@@ -163,13 +168,15 @@ class TestDataMapDriven {
       });
 
       test("Find First", () async {
-        final first = await dataStore.findFirst();
+        final first =
+            await (dataStore.findFirst() as FutureOr<Map<dynamic, dynamic>>);
 
         expect(first["objectId"], firstEntityId);
       });
 
       test("Find Last", () async {
-        final last = await dataStore.findLast();
+        final last =
+            await (dataStore.findLast() as FutureOr<Map<dynamic, dynamic>>);
 
         expect(last["objectId"], secondEntityId);
       });
@@ -186,26 +193,28 @@ class TestDataMapDriven {
 
         final objects = List.filled(numberOfObjectsInBulk, testObject);
 
-        final ids = await dataStore.create(objects);
+        final ids = await (dataStore.create(objects) as FutureOr<List<String>>);
 
         expect(ids, isNotNull);
         expect(ids.length, numberOfObjectsInBulk);
       });
 
       test("Find By Id", () async {
-        final found = await dataStore.findById(firstEntityId);
+        final found = await (dataStore.findById(firstEntityId!)
+            as FutureOr<Map<dynamic, dynamic>>);
 
         expect(found, isNotNull);
         expect(found["objectId"], firstEntityId);
       });
 
       test("Find Without WhereClause", () async {
-        final found = await dataStore.find();
+        final found =
+            await (dataStore.find() as FutureOr<List<Map<dynamic, dynamic>?>>);
 
         expect(found, isNotNull);
         expect(found.length, defaultPageSize);
 
-        found.forEach((obj) => expect(obj["objectId"], isNotNull));
+        found.forEach((obj) => expect(obj!["objectId"], isNotNull));
       });
 
       test("Find With WhereClause", () async {
@@ -215,17 +224,19 @@ class TestDataMapDriven {
           ..whereClause = "first = '$firstFieldValue'"
           ..pageSize = 50;
 
-        final exactFound = await dataStore.find(exactQueryBuilder);
-        final commonFound = await dataStore.find(commonQueryBuilder);
+        final exactFound = await (dataStore.find(exactQueryBuilder)
+            as FutureOr<List<Map<dynamic, dynamic>?>>);
+        final commonFound = await (dataStore.find(commonQueryBuilder)
+            as FutureOr<List<Map<dynamic, dynamic>?>>);
 
         expect(exactFound, isNotNull);
         expect(exactFound.length, 1);
-        expect(exactFound.first["objectId"], secondEntityId);
+        expect(exactFound.first!["objectId"], secondEntityId);
 
         expect(commonFound, isNotNull);
         expect(commonFound.length, numberOfObjectsInBulk + createdOneByOne);
 
-        commonFound.forEach((obj) => expect(obj["first"], firstFieldValue));
+        commonFound.forEach((obj) => expect(obj!["first"], firstFieldValue));
       });
 
       test("Get Object Count After Creating", () async {
@@ -243,7 +254,8 @@ class TestDataMapDriven {
           "fourth": fourthFieldValueUpdated
         };
 
-        final updatedObject = await dataStore.save(entityToSave);
+        final updatedObject = await (dataStore.save(entityToSave)
+            as FutureOr<Map<dynamic, dynamic>>);
 
         expect(updatedObject, isNotNull);
         expect(updatedObject["objectId"], firstEntityId);
@@ -263,7 +275,8 @@ class TestDataMapDriven {
           ..pageSize = 40;
 
         final updatedAmount = await dataStore.update(whereClause, changes);
-        final updatedEntities = await dataStore.find(queryBuilder);
+        final updatedEntities = await (dataStore.find(queryBuilder)
+            as FutureOr<List<Map<dynamic, dynamic>?>>);
         final amountToBeUpdated =
             numberOfObjectsInBulk + createdOneByOne - updatedOneByOne;
 
@@ -271,14 +284,14 @@ class TestDataMapDriven {
         expect(updatedEntities.length, amountToBeUpdated);
 
         updatedEntities.forEach((entity) {
-          expect(entity["first"], firstFieldValueUpdated);
+          expect(entity!["first"], firstFieldValueUpdated);
           expect(entity["updated"], isNotNull);
         });
       });
 
       test("Set relation", () async {
-        final relations = await dataStore.setRelation(firstEntityId, "seventh",
-            childrenObjectIds: [firstChildId]);
+        final relations = await dataStore.setRelation(firstEntityId!, "seventh",
+            childrenObjectIds: [firstChildId!]);
 
         expect(relations, isNotNull);
         expect(relations, 1);
@@ -286,8 +299,8 @@ class TestDataMapDriven {
 
       test("Load Relations", () async {
         final queryBuilder = LoadRelationsQueryBuilder.ofMap("seventh");
-        final relations =
-            await dataStore.loadRelations(firstEntityId, queryBuilder);
+        final relations = await (dataStore.loadRelations(
+            firstEntityId!, queryBuilder) as FutureOr<List<dynamic>>);
 
         expect(relations, isNotNull);
         expect(relations.length, 1);
@@ -303,8 +316,8 @@ class TestDataMapDriven {
 
       test("Add relation", () async {
         final addedRelations = await dataStore.addRelation(
-            firstEntityId, "seventh",
-            childrenObjectIds: [firstChildId, secondChildId]);
+            firstEntityId!, "seventh",
+            childrenObjectIds: [firstChildId!, secondChildId!]);
 
         expect(addedRelations, isNotNull);
         expect(addedRelations, 1);
@@ -312,8 +325,8 @@ class TestDataMapDriven {
 
       test("Load Relations After Adding", () async {
         final queryBuilder = LoadRelationsQueryBuilder.ofMap("seventh");
-        final relations =
-            await dataStore.loadRelations(firstEntityId, queryBuilder);
+        final relations = await (dataStore.loadRelations(
+            firstEntityId!, queryBuilder) as FutureOr<List<dynamic>>);
 
         expect(relations, isNotNull);
         expect(relations.length, 2);
@@ -335,9 +348,10 @@ class TestDataMapDriven {
       test("Find First With Relations", () async {
         final relations = ["seventh"];
         final relationsDepth = 1;
-        final byRelationsName = await dataStore.findFirst(relations: relations);
-        final byRelationsDepth =
-            await dataStore.findFirst(relationsDepth: relationsDepth);
+        final byRelationsName = await (dataStore.findFirst(relations: relations)
+            as FutureOr<Map<dynamic, dynamic>>);
+        final byRelationsDepth = await (dataStore.findFirst(
+            relationsDepth: relationsDepth) as FutureOr<Map<dynamic, dynamic>>);
 
         expect(byRelationsName["objectId"], firstEntityId);
         expect(byRelationsName["seventh"], isNotNull);

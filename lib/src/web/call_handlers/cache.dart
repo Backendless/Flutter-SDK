@@ -57,4 +57,4 @@ external dynamic expireIn(String key, int seconds);
 external dynamic get(String key);
 
 @JS('Backendless.Cache.put')
-external dynamic put(String key, dynamic object, [int timeToLive]);
+external dynamic put(String key, dynamic object, [int? timeToLive]);

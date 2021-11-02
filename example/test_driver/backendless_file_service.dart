@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:test/test.dart';
 import 'package:backendless_sdk/backendless_sdk.dart';
 
@@ -93,11 +94,13 @@ class TestFileService {
         });
 
         test("Listing", () async {
-          final rootList = await files.listing(folder);
+          final rootList =
+              await (files.listing(folder) as FutureOr<List<FileInfo>>);
           final rootNames = rootList.map((file) => file.name).toList();
 
           final copyPath = folder + "/" + copyFolder;
-          final copyList = await files.listing(copyPath);
+          final copyList =
+              await (files.listing(copyPath) as FutureOr<List<FileInfo>>);
           final copyNames = copyList.map((file) => file.name).toList();
 
           expect(rootNames.length, 2);

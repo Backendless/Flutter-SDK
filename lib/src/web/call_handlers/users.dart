@@ -120,7 +120,7 @@ external bool isValidLogin();
 external String loggedInUser();
 
 @JS('Backendless.UserService.login')
-external dynamic login(String login, String password, [bool stayLoggedIn]);
+external dynamic login(String login, String password, [bool? stayLoggedIn]);
 
 @JS('Backendless.UserService.logout')
 external dynamic logout();
@@ -144,7 +144,7 @@ external String getUserToken();
 external dynamic setUserToken(String userToken);
 
 @JS('Backendless.UserService.loginAsGuest')
-external dynamic loginAsGuest([bool stayLoggedIn]);
+external dynamic loginAsGuest([bool? stayLoggedIn]);
 
 @JS('Backendless.UserService.loginWithGooglePlusSdk')
 external dynamic loginWithGooglePlus(
