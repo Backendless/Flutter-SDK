@@ -5,7 +5,8 @@ import 'package:backendless_sdk/backendless_sdk.dart';
 
 class TestRT {
   static void start() {
-    final IDataStore<Map<dynamic, dynamic>?> dataStore = Backendless.data.of("MapDrivenTest");
+    final IDataStore<Map<dynamic, dynamic>?> dataStore =
+        Backendless.data.of("MapDrivenTest");
     final rt = dataStore.rt();
 
     final firstFieldValue = "first_test";

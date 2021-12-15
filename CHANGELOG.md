@@ -1,3 +1,8 @@
+# 7.1.8
+
+* Updated version of Android-SDK
+* Fixed problem with initializing custom domains.
+
 # 7.1.7
 
 * Added support null safety for tests
