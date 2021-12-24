@@ -1,65 +1,75 @@
-import 'package:backendless_sdk/backendless_sdk.dart';
 import 'package:flutter/material.dart';
+import 'package:backendless_sdk/backendless_sdk.dart';
 
-void main() {
-  runApp(MyApp());
+void main() async {
+  await Backendless.initApp(
+    applicationId: '756C19D2-DF82-9D99-FF9C-9BFD2F85DC00',
+    iosApiKey: 'A4470C03-FC06-4009-BD47-9077033BF7F6',
+  );
+
+  runApp(const MyApp());
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  // This widget is the root of your application.
   @override
-  _MyAppState createState() => _MyAppState();
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+    );
+  }
 }
 
-class _MyAppState extends State<MyApp> {
-  static const String APP_ID = 'YOUR_APP_ID';
-  static const String ANDROID_KEY = 'YOUR_ANDROID_KEY';
-  static const String IOS_KEY = 'YOUR_IOS_KEY';
-  static const String JS_KEY = 'YOUR_JS_KEY';
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({Key? key, required this.title}) : super(key: key);
 
+  final String title;
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    Backendless.setUrl('https://api.backendless.com');
-    Backendless.initApp(
-        applicationId: APP_ID,
-        androidApiKey: ANDROID_KEY,
-        iosApiKey: IOS_KEY,
-        jsApiKey: JS_KEY);
   }
 
-  void buttonPressed() async {
-    // create a Map object. This will become a record in a database table
-    Map testObject = new Map();
-
-    // add a property to the object.
-    // The property name ("foo") will become a column in the database table
-    // The property value ("bar") will be stored as a value for the stored record
-    testObject["foo"] = "bar";
-
-    // Save the object in the database. The name of the database table is "TestTable".
-
-    Backendless.data.of("TestTable").save(testObject).then((response) =>
-        print("Object is saved in Backendless. Please check in the console."));
-
-    var data = await Backendless.data.of('TestTable').find();
-    print(data);
+  void _incrementCounter() async {
+    var t = await Backendless.data.of('TestTable').find();
+    print(t);
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Plugin example app'),
-        ),
-        body: Center(
-            child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
+      ),
+      body: Center(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            ElevatedButton(child: Text("Press"), onPressed: buttonPressed)
+            const Text(
+              'You have pushed the button this many times:',
+            ),
+            Text(
+              'Backendless',
+              style: Theme.of(context).textTheme.headline4,
+            ),
           ],
-        )),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _incrementCounter,
+        tooltip: 'Increment',
+        child: const Icon(Icons.add),
       ),
     );
   }

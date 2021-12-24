@@ -1,9 +1,0 @@
-targets:
-  $default:
-    builders:
-      reflectable:
-        generate_for:
-          - example/lib/main.dart
-          - example/test_driver/backendless_tests.dart
-        options:
-          formatted: true
