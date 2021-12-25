@@ -5,12 +5,6 @@ class Backendless {
 
   static final BackendlessPrefs _prefs = BackendlessPrefs();
 
-  static get apiKey => _prefs.apiKey;
-
-  static get applicationId => _prefs.appId;
-
-  static get url => _prefs.url;
-
   static Future initApp(
       {String? applicationId,
       String? androidApiKey,
@@ -34,7 +28,11 @@ class Backendless {
 
       await _prefs.initPreferences(appId: applicationId, apiKey: apiKey);
     }
-
-    print('End of \'initApp\' method');
   }
+
+  static get apiKey => _prefs.apiKey;
+
+  static get applicationId => _prefs.appId;
+
+  static get url => _prefs.url;
 }

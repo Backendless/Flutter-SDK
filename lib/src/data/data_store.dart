@@ -1,5 +1,5 @@
 part of backendless_sdk;
 
 abstract class IDataStore<T> {
-  Future<http.Response?> find({DataQueryBuilder? dataQueryBuilder});
+  Future<List<Map>?>? find({DataQueryBuilder? dataQueryBuilder});
 }

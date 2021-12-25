@@ -1,21 +1,16 @@
-# backendless_sdk_example
+# example
 
-Demonstrates how to use the backendless_sdk plugin.
+A new Flutter project.
 
 ## Getting Started
 
-The sample code to store an object in Backendless database:
-```dart
-Backendless.initApp(APPLICATION_ID, ANDROID_API_KEY, IOS_API_KEY);
-// create a Map object. This will become a record in a database table
-Map testObject = new Map();
+This project is a starting point for a Flutter application.
 
-// add a property to the object. 
-// The property name ("foo") will become a column in the database table
-// The property value ("bar") will be stored as a value for the stored record
-testObject["foo"] = "bar";
+A few resources to get you started if this is your first Flutter project:
 
-// Save the object in the database. The name of the database table is "TestTable".
-Backendless.data.of("TestTable").save(testObject).then(
-  (response) => print("Object is saved in Backendless. Please check in the console."));
-```
+- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
+- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+
+For help getting started with Flutter, view our
+[online documentation](https://flutter.dev/docs), which offers tutorials,
+samples, guidance on mobile development, and a full API reference.

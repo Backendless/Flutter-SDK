@@ -3,7 +3,8 @@ part of backendless_sdk;
 class BackendlessPrefs {
   AuthKeys? authKeys;
   late Map<String, String> headers;
-  late Uri url;
+  late String url;
+  late InitAppData initAppData;
 
   static final BackendlessPrefs _instance = BackendlessPrefs._internal();
 
@@ -11,19 +12,21 @@ class BackendlessPrefs {
 
   BackendlessPrefs._internal() {
     headers = {'Content-Type': 'application/json'};
-    url = Uri.parse("https://api.backendless.com");
+    url = 'https://api.backendless.com';
   }
 
   Future initPreferences(
       {String? appId, String? apiKey, String? customDomain}) async {
     if (customDomain != null) {
       if (!customDomain.startsWith('http')) {
-        url = Uri.parse(customDomain);
+        url = customDomain;
       } else {
-        url = Uri.parse('https://' + customDomain);
+        url = 'https://' + customDomain;
+        initAppData = InitAppData.withDomain(url);
       }
     } else {
       authKeys = AuthKeys(appId!, apiKey!);
+      initAppData = InitAppData();
     }
   }
 
