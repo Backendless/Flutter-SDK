@@ -42,7 +42,11 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _incrementCounter() async {
-    var t = await Backendless.data.of('TestTable').find();
+    DataQueryBuilder queryBuilder = DataQueryBuilder();
+    queryBuilder.pageSize = 3;
+
+    var t =
+        await Backendless.data.of('TestTable').find(queryBuilder: queryBuilder);
     print(t);
   }
 

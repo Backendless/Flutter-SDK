@@ -1,11 +1,76 @@
 part of backendless_sdk;
 
 class DataQueryBuilder {
-  String? whereClause;
-  int? pageSize;
-  int? offset;
+  static const int DEFAULT_RELATIONS_DEPTH = 0;
+  late PagedQueryBuilder _pagedQueryBuilder = new PagedQueryBuilder();
+  late List<String> properties;
+  late List<String> excludeProperties;
+  late String whereClause;
+  late List<String> groupBy;
+  late String havingClause;
+  late List<String> sortBy;
+  late List<String> related;
+  late int relationsDepth;
+  late int relationsPageSize;
+  late bool distinct;
 
-  Map toJson() {
-    return {'offset': offset, 'pageSize': pageSize, 'whereClause': whereClause};
+  DataQueryBuilder() {
+    this.properties = List.empty();
+    this.excludeProperties = List.empty();
+    this.whereClause = "";
+    this.groupBy = List.empty();
+    this.havingClause = "";
+    this.sortBy = List.empty();
+    this.related = List.empty();
+    this.relationsDepth = 0;
+    this.relationsPageSize = 0;
+    this.distinct = false;
   }
+
+  DataQueryBuilder.fromJson(Map json) {
+    pageSize = json['pageSize'];
+    offset = json['offset'];
+    properties = json['properties']?.cast<String>();
+    excludeProperties = json['excludeProperties']?.cast<String>();
+    whereClause = json['whereClause'];
+    groupBy = json['groupBy']?.cast<String>();
+    havingClause = json['havingClause'];
+    sortBy = json['sortBy']?.cast<String>();
+    related = json['related']?.cast<String>();
+    if (json['relationsDepth'] != null)
+      relationsDepth = json['relationsDepth'];
+    else
+      relationsDepth = DEFAULT_RELATIONS_DEPTH;
+    relationsPageSize = json['relationsPageSize'];
+    distinct = json['distinct'];
+  }
+
+  set pageSize(int pageSize) => _pagedQueryBuilder.pageSize = pageSize;
+
+  int get pageSize => _pagedQueryBuilder.pageSize;
+
+  set offset(int offset) => _pagedQueryBuilder.offset = offset;
+
+  int get offset => _pagedQueryBuilder.offset;
+
+  void prepareNextPage() => _pagedQueryBuilder.prepareNextPage();
+
+  void preparePreviousPage() => _pagedQueryBuilder.preparePreviousPage();
+
+  void addAllProperties() => properties.add("*");
+
+  Map toJson() => {
+        'pageSize': pageSize,
+        'offset': offset,
+        'properties': properties,
+        'excludeProperties': excludeProperties,
+        'whereClause': whereClause,
+        'groupBy': groupBy,
+        'havingClause': havingClause,
+        'sortBy': sortBy,
+        'related': related,
+        'relationsDepth': relationsDepth,
+        'relationsPageSize': relationsPageSize,
+        'distinct': distinct,
+      };
 }

@@ -30,9 +30,9 @@ class Backendless {
     }
   }
 
-  static get apiKey => _prefs.apiKey;
+  static String get apiKey => _prefs.apiKey;
 
-  static get applicationId => _prefs.appId;
+  static String get applicationId => _prefs.appId;
 
-  static get url => _prefs.url;
+  static String get url => _prefs.url;
 }
