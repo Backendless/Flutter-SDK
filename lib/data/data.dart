@@ -1,5 +1,5 @@
 part of backendless_sdk;
 
-class BackendlessData {
+class Data {
   IDataStore<Map> of(String table) => MapDrivenDataStore(table);
 }

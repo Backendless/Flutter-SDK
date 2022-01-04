@@ -1,7 +1,8 @@
 part of backendless_sdk;
 
 class Backendless {
-  static final data = BackendlessData();
+  static final data = Data();
+  static final cache = Cache();
 
   static final BackendlessPrefs _prefs = BackendlessPrefs();
 
@@ -18,13 +19,13 @@ class Backendless {
 
       if (kIsWeb) {
         apiKey = jsApiKey;
-      } else if (io.Platform.isAndroid) {
+      } else if (Platform.isAndroid) {
         apiKey = androidApiKey;
       } else {
         apiKey = iosApiKey;
       }
 
-      if (apiKey == null) throw Exception('ApiKey must not be null');
+      if (apiKey == null) throw BackendlessException('ApiKey must not be null');
 
       await _prefs.initPreferences(appId: applicationId, apiKey: apiKey);
     }

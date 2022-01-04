@@ -4,7 +4,6 @@ class BackendlessPrefs {
   AuthKeys? authKeys;
   late Map<String, String> headers;
   late String url;
-  late InitAppData initAppData;
 
   static final BackendlessPrefs _instance = BackendlessPrefs._internal();
 
@@ -22,11 +21,9 @@ class BackendlessPrefs {
         url = customDomain;
       } else {
         url = 'https://' + customDomain;
-        initAppData = InitAppData.withDomain(url);
       }
     } else {
       authKeys = AuthKeys(appId!, apiKey!);
-      initAppData = InitAppData();
     }
   }
 

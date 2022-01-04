@@ -1,14 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:backendless_sdk/backendless_sdk.dart';
 
-void main() async {
-  await Backendless.initApp(
-    applicationId: '756C19D2-DF82-9D99-FF9C-9BFD2F85DC00',
-    iosApiKey: 'A4470C03-FC06-4009-BD47-9077033BF7F6',
-  );
-
-  runApp(const MyApp());
-}
+void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -39,15 +32,16 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
+    Backendless.initApp(
+      applicationId: 'EE7601C1-57BF-5CF1-FFC9-042D8911A100',
+      androidApiKey: '4389684F-6AF7-4ADD-95BD-EEF69ED8BBC1',
+    );
   }
 
-  void _incrementCounter() async {
-    DataQueryBuilder queryBuilder = DataQueryBuilder();
-    queryBuilder.pageSize = 3;
-
-    var t =
-        await Backendless.data.of('TestTable').find(queryBuilder: queryBuilder);
-    print(t);
+  void _buttonPressed() async {
+    // var result = await Backendless.cache.contains("mykey");
+    var result = await Backendless.cache.get("mykey");
+    print("Result; $result");
   }
 
   @override
@@ -71,7 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: _buttonPressed,
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ),
