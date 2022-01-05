@@ -3,28 +3,37 @@ part of backendless_sdk;
 class DataQueryBuilder {
   static const int DEFAULT_RELATIONS_DEPTH = 0;
   late PagedQueryBuilder _pagedQueryBuilder = new PagedQueryBuilder();
-  late List<String> properties;
-  late List<String> excludeProperties;
-  late String whereClause;
-  late List<String> groupBy;
-  late String havingClause;
-  late List<String> sortBy;
-  late List<String> related;
-  late int relationsDepth;
-  late int relationsPageSize;
-  late bool distinct;
+
+  late List<String>? sortBy;
+  late List<String>? groupBy;
+
+  late List<String>? properties;
+  late List<String>? excludeProperties;
+
+  late String? whereClause;
+  late String? havingClause;
+
+  late List<String>? related;
+  late int? relationsDepth;
+  late int? relationsPageSize;
+
+  late bool? distinct;
 
   DataQueryBuilder() {
-    this.properties = List.empty();
-    this.excludeProperties = List.empty();
-    this.whereClause = "";
-    this.groupBy = List.empty();
-    this.havingClause = "";
-    this.sortBy = List.empty();
-    this.related = List.empty();
-    this.relationsDepth = 0;
-    this.relationsPageSize = 0;
-    this.distinct = false;
+    this.sortBy = null;
+    this.groupBy = null;
+
+    this.properties = null;
+    this.excludeProperties = null;
+
+    this.whereClause = null;
+    this.havingClause = null;
+
+    this.related = null;
+    this.relationsDepth = null;
+    this.relationsPageSize = null;
+
+    this.distinct = null;
   }
 
   DataQueryBuilder.fromJson(Map json) {
@@ -57,7 +66,7 @@ class DataQueryBuilder {
 
   void preparePreviousPage() => _pagedQueryBuilder.preparePreviousPage();
 
-  void addAllProperties() => properties.add("*");
+  void addAllProperties() => properties!.add("*");
 
   Map toJson() => {
         'pageSize': pageSize,
@@ -73,4 +82,11 @@ class DataQueryBuilder {
         'relationsPageSize': relationsPageSize,
         'distinct': distinct,
       };
+
+  /*String _toRequestBody({DataQueryBuilder? queryBuilder}) {
+    var query = queryBuilder != null ? queryBuilder.toJson() : {};
+    query.forEach((key, value) {
+
+    })
+  }*/
 }

@@ -6,6 +6,8 @@ class Backendless {
 
   static final BackendlessPrefs _prefs = BackendlessPrefs();
 
+  ///This method must be called once before sending the request to the `Backendless` server.
+  ///Must be an app ID and API key or custom domain.
   static Future initApp(
       {String? applicationId,
       String? androidApiKey,
@@ -14,7 +16,7 @@ class Backendless {
       String? customDomain}) async {
     if (customDomain != null && customDomain.isNotEmpty) {
       _prefs.initPreferences(customDomain: customDomain);
-    } else if (applicationId != null && applicationId.isNotEmpty) {
+    } else if (applicationId?.isNotEmpty ?? true) {
       String? apiKey;
 
       if (kIsWeb) {
@@ -25,10 +27,14 @@ class Backendless {
         apiKey = iosApiKey;
       }
 
-      if (apiKey == null) throw BackendlessException('ApiKey must not be null');
+      if (apiKey == null)
+        throw ArgumentError.value(ExceptionMessage.EMPTY_NULL_API_KEY);
 
       await _prefs.initPreferences(appId: applicationId, apiKey: apiKey);
+      return;
     }
+
+    throw ArgumentError.value(ExceptionMessage.EMPTY_NULL_APP_ID);
   }
 
   static String get apiKey => _prefs.apiKey;

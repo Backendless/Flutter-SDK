@@ -5,8 +5,13 @@ class Invoker<T> {
   static final Client _httpClient = Client();
   static final Decoder decoder = Decoder();
 
-  static Future<T?> get<T>(String methodName) async {
-    final result = await _invoke(methodName, Method.get);
+  static Future<T?> get<T>(String methodName, {dynamic args}) async {
+    String queryString = '';
+    if (args != null && args is DataQueryBuilder) {
+      Map<String, String> queryMap = _createQueryMap(args);
+      queryString = Uri(queryParameters: queryMap).query;
+    }
+    final result = await _invoke(methodName + '?$queryString', Method.get);
     return decoder.decode<T>(result);
   }
 
@@ -28,7 +33,7 @@ class Invoker<T> {
   static Future _invoke(String methodName, Method method,
       {dynamic args}) async {
     final encodedBody = _encodeBody(args);
-    final url = Uri.parse(_getApplicationUrl() + "/$methodName");
+    final url = Uri.parse(_getApplicationUrl() + methodName);
     final headers = prefs.headers;
 
     // var userToken = await BackendlessUserService._instance.getUserToken();
@@ -38,7 +43,10 @@ class Invoker<T> {
 
     switch (method) {
       case Method.get:
-        response = await _httpClient.get(url, headers: headers);
+        response = await _httpClient.get(
+          url,
+          headers: headers,
+        );
         break;
 
       case Method.put:
@@ -80,6 +88,39 @@ class Invoker<T> {
       else
         return nonEncodable.toJson();
     });
+  }
+
+  static Map<String, String> _createQueryMap(DataQueryBuilder args) {
+    Map cleanMap = _removeNullOrEmpty(args.toJson());
+    Map<String, String> params = cleanMap
+        .map((key, value) => MapEntry(key.toString(), value.toString()));
+
+    return params;
+  }
+
+  static dynamic _removeNullOrEmpty(dynamic params) {
+    if (params is Map) {
+      var _map = {};
+      params.forEach((key, value) {
+        var _value = _removeNullOrEmpty(value);
+        if (_value != null) {
+          _map[key] = _value;
+        }
+      });
+      if (_map.isNotEmpty) return _map;
+    } else if (params is List) {
+      var _list = [];
+      for (var val in params) {
+        var _value = _removeNullOrEmpty(val);
+        if (_value != null) {
+          _list.add(_value);
+        }
+      }
+      if (_list.isNotEmpty) return _list;
+    } else if (params != null) {
+      return params;
+    }
+    return null;
   }
 }
 
