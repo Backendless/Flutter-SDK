@@ -3,6 +3,7 @@ part of backendless_sdk;
 class Backendless {
   static final data = Data();
   static final cache = Cache();
+  static final userService = UserService();
 
   static final BackendlessPrefs _prefs = BackendlessPrefs();
 
@@ -21,7 +22,7 @@ class Backendless {
 
       if (kIsWeb) {
         apiKey = jsApiKey;
-      } else if (Platform.isAndroid) {
+      } else if (io.Platform.isAndroid) {
         apiKey = androidApiKey;
       } else {
         apiKey = iosApiKey;

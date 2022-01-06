@@ -82,11 +82,4 @@ class DataQueryBuilder {
         'relationsPageSize': relationsPageSize,
         'distinct': distinct,
       };
-
-  /*String _toRequestBody({DataQueryBuilder? queryBuilder}) {
-    var query = queryBuilder != null ? queryBuilder.toJson() : {};
-    query.forEach((key, value) {
-
-    })
-  }*/
 }

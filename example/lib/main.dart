@@ -45,18 +45,14 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _buttonPressed() async {
-    // var result = await Backendless.cache.contains("mykey");
-    var result = await Backendless.cache.get("mykey");
-    print("Result; $result");
+    /*if (await Backendless.userService.getCurrentUser(false) == null) {
+      await Backendless.userService.login('hdhdhd@gmail.com', '123234', true);
+    }
+    */
 
-    DataQueryBuilder builder = DataQueryBuilder();
-    builder.whereClause = 'foo=\'bar1\'';
+    var result = await Backendless.data.of('TestTable').find();
 
-    var resultById = await Backendless.data.of('TestTable').findById(
-        '83671CD7-EEF2-4222-B950-88B0A69117E6',
-        queryBuilder: builder);
-
-    print(resultById);
+    print(result);
   }
 
   @override

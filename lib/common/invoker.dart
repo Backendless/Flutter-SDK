@@ -11,7 +11,10 @@ class Invoker<T> {
       Map<String, String> queryMap = _createQueryMap(args);
       queryString = Uri(queryParameters: queryMap).query;
     }
-    final result = await _invoke(methodName + '?$queryString', Method.get);
+    if (queryString.isNotEmpty) {
+      queryString = '?' + queryString.substring(0, queryString.length);
+    }
+    final result = await _invoke(methodName + '$queryString', Method.get);
     return decoder.decode<T>(result);
   }
 
@@ -36,8 +39,9 @@ class Invoker<T> {
     final url = Uri.parse(_getApplicationUrl() + methodName);
     final headers = prefs.headers;
 
-    // var userToken = await BackendlessUserService._instance.getUserToken();
-    // if (userToken != null) headers['user-token'] = userToken;
+    if (Backendless.userService.loginStorage!._hasData) {
+      headers['user-token'] = Backendless.userService.loginStorage!._userToken!;
+    }
 
     Response response;
 
@@ -71,6 +75,8 @@ class Invoker<T> {
         throw BackendlessException(response.body);
       }
     }
+    if (response.body.isEmpty) return;
+
     return jsonDecode(response.body);
   }
 

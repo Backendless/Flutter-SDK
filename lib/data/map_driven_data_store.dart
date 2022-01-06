@@ -18,11 +18,7 @@ class MapDrivenDataStore implements IDataStore<Map> {
     if (id.isEmpty)
       throw ArgumentError.value(ExceptionMessage.EMPTY_NULL_OBJECT_ID);
 
-    dynamic response =
-        await Invoker.get<Map?>('/data/$tableName/$id', args: queryBuilder);
-    Map? parsedResponse = response as Map;
-
-    return parsedResponse;
+    return await Invoker.get<Map?>('/data/$tableName/$id', args: queryBuilder);
   }
 
   @override

@@ -1,6 +1,6 @@
 part of backendless_sdk;
 
-class BackendlessException extends HttpException {
+class BackendlessException extends io.HttpException {
   final int? code;
 
   BackendlessException(String message, {this.code}) : super(message);
