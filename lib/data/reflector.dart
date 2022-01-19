@@ -36,8 +36,13 @@ class Reflector extends Reflectable {
     return result;
   }
 
+  T? deserializeList<T>(List list) {
+    throw UnimplementedError('TODO');
+  }
+
   T? deserialize<T>(Map map) {
     if (T == BackendlessUser) return BackendlessUser.fromJson(map) as T;
+    if (T == UserProperty) return UserProperty.fromJson(map) as T;
     return _deserialize(map, reflectType(T) as ClassMirror) as T;
   }
 
@@ -99,9 +104,11 @@ class Reflector extends Reflectable {
   }
 
   DateTime? _deserializeDateTime(dynamic value) {
-    if (value == null) return null;
-    if (value is DateTime) return value;
-    if (value is int) return DateTime.fromMillisecondsSinceEpoch(value);
+    var dateValue = value;
+    if (value is Map) dateValue = value['deletionTime'];
+    if (dateValue == null) return null;
+    if (dateValue is DateTime) return dateValue;
+    if (dateValue is int) return DateTime.fromMillisecondsSinceEpoch(dateValue);
     return null;
   }
 

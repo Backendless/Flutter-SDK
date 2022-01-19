@@ -50,7 +50,16 @@ class _MyHomePageState extends State<MyHomePage> {
     }
     */
 
-    var result = await Backendless.data.of('TestTable').find();
+    BackendlessUser user = BackendlessUser();
+    user.email = 'hdhdhd2@gmail.com';
+    user.password = '123234';
+    user.setProperty('name', 'UserUpdated');
+    user.setProperty('objectId', '15677AD7-7124-45CC-8189-403AE0437D3F');
+    //await Backendless.userService.login(user.email, user.password, true);
+    Map map = Map();
+    map['foo'] = 'Update object';
+    map['objectId'] = '6E0E7E2A-1F66-4217-BD34-E2C323FCF372';
+    var result = await Backendless.data.of('TestTable').bulkRemove('age>10');
 
     print(result);
   }

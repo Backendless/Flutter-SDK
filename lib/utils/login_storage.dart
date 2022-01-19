@@ -22,7 +22,7 @@ class LoginStorage {
           await storage.containsKey(key: 'userId')) {
         this._userToken = await storage.read(key: 'userToken');
         this._objectId = await storage.read(key: 'userId');
-        _hasData = true;
+        _hasData = _userToken != null && _objectId != null ? true : false;
       } else
         _hasData = false;
     } catch (e) {

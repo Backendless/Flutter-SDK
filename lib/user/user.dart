@@ -26,9 +26,9 @@ class BackendlessUser {
 
   void setProperty(String key, dynamic value) => _properties[key] = value;
 
-  String getObjectId() => getUserId();
+  String? getObjectId() => getUserId();
 
-  String getUserId() => getProperty(ID_KEY);
+  String? getUserId() => getProperty(ID_KEY);
 
   set password(String password) => setProperty(PASSWORD_KEY, password);
 

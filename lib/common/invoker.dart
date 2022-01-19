@@ -11,9 +11,9 @@ class Invoker<T> {
       Map<String, String> queryMap = _createQueryMap(args);
       queryString = Uri(queryParameters: queryMap).query;
     }
-    if (queryString.isNotEmpty) {
+    /*if (queryString.isNotEmpty) {
       queryString = '?' + queryString.substring(0, queryString.length);
-    }
+    }*/
     final result = await _invoke(methodName + '$queryString', Method.get);
     return decoder.decode<T>(result);
   }
@@ -35,12 +35,12 @@ class Invoker<T> {
 
   static Future _invoke(String methodName, Method method,
       {dynamic args}) async {
-    final encodedBody = _encodeBody(args);
+    final encodedBody = args != null ? _encodeBody(args) : null;
     final url = Uri.parse(_getApplicationUrl() + methodName);
     final headers = prefs.headers;
 
-    if (Backendless.userService.loginStorage!._hasData) {
-      headers['user-token'] = Backendless.userService.loginStorage!._userToken!;
+    if (Backendless.userService.loginStorage._hasData) {
+      headers['user-token'] = Backendless.userService.loginStorage._userToken!;
     }
 
     Response response;
