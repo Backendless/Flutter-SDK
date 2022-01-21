@@ -13,10 +13,21 @@ class BackendlessUserService {
   Future<BackendlessUser?> getCurrentUser() =>
       _channel.invokeMethod("Backendless.UserService.getCurrentUser");
 
-  Future<void> setCurrentUser(BackendlessUser currentUser) =>
-      _channel.invokeMethod("Backendless.UserService.setCurrentUser", {
-        "currentUser": currentUser,
-      });
+  Future<void> setCurrentUser(BackendlessUser currentUser,
+      {bool stayLoggedIn = false}) async {
+    if (stayLoggedIn) {
+      if (currentUser.getProperty('objectId') == null ||
+          await Backendless.userService.getUserToken() == null)
+        throw Exception(
+            'stayLoggedIn failed bacause objectId and userToken cannot be null');
+    }
+
+    return await _channel
+        .invokeMethod("Backendless.UserService.setCurrentUser", {
+      "currentUser": currentUser,
+      "stayLoggedIn": stayLoggedIn,
+    });
+  }
 
   Future<List<UserProperty>> describeUserClass() async =>
       (await _channel.invokeMethod("Backendless.UserService.describeUserClass"))
