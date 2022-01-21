@@ -4,6 +4,9 @@ import com.backendless.Backendless;
 import com.backendless.BackendlessUser;
 import com.backendless.HeadersManager;
 import com.backendless.backendless_sdk.utils.FlutterCallback;
+import com.backendless.exceptions.ExceptionMessage;
+import com.backendless.persistence.local.UserIdStorageFactory;
+import com.backendless.persistence.local.UserTokenStorageFactory;
 import com.backendless.property.UserProperty;
 import com.backendless.persistence.DataQueryBuilder;
 
@@ -93,7 +96,17 @@ public class UserServiceCallHandler implements MethodChannel.MethodCallHandler {
 
     private void setCurrentUser(MethodCall call, MethodChannel.Result result) {
         BackendlessUser currentUser = call.argument("currentUser");
+        boolean stayLoggedIn = call.argument("stayLoggedIn");
         Backendless.UserService.setCurrentUser(currentUser);
+
+        if(stayLoggedIn) {
+            String userId = currentUser.getUserId();
+            String userToken = HeadersManager.getInstance().getHeader(HeadersManager.HeadersEnum.USER_TOKEN_KEY);
+
+            UserTokenStorageFactory.instance().getStorage().set(userToken);
+            UserIdStorageFactory.instance().getStorage().set(userId);
+        }
+
         result.success(null);
     }
 

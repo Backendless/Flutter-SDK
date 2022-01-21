@@ -36,6 +36,9 @@ class UserServiceCallHandler {
         return promiseToFuture(login(call.arguments['login'],
                 call.arguments['password'], call.arguments['stayLoggedIn']))
             .then((value) => getUser(value));
+      case "Backendless.UserService.setCurrentUser":
+        return Future(() => setCurrentUser(
+            call.arguments['currentUser'], call.arguments('stayLoggedIn')));
       case "Backendless.UserService.logout":
         return promiseToFuture(logout());
       case "Backendless.UserService.register":
@@ -112,6 +115,9 @@ external dynamic findByRole(roleName, loadRoles, queryBuilder);
 
 @JS('Backendless.UserService.getUserRoles')
 external List<String> getUserRoles();
+
+@JS('Backendless.UserService.setCurrentUser')
+external void setCurrentUser(dynamic user, [bool? stayLoggedIn]);
 
 @JS('Backendless.UserService.isValidLogin')
 external bool isValidLogin();

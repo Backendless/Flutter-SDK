@@ -1,3 +1,6 @@
+# 7.1.9
+* AAdded the ability to set the `stayLoggedIn` parameter in the `setCurrentUser` method.
+
 # 7.1.8
 
 * Updated version of Android-SDK
