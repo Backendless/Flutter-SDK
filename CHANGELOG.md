@@ -1,3 +1,11 @@
+# 7.1.9
+* AAdded the ability to set the `stayLoggedIn` parameter in the `setCurrentUser` method.
+
+# 7.1.8
+
+* Updated version of Android-SDK
+* Fixed problem with initializing custom domains.
+
 # 7.1.7
 
 * Added support null safety for tests

@@ -133,6 +133,9 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
         }
         
         userService.currentUser = currentUser
+        let stayLoggedIn: Bool = (arguments[Args.stayLoggedIn].flatMap(cast) != nil);
+        
+        Backendless.shared.userService.stayLoggedIn = stayLoggedIn;
         result(nil)
     }
     
