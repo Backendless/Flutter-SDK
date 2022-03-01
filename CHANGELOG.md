@@ -1,5 +1,10 @@
+# 7.2.0
+
+* Added support for upsert in save method.
+* Added upsert and bulkUpsert methods for transactions.
+
 # 7.1.9
-* AAdded the ability to set the `stayLoggedIn` parameter in the `setCurrentUser` method.
+* Added the ability to set the `stayLoggedIn` parameter in the `setCurrentUser` method.
 
 # 7.1.8
 
