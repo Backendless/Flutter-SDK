@@ -84,6 +84,7 @@ part 'src/modules/transaction/uow.dart';
 part 'src/modules/transaction/uow_create.dart';
 part 'src/modules/transaction/uow_delete.dart';
 part 'src/modules/transaction/uow_update.dart';
+part 'src/modules/transaction/uow_upsert.dart';
 part 'src/modules/transaction/uow_find.dart';
 part 'src/modules/transaction/uow_executor.dart';
 part 'src/modules/transaction/helper.dart';

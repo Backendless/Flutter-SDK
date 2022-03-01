@@ -87,7 +87,7 @@ class BackendlessCallHandler: FlutterCallHandlerProtocol {
     // MARK: -
     // MARK: - Is Initialized
     private func isInitialized(_ arguments: [String: Any], _ result: FlutterResult) {
-        let appId = backendless.getApplictionId()
+        let appId = backendless.getApplicationId()
         let apiKey = backendless.getApiKey()
         let isInitialized = appId != "AppId" && apiKey != "APIKey"
         

@@ -15,7 +15,7 @@ A new flutter plugin project.
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
   s.dependency 'Flutter'
-  s.dependency 'BackendlessSwift', '6.4.1'
+  s.dependency 'BackendlessSwift', '6.5.1'
 
   s.ios.deployment_target = '10.0'
 end

@@ -27,7 +27,7 @@ abstract class IDataStore<E> {
 
   Future<int?> remove({E? entity, String? whereClause});
 
-  Future<E?> save(E entity);
+  Future<E?> save(E entity, {bool isUpsert = false});
 
   Future<E?> deepSave(E entity);
 
@@ -159,10 +159,11 @@ class MapDrivenDataStore implements IDataStore<Map> {
     });
   }
 
-  Future<Map?> save(Map entity) =>
+  Future<Map?> save(Map entity, {bool isUpsert = false}) =>
       _channel.invokeMethod("Backendless.Data.of.save", <String, dynamic>{
         'tableName': _tableName,
         'entity': entity,
+        'isUpsert': isUpsert
       });
 
   Future<Map?> deepSave(Map entity) =>
@@ -333,11 +334,12 @@ class ClassDrivenDataStore<T> implements IDataStore<T> {
     });
   }
 
-  Future<T?> save(T entity) async {
-    Map mapObject = await _channel.invokeMethod(
-        "Backendless.Data.of.save", <String, dynamic>{
+  Future<T?> save(T entity, {bool isUpsert = false}) async {
+    Map mapObject = await _channel
+        .invokeMethod("Backendless.Data.of.save", <String, dynamic>{
       'tableName': _tableName,
-      'entity': reflector.serialize(entity)
+      'entity': reflector.serialize(entity),
+      'isUpsert': isUpsert
     });
     return reflector.deserialize<T>(mapObject);
   }

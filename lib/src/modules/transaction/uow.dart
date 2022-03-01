@@ -8,6 +8,7 @@ class UnitOfWork {
 
   late UnitOfWorkCreate _unitOfWorkCreate;
   late UnitOfWorkUpdate _unitOfWorkUpdate;
+  late UnitOfWorkUpsert _unitOfWorkUpsert;
   late UnitOfWorkDelete _unitOfWorkDelete;
   late UnitOfWorkFind _unitOfWorkFind;
   late UnitOfWorkExecutor _unitOfWorkExecutor;
@@ -24,6 +25,7 @@ class UnitOfWork {
         new OpResultIdGenerator(_opResultIdStrings);
     _unitOfWorkCreate = new UnitOfWorkCreate(_operations, opResultIdGenerator);
     _unitOfWorkUpdate = new UnitOfWorkUpdate(_operations, opResultIdGenerator);
+    _unitOfWorkUpsert = new UnitOfWorkUpsert(_operations, opResultIdGenerator);
     _unitOfWorkDelete = new UnitOfWorkDelete(_operations, opResultIdGenerator);
     _unitOfWorkFind = new UnitOfWorkFind(_operations, opResultIdGenerator);
     _relationOperation =
@@ -53,6 +55,14 @@ class UnitOfWork {
 
   OpResult bulkUpdate(Map changes, dynamic identifier, [String? tableName]) {
     return _unitOfWorkUpdate.bulkUpdate(changes, identifier, tableName);
+  }
+
+  OpResult upsert<T>(T instance, [String? tableName]) {
+    return _unitOfWorkUpsert.upsert(instance, tableName);
+  }
+
+  OpResult bulkUpsert<T>(List<T> instances, [String? tableName]) {
+    return _unitOfWorkUpsert.bulkUpsert(instances, tableName);
   }
 
   OpResult delete<T>(T value, [String? tableName]) {

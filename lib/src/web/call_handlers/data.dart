@@ -72,8 +72,9 @@ class DataCallHandler {
                 .remove(whereClause != null ? whereClause : entity))
             .then((value) => (convertFromJs(value) as Map)['deletionTime']);
       case "Backendless.Data.of.save":
-        return promiseToFuture(
-                getDataStore(call).save(convertToJs(call.arguments['entity'])))
+        return promiseToFuture(getDataStore(call).save(
+                convertToJs(call.arguments['entity']),
+                call.arguments['isUpsert']))
             .then((value) => convertFromJs(value));
       case "Backendless.Data.of.deepSave":
         return promiseToFuture(getDataStore(call)
@@ -295,7 +296,7 @@ class DataStoreJs {
   external dynamic remove(object);
 
   @JS()
-  external dynamic save(entity);
+  external dynamic save(entity, isUpsert);
 
   @JS()
   external dynamic deepSave(entity);

@@ -38,5 +38,5 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.8'
     api 'com.google.firebase:firebase-messaging:20.0.0'
 
-   api 'com.backendless:backendless:6.3.3'
+   api 'com.backendless:backendless:6.3.4'
 }
