@@ -73,6 +73,22 @@ class OperationUpdateBulk extends Operation<UpdateBulkPayload> {
   OperationUpdateBulk.fromJson(Map json) : super.fromJson(json);
 }
 
+class OperationUpsert extends Operation<Map> {
+  OperationUpsert(
+      OperationType operationType, String table, String opResultId, Map payload)
+      : super.withPayload(operationType, table, opResultId, payload);
+
+  OperationUpsert.fromJson(Map json) : super.fromJson(json);
+}
+
+class OperationUpsertBulk extends Operation<List> {
+  OperationUpsertBulk(OperationType operationType, String table,
+      String opResultId, List payload)
+      : super.withPayload(operationType, table, opResultId, payload);
+
+  OperationUpsertBulk.fromJson(Map json) : super.fromJson(json);
+}
+
 class OperationDelete extends Operation<Object> {
   OperationDelete(OperationType operationType, String table, String opResultId,
       Object payload)

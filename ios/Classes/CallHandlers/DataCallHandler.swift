@@ -54,6 +54,7 @@ class DataCallHandler: FlutterCallHandlerProtocol {
         static let fault = "fault"
         static let response = "response"
         static let parentObjects = "parentObjects"
+        static let isUpsert = "isUpsert"
     }
     
     private enum DataRTEvents {
@@ -193,7 +194,7 @@ class DataCallHandler: FlutterCallHandlerProtocol {
         }
         
         data.ofTable(tableName)
-            .createBulk(entities: entities,
+            .bulkCreate(entities: entities,
                 responseHandler: {
                     result($0)
                 },
@@ -443,7 +444,7 @@ class DataCallHandler: FlutterCallHandlerProtocol {
                     })
         } else if let whereClause = whereClause {
             data.ofTable(tableName)
-                .removeBulk(whereClause: whereClause,
+                .bulkRemove(whereClause: whereClause,
                     responseHandler: {
                         result($0)
                     },
@@ -462,25 +463,14 @@ class DataCallHandler: FlutterCallHandlerProtocol {
             result(FlutterError.noRequiredArguments)
             return
         }
-        if let _ = entity[Args.objectId] {
-            data.ofTable(tableName)
-                .update(entity: entity,
-                    responseHandler: {
-                        result($0)
-                    },
-                    errorHandler: {
-                        result(FlutterError($0))
-                    })
-        } else {
-            data.ofTable(tableName)
-                .save(entity: entity,
-                    responseHandler: {
-                        result($0)
-                    },
-                    errorHandler: {
-                        result(FlutterError($0))
-                    })
-        }
+        let _upsert = entity[Args.isUpsert]
+        data.ofTable(tableName)
+            .save(entity: entity, isUpsert: (_upsert != nil),   responseHandler: {
+                    result($0)
+                },
+                errorHandler: {
+                    result(FlutterError($0))
+                })
     }
     
     // MARK: -
@@ -549,7 +539,7 @@ class DataCallHandler: FlutterCallHandlerProtocol {
         let whereClause: String? = arguments[Args.whereClause].flatMap(cast)
         
         data.ofTable(tableName)
-            .updateBulk(whereClause: whereClause, changes: changes,
+            .bulkUpdate(whereClause: whereClause, changes: changes,
                 responseHandler: {
                     result($0)
                 },

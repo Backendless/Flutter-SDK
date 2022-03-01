@@ -233,7 +233,8 @@ public class DataCallHandler implements MethodChannel.MethodCallHandler {
 
     private void save(String tableName, MethodCall call, MethodChannel.Result result) {
         Map entity = call.argument("entity");
-        Backendless.Data.of(tableName).save(entity, new FlutterCallback<Map>(result));
+        Boolean isUpsert = call.argument("isUpsert");
+        Backendless.Data.of(tableName).save(entity, isUpsert, new FlutterCallback<Map>(result));
     }
 
     private void deepSave(String tableName, MethodCall call, MethodChannel.Result result) {

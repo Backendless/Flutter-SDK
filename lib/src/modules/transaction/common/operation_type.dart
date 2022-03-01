@@ -5,6 +5,8 @@ enum OperationType {
   CREATE_BULK,
   UPDATE,
   UPDATE_BULK,
+  UPSERT,
+  UPSERT_BULK,
   DELETE,
   DELETE_BULK,
   FIND,
@@ -19,6 +21,8 @@ extension OperationTypeExt on OperationType {
         OperationType.CREATE_BULK: "createBulk",
         OperationType.UPDATE: "update",
         OperationType.UPDATE_BULK: "updateBulk",
+        OperationType.UPSERT: "upsert",
+        OperationType.UPSERT_BULK: "upsertBulk",
         OperationType.DELETE: "delete",
         OperationType.DELETE_BULK: "deleteBulk",
         OperationType.FIND: "find",
@@ -35,6 +39,7 @@ extension OperationTypeExt on OperationType {
 
   static final List<OperationType> supportIntResultType = List.unmodifiable([
     OperationType.UPDATE_BULK,
+    OperationType.UPSERT_BULK,
     OperationType.DELETE_BULK,
     OperationType.ADD_RELATION,
     OperationType.SET_RELATION,
@@ -45,5 +50,6 @@ extension OperationTypeExt on OperationType {
       List.unmodifiable([OperationType.DELETE]);
 
   static final List<OperationType> supportEntityDescriptionResultType =
-      List.unmodifiable([OperationType.CREATE, OperationType.UPDATE]);
+      List.unmodifiable(
+          [OperationType.CREATE, OperationType.UPDATE, OperationType.UPSERT]);
 }

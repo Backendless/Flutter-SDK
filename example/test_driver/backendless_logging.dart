@@ -53,7 +53,8 @@ class TestLogging {
         test("Get Logs File", () async {
           final logName =
               DateFormat("MMM dd yyyy").format(DateTime.now()) + ".log";
-          final files = await (Backendless.files.listing("logging") as FutureOr<List<FileInfo>>);
+          final files = await (Backendless.files.listing("logging")
+              as FutureOr<List<FileInfo>>);
           final logUrl = files
               .where((file) => file.name == logName)
               .map((file) => file.publicUrl)

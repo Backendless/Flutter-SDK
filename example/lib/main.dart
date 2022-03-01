@@ -19,7 +19,6 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    Backendless.setUrl('https://api.backendless.com');
     Backendless.initApp(
         applicationId: APP_ID,
         androidApiKey: ANDROID_KEY,
