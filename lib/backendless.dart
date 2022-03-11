@@ -2,8 +2,11 @@ part of backendless_sdk;
 
 class Backendless {
   static final data = Data();
+  static final customService = CustomService();
   static final cache = Cache();
   static final userService = UserService();
+  static final files = FileService();
+  static final messaging = Messaging();
 
   static final BackendlessPrefs _prefs = BackendlessPrefs();
 

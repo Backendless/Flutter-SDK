@@ -22,6 +22,9 @@ abstract class IDataStore<T> {
   ///Otherwise, the create method will be called, which creates a new object in the table.
   Future<Map?> save(Map map, {bool isUpsert = false});
 
+  ///TODO: add doc
+  Future<Map?> deepSave(Map map);
+
   ///Creates multiple objects in the database.
   ///The API returns a list of object IDs for the objects created in the database.
   Future<List<String>?> bulkCreate(List<Map> entities);
@@ -43,4 +46,35 @@ abstract class IDataStore<T> {
   ///Removes multiple objects according to the described whereClause.
   ///The API returns the number of objects deleted as a result of the request.
   Future<int?> bulkRemove(String whereClause);
+
+  ///The API request has 2 options:
+  ///  1. Must explicitly specify child objects to add to the relation by referring to their identifiers.
+  ///  2. Child objects are referenced implicitly through the whereClause clause, which defines the condition for selecting the object.
+  ///
+  ///At least 1 optional parameter must be defined. If 2 optional parameters are defined, 1 option is preferred.
+  ///The API returns the number of objects the operation adds to the relations.
+  Future<int?> addRelation(String parentObjectId, String relationColumnName,
+      {List? childrenObjectIds, String? whereClause});
+
+  ///The API request has 2 options:
+  ///  1. Must explicitly specify child objects to set to the relation by referring to their identifiers.
+  ///  2. Child objects are referenced implicitly through the whereClause clause, which defines the condition for selecting the object.
+  ///
+  ///At least 1 optional parameter must be defined. If 2 optional parameters are defined, 1 option is preferred.
+  ///The API returns the number of objects the operation sets to the relations.
+  Future<int?> setRelation(String parentObjectId, String relationColumnName,
+      {List? childrenObjectIds, String? whereClause});
+
+  ///The API request has 2 options:
+  ///  1. Removes specific objects from a relationship by ID with their parent..
+  ///  2. Deletes objects from a relationship with their parent. The objects are identified implicitly through a `whereClause` condition.
+  ///
+  ///At least 1 optional parameter must be defined. If 2 optional parameters are defined, 1 option is preferred.
+  ///The API returns the number of child objects removed from the relationship.
+  Future<int?> deleteRelation(String parentObjectId, String relationColumnName,
+      {List? childrenObjectIds, String? whereClause});
+
+  ///TODO: add doc
+  Future<List<dynamic>?> loadRelations(
+      String objectId, LoadRelationsQueryBuilder relationsQueryBuilder);
 }

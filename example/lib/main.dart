@@ -1,3 +1,6 @@
+import 'dart:typed_data';
+
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:backendless_sdk/backendless_sdk.dart';
 import 'main.reflectable.dart';
@@ -59,9 +62,13 @@ class _MyHomePageState extends State<MyHomePage> {
     Map map = Map();
     map['foo'] = 'Update object';
     map['objectId'] = '6E0E7E2A-1F66-4217-BD34-E2C323FCF372';
-    var result = await Backendless.data.of('TestTable').bulkRemove('age>10');
+    LoadRelationsQueryBuilder lRQB = LoadRelationsQueryBuilder.ofMap('userRel');
 
-    print(result);
+    var result = await Backendless.messaging.registerDevice(onMessage: onPush);
+  }
+
+  void onPush(RemoteMessage message) async {
+    print('new message');
   }
 
   @override

@@ -19,6 +19,11 @@ class MapDrivenDataStore implements IDataStore<Map> {
     return await Invoker.put(methodName, entity);
   }
 
+  @override
+  Future<Map?> deepSave(Map map) async {
+    return await Invoker.put('/data/$tableName/deep-save', map);
+  }
+
   Future<List<String>?> bulkCreate(List<Map> entities) async {
     return await Invoker.post('/data/bulk/$tableName', entities);
   }
@@ -78,7 +83,8 @@ class MapDrivenDataStore implements IDataStore<Map> {
     if (id.isEmpty)
       throw ArgumentError.value(ExceptionMessage.EMPTY_NULL_OBJECT_ID);
 
-    return await Invoker.get<Map?>('/data/$tableName/$id', args: queryBuilder);
+    return await Invoker.get<Map?>('/data/$tableName/$id',
+        queryString: await toQueryString(queryBuilder));
   }
 
   @override
@@ -94,6 +100,61 @@ class MapDrivenDataStore implements IDataStore<Map> {
       Invoker.post<List<Map>?>('/data/$tableName/find',
               _buildFindFirstOrLastQuery(queryBuilder, 'desc'))
           .then((result) => result![0]);
+
+  @override
+  Future<int?> addRelation(String parentObjectId, String relationColumnName,
+      {List? childrenObjectIds, String? whereClause}) async {
+    String methodName = '/data/$tableName/$parentObjectId/$relationColumnName';
+    var parameters;
+
+    if (childrenObjectIds?.isNotEmpty ?? false)
+      parameters = childrenObjectIds;
+    else if (whereClause?.isNotEmpty ?? false)
+      methodName += '?where=$whereClause';
+
+    return await Invoker.put(methodName, parameters);
+  }
+
+  @override
+  Future<int?> setRelation(String parentObjectId, String relationColumnName,
+      {List? childrenObjectIds, String? whereClause}) async {
+    String methodName = '/data/$tableName/$parentObjectId/$relationColumnName';
+    var parameters;
+
+    if (childrenObjectIds?.isNotEmpty ?? false)
+      parameters = childrenObjectIds;
+    else if (whereClause?.isNotEmpty ?? false)
+      methodName += '?where=$whereClause';
+
+    return await Invoker.post(methodName, parameters);
+  }
+
+  @override
+  Future<int?> deleteRelation(String parentObjectId, String relationColumnName,
+      {List? childrenObjectIds, String? whereClause}) async {
+    String methodName = '/data/$tableName/$parentObjectId/$relationColumnName';
+    var parameters;
+
+    if (childrenObjectIds?.isNotEmpty ?? false)
+      parameters = childrenObjectIds;
+    else if (whereClause?.isNotEmpty ?? false)
+      methodName += '?where=$whereClause';
+
+    return await Invoker.delete(methodName, args: parameters);
+  }
+
+  @override
+  Future<List<dynamic>?> loadRelations(
+      String objectId, LoadRelationsQueryBuilder relationsQueryBuilder) async {
+    if (objectId.isEmpty)
+      throw ArgumentError.value(ExceptionMessage.EMPTY_NULL_OBJECT_ID);
+    if (relationsQueryBuilder.relationName.isEmpty)
+      throw ArgumentError.value(ExceptionMessage.EMPTY_RELATION_NAME);
+
+    return await Invoker.get(
+        '/data/$tableName/$objectId/${relationsQueryBuilder.relationName}',
+        queryString: await toQueryString(relationsQueryBuilder));
+  }
 
   DataQueryBuilder _buildFindFirstOrLastQuery(
       DataQueryBuilder? queryBuilder, String sortDir) {

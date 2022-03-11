@@ -5,16 +5,12 @@ class Invoker<T> {
   static final Client _httpClient = Client();
   static final Decoder decoder = Decoder();
 
-  static Future<T?> get<T>(String methodName, {dynamic args}) async {
-    String queryString = '';
-    if (args != null && args is DataQueryBuilder) {
-      Map<String, String> queryMap = _createQueryMap(args);
-      queryString = Uri(queryParameters: queryMap).query;
+  static Future<T?> get<T>(String methodName, {String? queryString}) async {
+    if (queryString?.isNotEmpty ?? false) {
+      queryString = '?' + queryString!.substring(0, queryString.length);
     }
-    /*if (queryString.isNotEmpty) {
-      queryString = '?' + queryString.substring(0, queryString.length);
-    }*/
-    final result = await _invoke(methodName + '$queryString', Method.get);
+    if (queryString == null) queryString = '';
+    final result = await _invoke(methodName + queryString, Method.get);
     return decoder.decode<T>(result);
   }
 
@@ -96,7 +92,7 @@ class Invoker<T> {
     });
   }
 
-  static Map<String, String> _createQueryMap(DataQueryBuilder args) {
+  /*static Map<String, String> _createQueryMap(DataQueryBuilder args) {
     Map cleanMap = _removeNullOrEmpty(args.toJson());
     Map<String, String> params = cleanMap
         .map((key, value) => MapEntry(key.toString(), value.toString()));
@@ -127,6 +123,41 @@ class Invoker<T> {
       return params;
     }
     return null;
+  }*/
+
+  static Future _invokeCustomService(String methodName, body,
+      {InvokeOptions? options}) async {
+    final encodedBody = _encodeBody(body);
+    final url = Uri.parse(_getApplicationUrl() + "/$methodName");
+    final headers = prefs.headers;
+
+    if (options != null) {
+      if (options.executionType != null)
+        headers['bl-execution-type'] = describeEnum(options.executionType!);
+      if (options.httpRequestHeaders != null)
+        headers.addAll(options.httpRequestHeaders!);
+    }
+
+    if (Backendless.userService.loginStorage._hasData) {
+      headers['user-token'] = Backendless.userService.loginStorage._userToken!;
+    }
+
+    return _httpClient
+        .post(
+      url,
+      headers: headers,
+      body: encodedBody,
+    )
+        .then((response) {
+      if (response.statusCode >= 400) {
+        try {
+          throw new BackendlessException.fromJson(jsonDecode(response.body));
+        } on FormatException {
+          throw new BackendlessException(response.body);
+        }
+      }
+      return jsonDecode(response.body);
+    });
   }
 }
 

@@ -128,10 +128,12 @@ class UserService {
     else
       methodName += '?loadRoles=false';
 
-    if (queryBuilder != null) methodName += '&';
+    if (queryBuilder != null) {
+      methodName += '&';
+      methodName += (await toQueryString(queryBuilder))!;
+    }
 
-    return await Invoker.get<List<BackendlessUser>?>('$methodName',
-        args: queryBuilder);
+    return await Invoker.get<List<BackendlessUser>?>('$methodName');
   }
 
   Future<List<String>?> getUserRoles() async {
