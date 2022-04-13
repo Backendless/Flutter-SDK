@@ -37,6 +37,7 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
         static let loginWithGoogle = "Backendless.UserService.loginWithGoogle"
         static let loginWithOauth1 = "Backendless.UserService.loginWithOauth1"
         static let loginWithOauth2 = "Backendless.UserService.loginWithOauth2"
+        static let getAuthorizationUrlLink = "Backendless.UserService.getAuthorizationUrlLink";
     }
     
     private enum Args {
@@ -58,6 +59,7 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
         static let roleName = "roleName"
         static let queryBuilder = "queryBuilder"
         static let loadRoles = "loadRoles"
+        static let scope = "scope";
     }
     
     // MARK: -
@@ -110,6 +112,8 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
             loginWithOauth1(arguments, result)
         case Methods.loginWithOauth2:
             loginWithOauth2(arguments, result)
+        case Methods.getAuthorizationUrlLink:
+            getAuthorizationUrlLink(arguments, result)
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -457,6 +461,54 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
             errorHandler: {
                 result(FlutterError($0))
             })
+        }
+    }
+
+    private func getAuthorizationUrlLink(_ arguments: [String : Any], _ result: @escaping FlutterResult) {
+        guard
+            let authProviderCode: String = arguments[Args.authProviderCode].flatMap(cast)
+        else {
+            result(FlutterError.noRequiredArguments)
+
+            return
+        }
+
+        let fieldsMappings: [String: String]? = arguments[Args.fieldsMappings].flatMap(cast)
+        
+        let scope: [String]? = arguments[Args.scope].flatMap(cast)
+
+        if fieldsMappings != nil && scope != nil {
+            userService.getAuthorizationUrlLink(providerCode: authProviderCode, fieldsMappings: fieldsMappings!, scope: scope!, responseHandler: {
+                result($0)
+            },
+                                                errorHandler: {
+                result(FlutterError($0))
+            })
+        } else {
+            if fieldsMappings != nil {
+                userService.getAuthorizationUrlLink(providerCode: authProviderCode, fieldsMappings: fieldsMappings!, responseHandler: {
+                    result($0)
+                },
+                                                    errorHandler: {
+                    result(FlutterError($0))
+                })
+            } else {
+                if scope != nil {
+                    userService.getAuthorizationUrlLink(providerCode: authProviderCode, scope: scope!, responseHandler: {
+                        result($0)
+                    },
+                                                        errorHandler: {
+                        result(FlutterError($0))
+                    })
+                } else {
+                    userService.getAuthorizationUrlLink(providerCode: authProviderCode, responseHandler: {
+                        result($0)
+                    },
+                    errorHandler: {
+                        result(FlutterError($0))
+                    })
+                }
+            }
         }
     }
 }
