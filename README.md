@@ -19,7 +19,7 @@ Follow the steps below to get started with Backendless Flutter SDK:
 To use this plugin in your Flutter project, add `backendless_sdk` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/):
 ```dart
 dependencies:
-  backendless_sdk: ^7.2.0
+  backendless_sdk: ^7.2.1
 ```
 #### STEP 2. Import the Backendless SDK:
 Add the following import to your Dart code
@@ -35,7 +35,8 @@ void initState() {
   Backendless.initApp(
       applicationId: APPLICATION_ID,
       androidApiKey: ANDROID_API_KEY,
-      iosApiKey: IOS_API_KEY);
+      iosApiKey: IOS_API_KEY,
+      jsApiKey: JS_KEY);
 }
 ```
 The `APPLICATION_ID`, `ANDROID_API_KEY` and `IOS_API_KEY` values must be obtained in Backendless Console:
@@ -50,7 +51,9 @@ For example, here is a sample code which stores an object in Backendless databas
 Backendless.initApp(
   applicationId: APPLICATION_ID,
   androidApiKey: ANDROID_API_KEY,
-  iosApiKey: IOS_API_KEY);
+  iosApiKey: IOS_API_KEY,
+  jsApiKey: JS_KEY);
+
 // create a Map object. This will become a record in a database table
 Map testObject = new Map();
 

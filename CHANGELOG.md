@@ -1,3 +1,8 @@
+# 7.2.1
+
+* Added getAuthorizationUrlLink method.
+* Fixed a bug due to which the RT handlers did not work in the web application.
+
 # 7.2.0
 
 * Added support for upsert in save method.

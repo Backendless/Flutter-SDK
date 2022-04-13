@@ -107,9 +107,9 @@ class DataCallHandler {
 
   int addListener(MethodCall call) {
     String event = call.arguments["event"];
-    String whereClause = call.arguments["whereClause"];
-    String relationColumnName = call.arguments["relationColumnName"];
-    List parentObjects = call.arguments["parentObjects"];
+    String? whereClause = call.arguments["whereClause"];
+    String? relationColumnName = call.arguments["relationColumnName"];
+    List? parentObjects = call.arguments["parentObjects"];
 
     int handle = _nextHandle++;
 

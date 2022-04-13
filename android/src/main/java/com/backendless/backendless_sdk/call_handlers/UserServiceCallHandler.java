@@ -85,6 +85,9 @@ public class UserServiceCallHandler implements MethodChannel.MethodCallHandler {
             case "Backendless.UserService.loginWithOauth2":
                 loginWithOauth2(call, result);
                 break;
+            case "Backendless.UserService.getAuthorizationUrlLink":
+                getAuthorizationUrlLink(call, result);
+                break;
             default:
                 result.notImplemented();
         }
@@ -233,5 +236,15 @@ public class UserServiceCallHandler implements MethodChannel.MethodCallHandler {
             Backendless.UserService.loginWithOAuth2(authProviderCode, accessToken, guestUser, fieldsMappings, callback, stayLoggedIn);
         else
             Backendless.UserService.loginWithOAuth2(authProviderCode, accessToken, fieldsMappings, callback, stayLoggedIn);
+    }
+
+    private void getAuthorizationUrlLink(MethodCall call, MethodChannel.Result result){
+        String authProviderCode = call.argument("authProviderCode");
+        Map<String, String> fieldsMappings = call.argument("fieldsMappings");
+        List<String> scope = call.argument("scope");
+
+        FlutterCallback<String> callback = new FlutterCallback<>(result);
+
+        Backendless.UserService.getAuthorizationUrlLink(authProviderCode, fieldsMappings, scope, callback);
     }
 }
