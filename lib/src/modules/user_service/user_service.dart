@@ -131,4 +131,15 @@ class BackendlessUserService {
         "stayLoggedIn": stayLoggedIn,
         "guestUser": guestUser,
       });
+
+  Future<String?> getAuthorizationUrlLink(
+    String authProviderCode, {
+    Map<String, String>? fieldsMappings,
+    List<String>? scope,
+  }) =>
+      _channel.invokeMethod("Backendless.UserService.getAuthorizationUrlLink", {
+        "authProviderCode": authProviderCode,
+        "fieldsMappings": fieldsMappings,
+        "scope": scope,
+      });
 }
