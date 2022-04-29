@@ -33,13 +33,14 @@ enum FlutterTypeCode: UInt8 {
     case lineString
     case polygon
     case relationStatus
+    case backendlessFile
 }
 
 // MARK: -
 // MARK: - BackendlessReaderWriter
 class BackendlessReaderWriter: FlutterStandardReaderWriter {
     override func writer(with data: NSMutableData) -> FlutterStandardWriter {
-        return BackendlessWtiter(data: data)
+        return BackendlessWriter(data: data)
     }
     
     override func reader(with data: Data) -> FlutterStandardReader {

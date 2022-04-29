@@ -4,7 +4,7 @@ import Backendless
 
 // MARK: -
 // MARK: - BackendlessWriter
-class BackendlessWtiter: FlutterStandardWriter {
+class BackendlessWriter: FlutterStandardWriter {
     
     // MARK: -
     // MARK: - Constants
@@ -28,7 +28,7 @@ class BackendlessWtiter: FlutterStandardWriter {
             guard let json = try? JSONSerialization.jsonObject(with: jsonData, options: []) else { return }
 
             writeCode(for: value)
-            
+
             if value is MessageStatus {
                 let jsonToWrite = prepareJsonForMessageStatus(json)
                 super.writeValue(jsonToWrite)
@@ -74,6 +74,10 @@ class BackendlessWtiter: FlutterStandardWriter {
                 if let wkt = wktFromGeometry(value as! BLPolygon) {
                 writeCode(for: value)
                 super.writeValue(wkt)
+            }
+        case is BackendlessFile:
+            if value is BackendlessFile {
+                super.writeValue((value as! BackendlessFile).fileUrl! as String)
             }
         default:               
             super.writeValue(value)
