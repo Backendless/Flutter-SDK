@@ -1,3 +1,11 @@
+# 7.2.3
+
+* fixed a bug that occurred when working with Cyrillic in custom services
+
+# 7.2.2
+
+* Fixed a bug due to which the method parsed the response incorrectly on ios.
+
 # 7.2.1
 
 * Added getAuthorizationUrlLink method.
