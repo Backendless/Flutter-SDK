@@ -77,4 +77,6 @@ abstract class IDataStore<T> {
   ///TODO: add doc
   Future<List<dynamic>?> loadRelations(
       String objectId, LoadRelationsQueryBuilder relationsQueryBuilder);
+
+  EventHandler<T> rt();
 }

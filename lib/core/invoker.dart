@@ -156,7 +156,7 @@ class Invoker<T> {
           throw new BackendlessException(response.body);
         }
       }
-      return jsonDecode(response.body);
+      return jsonDecode(utf8.decode(response.bodyBytes));
     });
   }
 }

@@ -38,6 +38,11 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   void initState() {
     super.initState();
     Backendless.initApp(
@@ -53,18 +58,36 @@ class _MyHomePageState extends State<MyHomePage> {
     }
     */
 
-    BackendlessUser user = BackendlessUser();
-    user.email = 'hdhdhd2@gmail.com';
-    user.password = '123234';
-    user.setProperty('name', 'UserUpdated');
-    user.setProperty('objectId', '15677AD7-7124-45CC-8189-403AE0437D3F');
-    //await Backendless.userService.login(user.email, user.password, true);
-    Map map = Map();
-    map['foo'] = 'Update object';
-    map['objectId'] = '6E0E7E2A-1F66-4217-BD34-E2C323FCF372';
-    LoadRelationsQueryBuilder lRQB = LoadRelationsQueryBuilder.ofMap('userRel');
-
-    var result = await Backendless.messaging.registerDevice(onMessage: onPush);
+    // BackendlessUser user = BackendlessUser();
+    // user.email = 'hdhdhd2@gmail.com';
+    // user.password = '123234';
+    // user.setProperty('name', 'UserUpdated');
+    // user.setProperty('objectId', '15677AD7-7124-45CC-8189-403AE0437D3F');
+    // //await Backendless.userService.login(user.email, user.password, true);
+    // Map map = Map();
+    // map['foo'] = 'Update object';
+    // map['objectId'] = '6E0E7E2A-1F66-4217-BD34-E2C323FCF372';
+    // LoadRelationsQueryBuilder lRQB = LoadRelationsQueryBuilder.ofMap('userRel');
+    //
+    // var result = await Backendless.messaging.registerDevice(onMessage: onPush);
+    await Backendless.userService.logout();
+    var res = await Backendless.data.of('TestTable').rt();
+    res.addConnectListener(() {
+      print('CONNEEEEEECT');
+    });
+    res.addCreateListener((data) => print('CREATE minion\n$data'));
+    res.addUpdateListener((data) => print('UPDATE minion\n$data'));
+    res.addUpsertListener((data) => print('UPSERT minion\n$data'));
+    res.addDeleteListener((data) => print('DELETE minion\n$data'));
+    res.addBulkCreateListener(
+        (response) => print('BULK CREATE minions\n$response'));
+    res.addBulkUpdateListener(
+        (response) => print('BULK UPDATE minions\n$response'));
+    res.addBulkUpsertListener(
+        (response) => print('BULK UPSERT minions\n$response'));
+    res.addBulkDeleteListener(
+        (response) => print('BULK DELETE minions\n$response'));
+    res.addDisconnectListener(() => print('DISCONEEEEEECT'));
   }
 
   void onPush(RemoteMessage message) async {

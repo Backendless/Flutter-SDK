@@ -16,4 +16,5 @@ class ExceptionMessage {
   static const String EMPTY_SOURCE_OR_TARGET_PATHS =
       'sourcePath or targetPath cannot be null';
   static const String EMPTY_PATH = 'Path cannot be null';
+  static const String NO_INTERNET_CONNECTION = 'No internet connection';
 }

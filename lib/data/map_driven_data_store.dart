@@ -1,6 +1,6 @@
 part of backendless_sdk;
 
-class MapDrivenDataStore implements IDataStore<Map> {
+class MapDrivenDataStore<T> implements IDataStore<T> {
   final String tableName;
 
   const MapDrivenDataStore(this.tableName);
@@ -167,5 +167,10 @@ class MapDrivenDataStore implements IDataStore<Map> {
     if (query.sortBy == null) query.sortBy = ['created $sortDir'];
 
     return query;
+  }
+
+  @override
+  EventHandler<T> rt() {
+    return EventHandler<T>(tableName);
   }
 }
