@@ -1,6 +1,6 @@
 part of backendless_sdk;
 
-class MapDrivenDataStore<T> implements IDataStore<T> {
+class MapDrivenDataStore<T> implements IDataStore<Map> {
   final String tableName;
 
   const MapDrivenDataStore(this.tableName);
@@ -9,12 +9,13 @@ class MapDrivenDataStore<T> implements IDataStore<T> {
   Future<Map?> save(Map entity, {bool isUpsert = false}) async {
     String methodName = '/data/$tableName';
 
-    if (isUpsert)
+    if (isUpsert) {
       methodName += '/upsert';
-    else if (entity.containsKey('objectId'))
+    } else if (entity.containsKey('objectId')) {
       methodName += '/${entity['objectId']}';
-    else
+    } else {
       return await Invoker.post(methodName, entity);
+    }
 
     return await Invoker.put(methodName, entity);
   }
@@ -45,15 +46,18 @@ class MapDrivenDataStore<T> implements IDataStore<T> {
     if (entity.isEmpty) throw ArgumentError.value(ExceptionMessage.EMPTY_MAP);
 
     String? objectId = entity['objectId'];
+
     if (objectId?.isEmpty ?? true)
       throw ArgumentError.value(ExceptionMessage.EMPTY_NULL_OBJECT_ID);
 
     methodName += '$tableName/$objectId';
+
     return await Invoker.delete(methodName);
   }
 
   Future<int?> bulkRemove(String whereClause) async {
     String methodName = '/data/bulk/$tableName';
+
     if (whereClause.isEmpty)
       throw ArgumentError.value(ExceptionMessage.NULL_WHERE);
 
@@ -74,7 +78,8 @@ class MapDrivenDataStore<T> implements IDataStore<T> {
   Future<List<Map>?> find({DataQueryBuilder? queryBuilder}) async {
     if (queryBuilder == null) queryBuilder = DataQueryBuilder();
 
-    return Invoker.post<List<Map>?>('/data/$tableName/find', queryBuilder);
+    return await Invoker.post<List<Map>?>(
+        '/data/$tableName/find', queryBuilder);
   }
 
   @override
@@ -91,14 +96,14 @@ class MapDrivenDataStore<T> implements IDataStore<T> {
   Future<Map?> findFirst(
           {List<String>? relations, DataQueryBuilder? queryBuilder}) =>
       Invoker.post<List<Map>?>('/data/$tableName/find',
-              _buildFindFirstOrLastQuery(queryBuilder, 'asc'))
+              buildFindFirstOrLastQuery(queryBuilder, 'asc'))
           .then((result) => result![0]);
 
   @override
   Future<Map?> findLast(
           {List<String>? relations, DataQueryBuilder? queryBuilder}) =>
       Invoker.post<List<Map>?>('/data/$tableName/find',
-              _buildFindFirstOrLastQuery(queryBuilder, 'desc'))
+              buildFindFirstOrLastQuery(queryBuilder, 'desc'))
           .then((result) => result![0]);
 
   @override
@@ -144,8 +149,8 @@ class MapDrivenDataStore<T> implements IDataStore<T> {
   }
 
   @override
-  Future<List<dynamic>?> loadRelations(
-      String objectId, LoadRelationsQueryBuilder relationsQueryBuilder) async {
+  Future<List<R>?> loadRelations<R>(String objectId,
+      LoadRelationsQueryBuilder<R> relationsQueryBuilder) async {
     if (objectId.isEmpty)
       throw ArgumentError.value(ExceptionMessage.EMPTY_NULL_OBJECT_ID);
     if (relationsQueryBuilder.relationName.isEmpty)
@@ -156,21 +161,10 @@ class MapDrivenDataStore<T> implements IDataStore<T> {
         queryString: await toQueryString(relationsQueryBuilder));
   }
 
-  DataQueryBuilder _buildFindFirstOrLastQuery(
-      DataQueryBuilder? queryBuilder, String sortDir) {
-    DataQueryBuilder query =
-        queryBuilder != null ? queryBuilder : DataQueryBuilder();
-
-    query.pageSize = 1;
-    query.offset = 0;
-
-    if (query.sortBy == null) query.sortBy = ['created $sortDir'];
-
-    return query;
-  }
-
   @override
-  EventHandler<T> rt() {
-    return EventHandler<T>(tableName);
+  Future<MapEventHandler<Map>> rt() async {
+    await MapEventHandler.initialize();
+
+    return MapEventHandler<Map>(tableName);
   }
 }

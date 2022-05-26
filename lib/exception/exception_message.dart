@@ -9,6 +9,7 @@ class ExceptionMessage {
   static const String EMPTY_NULL_USER_ID = 'User id cannot be null or empty.';
   static const String EMPTY_IDENTITY = 'Identity cannot be empty.';
   static const String EMPTY_MAP = 'Map cannot be empty';
+  static const String EMPTY_ENTITY = 'Entity cannot be empty';
   static const String EMPTY_RELATION_NAME = 'relationName cannot be empty';
   static const String NO_ONE_ARGUMENT_SPECIFIED =
       'At least one argument must be specified.';
@@ -17,4 +18,7 @@ class ExceptionMessage {
       'sourcePath or targetPath cannot be null';
   static const String EMPTY_PATH = 'Path cannot be null';
   static const String NO_INTERNET_CONNECTION = 'No internet connection';
+  static const String ERROR_DURING_REMOVE_SUB =
+      'An error occurred while deleting a subscription.\n'
+      'Perhaps you are trying to delete a subscription that does not exist.';
 }

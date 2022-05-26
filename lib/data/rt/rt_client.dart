@@ -1,79 +1,72 @@
 part of backendless_sdk;
 
 class RTClient {
-  RTClient._();
-
-  static final _instance = RTClient._();
-  static RTClient get instance => _instance;
-
-  Map<String, List<RTSubscription>> _subscriptions =
-      Map<String, List<RTSubscription>>();
-  Map<String, RTSubscription> subs = Map<String, RTSubscription>();
   IO.Socket? socket;
-  //Future<RTLookupService> _lookupService = RTLookupService.create();
   bool socketCreated = false;
   bool socketConnected = false;
   bool isConnectionHandlersReady = false;
   bool needResubscribe = false;
+  bool needCallDisconnect = true;
+
+  Map<String, List<RTSubscription>> _subscriptions =
+      Map<String, List<RTSubscription>>();
+  Map<String, RTSubscription> subs = Map<String, RTSubscription>();
 
   StreamController _controller = StreamController.broadcast();
+
+  static final _instance = RTClient._();
+  static RTClient get instance => _instance;
+
+  RTClient._();
 
   Future connectSocket(void connected()) async {
     if (!socketCreated) {
       String path = '/${Backendless.applicationId}';
-      String host = EventHandler._rtUrl;
+      String host = MapEventHandler._rtUrl;
 
-      if (host != null) {
-        host += path;
-        socket = IO.io(host, <String, dynamic>{
-          'transports': ['websocket'],
-          'path': '/' + Backendless.applicationId,
-          'query': <String, String>{
-            'apiKey': Backendless.apiKey,
-          }
-        });
-        if (socket != null) {
-          socketCreated = true;
-          this.onConnectionHandlers(connected);
+      host += path;
+      socket = IO.io(host, <String, dynamic>{
+        'transports': ['websocket'],
+        'path': '/' + Backendless.applicationId,
+        'query': <String, String>{
+          'apiKey': Backendless.apiKey,
         }
-        /*socket!.onConnect((socketRes) {
-          print('Connected');
-          print(socketRes);
-          //if (!socketConnected) _controller.add(socketConnected);
-          socketConnected = true;
-        });*/
+      });
 
-        socket!.on('disconnect', (data) {
-          print('disconnect: $data');
-          socketConnected = false;
-          _controller.add('disconnect');
-        });
-        socket!.on('error', (data) {
-          _controller.add('disconnect');
-        });
-        socket!.on('connect_error', (data) => print('connect_error: $data'));
-        socket!
-            .on('connect_timeout', (data) => print('connect_timeout: $data'));
-        //socket!.on('SUB_RES', (data) => print('sub_res: $data'));
-        //socket!.on('SUB_ON', (data) => print('ON SOCKET'));
-        //socket!.emit('SUB_ON', (data) => print('EMIT SOCKET'));
+      if (socket != null) {
+        socketCreated = true;
+        this.onConnectionHandlers(connected);
       }
+
+      socket!.on('disconnect', (data) {
+        //print('disconnect: $data');
+        socketConnected = false;
+        if (this.needCallDisconnect) _controller.add('disconnect');
+      });
+      socket!.on('error', (data) {
+        print('error');
+        _controller.add('disconnect');
+        needResubscribe = true;
+      });
+      socket!.on('connect_error', (data) {
+        print('connect_error: $data');
+        needResubscribe = true;
+      });
+      socket!.on('connect_timeout', (data) => print('connect_timeout: $data'));
     } else if (socketConnected == true) {
       connected.call();
     }
   }
 
-  Future<RTSubscription> createSubscription<T>(
-      String type,
-      Map<String, dynamic> options,
-      void Function(dynamic response) callback) async {
+  Future<RTSubscription> createSubscription<T>(String type,
+      Map<String, dynamic> options, void Function(T response) callback) async {
     String subscriptionId = Uuid().v4();
     Map<String, dynamic> data = {
       'id': subscriptionId,
       'name': type,
       'options': options
     };
-    var subscription = RTSubscription();
+    var subscription = RTSubscription<T>();
     subscription.data = data;
     subscription.subscriptionId = subscriptionId;
     subscription.type = type;
@@ -107,11 +100,6 @@ class RTClient {
     subscriptionStack.add(subscription);
     this._subscriptions[typeName] = subscriptionStack;
     this.subs[subscriptionId] = subscription;
-    /*if (socketConnected)
-      subscribe(data, subscription);
-    else
-      await connectSocket(() => subscribe(data, subscription));
-    */
 
     return subscription;
   }
@@ -119,16 +107,22 @@ class RTClient {
   void subscribe(Map<String, dynamic> data, RTSubscription subscription) {
     if (_instance.socketConnected) {
       this.socket!.emit('SUB_ON', data);
+      //print('sub_on ${subscription.subscriptionId}');
     } else {
       this.connectSocket(() => socket!.emit('SUB_ON', data));
     }
   }
 
   void onConnectionHandlers(void connected()) {
-    if (!this.isConnectionHandlersReady) {
-      this.isConnectionHandlersReady = true;
-      this.socket?.on('connect', (data) {
-        print('connected');
+    this.socket?.on('connect', (data) {
+      if (this.needResubscribe) {
+        print('connect re_sub');
+        this.needCallDisconnect = false;
+        this.removeSocket();
+        this.connectSocket(connected);
+        this.needCallDisconnect = true;
+      } else {
+        //print('connected');
         this.socketConnected = true;
         for (var subscriptionId in this.subs.keys) {
           var subscription = this.subs[subscriptionId];
@@ -143,24 +137,56 @@ class RTClient {
           this.subscribe(data, subscription);
         }
         this.socket!.on('SUB_RES', (data) {
-          subs[data['id']]!.callback?.call(data);
+          subs[data['id']]!.callback?.call(data['data']);
         });
         this.needResubscribe = false;
         connected.call();
-      });
+        _controller.add('connect');
+      }
+    });
+  }
+
+  void removeSocket() {
+    this.socket!.dispose();
+    this.isConnectionHandlersReady = false;
+    this.socketConnected = false;
+    this.socketCreated = false;
+    this.needResubscribe = false;
+  }
+
+  void removeListeners(String type, String event, {String? whereClause}) =>
+      stopSubscription(event, whereClause: whereClause);
+
+  void stopSubscription(String event, {String? whereClause}) {
+    try {
+      var subscriptionStack = this._subscriptions[event];
+
+      if (whereClause?.isNotEmpty ?? false) {
+        for (var subscription in subscriptionStack!) {
+          final options = subscription.options;
+          final subscriptionWhereClause = options!['whereClause'] as String?;
+          if (subscriptionWhereClause == whereClause) {
+            subscription.stop();
+            this._subscriptions[event]!.remove(subscription.subscriptionId);
+          }
+        }
+      } else {
+        for (var subscription in subscriptionStack!) {
+          subscription.stop();
+          this._subscriptions[event]!.remove(subscription.subscriptionId);
+        }
+      }
+    } catch (ex) {
+      throw ArgumentError.value(ExceptionMessage.ERROR_DURING_REMOVE_SUB);
     }
   }
 
-  void onResult() {
-    this.socket!.on('SUB_RES', (data) {
-      var resultData;
-      if (data is Map) {
-        resultData = data;
-        String subscriptionId = data['id'];
-        RTSubscription subscription = this.subs[subscriptionId]!;
-        if (data['data'] != null) {}
-      }
-    });
+  void unsubscribe(String subscriptionId) {
+    if (this.subs.keys.contains(subscriptionId)) {
+      this.socket?.emit('SUB_OFF', {'id': subscriptionId});
+      this.subs.remove(subscriptionId);
+    }
+    if (this.subs.length == 0 && this.socket != null) this.removeSocket();
   }
 
   Stream get streamController => _controller.stream;

@@ -9,6 +9,9 @@ enum RTEventHandlers {
   BULK_UPDATED,
   BULK_UPSERTED,
   BULK_DELETED,
+  SET,
+  ADD,
+  DELETE,
 }
 
 extension RTEventHandlerAsString on RTEventHandlers {

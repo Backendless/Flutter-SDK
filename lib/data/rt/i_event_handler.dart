@@ -25,6 +25,24 @@ abstract class IEventHandler<T> {
   void addBulkDeleteListener(void Function(dynamic response) callback,
       {void onError(String error)?, String? whereClause});
 
+  void addSetRelationListener(String relationColumnName, callback,
+      {List<String>? parentObjectIds,
+      List? parents,
+      void onError(String error)?,
+      String? whereClause});
+
+  void addAddRelationListener(String relationColumnName, callback,
+      {List<String>? parentObjectIds,
+      List? parents,
+      void onError(String error)?,
+      String? whereClause});
+
+  void addDeleteRelationListener(String relationColumnName, callback,
+      {List<String>? parentObjectIds,
+      List? parents,
+      void onError(String error)?,
+      String? whereClause});
+
   void addConnectListener(void Function() callback,
       {void onError(String error)?, String? whereClause});
 
@@ -46,4 +64,10 @@ abstract class IEventHandler<T> {
   void removeBulkUpsertListeners({String? whereClause});
 
   void removeBulkDeleteListeners({String? whereClause});
+
+  void removeSetRelationListeners({String? whereClause});
+
+  void removeAddRelationListeners({String? whereClause});
+
+  void removeDeleteRelationListeners({String? whereClause});
 }

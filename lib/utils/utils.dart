@@ -53,3 +53,16 @@ Future<String?> toQueryString(DataQueryBuilder? queryBuilder) async {
 
   return queryTokens.join('&');
 }
+
+DataQueryBuilder buildFindFirstOrLastQuery(
+    DataQueryBuilder? queryBuilder, String sortDir) {
+  DataQueryBuilder query =
+      queryBuilder != null ? queryBuilder : DataQueryBuilder();
+
+  query.pageSize = 1;
+  query.offset = 0;
+
+  if (query.sortBy == null) query.sortBy = ['created $sortDir'];
+
+  return query;
+}

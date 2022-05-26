@@ -7,7 +7,6 @@ import 'main.reflectable.dart';
 
 void main() {
   initializeReflectable();
-
   runApp(const MyApp());
 }
 
@@ -71,23 +70,28 @@ class _MyHomePageState extends State<MyHomePage> {
     //
     // var result = await Backendless.messaging.registerDevice(onMessage: onPush);
     await Backendless.userService.logout();
-    var res = await Backendless.data.of('TestTable').rt();
-    res.addConnectListener(() {
-      print('CONNEEEEEECT');
+
+    TestTable tt = TestTable();
+    tt.foo = 'TT';
+
+    //var res = await Backendless.data.withClass<TestTable>().find();
+
+    //print(res);
+    var ev = await Backendless.data.of('TestTable').rt();
+
+    ev.addCreateListener((response) {
+      print('create $response');
+    }, onError: (error) {
+      print('error $error');
     });
-    res.addCreateListener((data) => print('CREATE minion\n$data'));
-    res.addUpdateListener((data) => print('UPDATE minion\n$data'));
-    res.addUpsertListener((data) => print('UPSERT minion\n$data'));
-    res.addDeleteListener((data) => print('DELETE minion\n$data'));
-    res.addBulkCreateListener(
-        (response) => print('BULK CREATE minions\n$response'));
-    res.addBulkUpdateListener(
-        (response) => print('BULK UPDATE minions\n$response'));
-    res.addBulkUpsertListener(
-        (response) => print('BULK UPSERT minions\n$response'));
-    res.addBulkDeleteListener(
-        (response) => print('BULK DELETE minions\n$response'));
-    res.addDisconnectListener(() => print('DISCONEEEEEECT'));
+
+    ev.addUpdateListener((response) => print('update $response'));
+
+    ev.addUpsertListener((response) => print('upsert $response'));
+
+    ev.addDeleteListener((response) => print('delete $response'));
+
+    ev.addConnectListener(() => print('connected'));
   }
 
   void onPush(RemoteMessage message) async {
@@ -121,4 +125,11 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
+}
+
+@reflector
+class TestTable {
+  String? objectId;
+  String? foo;
+  BackendlessUser? userRel;
 }
