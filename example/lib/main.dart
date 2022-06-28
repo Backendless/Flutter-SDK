@@ -1,7 +1,9 @@
 import 'package:backendless_sdk/backendless_sdk.dart';
+import 'package:backendless_sdk_example/main.reflectable.dart';
 import 'package:flutter/material.dart';
 
 void main() {
+  initializeReflectable();
   runApp(MyApp());
 }
 
