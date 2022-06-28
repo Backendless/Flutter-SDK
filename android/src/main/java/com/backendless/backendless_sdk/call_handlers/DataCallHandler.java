@@ -11,6 +11,7 @@ import com.backendless.persistence.LoadRelationsQueryBuilder;
 import com.backendless.backendless_sdk.utils.FlutterCallback;
 import com.backendless.property.ObjectProperty;
 import com.backendless.rt.data.BulkEvent;
+import com.backendless.rt.data.EventHandler;
 import com.backendless.rt.data.RelationStatus;
 
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ public class DataCallHandler implements MethodChannel.MethodCallHandler {
     private MethodChannel methodChannel;
     private final SparseArray<DataEventAsyncCallback> subscriptions = new SparseArray<>();
     private int nextHandle = 0;
+    private EventHandler eventHandler;
 
     public DataCallHandler(MethodChannel methodChannel) {
         this.methodChannel = methodChannel;
@@ -86,9 +88,15 @@ public class DataCallHandler implements MethodChannel.MethodCallHandler {
                 getView(call, result);
                 break;
             case "Backendless.Data.RT.addListener":
+                if(eventHandler == null)
+                    eventHandler = Backendless.Data.of(tableName).rt();
+
                 addListener(call, result);
                 break;
             case "Backendless.Data.RT.removeListener":
+                if(eventHandler == null)
+                    eventHandler = Backendless.Data.of(tableName).rt();
+
                 removeListener(call, result);
                 break;
             default:
@@ -295,19 +303,19 @@ public class DataCallHandler implements MethodChannel.MethodCallHandler {
             switch (event) {
                 case "RTDataEvent.BULK_CREATED":
                     DataEventAsyncCallback<List> bulkCreateCallback = new DataEventAsyncCallback<>(handle);
-                    Backendless.Data.of(tableName).rt().addBulkCreateListener(bulkCreateCallback);
+                    eventHandler.addBulkCreateListener(bulkCreateCallback);
                     break;
                 case "RTDataEvent.BULK_UPDATED":
                     if (whereClause != null)
-                        Backendless.Data.of(tableName).rt().addBulkUpdateListener(whereClause, bulkCallback);
+                        eventHandler.addBulkUpdateListener(whereClause, bulkCallback);
                     else
-                        Backendless.Data.of(tableName).rt().addBulkUpdateListener(bulkCallback);
+                        eventHandler.addBulkUpdateListener(bulkCallback);
                     break;
                 case "RTDataEvent.BULK_DELETED":
                     if (whereClause != null)
-                        Backendless.Data.of(tableName).rt().addBulkDeleteListener(whereClause, bulkCallback);
+                        eventHandler.addBulkDeleteListener(whereClause, bulkCallback);
                     else
-                        Backendless.Data.of(tableName).rt().addBulkDeleteListener(bulkCallback);
+                        eventHandler.addBulkDeleteListener(bulkCallback);
                     break;
                 default:
                     result.notImplemented();
@@ -321,21 +329,21 @@ public class DataCallHandler implements MethodChannel.MethodCallHandler {
             switch (event) {
                 case "RTDataEvent.RELATIONS_SET":
                     if (parentObjects != null)
-                        Backendless.Data.of(tableName).rt().addSetRelationListener(relationColumnName, parentObjects, relationsCallback);
+                        eventHandler.addSetRelationListener(relationColumnName, parentObjects, relationsCallback);
                     else
-                        Backendless.Data.of(tableName).rt().addSetRelationListener(relationColumnName, relationsCallback);
+                        eventHandler.addSetRelationListener(relationColumnName, relationsCallback);
                     break;
                 case "RTDataEvent.RELATIONS_ADDED":
                     if (parentObjects != null)
-                        Backendless.Data.of(tableName).rt().addAddRelationListener(relationColumnName, parentObjects, relationsCallback);
+                        eventHandler.addAddRelationListener(relationColumnName, parentObjects, relationsCallback);
                     else
-                        Backendless.Data.of(tableName).rt().addAddRelationListener(relationColumnName, relationsCallback);
+                        eventHandler.addAddRelationListener(relationColumnName, relationsCallback);
                     break;
                 case "RTDataEvent.RELATIONS_REMOVED":
                     if (parentObjects != null)
-                        Backendless.Data.of(tableName).rt().addDeleteRelationListener(relationColumnName, parentObjects, relationsCallback);
+                        eventHandler.addDeleteRelationListener(relationColumnName, parentObjects, relationsCallback);
                     else
-                        Backendless.Data.of(tableName).rt().addDeleteRelationListener(relationColumnName, relationsCallback);
+                        eventHandler.addDeleteRelationListener(relationColumnName, relationsCallback);
                     break;
                 default:
                     result.notImplemented();
@@ -347,21 +355,21 @@ public class DataCallHandler implements MethodChannel.MethodCallHandler {
             switch (event) {
                 case "RTDataEvent.CREATED":
                     if (whereClause != null)
-                        Backendless.Data.of(tableName).rt().addCreateListener(whereClause, mapCallback);
+                        eventHandler.addCreateListener(whereClause, mapCallback);
                     else
-                        Backendless.Data.of(tableName).rt().addCreateListener(mapCallback);
+                        eventHandler.addCreateListener(mapCallback);
                     break;
                 case "RTDataEvent.UPDATED":
                     if (whereClause != null)
-                        Backendless.Data.of(tableName).rt().addUpdateListener(whereClause, mapCallback);
+                        eventHandler.addUpdateListener(whereClause, mapCallback);
                     else
-                        Backendless.Data.of(tableName).rt().addUpdateListener(mapCallback);
+                        eventHandler.addUpdateListener(mapCallback);
                     break;
                 case "RTDataEvent.DELETED":
                     if (whereClause != null)
-                        Backendless.Data.of(tableName).rt().addDeleteListener(whereClause, mapCallback);
+                        eventHandler.addDeleteListener(whereClause, mapCallback);
                     else
-                        Backendless.Data.of(tableName).rt().addDeleteListener(mapCallback);
+                        eventHandler.addDeleteListener(mapCallback);
                     break;
                 default:
                     result.notImplemented();
@@ -382,45 +390,45 @@ public class DataCallHandler implements MethodChannel.MethodCallHandler {
         switch (event) {
             case "RTDataEvent.CREATED":
                 if (whereClause != null)
-                    Backendless.Data.of(tableName).rt().removeCreateListener(whereClause, callback);
+                    eventHandler.removeCreateListener(whereClause, callback);
                 else
-                    Backendless.Data.of(tableName).rt().removeCreateListener(callback);
+                    eventHandler.removeCreateListener(callback);
                 break;
             case "RTDataEvent.UPDATED":
                 if (whereClause != null)
-                    Backendless.Data.of(tableName).rt().removeUpdateListener(whereClause, callback);
+                    eventHandler.removeUpdateListener(whereClause, callback);
                 else
-                    Backendless.Data.of(tableName).rt().removeUpdateListener(callback);
+                    eventHandler.removeUpdateListener(callback);
                 break;
             case "RTDataEvent.DELETED":
                 if (whereClause != null)
-                    Backendless.Data.of(tableName).rt().removeDeleteListener(whereClause, callback);
+                    eventHandler.removeDeleteListener(whereClause, callback);
                 else
-                    Backendless.Data.of(tableName).rt().removeDeleteListener(callback);
+                    eventHandler.removeDeleteListener(callback);
                 break;
             case "RTDataEvent.BULK_CREATED":
-                Backendless.Data.of(tableName).rt().removeBulkCreateListener(callback);
+                eventHandler.removeBulkCreateListener(callback);
                 break;
             case "RTDataEvent.BULK_UPDATED":
                 if (whereClause != null)
-                    Backendless.Data.of(tableName).rt().removeBulkUpdateListener(whereClause, callback);
+                    eventHandler.removeBulkUpdateListener(whereClause, callback);
                 else
-                    Backendless.Data.of(tableName).rt().removeBulkUpdateListener(callback);
+                    eventHandler.removeBulkUpdateListener(callback);
                 break;
             case "RTDataEvent.BULK_DELETED":
                 if (whereClause != null)
-                    Backendless.Data.of(tableName).rt().removeBulkDeleteListener(whereClause, callback);
+                    eventHandler.removeBulkDeleteListener(whereClause, callback);
                 else
-                    Backendless.Data.of(tableName).rt().removeBulkDeleteListener(callback);
+                    eventHandler.removeBulkDeleteListener(callback);
                 break;
             case "RTDataEvent.RELATIONS_SET":
-                Backendless.Data.of(tableName).rt().removeSetRelationListeners();
+                eventHandler.removeSetRelationListeners();
                 break;
             case "RTDataEvent.RELATIONS_ADDED":
-                Backendless.Data.of(tableName).rt().removeAddRelationListeners();
+                eventHandler.removeAddRelationListeners();
                 break;
             case "RTDataEvent.RELATIONS_REMOVED":
-                Backendless.Data.of(tableName).rt().removeDeleteRelationListeners();
+                eventHandler.removeDeleteRelationListeners();
                 break;
             default:
                 result.notImplemented();

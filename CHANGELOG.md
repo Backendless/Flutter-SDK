@@ -1,6 +1,10 @@
+# 7.2.4
+
+* Fixed a bug that did not allow you to remove a subscription to a RT event in Android.
+
 # 7.2.3
 
-* fixed a bug that occurred when working with Cyrillic in custom services
+* Fixed a bug that occurred when working with Cyrillic in custom services
 
 # 7.2.2
 
