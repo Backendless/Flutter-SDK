@@ -10,7 +10,7 @@ import Foundation
 import Flutter
 import Backendless
 
-class MessagingCallHandler: FlutterCallHandlerProtocol {
+class MessagingCallHandler: NSObject, FlutterCallHandlerProtocol, UNUserNotificationCenterDelegate {
     
     // MARK: -
     // MARK: - Constants
@@ -317,11 +317,31 @@ class MessagingCallHandler: FlutterCallHandlerProtocol {
         registerDeviceArgs[Args.channels] = arguments[Args.channels]
         registerDeviceArgs[Args.expiration] = arguments[Args.expiration]
         
-        DispatchQueue.main.async { [weak self] in
+        if #available(iOS 10.0, *) {
+            let center = UNUserNotificationCenter.current()
+            center.delegate = self
+            center.requestAuthorization(options: [.alert, .badge, .sound]) { (granted, error) in
+                if let error = error {
+                    print(":red_circle: APNS error: \(error.localizedDescription)")
+                }
+                else {
+                    DispatchQueue.main.async {
+                        UIApplication.shared.registerForRemoteNotifications()
+                        self.didAskRegistration = true
+                        self.registerDeviceFinished = result
+                    }
+                }
+            }
+        } else {
+            let settings = UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
+            UIApplication.shared.registerUserNotificationSettings(settings)
             UIApplication.shared.registerForRemoteNotifications()
-            self?.didAskRegistration = true
-            self?.registerDeviceFinished = result
         }
+        //        DispatchQueue.main.async { [weak self] in
+        //
+        //            UIApplication.shared.registerForRemoteNotifications()
+        //            self?.didAskRegistration = true
+        //            self?.registerDeviceFinished = result
     }
     
     func didRegisterForRemotePushNotifications(withToken deviceToken: Data) {

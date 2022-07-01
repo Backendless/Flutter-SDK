@@ -1,3 +1,7 @@
+# 7.2.5
+
+* Fixed a bug due to which the request for permission to send push notifications did not appear on IOS.
+
 # 7.2.4
 
 * Fixed a bug that did not allow you to remove a subscription to a RT event in Android.
