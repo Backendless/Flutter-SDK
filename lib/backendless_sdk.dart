@@ -2,8 +2,6 @@ library backendless_sdk;
 
 import 'dart:collection';
 import 'dart:io';
-import 'dart:typed_data';
-import 'dart:ui' show hashValues;
 import 'dart:convert';
 
 import 'package:collection/collection.dart';

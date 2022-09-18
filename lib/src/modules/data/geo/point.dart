@@ -20,7 +20,7 @@ class Point extends Geometry {
       (other.y - y).abs() < Point.precision;
 
   @override
-  int get hashCode => hashValues(x, y, srs);
+  int get hashCode => Object.hash(x, y, srs);
 
   Point({this.x = 0.0, this.y = 0.0, SpatialReferenceSystem? srs})
       : super(srs: srs);
