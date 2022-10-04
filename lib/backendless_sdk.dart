@@ -74,6 +74,13 @@ part 'messaging/device_registration.dart';
 part 'messaging/device_registration_result.dart';
 part 'messaging/body_parts.dart';
 part 'messaging/email_envelope.dart';
+part 'messaging/user_info.dart';
+part 'messaging/user_status.dart';
+part 'messaging/user_status_response.dart';
+part 'messaging/rt/channel.dart';
+part 'messaging/rt/rt_messaging.dart';
+part 'messaging/rt/rt_method.dart';
+part 'messaging/rt/rt_method_request.dart';
 
 part 'transactions/unit_of_work.dart';
 part 'transactions/unit_of_work_create.dart';

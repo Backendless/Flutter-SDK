@@ -141,6 +141,11 @@ class Messaging {
   }
 
   ///TODO: Add subscribe method
+  Channel subscribe({String? channelName}) {
+    if (channelName == null) channelName = 'default';
+
+    return Channel(channelName);
+  }
 
   Future<Map<String, String>> _getDeviceDetails() async {
     String deviceName = '';

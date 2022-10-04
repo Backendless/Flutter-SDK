@@ -1,15 +1,112 @@
 part of backendless_sdk;
 
-class ClassEventHandler<E> implements IEventHandler<E> {
+class ClassEventHandler<T> implements IEventHandler<T> {
   late String _tableName;
   static String _rtUrl = '';
 
   ClassEventHandler() {
-    _tableName = reflector.getServerName(E)!;
+    _tableName = reflector.getServerName(T)!;
   }
 
   static Future<void> initialize() async {
     _rtUrl = (await RTLookupService.lookup())!;
+  }
+
+  @override
+  void addConnectListener(void Function() callback,
+      {void Function(String error)? onError, String? whereClause}) async {
+    try {
+      if (_rtUrl.isEmpty) _rtUrl = (await RTLookupService.lookup())!;
+
+      if (_rtUrl.isNotEmpty)
+        RTListener.connectionHandler(callback);
+      else {
+        print('empty url');
+        throw ArgumentError.value(ExceptionMessage.NO_INTERNET_CONNECTION);
+      }
+    } catch (ex) {
+      onError!.call(ex.toString());
+    }
+  }
+
+  @override
+  void addCreateListener(void Function(T? response) callback,
+      {void Function(String error)? onError, String? whereClause}) async {
+    try {
+      print('classEvent: ' + (T).toString());
+      if (_rtUrl.isEmpty) _rtUrl = (await RTLookupService.lookup())!;
+
+      if (_rtUrl.isNotEmpty)
+        await RTListener.subscribeForObjectsChanges(
+            RTEventHandlers.CREATED.toShortString(), _tableName, callback,
+            whereClause: whereClause);
+      else {
+        print('empty url');
+        throw ArgumentError.value(ExceptionMessage.NO_INTERNET_CONNECTION);
+      }
+    } catch (ex) {
+      onError!.call(ex.toString());
+    }
+  }
+
+  @override
+  void addUpdateListener(void Function(T? response) callback,
+      {void Function(String error)? onError, String? whereClause}) async {
+    try {
+      print('classEvent: ' + (T).toString());
+      if (_rtUrl.isEmpty) _rtUrl = (await RTLookupService.lookup())!;
+
+      if (_rtUrl.isNotEmpty)
+        await RTListener.subscribeForObjectsChanges(
+            RTEventHandlers.UPDATED.toShortString(), _tableName, callback,
+            whereClause: whereClause);
+      else {
+        print('empty url');
+        throw ArgumentError.value(ExceptionMessage.NO_INTERNET_CONNECTION);
+      }
+    } catch (ex) {
+      onError!.call(ex.toString());
+    }
+  }
+
+  @override
+  void addUpsertListener(void Function(T? response) callback,
+      {void Function(String error)? onError, String? whereClause}) async {
+    try {
+      print('classEvent: ' + (T).toString());
+      if (_rtUrl.isEmpty) _rtUrl = (await RTLookupService.lookup())!;
+
+      if (_rtUrl.isNotEmpty)
+        await RTListener.subscribeForObjectsChanges(
+            RTEventHandlers.UPSERTED.toShortString(), _tableName, callback,
+            whereClause: whereClause);
+      else {
+        print('empty url');
+        throw ArgumentError.value(ExceptionMessage.NO_INTERNET_CONNECTION);
+      }
+    } catch (ex) {
+      onError!.call(ex.toString());
+    }
+  }
+
+  @override
+  void addDeleteListener(void Function(T? response) callback,
+      {void Function(String error)? onError, String? whereClause}) async {
+    try {
+      print('classEvent: ' + (T).toString());
+      if (_rtUrl.isEmpty) _rtUrl = (await RTLookupService.lookup())!;
+
+      if (_rtUrl.isNotEmpty)
+        await RTListener.subscribeForObjectsChanges(
+            RTEventHandlers.DELETED.toShortString(), _tableName, callback,
+            whereClause: whereClause);
+      else {
+        print('empty url');
+        throw ArgumentError.value(ExceptionMessage.NO_INTERNET_CONNECTION);
+      }
+    } catch (ex) {
+      onError!.call(ex.toString());
+    }
   }
 
   @override
@@ -46,24 +143,6 @@ class ClassEventHandler<E> implements IEventHandler<E> {
   }
 
   @override
-  void addConnectListener(void Function() callback,
-      {void Function(String error)? onError, String? whereClause}) {
-    // TODO: implement addConnectListener
-  }
-
-  @override
-  void addCreateListener(void Function(E response) callback,
-      {void Function(String error)? onError, String? whereClause}) {
-    // TODO: implement addCreateListener
-  }
-
-  @override
-  void addDeleteListener(void Function(E response) callback,
-      {void Function(String error)? onError, String? whereClause}) {
-    // TODO: implement addDeleteListener
-  }
-
-  @override
   void addDeleteRelationListener(String relationColumnName, callback,
       {List<String>? parentObjectIds,
       List? parents,
@@ -85,18 +164,6 @@ class ClassEventHandler<E> implements IEventHandler<E> {
       void Function(String error)? onError,
       String? whereClause}) {
     // TODO: implement addSetRelationListener
-  }
-
-  @override
-  void addUpdateListener(void Function(E response) callback,
-      {void Function(String error)? onError, String? whereClause}) {
-    // TODO: implement addUpdateListener
-  }
-
-  @override
-  void addUpsertListener(void Function(E response) callback,
-      {void Function(String error)? onError, String? whereClause}) {
-    // TODO: implement addUpsertListener
   }
 
   @override

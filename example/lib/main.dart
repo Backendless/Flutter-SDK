@@ -77,9 +77,34 @@ class _MyHomePageState extends State<MyHomePage> {
     //var res = await Backendless.data.withClass<TestTable>().find();
 
     //print(res);
-    var ev = await Backendless.data.of('TestTable').rt();
+    //await Backendless.data.of("TestTable").find();
 
-    ev.addCreateListener((response) {
+    //var ev = await Backendless.data.withClass<TestTable>().rt();
+    var ev = await Backendless.data.of('TestTable').rt();
+    //
+    // ev.addSetRelationListener('testRel', (resp) {
+    //   print('set relation $resp');
+    //   ev.removeSetRelationListeners();
+    // });
+    //
+    // ev.addConnectListener(() => print('connected listener has been called'));
+    //
+    // ev.addAddRelationListener('testRel', (resp) {
+    //   print('add relation $resp');
+    //   ev.removeAddRelationListeners();
+    // });
+
+    var mev = await Backendless.messaging.subscribe();
+
+    mev.join();
+    mev.addMessageListener((response) {
+      print('SOME MESS');
+      print(response);
+
+      mev.removeMessageListeners();
+    });
+
+    /*ev.addCreateListener((response) {
       print('create $response');
     }, onError: (error) {
       print('error $error');
@@ -89,9 +114,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
     ev.addUpsertListener((response) => print('upsert $response'));
 
-    ev.addDeleteListener((response) => print('delete $response'));
-
-    ev.addConnectListener(() => print('connected'));
+    ev.addDeleteListener(
+      (response) => print('delete $response'),
+    );*/
   }
 
   void onPush(RemoteMessage message) async {

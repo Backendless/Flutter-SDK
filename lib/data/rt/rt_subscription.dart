@@ -6,13 +6,13 @@ class RTSubscription<T> {
   Map<String, dynamic>? options;
   String? type;
   bool ready = false;
-  void Function(T response)? callback;
+  void Function(T? response)? callback;
 
   void subscribe() {
-    if (data != null) RTClient.instance.subscribe(this.data!, this);
+    if (data != null) RTListener.clientInstance!.subscribe<T>(this.data!, this);
   }
 
   void stop() {
-    RTClient.instance.unsubscribe(this.subscriptionId!);
+    RTListener.unsubscribe(this.subscriptionId!);
   }
 }

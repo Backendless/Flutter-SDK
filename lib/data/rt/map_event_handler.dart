@@ -11,13 +11,15 @@ class MapEventHandler<T> implements IEventHandler<T> {
   }
 
   @override
-  void addCreateListener(callback,
+  void addCreateListener(void Function(T? response) callback,
       {void onError(String error)?, String? whereClause}) async {
     try {
       if (_rtUrl.isEmpty) _rtUrl = (await RTLookupService.lookup())!;
 
+      print((T).toString());
+
       if (_rtUrl.isNotEmpty)
-        await RTListener.subscribeForObjectsChanges(
+        await RTListener.subscribeForObjectsChanges<T>(
             RTEventHandlers.CREATED.toShortString(), _tableName, callback,
             whereClause: whereClause);
       else {
@@ -30,13 +32,13 @@ class MapEventHandler<T> implements IEventHandler<T> {
   }
 
   @override
-  void addUpdateListener(callback,
+  void addUpdateListener(void Function(T? response) callback,
       {void onError(String error)?, String? whereClause}) async {
     try {
       if (_rtUrl.isEmpty) _rtUrl = (await RTLookupService.lookup())!;
 
       if (_rtUrl.isNotEmpty)
-        await RTListener.subscribeForObjectsChanges(
+        await RTListener.subscribeForObjectsChanges<T>(
             RTEventHandlers.UPDATED.toShortString(), _tableName, callback,
             whereClause: whereClause);
       else {
@@ -55,7 +57,7 @@ class MapEventHandler<T> implements IEventHandler<T> {
       if (_rtUrl.isEmpty) _rtUrl = (await RTLookupService.lookup())!;
 
       if (_rtUrl.isNotEmpty)
-        await RTListener.subscribeForObjectsChanges(
+        await RTListener.subscribeForObjectsChanges<T>(
             RTEventHandlers.UPSERTED.toShortString(), _tableName, callback,
             whereClause: whereClause);
       else {
@@ -74,7 +76,7 @@ class MapEventHandler<T> implements IEventHandler<T> {
       if (_rtUrl.isEmpty) _rtUrl = (await RTLookupService.lookup())!;
 
       if (_rtUrl.isNotEmpty)
-        await RTListener.subscribeForObjectsChanges(
+        await RTListener.subscribeForObjectsChanges<T>(
             RTEventHandlers.DELETED.toShortString(), _tableName, callback,
             whereClause: whereClause);
       else {
@@ -93,7 +95,7 @@ class MapEventHandler<T> implements IEventHandler<T> {
       if (_rtUrl.isEmpty) _rtUrl = (await RTLookupService.lookup())!;
 
       if (_rtUrl.isNotEmpty)
-        await RTListener.subscribeForObjectsChanges(
+        await RTListener.subscribeForObjectsChanges<T>(
             RTEventHandlers.BULK_CREATED.toShortString(), _tableName, callback,
             whereClause: whereClause);
       else {
@@ -112,7 +114,7 @@ class MapEventHandler<T> implements IEventHandler<T> {
       if (_rtUrl.isEmpty) _rtUrl = (await RTLookupService.lookup())!;
 
       if (_rtUrl.isNotEmpty)
-        await RTListener.subscribeForObjectsChanges(
+        await RTListener.subscribeForObjectsChanges<T>(
             RTEventHandlers.BULK_UPDATED.toShortString(), _tableName, callback,
             whereClause: whereClause);
       else {
@@ -131,7 +133,7 @@ class MapEventHandler<T> implements IEventHandler<T> {
       if (_rtUrl.isEmpty) _rtUrl = (await RTLookupService.lookup())!;
 
       if (_rtUrl.isNotEmpty)
-        await RTListener.subscribeForObjectsChanges(
+        await RTListener.subscribeForObjectsChanges<T>(
             RTEventHandlers.BULK_UPSERTED.toShortString(), _tableName, callback,
             whereClause: whereClause);
       else {
@@ -150,7 +152,7 @@ class MapEventHandler<T> implements IEventHandler<T> {
       if (_rtUrl.isEmpty) _rtUrl = (await RTLookupService.lookup())!;
 
       if (_rtUrl.isNotEmpty)
-        await RTListener.subscribeForObjectsChanges(
+        await RTListener.subscribeForObjectsChanges<T>(
             RTEventHandlers.BULK_DELETED.toShortString(), _tableName, callback,
             whereClause: whereClause);
       else {
@@ -177,7 +179,7 @@ class MapEventHandler<T> implements IEventHandler<T> {
         if (parents?.isNotEmpty ?? false)
           for (var parent in parents!) _parentObjectIds.add(parent['objectId']);
 
-        await RTListener.subscribeForRelationsChanges(
+        await RTListener.subscribeForRelationsChanges<T>(
           RTEventHandlers.SET.toShortString(),
           _tableName,
           relationColumnName,
@@ -208,7 +210,7 @@ class MapEventHandler<T> implements IEventHandler<T> {
         if (parents?.isNotEmpty ?? false)
           for (var parent in parents!) _parentObjectIds.add(parent['objectId']);
 
-        await RTListener.subscribeForRelationsChanges(
+        await RTListener.subscribeForRelationsChanges<T>(
           RTEventHandlers.ADD.toShortString(),
           _tableName,
           relationColumnName,
@@ -239,7 +241,7 @@ class MapEventHandler<T> implements IEventHandler<T> {
         if (parents?.isNotEmpty ?? false)
           for (var parent in parents!) _parentObjectIds.add(parent['objectId']);
 
-        await RTListener.subscribeForRelationsChanges(
+        await RTListener.subscribeForRelationsChanges<T>(
           RTEventHandlers.DELETE.toShortString(),
           _tableName,
           relationColumnName,
@@ -262,11 +264,7 @@ class MapEventHandler<T> implements IEventHandler<T> {
       if (_rtUrl.isEmpty) _rtUrl = (await RTLookupService.lookup())!;
 
       if (_rtUrl.isNotEmpty)
-        RTClient.instance.streamController.listen((event) {
-          if (event == 'connect') {
-            callback.call();
-          }
-        });
+        RTListener.connectionHandler(callback);
       else {
         print('empty url');
         throw ArgumentError.value(ExceptionMessage.NO_INTERNET_CONNECTION);
@@ -283,11 +281,7 @@ class MapEventHandler<T> implements IEventHandler<T> {
       if (_rtUrl.isEmpty) _rtUrl = (await RTLookupService.lookup())!;
 
       if (_rtUrl.isNotEmpty)
-        RTClient.instance.streamController.listen((event) {
-          if (event == 'disconnect') {
-            callback.call();
-          }
-        });
+        RTListener.connectionHandler(callback);
       else {
         print('empty url');
         throw ArgumentError.value(ExceptionMessage.NO_INTERNET_CONNECTION);
@@ -299,7 +293,7 @@ class MapEventHandler<T> implements IEventHandler<T> {
 
   @override
   void removeBulkCreateListeners({String? whereClause}) {
-    RTClient.instance.removeListeners(
+    RTListener.removeListeners(
         SubscriptionNames.OBJECTS_CHANGES.toShortString(),
         RTEventHandlers.BULK_CREATED.toShortString(),
         whereClause: whereClause);
@@ -307,7 +301,7 @@ class MapEventHandler<T> implements IEventHandler<T> {
 
   @override
   void removeBulkDeleteListeners({String? whereClause}) {
-    RTClient.instance.removeListeners(
+    RTListener.removeListeners(
         SubscriptionNames.OBJECTS_CHANGES.toShortString(),
         RTEventHandlers.BULK_DELETED.toShortString(),
         whereClause: whereClause);
@@ -315,7 +309,7 @@ class MapEventHandler<T> implements IEventHandler<T> {
 
   @override
   void removeBulkUpdateListeners({String? whereClause}) {
-    RTClient.instance.removeListeners(
+    RTListener.removeListeners(
         SubscriptionNames.OBJECTS_CHANGES.toShortString(),
         RTEventHandlers.BULK_UPDATED.toShortString(),
         whereClause: whereClause);
@@ -323,7 +317,7 @@ class MapEventHandler<T> implements IEventHandler<T> {
 
   @override
   void removeBulkUpsertListeners({String? whereClause}) {
-    RTClient.instance.removeListeners(
+    RTListener.removeListeners(
         SubscriptionNames.OBJECTS_CHANGES.toShortString(),
         RTEventHandlers.BULK_UPSERTED.toShortString(),
         whereClause: whereClause);
@@ -331,7 +325,7 @@ class MapEventHandler<T> implements IEventHandler<T> {
 
   @override
   void removeCreateListeners({String? whereClause}) {
-    RTClient.instance.removeListeners(
+    RTListener.removeListeners(
         SubscriptionNames.OBJECTS_CHANGES.toShortString(),
         RTEventHandlers.CREATED.toShortString(),
         whereClause: whereClause);
@@ -339,7 +333,7 @@ class MapEventHandler<T> implements IEventHandler<T> {
 
   @override
   void removeDeleteListeners({String? whereClause}) {
-    RTClient.instance.removeListeners(
+    RTListener.removeListeners(
         SubscriptionNames.OBJECTS_CHANGES.toShortString(),
         RTEventHandlers.DELETED.toShortString(),
         whereClause: whereClause);
@@ -347,7 +341,7 @@ class MapEventHandler<T> implements IEventHandler<T> {
 
   @override
   void removeUpdateListeners({String? whereClause}) {
-    RTClient.instance.removeListeners(
+    RTListener.removeListeners(
         SubscriptionNames.OBJECTS_CHANGES.toShortString(),
         RTEventHandlers.UPDATED.toShortString(),
         whereClause: whereClause);
@@ -355,7 +349,7 @@ class MapEventHandler<T> implements IEventHandler<T> {
 
   @override
   void removeUpsertListeners({String? whereClause}) {
-    RTClient.instance.removeListeners(
+    RTListener.removeListeners(
         SubscriptionNames.OBJECTS_CHANGES.toShortString(),
         RTEventHandlers.UPSERTED.toShortString(),
         whereClause: whereClause);
@@ -363,7 +357,7 @@ class MapEventHandler<T> implements IEventHandler<T> {
 
   @override
   void removeSetRelationListeners({String? whereClause}) {
-    RTClient.instance.removeListeners(
+    RTListener.removeListeners(
         SubscriptionNames.RELATIONS_CHANGES.toShortString(),
         RTEventHandlers.SET.toShortString(),
         whereClause: whereClause);
@@ -371,7 +365,7 @@ class MapEventHandler<T> implements IEventHandler<T> {
 
   @override
   void removeAddRelationListeners({String? whereClause}) {
-    RTClient.instance.removeListeners(
+    RTListener.removeListeners(
         SubscriptionNames.RELATIONS_CHANGES.toShortString(),
         RTEventHandlers.ADD.toShortString(),
         whereClause: whereClause);
@@ -379,7 +373,7 @@ class MapEventHandler<T> implements IEventHandler<T> {
 
   @override
   void removeDeleteRelationListeners({String? whereClause}) {
-    RTClient.instance.removeListeners(
+    RTListener.removeListeners(
         SubscriptionNames.RELATIONS_CHANGES.toShortString(),
         RTEventHandlers.DELETE.toShortString(),
         whereClause: whereClause);

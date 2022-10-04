@@ -1,7 +1,7 @@
 part of backendless_sdk;
 
 abstract class IEventHandler<T> {
-  void addCreateListener(void Function(dynamic response) callback,
+  void addCreateListener(void Function(T? response) callback,
       {void onError(String error)?, String? whereClause});
 
   void addUpdateListener(void Function(dynamic response) callback,
