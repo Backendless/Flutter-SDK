@@ -1,3 +1,7 @@
+# 7.2.6
+
+* Fixed a problem with setCurrentUser method.
+
 # 7.2.5
 
 * Fixed a bug due to which the request for permission to send push notifications did not appear on IOS.

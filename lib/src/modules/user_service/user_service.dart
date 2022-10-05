@@ -17,7 +17,8 @@ class BackendlessUserService {
       {bool stayLoggedIn = false}) async {
     if (stayLoggedIn) {
       if (currentUser.getProperty('objectId') == null ||
-          await Backendless.userService.getUserToken() == null)
+          (await Backendless.userService.getUserToken() == null &&
+              currentUser.properties['user-token'] == null))
         throw Exception(
             'stayLoggedIn failed bacause objectId and userToken cannot be null');
     }

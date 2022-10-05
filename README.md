@@ -19,7 +19,7 @@ Follow the steps below to get started with Backendless Flutter SDK:
 To use this plugin in your Flutter project, add `backendless_sdk` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/):
 ```dart
 dependencies:
-  backendless_sdk: ^7.2.5
+  backendless_sdk: ^7.2.6
 ```
 #### STEP 2. Import the Backendless SDK:
 Add the following import to your Dart code
