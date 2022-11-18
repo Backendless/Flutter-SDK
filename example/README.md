@@ -6,7 +6,11 @@ Demonstrates how to use the backendless_sdk plugin.
 
 The sample code to store an object in Backendless database:
 ```dart
-Backendless.initApp(APPLICATION_ID, ANDROID_API_KEY, IOS_API_KEY);
+Backendless.initApp(
+  applicationId: APP_ID,
+  androidApiKey: ANDROID_KEY,
+  iosApiKey: IOS_KEY,
+  jsApiKey: JS_KEY);
 // create a Map object. This will become a record in a database table
 Map testObject = new Map();
 
