@@ -3,7 +3,6 @@
 library backendless_files_web;
 
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
 import 'package:js/js.dart';
