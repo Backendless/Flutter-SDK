@@ -1,3 +1,10 @@
+# 7.2.7
+> Note: This release has breaking changes.
+
+* Bump Backendless Android SDK version to 6.3.6
+* Bump Backendless iOS SDK version to 6.7.2
+* **BREAKING** The minimum iOS version is 11.0 
+
 # 7.2.6
 
 * Fixed a problem with setCurrentUser method.

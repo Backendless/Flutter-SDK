@@ -11,9 +11,9 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  static const String APP_ID = 'YOUR_APP_ID';
-  static const String ANDROID_KEY = 'YOUR_ANDROID_KEY';
-  static const String IOS_KEY = 'YOUR_IOS_KEY';
+  static const String APP_ID = '756C19D2-DF82-9D99-FF9C-9BFD2F85DC00';
+  static const String ANDROID_KEY = 'D3514DD9-C127-4BDA-BA06-AF0DF15EBEFB';
+  static const String IOS_KEY = 'A4470C03-FC06-4009-BD47-9077033BF7F6';
   static const String JS_KEY = 'YOUR_JS_KEY';
 
   @override
