@@ -128,3 +128,5 @@ part 'transactions/common/operations/crud/operation_find.dart';
 part 'transactions/common/operations/relations/operation_add_relation.dart';
 part 'transactions/common/operations/relations/operation_set_relation.dart';
 part 'transactions/common/operations/relations/operation_delete_relation.dart';
+
+part 'utils/native_functions_container.dart';

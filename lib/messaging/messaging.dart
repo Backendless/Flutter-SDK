@@ -78,7 +78,7 @@ class Messaging {
       final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
       _deviceToken = await _firebaseMessaging.getToken();*/
     } else {
-      _deviceToken = iOSToken;
+      _deviceToken = await _NativeFunctionsContainer.getDeviceToken();
     }
     Map<String, String> deviceInfo = await _getDeviceDetails();
 

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
@@ -16,8 +17,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
-
   @override
   void initState() {
     super.initState();
@@ -26,19 +25,17 @@ class _MyAppState extends State<MyApp> {
 
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
-    String platformVersion;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    // We also handle the message potentially returning null.
-    try {} on PlatformException {
-      platformVersion = 'Failed to get platform version.';
+    try {
+      await Backendless.initApp(
+        applicationId: '756C19D2-DF82-9D99-FF9C-9BFD2F85DC00',
+        androidApiKey: 'D3514DD9-C127-4BDA-BA06-AF0DF15EBEFB',
+        iosApiKey: 'A4470C03-FC06-4009-BD47-9077033BF7F6',
+      );
+    } on Exception {
+      if (kDebugMode) {
+        print('Failed to init application.');
+      }
     }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
-
-    setState(() {});
   }
 
   @override
@@ -49,9 +46,20 @@ class _MyAppState extends State<MyApp> {
           title: const Text('Plugin example app'),
         ),
         body: Center(
-          child: Text('Running on: $_platformVersion\n'),
+          child: TextButton(
+            child: const Text('Test'),
+            onPressed: mainFunction,
+          ),
         ),
       ),
     );
+  }
+
+  Future<void> mainFunction() async {
+    var res = await Backendless.messaging.registerDevice();
+
+    if (kDebugMode) {
+      print(res);
+    }
   }
 }
