@@ -1,12 +1,11 @@
 part of backendless_sdk;
 
-//typedef void MessageHandler(RemoteMessage message);
+typedef OnTapPushHandler = Future<void> Function({Map? data});
 
 class Messaging {
   static final DeviceInfoPlugin _deviceInfoPlugin = DeviceInfoPlugin();
   static const String DEFAULT_CHANNEL_NAME = 'default';
   static String? _deviceToken;
-  static bool _initialized = false;
 
   Future<MessageStatus?> pushWithTemplate(String templateName,
       {Map<String, dynamic>? templateValues}) async {
@@ -65,38 +64,46 @@ class Messaging {
   }
 
   ///iOSToken this is required parameter if you want to register iOS device.
+  ///onTapPushAction this function will be called when clicking on the incoming push notification window
   Future<DeviceRegistrationResult?> registerDevice({
     String? iOSToken,
     List<String>? channels = const ['default'],
     DateTime? expiration,
-    //MessageHandler? onMessage,
+    OnTapPushHandler? onTapPushAction,
   }) async {
-    if (kIsWeb) {
-      ///TODO for WEB
-    } else if (io.Platform.isAndroid) {
-      /*await Firebase.initializeApp();
+    try {
+      if (kIsWeb) {
+        ///TODO for WEB
+      } else if (io.Platform.isAndroid) {
+        /*await Firebase.initializeApp();
       final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
       _deviceToken = await _firebaseMessaging.getToken();*/
-    } else {
-      _deviceToken = await _NativeFunctionsContainer.getDeviceToken();
-    }
-    Map<String, String> deviceInfo = await _getDeviceDetails();
+      } else {
+        await _NativeFunctionsContainer.registerForRemoteNotifications();
+        _NativeFunctionsContainer.onTapPushAction = onTapPushAction;
+        await _NativeFunctionsContainer.streamController.done;
 
-    Map<String, dynamic> parameters = {
-      'deviceToken': _deviceToken,
-      'deviceId': deviceInfo['identifier'],
-      'osVersion': deviceInfo['deviceVersion'],
-      'os': deviceInfo['deviceName'],
-      'channels': channels,
-    };
+        _deviceToken = await _NativeFunctionsContainer.getDeviceToken();
+      }
+      Map<String, String> deviceInfo = await _getDeviceDetails();
 
-    /*
+      Map<String, dynamic> parameters = {
+        'deviceToken': _deviceToken,
+        'deviceId': deviceInfo['identifier'],
+        'osVersion': deviceInfo['deviceVersion'],
+        'os': deviceInfo['deviceName'],
+        'channels': channels,
+      };
+
+      /*
     FirebaseMessaging.onMessage.listen((event) async {
       onMessage!.call(event);
     });*/
 
-    _initialized = true;
-    return await Invoker.post('/messaging/registrations', parameters);
+      return await Invoker.post('/messaging/registrations', parameters);
+    } catch (ex) {
+      throw Exception(ex);
+    }
   }
 
   Future<DeviceRegistration?> getDeviceRegistration() async {

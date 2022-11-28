@@ -56,10 +56,15 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> mainFunction() async {
-    var res = await Backendless.messaging.registerDevice();
+    var res = await Backendless.messaging
+        .registerDevice(onTapPushAction: testFunction);
 
     if (kDebugMode) {
       print(res);
     }
+  }
+
+  Future<void> testFunction({Map? data}) async {
+    print("TEST FUNCTION HERE!!!");
   }
 }

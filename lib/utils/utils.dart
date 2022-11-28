@@ -67,16 +67,3 @@ DataQueryBuilder buildFindFirstOrLastQuery(
 
   return query;
 }
-
-Future<dynamic> backendlessEventHandler(MethodCall methodCall) async {
-  switch (methodCall.method) {
-    case 'onTapPushAction':
-      {
-        break;
-      }
-    default:
-      {
-        throw UnimplementedError('Handler for this method unimplemented');
-      }
-  }
-}

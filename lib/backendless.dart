@@ -9,10 +9,8 @@ class Backendless {
   static final messaging = Messaging();
 
   static final BackendlessPrefs _prefs = BackendlessPrefs();
-  static const MethodChannel _channelToNative =
+  static const MethodChannel _channelNative =
       MethodChannel('backendless/native_api');
-  static const MethodChannel _channelFromNative =
-      MethodChannel('backendless/flutter_api');
 
   ///This method must be called once before sending the request to the `Backendless` server.
   ///Must be an app ID and API key or custom domain.
@@ -32,7 +30,8 @@ class Backendless {
       } else if (io.Platform.isAndroid) {
         apiKey = androidApiKey;
       } else {
-        //_channel.setMethodCallHandler((call) => backendlessEventHandler(call));
+        _channelNative.setMethodCallHandler(
+            (call) => _NativeFunctionsContainer.backendlessEventHandler(call));
         apiKey = iosApiKey;
       }
 
