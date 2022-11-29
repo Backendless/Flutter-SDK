@@ -2,6 +2,11 @@ part of backendless_sdk;
 
 typedef OnTapPushHandler = Future<void> Function({Map? data});
 
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  print('_firebaseMessagingBackgroundHandler');
+}
+
 class Messaging {
   static final DeviceInfoPlugin _deviceInfoPlugin = DeviceInfoPlugin();
   static const String DEFAULT_CHANNEL_NAME = 'default';
@@ -75,9 +80,42 @@ class Messaging {
       if (kIsWeb) {
         ///TODO for WEB
       } else if (io.Platform.isAndroid) {
-        /*await Firebase.initializeApp();
-      final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
-      _deviceToken = await _firebaseMessaging.getToken();*/
+        await Firebase.initializeApp();
+        final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+
+        await FirebaseMessaging.instance.requestPermission(
+          sound: true,
+          badge: true,
+          alert: true,
+          provisional: false,
+        );
+
+        _deviceToken = await _firebaseMessaging.getToken();
+
+        await FirebaseMessaging.instance
+            .setForegroundNotificationPresentationOptions(
+          alert: true,
+          badge: true,
+          sound: true,
+        );
+
+        FirebaseMessaging.onMessage.listen((event) async {
+          print('foreground message');
+        });
+
+        FirebaseMessaging.onBackgroundMessage(
+            _firebaseMessagingBackgroundHandler);
+
+        FirebaseMessaging.instance.getInitialMessage().then((message) {
+          print('instance');
+          if (message != null) {
+            print('do stuff');
+          }
+        });
+
+        FirebaseMessaging.onMessageOpenedApp.listen((message) {
+          print('A new onMessageOpenedApp event was published!');
+        });
       } else {
         await _NativeFunctionsContainer.registerForRemoteNotifications();
         _NativeFunctionsContainer.onTapPushAction = onTapPushAction;
@@ -94,11 +132,6 @@ class Messaging {
         'os': deviceInfo['deviceName'],
         'channels': channels,
       };
-
-      /*
-    FirebaseMessaging.onMessage.listen((event) async {
-      onMessage!.call(event);
-    });*/
 
       return await Invoker.post('/messaging/registrations', parameters);
     } catch (ex) {
