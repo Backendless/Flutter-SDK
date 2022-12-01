@@ -11,7 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   http: ^0.13.4
-  reflectable: ^3.0.4
+  reflectable: ^4.0.2
   connectivity_plus: ^2.0.2
   device_info_plus: ^8.0.0
   socket_io_client: ^1.0.2
@@ -29,7 +29,6 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^2.0.0
   build_runner: ^2.1.7
-  plugin_platform_interface: ^2.0.2
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

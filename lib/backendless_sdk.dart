@@ -3,14 +3,12 @@ library backendless_sdk;
 import 'dart:collection';
 import 'dart:convert';
 import 'dart:io' as io;
-import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'dart:typed_data';
 import 'dart:ui';
 import 'dart:async';
 import 'package:backendless_sdk/utils/utils.dart';
 import 'package:device_info_plus/device_info_plus.dart';
-//import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart'
     show
         ReadBuffer,

@@ -20,10 +20,11 @@ class Decoder {
       return listProperties as T;
     }
     if (obj is List<dynamic>) return obj.map((e) => e as Map).toList() as T;
-    if (isSubTypeOf<DateTime, T>())
+    if (isSubTypeOf<DateTime, T>()) {
       return reflector._deserializeDateTime(obj) as T;
-    else
+    } else {
       return reflector.deserialize<T>(obj);
+    }
   }
 }
 

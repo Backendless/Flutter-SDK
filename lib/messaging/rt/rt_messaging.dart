@@ -1,8 +1,8 @@
 part of backendless_sdk;
 
 class RTMessaging<T> extends RTListener {
-  Channel _channel;
-  String _channelName;
+  final Channel _channel;
+  final String _channelName;
   String? _subscriptionId;
 
   RTMessaging(this._channel, this._channelName);
@@ -18,19 +18,19 @@ class RTMessaging<T> extends RTListener {
     var subscription = await RTListener.clientInstance!.createSubscription<T>(
         SubscriptionNames.PUB_SUB_CONNECT.toShortString(), options, callback);
 
-    this._subscriptionId = subscription.subscriptionId;
+    _subscriptionId = subscription.subscriptionId;
     subscription.subscribe();
   }
 
   Future<void> disconnect() async {
-    RTListener.clientInstance!.unsubscribe(this._subscriptionId!);
+    RTListener.clientInstance!.unsubscribe(_subscriptionId!);
     removeWaitingSubscriptions(
         subscriptionName: null, subscriptionSelector: null);
   }
 
   Future<void> addJoinListener(void Function() callback) async {
     var subscription = RTSubscription();
-    subscription.subscriptionId = Uuid().v4();
+    subscription.subscriptionId = const Uuid().v4();
     subscription.options = {'channel': _channelName};
     subscription.callback = callback as void Function(dynamic response)?;
 
@@ -38,24 +38,25 @@ class RTMessaging<T> extends RTListener {
   }
 
   void addMessageListener(void Function(dynamic response) callback) async {
-    if (RTListener.clientInstance!.socketConnected && this._channel.isJoined) {
-      var options = <String, dynamic>{'channel': this._channelName};
+    if (RTListener.clientInstance!.socketConnected && _channel.isJoined) {
+      var options = <String, dynamic>{'channel': _channelName};
       var subscription = await RTListener.clientInstance!
           .createSubscription<Map>(
               SubscriptionNames.PUB_SUB_MESSAGES.toShortString(),
               options,
               callback);
       subscription.subscribe();
-    } else
+    } else {
       await addWaitingSubscription(
         SubscriptionNames.PUB_SUB_MESSAGES.toShortString(),
         callback,
       );
+    }
   }
 
   void addCommandListener(void Function(dynamic response) callback) async {
-    if (RTListener.clientInstance!.socketConnected && this._channel.isJoined) {
-      var options = <String, dynamic>{'channel': this._channelName};
+    if (RTListener.clientInstance!.socketConnected && _channel.isJoined) {
+      var options = <String, dynamic>{'channel': _channelName};
       var subscription =
           await RTListener.clientInstance!.createSubscription<Map>(
         SubscriptionNames.PUB_SUB_COMMANDS.toShortString(),
@@ -73,8 +74,8 @@ class RTMessaging<T> extends RTListener {
 
   Future<void> addUserStatusListener(
       void Function(UserStatusResponse? response) callback,
-      {void onError(String error)?}) async {
-    if (RTListener.clientInstance!.socketConnected && this._channel.isJoined) {
+      {void Function(String error)? onError}) async {
+    if (RTListener.clientInstance!.socketConnected && _channel.isJoined) {
       var options = <String, dynamic>{'channel': _channelName};
       var subscription = await RTListener.clientInstance!
           .createSubscription<UserStatusResponse>(
@@ -106,7 +107,7 @@ class RTMessaging<T> extends RTListener {
     //return waitingSubscription;
   }
 
-  void subscribeForWaiting<T>() async {
+  void subscribeForWaiting() async {
     //var indexesToRemove = List<int>.empty(growable: true);
     var tempSubscriptions =
         List.from(RTListener.clientInstance!.waitingSubscriptions);
@@ -120,7 +121,7 @@ class RTMessaging<T> extends RTListener {
         if (name == SubscriptionNames.PUB_SUB_MESSAGES.toShortString() ||
             name == SubscriptionNames.PUB_SUB_COMMANDS.toShortString() ||
             name == SubscriptionNames.PUB_SUB_USERS.toShortString() ||
-            options!['channel'] as String == this._channelName) {
+            options!['channel'] as String == _channelName) {
           waitingSubscription.subscribe();
 
           ///TODO ADD DELETE FROM WAITING SUB
@@ -140,9 +141,10 @@ class RTMessaging<T> extends RTListener {
         .forEachIndexed((index, waitingSubscription) {
       var data = waitingSubscription.data;
 
-      if (data == null)
+      if (data == null) {
         throw BackendlessException(
             'cannot remove subscription. rt_messaging {105 str}');
+      }
 
       String? name = data['name'];
 
@@ -153,7 +155,7 @@ class RTMessaging<T> extends RTListener {
                   name == SubscriptionNames.PUB_SUB_USERS.toShortString())) {
         var opt = waitingSubscription.options;
         String? channelName = opt!['channel'] as String?;
-        if (channelName == this._channelName) {
+        if (channelName == _channelName) {
           if (subscriptionSelector == null) {
             indexesToRemove.add(index);
           } else if ((opt['selector'] as String?) == subscriptionSelector) {
@@ -169,16 +171,16 @@ class RTMessaging<T> extends RTListener {
 
   void removeMessageListeners() {
     RTListener.clientInstance!.stopSubscriptionForChannel(
-        this._channel, SubscriptionNames.PUB_SUB_MESSAGES.toShortString());
+        _channel, SubscriptionNames.PUB_SUB_MESSAGES.toShortString());
   }
 
   void removeCommandListeners() {
     RTListener.clientInstance!.stopSubscriptionForChannel(
-        this._channel, SubscriptionNames.PUB_SUB_COMMANDS.toShortString());
+        _channel, SubscriptionNames.PUB_SUB_COMMANDS.toShortString());
   }
 
   void removeUserStatusListeners() {
     RTListener.clientInstance!.stopSubscriptionForChannel(
-        this._channel, SubscriptionNames.PUB_SUB_USERS.toShortString());
+        _channel, SubscriptionNames.PUB_SUB_USERS.toShortString());
   }
 }

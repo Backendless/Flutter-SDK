@@ -2,8 +2,9 @@ part of backendless_sdk;
 
 class _NativeFunctionsContainer {
   static OnTapPushHandler? onTapPushAction;
-  static late String? deviceToken;
+  static String? deviceToken;
   static StreamController streamController = StreamController.broadcast();
+  static MessageHandler? messageHandler;
 
   static Future<String> getDeviceToken() async {
     if (deviceToken == null) {
@@ -16,18 +17,27 @@ class _NativeFunctionsContainer {
   static Future<bool> registerForRemoteNotifications() async {
     var res = await Backendless._channelNative
         .invokeMethod('registerForRemoteNotifications');
+
     streamController.stream.listen((event) {
       streamController.close();
     });
+
     return res;
   }
 
   static Future<dynamic> backendlessEventHandler(MethodCall methodCall) async {
     switch (methodCall.method) {
+      case 'onMessage':
+        {
+          if (messageHandler != null) {
+            messageHandler!.call(methodCall.arguments as Map);
+          }
+          break;
+        }
       case 'onTapPushAction':
         {
           if (onTapPushAction != null) {
-            onTapPushAction!.call();
+            await onTapPushAction!.call();
           }
           break;
         }

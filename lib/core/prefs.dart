@@ -1,7 +1,7 @@
 part of backendless_sdk;
 
 class BackendlessPrefs {
-  AuthKeys? authKeys;
+  AuthKeys _authKeys = AuthKeys();
   late Map<String, String> headers;
   late String url;
 
@@ -17,17 +17,20 @@ class BackendlessPrefs {
   Future initPreferences(
       {String? appId, String? apiKey, String? customDomain}) async {
     if (customDomain != null) {
+      _authKeys = AuthKeys(customDomain: customDomain);
       if (!customDomain.startsWith('http')) {
         url = customDomain;
       } else {
-        url = 'https://' + customDomain;
+        url = 'https://$customDomain';
       }
     } else {
-      authKeys = AuthKeys(appId!, apiKey!);
+      _authKeys = AuthKeys(appId: appId, apiKey: apiKey);
     }
   }
 
-  get appId => authKeys?.appId;
+  String? get customDomain => _authKeys.customDomain;
 
-  get apiKey => authKeys?.apiKey;
+  String? get appId => _authKeys.appId;
+
+  String? get apiKey => _authKeys.apiKey;
 }

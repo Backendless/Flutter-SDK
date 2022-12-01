@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -5,7 +7,12 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:backendless_sdk/backendless_sdk.dart';
 
-void main() {
+import 'main.reflectable.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  initializeReflectable();
+
   runApp(const MyApp());
 }
 
@@ -56,15 +63,50 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> mainFunction() async {
-    var res = await Backendless.messaging
-        .registerDevice(onTapPushAction: testFunction);
+    /*var res = await Backendless.messaging.registerDevice(
+        onTapPushAction: testFunction, onMessage: testFunction2);
+    */
+    var rt = await Backendless.data.withClass<TestTable>().rt();
+    rt.addBulkCreateListener((response) {
+      print('rt: $response');
+    });
+
+    rt.addConnectListener(() {
+      print('Connected');
+    }, onError: (String mes) {
+      print('Error: $mes');
+    });
+
+    rt.addDisconnectListener(() {
+      print('Disconnect');
+    });
 
     if (kDebugMode) {
-      print(res);
+      //print(res);
     }
+  }
+
+  Future<void> testFunction2(Map map) async {
+    print(map);
   }
 
   Future<void> testFunction({Map? data}) async {
     print("TEST FUNCTION HERE!!!");
   }
+}
+
+@reflector
+class TestTable {
+  String? foo;
+  String? nameTimeColumn;
+}
+
+@reflector
+class Person {
+  final String noZeroField;
+  int? age;
+  String? name;
+  Point? p1;
+
+  Person(this.noZeroField);
 }

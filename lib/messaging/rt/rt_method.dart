@@ -1,14 +1,14 @@
 part of backendless_sdk;
 
 class RTMethod {
-  static Map<String, List<RTMethodRequest>> _methods =
-      Map<String, List<RTMethodRequest>>();
+  static final Map<String, List<RTMethodRequest>> _methods =
+      <String, List<RTMethodRequest>>{};
 
   static void sendCommand(
     String type,
     Map<String, dynamic> options,
   ) {
-    String methodId = Uuid().v4();
+    String methodId = const Uuid().v4();
     var data = <String, dynamic>{
       'id': methodId,
       'name': type,
@@ -21,9 +21,7 @@ class RTMethod {
     method.options = options;
 
     var methodStack = RTMethod._methods[type];
-    if (methodStack == null) {
-      methodStack = List<RTMethodRequest>.empty(growable: true);
-    }
+    methodStack ??= List<RTMethodRequest>.empty(growable: true);
 
     methodStack.add(method);
     RTMethod._methods[type] = methodStack;

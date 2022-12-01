@@ -6,8 +6,9 @@ class FileService {
   }
 
   Future<String?> copyFile(String sourcePath, String targetPath) async {
-    if (sourcePath.isEmpty || targetPath.isEmpty)
+    if (sourcePath.isEmpty || targetPath.isEmpty) {
       throw ArgumentError.value(ExceptionMessage.EMPTY_SOURCE_OR_TARGET_PATHS);
+    }
 
     Map<String, dynamic> parameters = {
       'sourcePath': sourcePath,
@@ -41,8 +42,9 @@ class FileService {
   }
 
   Future<String?> rename(String path, String newName) async {
-    if (path.isEmpty || newName.isEmpty)
+    if (path.isEmpty || newName.isEmpty) {
       throw ArgumentError.value(ExceptionMessage.EMPTY_PATH);
+    }
 
     Map<String, dynamic> parameters = {
       'oldPathName': path,
@@ -53,8 +55,9 @@ class FileService {
   }
 
   Future<String?> moveFile(String sourcePath, String targetPath) async {
-    if (sourcePath.isEmpty || targetPath.isEmpty)
+    if (sourcePath.isEmpty || targetPath.isEmpty) {
       throw ArgumentError.value(ExceptionMessage.EMPTY_PATH);
+    }
 
     Map<String, dynamic> parameters = {
       'sourcePath': sourcePath,

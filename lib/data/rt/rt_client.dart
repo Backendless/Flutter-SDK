@@ -32,9 +32,9 @@ class RTClient<E> {
       host += path;
       socket = IO.io(host, <String, dynamic>{
         'transports': ['websocket'],
-        'path': '/' + Backendless.applicationId,
+        'path': '/' + Backendless.applicationId!,
         'query': <String, String>{
-          'apiKey': Backendless.apiKey,
+          'apiKey': Backendless.apiKey!,
         }
       });
 

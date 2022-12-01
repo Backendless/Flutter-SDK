@@ -1,11 +1,7 @@
 part of backendless_sdk;
 
 typedef OnTapPushHandler = Future<void> Function({Map? data});
-
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp();
-  print('_firebaseMessagingBackgroundHandler');
-}
+typedef MessageHandler = Future<void> Function(Map pushMessage);
 
 class Messaging {
   static final DeviceInfoPlugin _deviceInfoPlugin = DeviceInfoPlugin();
@@ -68,13 +64,12 @@ class Messaging {
     return await Invoker.get('/messaging/$messageId');
   }
 
-  ///iOSToken this is required parameter if you want to register iOS device.
-  ///onTapPushAction this function will be called when clicking on the incoming push notification window
+  ///onTapPushAction this function will be called when clicking on the incoming push notification window(iOS only)
   Future<DeviceRegistrationResult?> registerDevice({
-    String? iOSToken,
     List<String>? channels = const ['default'],
     DateTime? expiration,
     OnTapPushHandler? onTapPushAction,
+    MessageHandler? onMessage,
   }) async {
     try {
       if (kIsWeb) {
@@ -83,39 +78,7 @@ class Messaging {
         await Firebase.initializeApp();
         final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
-        await FirebaseMessaging.instance.requestPermission(
-          sound: true,
-          badge: true,
-          alert: true,
-          provisional: false,
-        );
-
         _deviceToken = await _firebaseMessaging.getToken();
-
-        await FirebaseMessaging.instance
-            .setForegroundNotificationPresentationOptions(
-          alert: true,
-          badge: true,
-          sound: true,
-        );
-
-        FirebaseMessaging.onMessage.listen((event) async {
-          print('foreground message');
-        });
-
-        FirebaseMessaging.onBackgroundMessage(
-            _firebaseMessagingBackgroundHandler);
-
-        FirebaseMessaging.instance.getInitialMessage().then((message) {
-          print('instance');
-          if (message != null) {
-            print('do stuff');
-          }
-        });
-
-        FirebaseMessaging.onMessageOpenedApp.listen((message) {
-          print('A new onMessageOpenedApp event was published!');
-        });
       } else {
         await _NativeFunctionsContainer.registerForRemoteNotifications();
         _NativeFunctionsContainer.onTapPushAction = onTapPushAction;
@@ -131,8 +94,10 @@ class Messaging {
         'osVersion': deviceInfo['deviceVersion'],
         'os': deviceInfo['deviceName'],
         'channels': channels,
+        'expiration': expiration,
       };
 
+      _NativeFunctionsContainer.messageHandler = onMessage;
       return await Invoker.post('/messaging/registrations', parameters);
     } catch (ex) {
       throw Exception(ex);

@@ -12,6 +12,8 @@ class Backendless {
   static const MethodChannel _channelNative =
       MethodChannel('backendless/native_api');
 
+  static bool _isInitialized = false;
+
   ///This method must be called once before sending the request to the `Backendless` server.
   ///Must be an app ID and API key or custom domain.
   static Future initApp(
@@ -40,15 +42,23 @@ class Backendless {
       }
 
       await _prefs.initPreferences(appId: applicationId, apiKey: apiKey);
-      return;
+      _isInitialized = true;
     }
 
     throw ArgumentError.value(ExceptionMessage.EMPTY_NULL_APP_ID);
   }
 
-  static String get apiKey => _prefs.apiKey;
+  static bool get isInitialized => _isInitialized;
 
-  static String get applicationId => _prefs.appId;
+  static String? get apiKey => _prefs.apiKey;
+
+  static String? get applicationId => _prefs.appId;
+
+  static String? get customDomain => _prefs.customDomain;
 
   static String get url => _prefs.url;
+
+  static set url(String url) {
+    _prefs.url = url;
+  }
 }
