@@ -11,7 +11,7 @@ class LineString extends Geometry {
       other is LineString && listEquals(points, other.points);
 
   @override
-  int get hashCode => hashValues(points, srs);
+  int get hashCode => Object.hash(points, srs);
 
   LineString({List<Point>? points, SpatialReferenceSystem? srs})
       : super(srs: srs) {

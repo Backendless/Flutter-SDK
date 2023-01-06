@@ -1,3 +1,7 @@
+# 7.2.8
+* Updated dependencies to newer ones
+* Minor refactoring
+
 # 7.2.7
 > Note: This release has breaking changes.
 

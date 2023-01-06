@@ -33,7 +33,7 @@ class MessageStatus implements Comparable<MessageStatus> {
           this.status == other.status;
 
   @override
-  int get hashCode => hashValues(messageId, status);
+  int get hashCode => Object.hash(messageId, status);
 
   @override
   String toString() =>
