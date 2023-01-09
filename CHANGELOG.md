@@ -1,4 +1,9 @@
+# 7.2.9
+
+* Fixed bug with ignoring relation properties for transaction find method
+
 # 7.2.8
+
 * Updated dependencies to newer ones
 * Minor refactoring
 
