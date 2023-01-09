@@ -1,5 +1,6 @@
 package com.backendless.backendless_sdk.call_handlers;
 
+import android.os.Looper;
 import android.util.SparseArray;
 
 import com.backendless.Backendless;
@@ -11,6 +12,7 @@ import com.backendless.rt.messaging.Channel;
 
 import java.util.HashMap;
 import java.util.Map;
+import android.os.Handler;
 
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -99,7 +101,7 @@ public class RtCallHandler implements MethodChannel.MethodCallHandler {
 
     private void addDisconnectListener(MethodChannel.Result result) {
         int disconnectHandle = nextDisconnectHandle++;
-        EventResult<String> eventResult = new EventResult<>("Disconnect", disconnectHandle);
+        EventResult<String> eventResult = new EventResult<>("Disconnect", disconnectHandle,  true);
         Backendless.RT.addDisconnectListener(eventResult);
         disconnectCallbacks.put(disconnectHandle, eventResult);
         result.success(disconnectHandle);
@@ -158,9 +160,16 @@ public class RtCallHandler implements MethodChannel.MethodCallHandler {
             Map<String, Object> arguments = new HashMap<>();
             arguments.put("handle", handle);
             if (hasResult) {
-                arguments.put("result", result);
+                if(method != "Disconnect") {
+                    arguments.put("result", result);
+                }
+                else {
+                    arguments.put("result", "Disconnected");
+                }
+
             }
-            methodChannel.invokeMethod("Backendless.RT." + method + ".EventResponse", arguments);
+
+            new Handler(Looper.getMainLooper()).post(() -> methodChannel.invokeMethod("Backendless.RT." + method + ".EventResponse", arguments));
         }
     }
 

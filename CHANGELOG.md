@@ -1,3 +1,7 @@
+# 7.2.10
+
+* Fixed bug due to which connect and disconnect listeners did not work in RT.
+
 # 7.2.9
 
 * Fixed bug with ignoring relation properties for transaction find method
