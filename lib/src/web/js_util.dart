@@ -2,7 +2,6 @@
 library jsmap;
 
 import 'dart:collection';
-
 import 'package:js/js.dart';
 import 'package:js/js_util.dart';
 
@@ -27,7 +26,8 @@ dynamic _convertDataTreeFromJs(dynamic data) {
       convertedList.addAll((o as List).map(_convert as dynamic));
       return convertedList;
     } else if (o.toString() == '[object Object]' ||
-        o.runtimeType.toString() == "NativeJavaScriptObject") {
+        o.runtimeType.toString() == 'NativeJavaScriptObject' ||
+        o.runtimeType.toString() == 'LegacyJavaScriptObject') {
       final convertedMap = Map();
       _convertedObjects[o] = convertedMap;
       for (var key in _getKeysOfObject(o)) {

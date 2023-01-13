@@ -16,7 +16,7 @@ class DataCallHandler {
 
   DataCallHandler(this._channel);
 
-  Future<dynamic> handleMethodCall(MethodCall call) {
+  Future<dynamic> handleMethodCall(MethodCall call) async {
     switch (call.method) {
       case "Backendless.Data.describe":
         return promiseToFuture(describe(call.arguments['tableName'])).then(
@@ -43,8 +43,10 @@ class DataCallHandler {
             call.arguments['relationColumnName'],
             child));
       case "Backendless.Data.of.find":
-        return promiseToFuture(getDataStore(call).find(getQueryBuilder(call)))
-            .then((value) => convertFromJs(value));
+        {
+          return promiseToFuture(getDataStore(call).find(getQueryBuilder(call)))
+              .then((value) => convertFromJs(value));
+        }
       case "Backendless.Data.of.findById":
         return promiseToFuture(getDataStore(call)
                 .findById(call.arguments['id'], getQueryBuilder(call)))
@@ -265,14 +267,14 @@ class DataStoreJs {
 
   @JS()
   external int addRelation(
-      String parentObjectId, String relationColumnName, dynamic childen);
+      String parentObjectId, String relationColumnName, dynamic children);
 
   @JS()
   external dynamic bulkCreate(objects);
 
   @JS()
   external int deleteRelation(
-      String parentObjectId, String relationColumnName, dynamic childen);
+      String parentObjectId, String relationColumnName, dynamic children);
 
   @JS()
   external dynamic find(queryBuilder);
@@ -303,7 +305,7 @@ class DataStoreJs {
 
   @JS()
   external int setRelation(
-      String parentObjectId, String relationColumnName, dynamic childen);
+      String parentObjectId, String relationColumnName, dynamic children);
 
   @JS()
   external int bulkUpdate(condition, changes);

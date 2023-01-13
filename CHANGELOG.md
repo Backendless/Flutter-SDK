@@ -1,3 +1,7 @@
+# 7.2.11
+
+* Fixed bug in web with nested relations named the same as global js classes.
+
 # 7.2.10
 
 * Fixed bug due to which connect and disconnect listeners did not work in RT.
