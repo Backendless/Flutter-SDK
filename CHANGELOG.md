@@ -1,3 +1,7 @@
+# 7.2.12
+
+* Fixed a bug with an issue where the user token would continue to be sent in a custom service request even after logout.
+
 # 7.2.11
 
 * Fixed bug in web with nested relations named the same as global js classes.

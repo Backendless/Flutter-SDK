@@ -64,8 +64,13 @@ class BackendlessUserService {
         "stayLoggedIn": stayLoggedIn
       });
 
-  Future<void> logout() =>
-      _channel.invokeMethod("Backendless.UserService.logout");
+  Future<void> logout() {
+    if (Backendless._prefs.headers.containsKey('user-token')) {
+      Backendless._prefs.headers.remove('user-token');
+    }
+
+    return _channel.invokeMethod("Backendless.UserService.logout");
+  }
 
   Future<BackendlessUser?> register(BackendlessUser user) =>
       _channel.invokeMethod(
