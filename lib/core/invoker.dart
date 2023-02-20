@@ -1,7 +1,7 @@
 part of backendless_sdk;
 
 class Invoker<T> {
-  static final BackendlessPrefs prefs = new BackendlessPrefs();
+  static final BackendlessPrefs prefs = Backendless._prefs;
   static final Client _httpClient = Client();
   static final Decoder decoder = Decoder();
 
@@ -10,6 +10,7 @@ class Invoker<T> {
       queryString = '?' + queryString!.substring(0, queryString.length);
     }
     if (queryString == null) queryString = '';
+
     final result = await _invoke(methodName + queryString, Method.get);
     return decoder.decode<T>(result);
   }
@@ -31,12 +32,13 @@ class Invoker<T> {
 
   static Future _invoke(String methodName, Method method,
       {dynamic args}) async {
-    final encodedBody = args != null ? _encodeBody(args) : null;
+    final encodedBody = args != null ? await _encodeBody(args) : null;
     final url = Uri.parse(_getApplicationUrl() + methodName);
     final headers = prefs.headers;
 
-    if (Backendless.userService.loginStorage._hasData) {
-      headers['user-token'] = Backendless.userService.loginStorage._userToken!;
+    if ((await Backendless.userService.loginStorage)._hasData) {
+      headers['user-token'] =
+          (await Backendless.userService.loginStorage)._userToken!;
     }
 
     Response response;
@@ -77,18 +79,24 @@ class Invoker<T> {
   }
 
   static String _getApplicationUrl() {
-    if (prefs.appId == null)
+    if (prefs.appId == null) {
       return "${prefs.url}/api";
-    else
+    } else {
       return "${prefs.url}/${prefs.appId}/${prefs.apiKey}";
+    }
   }
 
-  static String _encodeBody(dynamic body) {
+  static Future<String> _encodeBody(dynamic body) async {
     return jsonEncode(body, toEncodable: (dynamic nonEncodable) {
-      if (nonEncodable is DateTime)
+      if (nonEncodable is DateTime) {
         return nonEncodable.toIso8601String();
-      else
+      }
+      // if (nonEncodable is DataQueryBuilder) {
+      //   return await toQueryString(nonEncodable);
+      // }
+      else {
         return nonEncodable.toJson();
+      }
     });
   }
 
@@ -127,7 +135,7 @@ class Invoker<T> {
 
   static Future _invokeCustomService(String methodName, body,
       {InvokeOptions? options}) async {
-    final encodedBody = _encodeBody(body);
+    final encodedBody = await _encodeBody(body);
     final url = Uri.parse(_getApplicationUrl() + "/$methodName");
     final headers = prefs.headers;
 
@@ -138,8 +146,9 @@ class Invoker<T> {
         headers.addAll(options.httpRequestHeaders!);
     }
 
-    if (Backendless.userService.loginStorage._hasData) {
-      headers['user-token'] = Backendless.userService.loginStorage._userToken!;
+    if ((await Backendless.userService.loginStorage)._hasData) {
+      headers['user-token'] =
+          (await Backendless.userService.loginStorage)._userToken!;
     }
 
     return _httpClient

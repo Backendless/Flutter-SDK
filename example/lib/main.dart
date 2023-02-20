@@ -24,6 +24,8 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  String? token = 'Text';
+
   @override
   void initState() {
     super.initState();
@@ -33,6 +35,7 @@ class _MyAppState extends State<MyApp> {
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
     try {
+      // Backendless.url = 'https://stage-api.backendless.com';
       await Backendless.initApp(
         applicationId: '756C19D2-DF82-9D99-FF9C-9BFD2F85DC00',
         androidApiKey: 'D3514DD9-C127-4BDA-BA06-AF0DF15EBEFB',
@@ -53,9 +56,20 @@ class _MyAppState extends State<MyApp> {
           title: const Text('Plugin example app'),
         ),
         body: Center(
-          child: TextButton(
-            child: const Text('Test'),
-            onPressed: mainFunction,
+          child: Column(
+            children: [
+              TextButton(
+                  onPressed: testFunction2, child: const Text('Get Token')),
+              TextButton(
+                onPressed: mainFunction,
+                // setState(() {});
+                child: const Text('Login'),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 24),
+                child: Text(token == null ? 'null' : token!),
+              ),
+            ],
           ),
         ),
       ),
@@ -63,9 +77,9 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> mainFunction() async {
-    /*var res = await Backendless.messaging.registerDevice(
-        onTapPushAction: testFunction, onMessage: testFunction2);
-    */
+    // var res = await Backendless.messaging.registerDevice(
+    //     onTapPushAction: testFunction, onMessage: testFunction2);
+    /*
     var rt = await Backendless.data.withClass<TestTable>().rt();
     rt.addBulkCreateListener((response) {
       print('rt: $response');
@@ -83,11 +97,44 @@ class _MyAppState extends State<MyApp> {
 
     if (kDebugMode) {
       //print(res);
-    }
+    }*/
+    token = await Backendless.userService.getUserToken();
+    var user = await Backendless.userService
+        .login('hdhdhd@gmail.com', '123234', stayLoggedIn: true);
+
+    /*await Backendless.userService.setCurrentUser(tmpUser);
+    await Backendless.userService.setUserToken("fake-token-2");*/
+
+    token = await Backendless.userService.getUserToken();
+
+    final valid = await Backendless.userService.isValidLogin();
+    print("is valid login: ");
+    print(valid);
+    //
+    // try {
+    //   var r =
+    //       await Backendless.customService.invoke('Variables', 'getItems', null);
+    // } catch (ex) {
+    //   await Backendless.userService.logout();
+    //   var tokenAfterLogin = await Backendless.userService.getUserToken();
+    //
+    //   var r = await Backendless.customService
+    //       .invoke('Variables', 'getItems', 'value');
+    //   print(r);
+    // }
+    // // custom service request
+    //
+    // await Backendless.userService.logout();
+    // var tokenAfterLogin = await Backendless.userService.getUserToken();
+    // if (tokenAfterLogin != null)
+    //   print("tokenAfterLogin is now: " + tokenAfterLogin);
+    // else
+    //   print("tokenAfterLogin is null");
   }
 
-  Future<void> testFunction2(Map map) async {
-    print(map);
+  Future<void> testFunction2() async {
+    token = await Backendless.userService.getUserToken();
+    setState(() {});
   }
 
   Future<void> testFunction({Map? data}) async {

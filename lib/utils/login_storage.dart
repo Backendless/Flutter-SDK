@@ -6,13 +6,17 @@ class LoginStorage {
   String? _userToken;
   bool _hasData = false;
 
-  LoginStorage() {
-    loadData();
+  static Future<LoginStorage> create() async {
+    var temp = LoginStorage._internal();
+    await temp.loadData();
+    return temp;
   }
 
+  LoginStorage._internal();
+
   Future<void> saveData() async {
-    storage.write(key: 'userToken', value: _userToken);
-    storage.write(key: 'userId', value: _objectId);
+    await storage.write(key: 'userToken', value: _userToken);
+    await storage.write(key: 'userId', value: _objectId);
     _hasData = true;
   }
 
@@ -33,8 +37,25 @@ class LoginStorage {
     }
   }
 
-  Future deleteData() async {
+  Future<void> deleteData() async {
     storage.delete(key: 'userToken');
     storage.delete(key: 'userId');
+    _hasData = false;
+  }
+
+  Future<void> setUserToken(String? token) async {
+    _userToken = token;
+    if (_userToken != null) {
+      await storage.write(key: 'userToken', value: token);
+      _hasData = true;
+    } else {
+      if (await storage.containsKey(key: 'userToken')) {
+        storage.delete(key: 'userToken');
+      }
+
+      if (!await storage.containsKey(key: 'userId')) {
+        _hasData = false;
+      }
+    }
   }
 }

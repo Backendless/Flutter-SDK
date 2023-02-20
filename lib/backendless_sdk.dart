@@ -16,7 +16,8 @@ import 'package:flutter/foundation.dart'
         describeEnum,
         kIsWeb,
         listEquals,
-        visibleForTesting;
+        visibleForTesting,
+        TargetPlatform;
 import 'package:flutter/services.dart';
 import 'package:http/http.dart';
 import 'package:reflectable/reflectable.dart';
@@ -129,3 +130,4 @@ part 'transactions/common/operations/relations/operation_set_relation.dart';
 part 'transactions/common/operations/relations/operation_delete_relation.dart';
 
 part 'utils/native_functions_container.dart';
+part 'utils/headers_enum.dart';

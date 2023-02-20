@@ -2,17 +2,19 @@ part of backendless_sdk;
 
 class UserService {
   BackendlessUser? _currentUser;
-  LoginStorage? _loginStorage = LoginStorage();
+  final Future<LoginStorage> _loginStorage = LoginStorage.create();
 
-  LoginStorage get loginStorage {
-    return _loginStorage!;
+  Future<LoginStorage> get loginStorage async {
+    return await _loginStorage;
   }
 
   Future<BackendlessUser?> getCurrentUser(bool reload) async {
-    if (this._currentUser != null && !reload) return this._currentUser;
-    if (reload && loginStorage._hasData) {
+    if (_currentUser != null && !reload) {
+      return _currentUser;
+    }
+    if (reload && (await loginStorage)._hasData) {
       _currentUser = await Backendless.userService
-          .findById(loginStorage._objectId!)
+          .findById((await loginStorage)._objectId!)
           .catchError((e) {
         throw e;
       });
@@ -22,14 +24,26 @@ class UserService {
     return null;
   }
 
-  setCurrentUser(BackendlessUser user) {
+  Future<void> setCurrentUser(BackendlessUser user,
+      {bool stayLoggedIn = false}) async {
+    await Backendless.setHeader(user.getProperty('user-token'),
+        key: 'user-token');
+
+    if (stayLoggedIn) {
+      (await loginStorage)._userToken = user.getProperty('user-token');
+      (await loginStorage)._objectId = user.getProperty('objectId');
+      (await loginStorage).saveData();
+    }
+
     _currentUser = user;
   }
 
   Future<String?> loggedInUser() async {
-    if (await getCurrentUser(false) != null)
+    if (await getCurrentUser(false) != null) {
       return (await getCurrentUser(false))!.getUserId();
-    else if (loginStorage._hasData) return loginStorage._objectId;
+    } else if ((await loginStorage)._hasData) {
+      return (await loginStorage)._objectId;
+    }
 
     return null;
   }
@@ -39,7 +53,7 @@ class UserService {
   }
 
   Future<BackendlessUser?> login(String login, String password,
-      [bool stayLoggedIn = false]) async {
+      {bool stayLoggedIn = false}) async {
     if (await getCurrentUser(false) != null) await logout();
 
     Map? invokeResult = await Invoker.post<Map?>('/users/login',
@@ -104,13 +118,14 @@ class UserService {
   }
 
   Future<void> logout() async {
-    return Invoker.get('/users/logout')
-        .then((value) => loginStorage.deleteData());
+    await Invoker.get('/users/logout');
+    await Backendless.removeHeader(enumKey: HeadersEnum.USER_TOKEN);
   }
 
   Future<BackendlessUser?> update(BackendlessUser user) async {
-    if (user.getUserId()?.isEmpty ?? false)
+    if (user.getUserId()?.isEmpty ?? false) {
       throw ArgumentError.value(ExceptionMessage.EMPTY_NULL_USER_ID);
+    }
 
     return await Invoker.put('/users/${user.getUserId()}', user);
   }
@@ -123,17 +138,18 @@ class UserService {
   Future<List<BackendlessUser>?> findByRole(String roleName,
       {bool? loadRoles, DataQueryBuilder? queryBuilder}) async {
     String methodName = '/users/role/$roleName';
-    if (loadRoles != null && loadRoles == true)
+    if (loadRoles != null && loadRoles == true) {
       methodName += '?loadRoles=true';
-    else
+    } else {
       methodName += '?loadRoles=false';
+    }
 
     if (queryBuilder != null) {
       methodName += '&';
       methodName += (await toQueryString(queryBuilder))!;
     }
 
-    return await Invoker.get<List<BackendlessUser>?>('$methodName');
+    return await Invoker.get<List<BackendlessUser>?>(methodName);
   }
 
   Future<List<String>?> getUserRoles() async {
@@ -141,24 +157,27 @@ class UserService {
   }
 
   Future<String?> createEmailConfirmationURL(String identity) async {
-    if (identity.isEmpty)
+    if (identity.isEmpty) {
       throw ArgumentError.value(ExceptionMessage.EMPTY_IDENTITY);
+    }
 
     return await Invoker.post(
         '/users/createEmailConfirmationURL/$identity', null);
   }
 
   Future<String?> resendEmailConfirmation(String identity) async {
-    if (identity.isEmpty)
+    if (identity.isEmpty) {
       throw ArgumentError.value(ExceptionMessage.EMPTY_IDENTITY);
+    }
 
     return await Invoker.post(
         '/users/identity/resendEmailConfirmation/$identity', null);
   }
 
   Future<void> restorePassword(String identity) async {
-    if (identity.isEmpty)
+    if (identity.isEmpty) {
       throw ArgumentError.value(ExceptionMessage.EMPTY_IDENTITY);
+    }
 
     return await Invoker.get('/users/restorePassword/$identity');
   }
@@ -166,12 +185,13 @@ class UserService {
   Future<void> handleUserLogin(Map? invokeResult, bool stayLoggedIn) async {
     try {
       BackendlessUser user = Decoder().decode<BackendlessUser>(invokeResult)!;
-      this.setCurrentUser(user);
-      if (stayLoggedIn) {
+      await setCurrentUser(user, stayLoggedIn: true);
+
+      /*if (stayLoggedIn) {
         loginStorage._objectId = (await getCurrentUser(false))!.getObjectId();
         loginStorage._userToken = invokeResult!['user-token'];
         loginStorage.saveData();
-      }
+      }*/
     } catch (ex) {
       //TODO: -
       throw BackendlessException('Cannot parse user object');
@@ -179,18 +199,38 @@ class UserService {
   }
 
   Future<bool> isValidLogin() async {
-    if (!Backendless.userService.loginStorage._hasData) return false;
+    var currentToken = await Backendless.userService.getUserToken();
 
-    return await Invoker.get(
-        '/users/isvalidusertoken/${Backendless.userService.loginStorage._userToken}');
+    if (currentToken == null) {
+      return false;
+    }
+
+    return await Invoker.get('/users/isvalidusertoken/$currentToken');
   }
 
   Future<String?> getUserToken() async {
-    return Backendless.userService.loginStorage._userToken;
+    if (Backendless._prefs.headers.containsKey('user-token')) {
+      return Backendless._prefs.headers['user-token'];
+    }
+
+    return (await Backendless.userService.loginStorage)._userToken;
   }
 
   Future<void> setUserToken(String userToken) async {
-    Backendless.userService.loginStorage._userToken = userToken;
-    loginStorage.saveData();
+    Backendless._prefs.headers['user-token'] = userToken;
+
+    if ((await loginStorage)._hasData) {
+      (await loginStorage).setUserToken(userToken);
+      await (await loginStorage).saveData();
+    }
+  }
+
+  Future<void> removeUserToken() async {
+    if (Backendless._prefs.headers.containsKey('user-token')) {
+      Backendless._prefs.headers.remove('user-token');
+    }
+
+    (await Backendless.userService.loginStorage)._userToken = null;
+    await (await Backendless.userService.loginStorage).deleteData();
   }
 }

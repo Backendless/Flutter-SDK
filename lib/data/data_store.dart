@@ -18,7 +18,7 @@ abstract class IDataStore<T> {
   Future<int?> bulkUpdate(String whereClause, T changes);
 
   ///TODO: add doc
-  Future<String?> bulkUpsert(List<T> entities);
+  Future<List<T>?> bulkUpsert(List<T> entities);
 
   ///Removes the specified object from the database by id
   Future<DateTime?> remove(T entity);

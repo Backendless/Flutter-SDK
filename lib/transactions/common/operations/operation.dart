@@ -9,7 +9,25 @@ abstract class Operation<T> {
   Operation(this.operationType, this.table, this.opResultId);
 
   Operation.withPayload(
-      this.operationType, this.table, this.opResultId, this.payload);
+      this.operationType, this.table, this.opResultId, this.payload) {
+    if (payload is DataQueryBuilder) {
+      Map mapPayload = (payload as DataQueryBuilder).toJson();
+      Map relationQuery = {
+        'sortBy': mapPayload['sortBy'],
+        'related': mapPayload['related'],
+        'relationsDepth': mapPayload['relationsDepth'],
+        'relationsPageSize': mapPayload['relationsPageSize'],
+      };
+      mapPayload['queryOptions'] = relationQuery;
+      mapPayload.removeWhere((key, value) {
+        return key == 'sortBy' ||
+            key == 'related' ||
+            key == 'relationsDepth' ||
+            key == 'relationsPageSize';
+      });
+      this.payload = mapPayload as T;
+    }
+  }
 
   Map toJson() => {
         "operationType": describeEnum(operationType!),

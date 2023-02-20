@@ -43,6 +43,7 @@ class Backendless {
 
       await _prefs.initPreferences(appId: applicationId, apiKey: apiKey);
       _isInitialized = true;
+      return;
     }
 
     throw ArgumentError.value(ExceptionMessage.EMPTY_NULL_APP_ID);
@@ -60,5 +61,37 @@ class Backendless {
 
   static set url(String url) {
     _prefs.url = url;
+  }
+
+  static Map<String, String>? get headers => _prefs.headers;
+
+  static Future<void> setHeader(String value,
+      {String? key, HeadersEnum? enumKey}) async {
+    if (key == null && enumKey == null) {
+      throw ArgumentError(
+          '\'key\' or \'enumKey\' were null. At least one of them must be defined');
+    }
+    String keyHeader = key ?? enumKey!.header;
+
+    if (keyHeader == 'user-token') {
+      await Backendless.userService.setUserToken(value);
+    }
+
+    _prefs.headers[keyHeader] = value;
+  }
+
+  static Future<void> removeHeader({String? key, HeadersEnum? enumKey}) async {
+    if (key == null && enumKey == null) {
+      throw ArgumentError(
+          '\'key\' or \'enumKey\' were null. At least one of them must be defined');
+    }
+
+    String keyToRemove = key ?? enumKey!.header;
+
+    if (keyToRemove == 'user-token') {
+      await Backendless.userService.removeUserToken();
+    }
+
+    _prefs.headers.remove(keyToRemove);
   }
 }

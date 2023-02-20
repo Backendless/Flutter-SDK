@@ -2,38 +2,25 @@ part of backendless_sdk;
 
 class DataQueryBuilder {
   static const int DEFAULT_RELATIONS_DEPTH = 0;
-  late PagedQueryBuilder _pagedQueryBuilder = new PagedQueryBuilder();
+  final PagedQueryBuilder _pagedQueryBuilder = PagedQueryBuilder();
 
-  late List<String>? sortBy;
-  late List<String>? groupBy;
+  List<String>? sortBy;
+  List<String>? groupBy;
 
-  late List<String>? properties;
-  late List<String>? excludeProperties;
+  List<String>? properties;
+  List<String>? excludeProperties;
 
-  late String? whereClause;
-  late String? havingClause;
+  String? whereClause;
+  String? havingClause;
 
-  late List<String>? related;
-  late int? relationsDepth;
-  late int? relationsPageSize;
+  List<String>? loadRelations;
+  int? relationsDepth;
+  int? relationsPageSize;
 
-  late bool? distinct;
+  bool? distinct;
 
   DataQueryBuilder() {
-    this.sortBy = null;
-    this.groupBy = null;
-
-    this.properties = null;
-    this.excludeProperties = null;
-
-    this.whereClause = null;
-    this.havingClause = null;
-
-    this.related = null;
-    this.relationsDepth = null;
-    this.relationsPageSize = null;
-
-    this.distinct = null;
+    relationsDepth = DEFAULT_RELATIONS_DEPTH;
   }
 
   DataQueryBuilder.fromJson(Map json) {
@@ -45,11 +32,12 @@ class DataQueryBuilder {
     groupBy = json['groupBy']?.cast<String>();
     havingClause = json['havingClause'];
     sortBy = json['sortBy']?.cast<String>();
-    related = json['related']?.cast<String>();
-    if (json['relationsDepth'] != null)
+    loadRelations = json['loadRelations']?.cast<String>();
+    if (json['relationsDepth'] != null) {
       relationsDepth = json['relationsDepth'];
-    else
+    } else {
       relationsDepth = DEFAULT_RELATIONS_DEPTH;
+    }
     relationsPageSize = json['relationsPageSize'];
     distinct = json['distinct'];
   }
@@ -77,7 +65,7 @@ class DataQueryBuilder {
         'groupBy': groupBy,
         'havingClause': havingClause,
         'sortBy': sortBy,
-        'related': related,
+        'loadRelations': loadRelations?.join(','),
         'relationsDepth': relationsDepth,
         'relationsPageSize': relationsPageSize,
         'distinct': distinct,

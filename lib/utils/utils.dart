@@ -3,67 +3,88 @@ import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/services.dart';
 
 T? stringToEnum<T>(Iterable<T> enumValues, String? stringValue) {
-  if (stringValue == null) return null;
+  if (stringValue == null) {
+    return null;
+  }
   return enumValues.firstWhereOrNull((type) =>
       type.toString().split(".").last.toLowerCase() ==
       stringValue.toLowerCase());
 }
 
 Future<String?> toQueryString(DataQueryBuilder? queryBuilder) async {
-  if (queryBuilder == null) return null;
+  if (queryBuilder == null) {
+    return null;
+  }
 
   List queryTokens = [];
 
-  if (queryBuilder.pageSize > 0)
+  if (queryBuilder.pageSize > 0) {
     queryTokens.add('pageSize=${queryBuilder.pageSize}');
+  }
 
-  if (queryBuilder.offset > 0) queryTokens.add('offset=${queryBuilder.offset}');
+  if (queryBuilder.offset > 0) {
+    queryTokens.add('offset=${queryBuilder.offset}');
+  }
 
-  if (queryBuilder.properties?.isNotEmpty ?? false)
+  if (queryBuilder.properties?.isNotEmpty ?? false) {
     queryBuilder.properties!
         .map((property) => queryTokens.add('property=$property'));
+  }
 
-  if (queryBuilder.excludeProperties?.isNotEmpty ?? false)
+  if (queryBuilder.excludeProperties?.isNotEmpty ?? false) {
     queryTokens
         .add('excludeProps=${queryBuilder.excludeProperties!.join(',')}');
+  }
 
-  if (queryBuilder.whereClause?.isNotEmpty ?? false)
+  if (queryBuilder.whereClause?.isNotEmpty ?? false) {
     queryTokens.add('where=${queryBuilder.whereClause}');
+  }
 
-  if (queryBuilder.havingClause?.isNotEmpty ?? false)
+  if (queryBuilder.havingClause?.isNotEmpty ?? false) {
     queryTokens.add('having=${queryBuilder.havingClause}');
+  }
 
-  if (queryBuilder.sortBy?.isNotEmpty ?? false)
+  if (queryBuilder.sortBy?.isNotEmpty ?? false) {
     queryTokens.add('sortBy=${queryBuilder.sortBy!.join(',')}');
+  }
 
-  if (queryBuilder.groupBy?.isNotEmpty ?? false)
+  if (queryBuilder.groupBy?.isNotEmpty ?? false) {
     queryTokens.add('groupBy=${queryBuilder.groupBy!.join(',')}');
+  }
 
-  if (queryBuilder.related?.isNotEmpty ?? false)
-    queryTokens.add('loadRelations=${queryBuilder.related!.join(',')}');
+  if (queryBuilder.loadRelations?.isNotEmpty ?? false) {
+    queryTokens.add('loadRelations=${queryBuilder.loadRelations!.join(',')}');
+  }
 
   if (queryBuilder.relationsPageSize != null &&
-      queryBuilder.relationsPageSize! > 0)
+      queryBuilder.relationsPageSize! > 0) {
     queryTokens.add('relationsPageSize=${queryBuilder.relationsPageSize}');
+  }
 
-  if (queryBuilder.relationsDepth != null && queryBuilder.relationsDepth! > 0)
+  if (queryBuilder.relationsDepth != null && queryBuilder.relationsDepth! > 0) {
     queryTokens.add('relationsDepth=${queryBuilder.relationsDepth}');
+  }
 
-  if (queryBuilder.distinct ?? false)
+  if (queryBuilder.distinct ?? false) {
     queryTokens.add('distinct=${queryBuilder.distinct}');
+  }
 
   return queryTokens.join('&');
 }
 
 DataQueryBuilder buildFindFirstOrLastQuery(
-    DataQueryBuilder? queryBuilder, String sortDir) {
-  DataQueryBuilder query =
-      queryBuilder != null ? queryBuilder : DataQueryBuilder();
+    DataQueryBuilder? queryBuilder, String sortDir,
+    {List<String>? relations}) {
+  DataQueryBuilder query = queryBuilder ?? DataQueryBuilder();
+
+  if (relations?.isNotEmpty ?? false) {
+    query.loadRelations = relations;
+  }
 
   query.pageSize = 1;
   query.offset = 0;
 
-  if (query.sortBy == null) query.sortBy = ['created $sortDir'];
+  query.sortBy ??= ['created $sortDir'];
 
   return query;
 }
