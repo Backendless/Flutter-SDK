@@ -22,10 +22,10 @@ rootProject.allprojects {
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 33
 
     defaultConfig {
-        minSdkVersion 16
+        minSdkVersion 27
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     lintOptions {
@@ -38,5 +38,5 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.8'
     api 'com.google.firebase:firebase-messaging:20.0.0'
 
-   api 'com.backendless:backendless:6.3.6'
+   api 'com.backendless:android-client-sdk:7.0.0-RC3'
 }

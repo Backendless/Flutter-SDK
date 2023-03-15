@@ -42,16 +42,19 @@ public class CacheCallHandler implements MethodChannel.MethodCallHandler {
         }
     }
 
+    @Deprecated
     private void contains(MethodCall call, MethodChannel.Result result) {
         String key = call.argument("key");
         Backendless.Cache.contains(key, new FlutterCallback<Boolean>(result));
     }
 
+    @Deprecated
     private void delete(MethodCall call, MethodChannel.Result result) {
         String key = call.argument("key");
         Backendless.Cache.delete(key, new FlutterCallback<>(result));
     }
 
+    @Deprecated
     private void expireAt(MethodCall call, MethodChannel.Result result) {
         String key = call.argument("key");
         Date date = call.argument("date");
@@ -64,12 +67,14 @@ public class CacheCallHandler implements MethodChannel.MethodCallHandler {
         }
     }
 
+    @Deprecated
     private void expireIn(MethodCall call, MethodChannel.Result result) {
         String key = call.argument("key");
         Integer seconds = call.argument("seconds");
         Backendless.Cache.expireIn(key, seconds, new FlutterCallback<>(result));
     }
 
+    @Deprecated
     private void get(MethodCall call, final MethodChannel.Result result) {
         String key = call.argument("key");
 //        Pass AsyncCallback for compatibility
@@ -86,6 +91,7 @@ public class CacheCallHandler implements MethodChannel.MethodCallHandler {
         });
     }
 
+    @Deprecated
     private void put(MethodCall call, MethodChannel.Result result) {
         String key = call.argument("key");
         Object object = call.argument("object");

@@ -1,12 +1,11 @@
 package com.backendless.backendless_sdk.call_handlers;
 
 import com.backendless.Backendless;
+import com.backendless.BackendlessInjector;
 import com.backendless.BackendlessUser;
-import com.backendless.HeadersManager;
+import com.backendless.IHeadersManager;
 import com.backendless.backendless_sdk.utils.FlutterCallback;
 import com.backendless.exceptions.ExceptionMessage;
-import com.backendless.persistence.local.UserIdStorageFactory;
-import com.backendless.persistence.local.UserTokenStorageFactory;
 import com.backendless.property.UserProperty;
 import com.backendless.persistence.DataQueryBuilder;
 
@@ -104,10 +103,10 @@ public class UserServiceCallHandler implements MethodChannel.MethodCallHandler {
 
         if(stayLoggedIn) {
             String userId = currentUser.getUserId();
-            String userToken = HeadersManager.getInstance().getHeader(HeadersManager.HeadersEnum.USER_TOKEN_KEY);
+            String userToken = BackendlessInjector.getInstance().getHeadersManager().getHeader(IHeadersManager.HeadersEnum.USER_TOKEN_KEY);
 
-            UserTokenStorageFactory.instance().getStorage().set(userToken);
-            UserIdStorageFactory.instance().getStorage().set(userId);
+            BackendlessInjector.getInstance().getUserTokenStorage().set(userToken);
+            BackendlessInjector.getInstance().getUserIdStorage().set(userId);
         }
 
         result.success(null);
@@ -197,13 +196,13 @@ public class UserServiceCallHandler implements MethodChannel.MethodCallHandler {
     }
 
     private void getUserToken(MethodChannel.Result result) {
-        String userToken = HeadersManager.getInstance().getHeader(HeadersManager.HeadersEnum.USER_TOKEN_KEY);
+        String userToken = BackendlessInjector.getInstance().getHeadersManager().getHeader(IHeadersManager.HeadersEnum.USER_TOKEN_KEY);
         result.success(userToken);
     }
 
     private void setUserToken(MethodCall call, MethodChannel.Result result) {
         String userToken = call.argument("userToken");
-        HeadersManager.getInstance().addHeader(HeadersManager.HeadersEnum.USER_TOKEN_KEY, userToken);
+        BackendlessInjector.getInstance().getHeadersManager().addHeader( IHeadersManager.HeadersEnum.USER_TOKEN_KEY, userToken);
         result.success(null);
     }
 

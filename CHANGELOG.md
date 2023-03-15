@@ -1,3 +1,7 @@
+# 7.3.0
+
+* Bump Backendless Android SDK version to 7.0.0
+
 # 7.2.12
 
 * Fixed a bug with an issue where the user token would continue to be sent in a custom service request even after logout.

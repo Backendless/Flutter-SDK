@@ -33,6 +33,7 @@ public class FlutterBackendlessFCMService extends BackendlessFCMService {
         channel = methodChannel;
     }
 
+    @Deprecated
     public Map<String, Object> bundleToMap(Bundle extras) {
         Map<String, Object> map = new HashMap<>();
         for (String key : extras.keySet()) {

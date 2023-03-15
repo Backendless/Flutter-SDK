@@ -3,9 +3,9 @@ package com.backendless.backendless_sdk.call_handlers;
 import android.content.Context;
 
 import com.backendless.Backendless;
-import com.backendless.HeadersManager;
-import com.backendless.HeadersManager.HeadersEnum;
-
+import com.backendless.BackendlessInjector;
+import com.backendless.IHeadersManager;
+import com.backendless.Invoker;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
@@ -56,6 +56,7 @@ public class BackendlessCallHandler implements MethodChannel.MethodCallHandler {
             Backendless.initApp(context, customDomain);
         else
             Backendless.initApp(context, applicationId, apiKey);
+
         result.success(null);
     }
 
@@ -70,7 +71,7 @@ public class BackendlessCallHandler implements MethodChannel.MethodCallHandler {
     }
 
     private void getHeaders(MethodChannel.Result result) {
-        Hashtable<String, String> headers = HeadersManager.getInstance().getHeaders();
+        Map<String, String> headers = BackendlessInjector.getInstance().getHeadersManager().getHeaders();
         result.success(headers);
     }
 
@@ -86,11 +87,11 @@ public class BackendlessCallHandler implements MethodChannel.MethodCallHandler {
         if (stringKey != null) {
             Map<String, String> headers = new HashMap<>();
             headers.put(stringKey, value);
-            HeadersManager.getInstance().setHeaders(headers);
+            BackendlessInjector.getInstance().getHeadersManager().setHeaders(headers);
             result.success(null);
         } else if (enumKeyIndex != null) {
-            HeadersEnum headersEnum = HeadersEnum.values()[enumKeyIndex];
-            HeadersManager.getInstance().addHeader(headersEnum, value);
+            IHeadersManager.HeadersEnum headersEnum = IHeadersManager.HeadersEnum.values()[enumKeyIndex];
+            BackendlessInjector.getInstance().getHeadersManager().addHeader(headersEnum, value);
             result.success(null);
         } else {
             result.error("Invalid argument", "Key cannot be null", null);
@@ -102,15 +103,14 @@ public class BackendlessCallHandler implements MethodChannel.MethodCallHandler {
         String stringKey = call.argument("stringKey");
 
         if (stringKey != null) {
-            HeadersManager.getInstance().getHeaders().remove(stringKey);
+            BackendlessInjector.getInstance().getHeadersManager().getHeaders().remove(stringKey);
             result.success(null);
         } else if (enumKeyIndex != null) {
-            HeadersEnum headersEnum = HeadersEnum.values()[enumKeyIndex];
-            HeadersManager.getInstance().removeHeader(headersEnum);
+            IHeadersManager.HeadersEnum headersEnum= IHeadersManager.HeadersEnum.values()[enumKeyIndex];
+            BackendlessInjector.getInstance().getHeadersManager().removeHeader(headersEnum);
             result.success(null);
         } else {
             result.error("Invalid argument", "Key cannot be null", null);
-
         }
     }
 }

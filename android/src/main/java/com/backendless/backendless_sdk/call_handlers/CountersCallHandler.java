@@ -1,6 +1,7 @@
 package com.backendless.backendless_sdk.call_handlers;
 
 import com.backendless.Backendless;
+import com.backendless.BackendlessInjector;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.backendless_sdk.utils.FlutterCallback;
 
@@ -48,42 +49,52 @@ public class CountersCallHandler implements MethodChannel.MethodCallHandler {
                 result.notImplemented();
         }
     }
+
+    @Deprecated
     private void addAndGet(String counterName, MethodCall call, final MethodChannel.Result result) {
         Number value = call.argument("value");
         Backendless.Counters.addAndGet(counterName, value,  new FlutterAtomicCallback(result));
     }
 
+    @Deprecated
     private void compareAndSet(String counterName, MethodCall call, MethodChannel.Result result) {
         Number expected = call.argument("expected");
         Number updated = call.argument("updated");
         Backendless.Counters.compareAndSet(counterName, expected, updated, new FlutterCallback<Boolean>(result));
     }
 
+    @Deprecated
     private void decrementAndGet(String counterName, MethodChannel.Result result) {
         Backendless.Counters.decrementAndGet(counterName, new FlutterAtomicCallback(result));
     }
 
+    @Deprecated
     private void get(String counterName, MethodChannel.Result result) {
         Backendless.Counters.get(counterName, new FlutterAtomicCallback(result));
     }
 
+    @Deprecated
     private void getAndAdd(String counterName, MethodCall call, MethodChannel.Result result) {
         Number value = call.argument("value");
         Backendless.Counters.getAndAdd(counterName, value, new FlutterAtomicCallback(result));
     }
 
+    @Deprecated
     private void getAndDecrement(String counterName, MethodChannel.Result result) {
         Backendless.Counters.getAndDecrement(counterName, new FlutterAtomicCallback(result));
     }
 
+    @Deprecated
     private void getAndIncrement(String counterName, MethodChannel.Result result) {
         Backendless.Counters.getAndIncrement(counterName, new FlutterAtomicCallback(result));
     }
 
+    @Deprecated
     private void incrementAndGet(String counterName, MethodChannel.Result result) {
         Backendless.Counters.incrementAndGet(counterName, new FlutterAtomicCallback(result));
     }
 
+    @Deprecated
     private void reset(String counterName, MethodChannel.Result result) {
         Backendless.Counters.reset(counterName, new FlutterCallback<>(result));
     }
