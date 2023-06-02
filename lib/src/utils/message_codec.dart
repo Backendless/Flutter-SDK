@@ -28,6 +28,8 @@ class BackendlessMessageCodec extends StandardMessageCodec {
   static const int _kLineString = 156;
   static const int _kPolygon = 157;
   static const int _kRelationStatus = 158;
+  static const int _kBackendlessFault = 159;
+  static const int _kBackendlessException = 160;
 
   @override
   void writeValue(WriteBuffer buffer, dynamic value) {
@@ -108,6 +110,12 @@ class BackendlessMessageCodec extends StandardMessageCodec {
       writeValue(buffer, value.toJson());
     } else if (value is Set) {
       writeValue(buffer, value.toList());
+    } else if (value is BackendlessFault) {
+      buffer.putUint8(_kBackendlessFault);
+      writeValue(buffer, value.toJson());
+    } else if (value is BackendlessException) {
+      buffer.putUint8(_kBackendlessException);
+      writeValue(buffer, value.toJson());
     } else {
       super.writeValue(buffer, value);
     }
@@ -166,6 +174,10 @@ class BackendlessMessageCodec extends StandardMessageCodec {
         return Geometry.fromWKT(readValue(buffer) as String);
       case _kRelationStatus:
         return RelationStatus.fromJson(readValue(buffer) as Map);
+      case _kBackendlessFault:
+        return BackendlessFault.fromJson(readValue(buffer) as Map);
+      case _kBackendlessException:
+        return BackendlessException.fromJson(readValue(buffer) as Map);
       default:
         return super.readValueOfType(type, buffer);
     }

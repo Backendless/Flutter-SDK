@@ -106,12 +106,13 @@ class BackendlessMessaging {
 
   Future<MessageStatus?> sendEmailFromTemplate(
           String templateName, EmailEnvelope envelope,
-          [Map<String, String>? templateValues]) =>
+          [Map<String, String>? templateValues, List<String>? attachments]) =>
       _messagingChannel.invokeMethod(
           "Backendless.Messaging.sendEmailFromTemplate", <String, dynamic>{
         "templateName": templateName,
         "envelope": envelope,
-        "templateValues": templateValues
+        "templateValues": templateValues,
+        "attachments": attachments,
       });
 
   Future<Channel?> subscribe(

@@ -493,23 +493,44 @@ class MessagingCallHandler: NSObject, FlutterCallHandlerProtocol, UNUserNotifica
         }
         
         let templateValues: [String: String]? = arguments[Args.templateValues].flatMap(cast)
-        
+        let attachments: [String]? = arguments[Args.attachments].flatMap(cast)
+
         if let templateValues = templateValues {
-            messaging.sendEmailFromTemplate(templateName: templateName, envelope: envelope, templateValues: templateValues,
-                responseHandler: {
-                    result($0)
-                },
-                errorHandler: {
-                    result(FlutterError($0))
-                })
+            if let attachments = attachments {
+                messaging.sendEmailFromTemplate(templateName: templateName, envelope: envelope, templateValues: templateValues, attachments: attachments,
+                    responseHandler: {
+                        result($0)
+                    },
+                    errorHandler: {
+                        result(FlutterError($0))
+                    })
+            } else {
+                messaging.sendEmailFromTemplate(templateName: templateName, envelope: envelope, templateValues: templateValues,
+                    responseHandler: {
+                        result($0)
+                    },
+                    errorHandler: {
+                        result(FlutterError($0))
+                    })
+            }
         } else {
-            messaging.sendEmailFromTemplate(templateName: templateName, envelope: envelope,
-                responseHandler: {
-                    result($0)
-                },
-                errorHandler: {
-                    result(FlutterError($0))
-                })
+            if let attachments = attachments {
+                messaging.sendEmailFromTemplate(templateName: templateName, envelope: envelope, attachments: attachments,
+                    responseHandler: {
+                        result($0)
+                    },
+                    errorHandler: {
+                        result(FlutterError($0))
+                    })
+            } else {
+                messaging.sendEmailFromTemplate(templateName: templateName, envelope: envelope,
+                    responseHandler: {
+                        result($0)
+                    },
+                    errorHandler: {
+                        result(FlutterError($0))
+                    })
+            }
         }
     }
     

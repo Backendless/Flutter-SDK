@@ -250,14 +250,26 @@ public class MessagingCallHandler implements MethodChannel.MethodCallHandler {
         String templateName = call.argument("templateName");
         EmailEnvelope envelope = call.argument("envelope");
         Map<String, String> templateValues = call.argument("templateValues");
+        List<String> attachments = call.argument("attachments");
 
         FlutterCallback<MessageStatus> callback = new FlutterCallback<>(result);
 
-        if (templateValues != null) {
+        if (attachments == null) {
+            if (templateValues == null) {
+                Backendless.Messaging.sendEmailFromTemplate(templateName, envelope, callback);
+                return;
+            }
+
             Backendless.Messaging.sendEmailFromTemplate(templateName, envelope, templateValues, callback);
-        } else {
-            Backendless.Messaging.sendEmailFromTemplate(templateName, envelope, callback);
+            return;
         }
+
+        if (templateValues == null) {
+            Backendless.Messaging.sendEmailFromTemplate(templateName, envelope, attachments, callback);
+            return;
+        }
+
+        Backendless.Messaging.sendEmailFromTemplate(templateName,envelope, templateValues, attachments, callback);
     }
 
     private void subscribe(MethodCall call, MethodChannel.Result result) {

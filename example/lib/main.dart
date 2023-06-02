@@ -2,9 +2,20 @@ import 'package:backendless_sdk/backendless_sdk.dart';
 import 'package:flutter/material.dart';
 
 void main() {
+  const String APP_ID = 'APP_ID';
+  const String ANDROID_KEY = 'ANDROID_API_KEY';
+  const String IOS_KEY = 'IOS_API_KEY';
+  const String JS_KEY = 'JS_KEY';
+
   WidgetsFlutterBinding.ensureInitialized();
 
-  runApp(MyApp());
+  Backendless.initApp(
+      applicationId: APP_ID,
+      androidApiKey: ANDROID_KEY,
+      iosApiKey: IOS_KEY,
+      jsApiKey: JS_KEY);
+
+  runApp(MaterialApp(home: MyApp()));
 }
 
 class MyApp extends StatefulWidget {
@@ -13,23 +24,14 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  static const String APP_ID = 'APP_ID';
-  static const String ANDROID_KEY = 'ANDROID_API_KEY';
-  static const String IOS_KEY = 'IOS_API_KEY';
-  static const String JS_KEY = 'JS_API_KEY';
-
   @override
   void initState() {
     super.initState();
-    Backendless.initApp(
-        applicationId: APP_ID,
-        androidApiKey: ANDROID_KEY,
-        iosApiKey: IOS_KEY,
-        jsApiKey: JS_KEY);
   }
 
   void buttonPressed() async {
     // create a Map object. This will become a record in a database table
+
     Map testObject = new Map();
 
     // add a property to the object.
@@ -42,8 +44,8 @@ class _MyAppState extends State<MyApp> {
     Backendless.data.of("TestTable").save(testObject).then((response) =>
         print("Object is saved in Backendless. Please check in the console."));
 
-    var data = await Backendless.data.of('TestTable').find();
-    print(data);
+    var res = await Backendless.data.of("TestTable").find();
+    print(res);
   }
 
   @override
@@ -58,7 +60,10 @@ class _MyAppState extends State<MyApp> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            ElevatedButton(child: Text("Press"), onPressed: buttonPressed)
+            ElevatedButton(
+              child: Text("Press"),
+              onPressed: buttonPressed,
+            ),
           ],
         )),
       ),

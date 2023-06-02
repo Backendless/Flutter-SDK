@@ -89,7 +89,31 @@ class BackendlessRT {
   }
 }
 
-class BackendlessFault {}
+class BackendlessFault {
+  String? code;
+  String? message;
+  String? detail;
+  String? extendedData;
+
+  BackendlessFault(this.code, this.message, this.detail, this.extendedData);
+
+  BackendlessFault.fromJson(Map json)
+      : code = json['code'],
+        message = json['message'],
+        detail = json['detail'],
+        extendedData = json['extendedData'];
+
+  Map toJson() => {
+        'code': code,
+        'message': message,
+        'detail': detail,
+        'extendedData': extendedData,
+      };
+
+  @override
+  String toString() =>
+      "BackendlessFault{code=$code, message=$message, detail=$detail, extendedData=$extendedData}";
+}
 
 class ReconnectAttempt {
   final int timeout;

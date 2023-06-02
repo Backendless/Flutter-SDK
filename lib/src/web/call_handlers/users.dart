@@ -12,9 +12,15 @@ import '../js_util.dart';
 class UserServiceCallHandler {
   Future<dynamic> handleMethodCall(MethodCall call) {
     switch (call.method) {
-      case "Backendless.UserService.currentUser":
-        return Future(() =>
-            BackendlessUser.fromJson(convertFromJs(currentUser()) as Map));
+      case "Backendless.UserService.getCurrentUser":
+        return Future(() {
+          var currentUs = currentUser();
+          if (currentUs != null) {
+            return BackendlessUser.fromJson(convertFromJs(currentUs) as Map);
+          }
+
+          return null;
+        });
       case "Backendless.UserService.describeUserClass":
         return promiseToFuture(describeUserClass());
       case "Backendless.UserService.findById":
@@ -39,6 +45,9 @@ class UserServiceCallHandler {
       case "Backendless.UserService.setCurrentUser":
         return Future(() => setCurrentUser(
             call.arguments['currentUser'], call.arguments('stayLoggedIn')));
+      // case "Backendless.UserService.getCurrentUser":
+      //   return promiseToFuture(getCurrentUser(false))
+      //       then((value) => getUser(value));
       case "Backendless.UserService.logout":
         return promiseToFuture(logout());
       case "Backendless.UserService.register":
@@ -115,6 +124,9 @@ external dynamic findByRole(roleName, loadRoles, queryBuilder);
 
 @JS('Backendless.UserService.getUserRoles')
 external List<String> getUserRoles();
+
+// @JS('Backendless.UserService.getCurrentUser')
+// external
 
 @JS('Backendless.UserService.setCurrentUser')
 external void setCurrentUser(dynamic user, [bool? stayLoggedIn]);

@@ -315,7 +315,7 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
         
         userService.createEmailConfirmation(identity: identity,
             responseHandler: {
-                result($0["confirmationURL"])
+                result($0)
             },
             errorHandler: {
                 result(FlutterError($0))
@@ -416,7 +416,7 @@ class UserServiceCallHandler: FlutterCallHandlerProtocol {
         
         
         if let guestUser = guestUser {
-            userService.loginWithOauth1(providerCode: authProviderCode, authToken: authToken, authTokenSecret: authTokenSecret, guestUser: guestUser, fieldsMapping: fieldsMappings, stayLoggedIn: stayLoggedIn, responseHandler: {
+            userService.loginWithOauth1(providerCode: authProviderCode, authToken: authToken, tokenSecret: authTokenSecret, guestUser: guestUser, fieldsMapping: fieldsMappings, stayLoggedIn: stayLoggedIn, responseHandler: {
                 result($0)
             },
             errorHandler: {

@@ -1,11 +1,35 @@
+# 7.3.6
+
+* Fixed a bug with receiving push notifications when the application is closed in Android.
+
+# 7.3.5 
+
+* Fixed bug thats stayLoggedIn is true but method getUserToken returns null after restart application.
+
+# 7.3.4
+
+* Fixed uncorrect type casting in BackendlessException class.
+
+# 7.3.3
+
+* Fixed error thats appear when trying to get currentUser thats equals null(web).
+
+# 7.3.2
+
+* Fixed bug when getCurrentUser in web returned error.
+
+# 7.3.1
+
+* Added parameter 'attachments' to sendEmailFromTemplate method.
+
 # 7.3.0
 
-* Bump Backendless Android SDK version to 7.0.0
+* Bump Backendless Android SDK version to 7.0.0.
 
 # 7.2.12
 
 * Fixed a bug with an issue where the user token would continue to be sent in a custom service request even after logout.
-
+s
 # 7.2.11
 
 * Fixed bug in web with nested relations named the same as global js classes.

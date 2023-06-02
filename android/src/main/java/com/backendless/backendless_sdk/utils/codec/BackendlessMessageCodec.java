@@ -10,6 +10,8 @@ import com.backendless.backendless_sdk.utils.codec.mixins.ObjectPropertyMixin;
 import com.backendless.backendless_sdk.utils.codec.mixins.ReconnectAttemptMixin;
 import com.backendless.commerce.GooglePlayPurchaseStatus;
 import com.backendless.commerce.GooglePlaySubscriptionStatus;
+import com.backendless.exceptions.BackendlessException;
+import com.backendless.exceptions.BackendlessFault;
 import com.backendless.files.FileInfo;
 import com.backendless.messaging.DeliveryOptions;
 import com.backendless.messaging.EmailEnvelope;
@@ -80,6 +82,8 @@ public final class BackendlessMessageCodec extends StandardMessageCodec {
     private static final byte LINE_STRING = (byte) 156;
     private static final byte POLYGON = (byte) 157;
     private static final byte RELATION_STATUS = (byte) 158;
+    private static final byte BACKENDLESS_FAULT = (byte) 159;
+    private static final byte BACKENDLESS_EXCEPTION = (byte) 160;
 
     private BackendlessMessageCodec() {
         objectMapper.enable(SerializationFeature.WRITE_ENUMS_USING_INDEX);
@@ -193,7 +197,14 @@ public final class BackendlessMessageCodec extends StandardMessageCodec {
             Object[] array = (Object[]) value;
             List list = Arrays.asList(array);
             writeValue(stream, list);
-        } else {
+        } else if (value instanceof BackendlessFault){
+            stream.write(BACKENDLESS_FAULT);
+            writeValue(stream, objectMapper.convertValue(value, Map.class));
+        } else if( value instanceof BackendlessException) {
+            stream.write(BACKENDLESS_EXCEPTION);
+            writeValue(stream, objectMapper.convertValue(value, Map.class));
+        }
+        else {
             super.writeValue(stream, value);
         }
     }
@@ -255,6 +266,10 @@ public final class BackendlessMessageCodec extends StandardMessageCodec {
                 return Polygon.<Polygon>fromWKT((String) readValue(buffer));
             case RELATION_STATUS:
                 return objectMapper.convertValue(readValue(buffer), RelationStatus.class);
+            case BACKENDLESS_FAULT:
+                return objectMapper.convertValue(readValue(buffer), BackendlessFault.class);
+            case BACKENDLESS_EXCEPTION:
+                return objectMapper.convertValue(readValue(buffer), BackendlessException.class);
             default:
                 return super.readValueOfType(type, buffer);
         }
