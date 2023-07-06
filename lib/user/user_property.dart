@@ -7,14 +7,14 @@ class UserProperty extends AbstractProperty {
 
   UserProperty.fromJson(Map json) {
     name = json['name'];
-    this.required = json['required'];
+    required = json['required'];
     type = json['type'];
     identity = json['identity'];
   }
 
   Map toJson() => {
         'name': name,
-        'required': this.required,
+        'required': required,
         'type': type,
         'identity': identity,
       };

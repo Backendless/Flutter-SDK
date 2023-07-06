@@ -29,11 +29,11 @@ class Types {
   static String getColumnNameForProperty(
       String propertyName, VariableMirror variableMirror) {
     var columnName = propertyName;
-    variableMirror.metadata.forEach((metadata) {
+    for (var metadata in variableMirror.metadata) {
       if (metadata is MapToProperty) {
         columnName = metadata.property;
       }
-    });
+    }
     return columnName;
   }
 
@@ -53,8 +53,9 @@ class Types {
       var value = declarations[columnName];
       if (value is VariableMirror ||
           value is MethodMirror &&
-              !(value.metadata.any((metadata) => metadata is MapToProperty)))
+              !(value.metadata.any((metadata) => metadata is MapToProperty))) {
         return columnName;
+      }
     }
 
     return null;

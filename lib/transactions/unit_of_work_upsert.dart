@@ -7,10 +7,11 @@ class UnitOfWorkUpsert {
   UnitOfWorkUpsert(this.operations, this.opResultIdGenerator);
 
   OpResult upsert<T>(T instance, [String? tableName]) {
-    if (instance is Map)
+    if (instance is Map) {
       return _createMapInstance(tableName!, instance);
-    else
+    } else {
       return _createClassInstance(instance);
+    }
   }
 
   OpResult _createClassInstance<E>(E instance) {
@@ -25,7 +26,7 @@ class UnitOfWorkUpsert {
 
     String operationResultId =
         opResultIdGenerator.generateOpResultId(OperationType.UPSERT, tableName);
-    OperationUpsert operationUpsert = new OperationUpsert(
+    OperationUpsert operationUpsert = OperationUpsert(
         OperationType.UPSERT, tableName, operationResultId, objectMap);
 
     operations.add(operationUpsert);
@@ -35,10 +36,11 @@ class UnitOfWorkUpsert {
   }
 
   OpResult bulkUpsert<T>(List<T> instances, [String? tableName]) {
-    if (instances[0] is Map)
+    if (instances[0] is Map) {
       return _bulkCreateMapInstances(tableName!, instances.cast<Map>());
-    else
+    } else {
       return _bulkCreateClassInstances(instances);
+    }
   }
 
   OpResult _bulkCreateClassInstances<E>(List<E?> instances) {
@@ -52,12 +54,13 @@ class UnitOfWorkUpsert {
 
   OpResult _bulkCreateMapInstances(
       String tableName, List<Map?> listOfObjectMaps) {
-    for (Map? mapObject in listOfObjectMaps)
+    for (Map? mapObject in listOfObjectMaps) {
       TransactionHelper.makeReferenceToValueFromOpResult(mapObject);
+    }
 
     String operationResultId = opResultIdGenerator.generateOpResultId(
         OperationType.UPSERT_BULK, tableName);
-    OperationCreateBulk operationCreateBulk = new OperationCreateBulk(
+    OperationCreateBulk operationCreateBulk = OperationCreateBulk(
         OperationType.UPSERT_BULK,
         tableName,
         operationResultId,

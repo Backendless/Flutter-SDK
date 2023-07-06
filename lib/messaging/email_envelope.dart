@@ -13,16 +13,18 @@ class EmailEnvelope {
     to = Set<String>.from(json['to']);
 
     final jsonCc = json['cc'];
-    if (jsonCc == null)
+    if (jsonCc == null) {
       cc = null;
-    else
+    } else {
       cc = Set<String>.from(jsonCc);
+    }
 
     final jsonBcc = json['bcc'];
-    if (jsonBcc == null)
+    if (jsonBcc == null) {
       bcc = null;
-    else
+    } else {
       bcc = Set<String>.from(jsonBcc);
+    }
   }
 
   Map toJson() => {

@@ -6,11 +6,13 @@ class UnitOfWorkExecutor {
   UnitOfWorkExecutor(this.unitOfWork);
 
   Future<UnitOfWorkResult> execute() async {
-    if (unitOfWork.operations.isEmpty)
-      throw new ArgumentError(
+    if (unitOfWork.operations.isEmpty) {
+      throw ArgumentError(
           "List of operations in unitOfWork can not be null or empty");
+    }
 
-    final response = await Invoker.post("transaction/unit-of-work", unitOfWork);
+    final response =
+        await Invoker.post('/transaction/unit-of-work', unitOfWork);
     return UnitOfWorkResult.fromJson(response);
   }
 }

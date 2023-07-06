@@ -69,6 +69,26 @@ public class SwiftBackendlessSdkPlugin: NSObject, FlutterPlugin, UNUserNotificat
     }
     
     public func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        completionHandler([.alert, .badge, .sound])
+        print("userNotificationCenter called");
+        
+        let strPayload = notification.request.content.userInfo["payload"] as? String
+        
+        
+        if let map = strPayload?.data(using: .utf8) {
+            do {
+                let json = try JSONSerialization.jsonObject(with: map, options: .mutableContainers) as? [String:Any]
+
+                if let flutterId = json?["flutter_notification_identifier"] as? String,
+                flutterId == "identity" {
+                    completionHandler([.alert, .badge, .sound])
+                }
+            } catch {
+                print("payload wrong")
+            }
+        }
+        else {
+            SwiftBackendlessSdkPlugin.channelBackendlessNativeApi?.invokeMethod("showNotificationWithTemplate", arguments: notification.request.content.userInfo)
+            completionHandler([]);
+        }
     }
 }

@@ -3,21 +3,13 @@ library backendless_sdk;
 import 'dart:collection';
 import 'dart:convert';
 import 'dart:io' as io;
-import 'package:socket_io_client/socket_io_client.dart' as IO;
-import 'dart:typed_data';
-import 'dart:ui';
+import 'package:socket_io_client/socket_io_client.dart' as socket_io;
 import 'dart:async';
 import 'package:backendless_sdk/utils/utils.dart';
+import 'package:backendless_sdk/utils/push_template_worker.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart'
-    show
-        ReadBuffer,
-        WriteBuffer,
-        describeEnum,
-        kIsWeb,
-        listEquals,
-        visibleForTesting,
-        TargetPlatform;
+    show ReadBuffer, WriteBuffer, describeEnum, kDebugMode, kIsWeb, listEquals;
 import 'package:flutter/services.dart';
 import 'package:http/http.dart';
 import 'package:reflectable/reflectable.dart';
@@ -26,6 +18,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:backendless_sdk/data/rt/rt_lookup_service.dart';
+import 'package:backendless_sdk/utils/template_storage.dart';
 import 'package:uuid/uuid.dart';
 import 'package:synchronized/synchronized.dart';
 
@@ -56,7 +49,7 @@ part 'data/rt/rt_event_handlers.dart';
 
 part 'core/invoker.dart';
 part 'core/prefs.dart';
-part 'core/authKeys.dart';
+part 'core/auth_keys.dart';
 part 'core/decoder.dart';
 part 'exception/exception_message.dart';
 part 'exception/backendless_exception.dart';
@@ -82,6 +75,7 @@ part 'messaging/publish_options.dart';
 part 'messaging/push_broadcast_mask.dart';
 part 'messaging/device_registration.dart';
 part 'messaging/device_registration_result.dart';
+part 'messaging/notification_service.dart';
 part 'messaging/body_parts.dart';
 part 'messaging/email_envelope.dart';
 part 'messaging/user_info.dart';
@@ -131,3 +125,5 @@ part 'transactions/common/operations/relations/operation_delete_relation.dart';
 
 part 'utils/native_functions_container.dart';
 part 'utils/headers_enum.dart';
+
+part 'rt/rt_connector.dart';

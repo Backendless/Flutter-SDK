@@ -1,28 +1,28 @@
 part of backendless_sdk;
 
 class RTClient<E> {
-  IO.Socket? socket;
+  socket_io.Socket? socket;
   bool socketCreated = false;
   bool socketConnected = false;
   bool isConnectionHandlersReady = false;
   bool needResubscribe = false;
   bool needCallDisconnect = true;
 
-  Map<String, List<RTSubscription<E>>> _subscriptions =
-      Map<String, List<RTSubscription<E>>>();
-  Map<String, RTSubscription<E>> subs = Map<String, RTSubscription<E>>();
+  final Map<String, List<RTSubscription<E>>> _subscriptions =
+      <String, List<RTSubscription<E>>>{};
+  Map<String, RTSubscription<E>> subs = <String, RTSubscription<E>>{};
   List<RTSubscription<E>> waitingSubscriptions =
       List<RTSubscription<E>>.empty(growable: true);
-  Map<String, RTMethodRequest> _methods = Map<String, RTMethodRequest>();
+  final Map<String, RTMethodRequest> _methods = <String, RTMethodRequest>{};
 
-  StreamController _controller = StreamController.broadcast();
+  static final StreamController _controller = StreamController.broadcast();
 
   static final _instance = RTClient._();
   static RTClient get instance => _instance;
 
   RTClient._();
 
-  Future connectSocket(void connected()) async {
+  Future connectSocket(void Function() connected) async {
     if (!socketCreated) {
       String path = '/${Backendless.applicationId}';
       String host = MapEventHandler._rtUrl.isEmpty
@@ -30,9 +30,9 @@ class RTClient<E> {
           : MapEventHandler._rtUrl;
 
       host += path;
-      socket = IO.io(host, <String, dynamic>{
+      socket = socket_io.io(host, <String, dynamic>{
         'transports': ['websocket'],
-        'path': '/' + Backendless.applicationId!,
+        'path': '/${Backendless.applicationId!}',
         'query': <String, String>{
           'apiKey': Backendless.apiKey!,
         }
@@ -40,24 +40,39 @@ class RTClient<E> {
 
       if (socket != null) {
         socketCreated = true;
-        this.onConnectionHandlers(connected);
+        onConnectionHandlers(connected);
       }
 
       socket!.on('disconnect', (data) {
         //print('disconnect: $data');
         socketConnected = false;
-        if (this.needCallDisconnect) _controller.add('disconnect');
+        if (needCallDisconnect) _controller.add('disconnect');
       });
       socket!.on('error', (data) {
-        print('error');
-        _controller.add('disconnect');
+        if (kDebugMode) {
+          print('error$data');
+        }
+        //_controller.add('disconnect');
         needResubscribe = true;
       });
       socket!.on('connect_error', (data) {
-        print('connect_error: $data');
+        if (kDebugMode) {
+          print('connect_error: $data');
+        }
+        _controller.add('connect_error');
         needResubscribe = true;
       });
-      socket!.on('connect_timeout', (data) => print('connect_timeout: $data'));
+      socket!.on('connect_timeout', (data) {
+        if (kDebugMode) {
+          print('connect_timeout: $data');
+        }
+      });
+      socket!.on('reconnect', (data) {
+        if (kDebugMode) {
+          print('reconnect: $data');
+        }
+        _controller.add('reconnect');
+      });
     } else if (socketConnected == true) {
       connected.call();
     }
@@ -67,7 +82,7 @@ class RTClient<E> {
       String type,
       Map<String, dynamic> options,
       void Function(T? response)? callback) async {
-    String subscriptionId = Uuid().v4();
+    String subscriptionId = const Uuid().v4();
     Map<String, dynamic> data = {
       'id': subscriptionId,
       'name': type,
@@ -83,8 +98,9 @@ class RTClient<E> {
 
     var typeName = SubscriptionNames.RSO_CONNECT.toString();
 
-    if (options.containsKey('channel') && options['channel'] != null)
+    if (options.containsKey('channel') && options['channel'] != null) {
       typeName = SubscriptionNames.PUB_SUB_CONNECT.toString();
+    }
 
     if (data['name'] is String) {
       String name = data['name'];
@@ -100,47 +116,50 @@ class RTClient<E> {
       }
     }
 
-    var subscriptionStack = this._subscriptions[typeName];
-    if (subscriptionStack == null)
-      subscriptionStack = List.empty(growable: true);
+    var subscriptionStack = _subscriptions[typeName];
+    subscriptionStack ??= List.empty(growable: true);
 
     if (E == T || E == Map || T == Map) {
       subscriptionStack.add(subscription as RTSubscription<E>);
-    } else
-      throw ArgumentError.value(ExceptionMessage.CANNOT_COMPARE_TYPES);
+    } else {
+      throw ArgumentError.value(ExceptionMessage.cannotCompareTypes);
+    }
 
-    this._subscriptions[typeName] = subscriptionStack;
+    _subscriptions[typeName] = subscriptionStack;
 
-    if (E == T || E == Map || T == Map)
-      this.subs[subscriptionId] = subscription as RTSubscription<E>;
-    else
-      throw ArgumentError.value(ExceptionMessage.CANNOT_COMPARE_TYPES);
+    if (E == T || E == Map || T == Map) {
+      subs[subscriptionId] = subscription as RTSubscription<E>;
+    } else {
+      throw ArgumentError.value(ExceptionMessage.cannotCompareTypes);
+    }
 
     return subscription;
   }
 
   void subscribe<T>(Map<String, dynamic> data, RTSubscription<T> subscription) {
     if (_instance.socketConnected) {
-      this.socket!.emit('SUB_ON', data);
+      socket!.emit('SUB_ON', data);
       //print('sub_on ${subscription.subscriptionId}');
     } else {
-      this.connectSocket(() => socket!.emit('SUB_ON', data));
+      connectSocket(() => socket!.emit('SUB_ON', data));
     }
   }
 
-  void onConnectionHandlers(void connected()) {
-    this.socket?.on('connect', (data) {
-      if (this.needResubscribe) {
-        print('connect re_sub');
-        this.needCallDisconnect = false;
-        this.removeSocket();
-        this.connectSocket(connected);
-        this.needCallDisconnect = true;
+  void onConnectionHandlers(void Function() connected) {
+    socket?.on('connect', (data) {
+      if (needResubscribe) {
+        if (kDebugMode) {
+          print('connect re_sub');
+        }
+        needCallDisconnect = false;
+        removeSocket();
+        connectSocket(connected);
+        needCallDisconnect = true;
       } else {
         //print('connected');
-        this.socketConnected = true;
-        for (var subscriptionId in this.subs.keys) {
-          var subscription = this.subs[subscriptionId];
+        socketConnected = true;
+        for (var subscriptionId in subs.keys) {
+          var subscription = subs[subscriptionId];
           var type = subscription!.type;
           var options = subscription.options;
           var data = <String, dynamic>{
@@ -149,20 +168,19 @@ class RTClient<E> {
             'options': options,
           };
 
-          this.subscribe(data, subscription);
+          subscribe(data, subscription);
         }
 
-        this.socket!.on('SUB_RES', (data) {
+        socket!.on('SUB_RES', (data) {
           if (E != dynamic && E != Map) {
             subs[data['id']]!
                 .callback
-                ?.call(reflector.deserialize<E>(data['data'])!);
+                ?.call(reflector.deserialize<E>(data['data']));
           } else {
-            print('E' + (E).toString());
             subs[data['id']]!.callback?.call(data['data']);
           }
         });
-        this.needResubscribe = false;
+        needResubscribe = false;
         connected.call();
         _controller.add('connect');
       }
@@ -170,11 +188,11 @@ class RTClient<E> {
   }
 
   void removeSocket() {
-    this.socket!.dispose();
-    this.isConnectionHandlersReady = false;
-    this.socketConnected = false;
-    this.socketCreated = false;
-    this.needResubscribe = false;
+    socket!.dispose();
+    isConnectionHandlersReady = false;
+    socketConnected = false;
+    socketCreated = false;
+    needResubscribe = false;
   }
 
   void removeListeners(String type, String event, {String? whereClause}) =>
@@ -182,31 +200,32 @@ class RTClient<E> {
 
   void stopSubscription(String event, {String? whereClause}) {
     try {
-      var subscriptionStack = this._subscriptions[event];
+      var subscriptionStack = List.from(_subscriptions[event]!, growable: true);
 
       if (whereClause?.isNotEmpty ?? false) {
-        for (var subscription in subscriptionStack!) {
+        for (var subscription in subscriptionStack) {
           final options = subscription.options;
           final subscriptionWhereClause = options!['whereClause'] as String?;
           if (subscriptionWhereClause == whereClause) {
             subscription.stop();
-            this._subscriptions[event]!.remove(subscription.subscriptionId);
+            _subscriptions[event]!.remove(subscription);
           }
         }
       } else {
-        for (var subscription in subscriptionStack!) {
+        for (var subscription in subscriptionStack) {
           subscription.stop();
-          this._subscriptions[event]!.remove(subscription.subscriptionId);
+          _subscriptions[event]!.remove(subscription);
         }
       }
     } catch (ex) {
-      throw ArgumentError.value(ExceptionMessage.ERROR_DURING_REMOVE_SUB);
+      throw ArgumentError.value(ExceptionMessage.errorDuringRemoveSub);
     }
   }
 
   void stopSubscriptionForChannel(Channel channel, String event) {
-    var subscriptionStack = this._subscriptions[event];
-    if (subscriptionStack?.isNotEmpty ?? false)
+    var subscriptionStack = _subscriptions[event];
+
+    if (subscriptionStack?.isNotEmpty ?? false) {
       for (var tempSub in subscriptionStack!) {
         var options = tempSub.options;
 
@@ -216,21 +235,25 @@ class RTClient<E> {
           if (channelName == channel.channelName) tempSub.stop();
         }
       }
+    }
   }
 
   void unsubscribe(String subscriptionId) {
-    if (this.subs.keys.contains(subscriptionId)) {
-      this.socket?.emit('SUB_OFF', {'id': subscriptionId});
-      this.subs.remove(subscriptionId);
+    if (subs.keys.contains(subscriptionId)) {
+      socket?.emit('SUB_OFF', {'id': subscriptionId});
+      subs.remove(subscriptionId);
     }
-    if (this.subs.length == 0 && this.socket != null) this.removeSocket();
+
+    if (subs.isEmpty && socket != null) {
+      removeSocket();
+    }
   }
 
   void sendCommand(Map<String, dynamic> data, RTMethodRequest? method) {
-    if (this.socketConnected) {
-      this.socket!.emit('MET_REQ', data);
+    if (socketConnected) {
+      socket!.emit('MET_REQ', data);
     } else {
-      this.connectSocket(() => this.socket!.emit('MET_REQ', data));
+      connectSocket(() => socket!.emit('MET_REQ', data));
     }
 
     if (method != null) {
@@ -238,5 +261,5 @@ class RTClient<E> {
     }
   }
 
-  Stream get streamController => _controller.stream;
+  static Stream get streamController => _controller.stream;
 }

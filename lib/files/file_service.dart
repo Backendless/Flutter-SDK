@@ -7,7 +7,7 @@ class FileService {
 
   Future<String?> copyFile(String sourcePath, String targetPath) async {
     if (sourcePath.isEmpty || targetPath.isEmpty) {
-      throw ArgumentError.value(ExceptionMessage.EMPTY_SOURCE_OR_TARGET_PATHS);
+      throw ArgumentError.value(ExceptionMessage.emptySourceOrTargetPaths);
     }
 
     Map<String, dynamic> parameters = {
@@ -21,7 +21,7 @@ class FileService {
       {String pattern = '*',
       bool recursive = false,
       bool countDirectories = false}) async {
-    if (path.isEmpty) throw ArgumentError.value(ExceptionMessage.EMPTY_PATH);
+    if (path.isEmpty) throw ArgumentError.value(ExceptionMessage.emptyPath);
 
     var methodName =
         '/files/$path/?action=count&pattern$pattern&sub=$recursive&countDirectories=$countDirectories';
@@ -34,7 +34,7 @@ class FileService {
     String pattern = '*',
     bool recursive = false,
   }) async {
-    if (path.isEmpty) throw ArgumentError.value(ExceptionMessage.EMPTY_PATH);
+    if (path.isEmpty) throw ArgumentError.value(ExceptionMessage.emptyPath);
 
     var methodName = '/files/$path?pattern=$pattern&sub=$recursive';
 
@@ -43,7 +43,7 @@ class FileService {
 
   Future<String?> rename(String path, String newName) async {
     if (path.isEmpty || newName.isEmpty) {
-      throw ArgumentError.value(ExceptionMessage.EMPTY_PATH);
+      throw ArgumentError.value(ExceptionMessage.emptyPath);
     }
 
     Map<String, dynamic> parameters = {
@@ -56,7 +56,7 @@ class FileService {
 
   Future<String?> moveFile(String sourcePath, String targetPath) async {
     if (sourcePath.isEmpty || targetPath.isEmpty) {
-      throw ArgumentError.value(ExceptionMessage.EMPTY_PATH);
+      throw ArgumentError.value(ExceptionMessage.emptyPath);
     }
 
     Map<String, dynamic> parameters = {
@@ -72,7 +72,7 @@ class FileService {
       bool recursive = false,
       int? pageSize,
       int? offset}) async {
-    if (path.isEmpty) throw ArgumentError.value(ExceptionMessage.EMPTY_PATH);
+    if (path.isEmpty) throw ArgumentError.value(ExceptionMessage.emptyPath);
     var methodName = 'files/$path?pattern=$pattern&recursive=$recursive';
 
     if (pageSize != null) methodName += '&pagesize=$pageSize';

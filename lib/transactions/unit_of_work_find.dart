@@ -12,7 +12,7 @@ class UnitOfWorkFind {
     String operationResultId =
         opResultIdGenerator.generateOpResultId(OperationType.FIND, tableName);
 
-    OperationFind operationFind = new OperationFind(
+    OperationFind operationFind = OperationFind(
         OperationType.FIND, tableName, operationResultId, queryBuilder);
 
     operations.add(operationFind);

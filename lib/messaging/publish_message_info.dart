@@ -13,7 +13,7 @@ class PublishMessageInfo {
   int? publishAt;
   int? repeatEvery;
   int? repeatExpiresAt;
-  Map<String, String> headers = new Map();
+  Map<String, String> headers = {};
 
   PublishMessageInfo();
 
@@ -34,18 +34,18 @@ class PublishMessageInfo {
   }
 
   Map toJson() => {
-    'messageId': messageId,
-    'timestamp': timestamp,
-    'message': message,
-    'publisherId': publisherId,
-    'subtopic': subtopic,
-    'pushSinglecast': pushSinglecast,
-    'pushBroadcast': pushBroadcast,
-    'publishPolicy': publishPolicy,
-    'query': query,
-    'publishAt': publishAt,
-    'repeatEvery': repeatEvery,
-    'repeatExpiresAt': repeatExpiresAt,
-    'headers': headers,
-  };
+        'messageId': messageId,
+        'timestamp': timestamp,
+        'message': message,
+        'publisherId': publisherId,
+        'subtopic': subtopic,
+        'pushSinglecast': pushSinglecast,
+        'pushBroadcast': pushBroadcast,
+        'publishPolicy': publishPolicy,
+        'query': query,
+        'publishAt': publishAt,
+        'repeatEvery': repeatEvery,
+        'repeatExpiresAt': repeatExpiresAt,
+        'headers': headers,
+      };
 }

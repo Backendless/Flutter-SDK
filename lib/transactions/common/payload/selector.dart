@@ -8,7 +8,7 @@ class Selector {
 
   @override
   String toString() {
-    return "Selector{" +
-        "conditional='$conditional\', unconditional='$unconditional'}";
+    return "Selector{"
+        "conditional='$conditional', unconditional='$unconditional'}";
   }
 }

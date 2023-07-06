@@ -14,18 +14,28 @@ abstract class Operation<T> {
       Map mapPayload = (payload as DataQueryBuilder).toJson();
       Map relationQuery = {
         'sortBy': mapPayload['sortBy'],
-        'related': mapPayload['related'],
+        'related': (mapPayload['loadRelations'] as String).isNotEmpty
+            ? (mapPayload['loadRelations'] as String).split(',')
+            : [],
         'relationsDepth': mapPayload['relationsDepth'],
         'relationsPageSize': mapPayload['relationsPageSize'],
       };
+
+      mapPayload['whereClause'] = mapPayload['where'];
+      mapPayload['properties'] = mapPayload['props'];
+      mapPayload['havingClause'] = mapPayload['having'];
       mapPayload['queryOptions'] = relationQuery;
+
       mapPayload.removeWhere((key, value) {
         return key == 'sortBy' ||
-            key == 'related' ||
+            key == 'loadRelations' ||
             key == 'relationsDepth' ||
-            key == 'relationsPageSize';
+            key == 'relationsPageSize' ||
+            key == 'where' ||
+            key == 'props' ||
+            key == 'having';
       });
-      this.payload = mapPayload as T;
+      payload = mapPayload as T;
     }
   }
 
@@ -46,15 +56,16 @@ abstract class Operation<T> {
         (element) => describeEnum(element) == json['operationType']);
     table = json['table'];
     opResultId = json['opResultId'];
-    if (T == DeleteBulkPayload)
+    if (T == DeleteBulkPayload) {
       payload = DeleteBulkPayload.fromJson(json['payload']) as T;
-    else if (T == DataQueryBuilder)
+    } else if (T == DataQueryBuilder) {
       payload = DataQueryBuilder.fromJson(json['payload']) as T;
-    else if (T == Relation)
+    } else if (T == Relation) {
       payload = Relation.fromJson(json['payload']) as T;
-    else if (T == UpdateBulkPayload)
+    } else if (T == UpdateBulkPayload) {
       payload = UpdateBulkPayload.fromJson(json['payload']) as T;
-    else
+    } else {
       payload = json['payload'];
+    }
   }
 }

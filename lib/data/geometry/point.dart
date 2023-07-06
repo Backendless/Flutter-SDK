@@ -1,7 +1,7 @@
 part of backendless_sdk;
 
 class Point extends Geometry {
-  static final double precision = 0.000000001;
+  static const double precision = 0.000000001;
   static const String geoJsonType = "Point";
   static const String wktType = "POINT";
 
@@ -20,7 +20,7 @@ class Point extends Geometry {
       (other.y - y).abs() < Point.precision;
 
   @override
-  int get hashCode => hashValues(x, y, srs);
+  int get hashCode => Object.hash(x, y, srs);
 
   Point({this.x = 0.0, this.y = 0.0, SpatialReferenceSystemEnum? srs})
       : super(srs: srs);
@@ -33,11 +33,11 @@ class Point extends Geometry {
 
   @override
   String getWktCoordinatePairs() {
-    return "$x" + " " + "$y";
+    return "$x $y";
   }
 
   @override
   String getJsonCoordinatePairs() {
-    return "[" + "$x" + "," + "$y" + "]";
+    return "[$x,$y]";
   }
 }

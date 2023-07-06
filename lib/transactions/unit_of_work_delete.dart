@@ -11,8 +11,10 @@ class UnitOfWorkDelete {
     if (value is String) return _deleteById(tableName!, value);
     if (value is OpResult) return _deleteOpResult(value);
     if (value is OpResultValueReference) return _deleteValueRef(value);
-    if (reflector.canReflect(value as Object))
+    if (reflector.canReflect(value as Object)) {
       return _deleteClassInstance(value);
+    }
+
     throw ArgumentError(
         "The value should be either Custom class object, Map, Id, OpResult or OpResultValueReference");
   }
@@ -32,7 +34,7 @@ class UnitOfWorkDelete {
   OpResult _deleteById(String tableName, String objectId) {
     String operationResultId =
         opResultIdGenerator.generateOpResultId(OperationType.DELETE, tableName);
-    OperationDelete operationDelete = new OperationDelete(
+    OperationDelete operationDelete = OperationDelete(
         OperationType.DELETE, tableName, operationResultId, objectId);
 
     operations.add(operationDelete);
@@ -43,13 +45,14 @@ class UnitOfWorkDelete {
 
   OpResult _deleteOpResult(OpResult result) {
     if (!OperationTypeExt.supportEntityDescriptionResultType
-        .contains(result.operationType))
-      throw new ArgumentError(
+        .contains(result.operationType)) {
+      throw ArgumentError(
           "This operation result not supported in this operation");
+    }
 
     String operationResultId = opResultIdGenerator.generateOpResultId(
         OperationType.DELETE, result.tableName);
-    OperationDelete operationDelete = new OperationDelete(
+    OperationDelete operationDelete = OperationDelete(
         OperationType.DELETE,
         result.tableName,
         operationResultId,
@@ -62,9 +65,10 @@ class UnitOfWorkDelete {
   }
 
   OpResult _deleteValueRef(OpResultValueReference resultIndex) {
-    if (resultIndex.resultIndex == null || resultIndex.propName != null)
-      throw new ArgumentError(
+    if (resultIndex.resultIndex == null || resultIndex.propName != null) {
+      throw ArgumentError(
           "This operation result in this operation must resolved only to resultIndex");
+    }
 
     Map referenceToObjectId =
         TransactionHelper.convertCreateBulkOrFindResultIndexToObjectId(
@@ -72,7 +76,7 @@ class UnitOfWorkDelete {
 
     String operationResultId = opResultIdGenerator.generateOpResultId(
         OperationType.DELETE, resultIndex.opResult.tableName);
-    OperationDelete operationDelete = new OperationDelete(OperationType.DELETE,
+    OperationDelete operationDelete = OperationDelete(OperationType.DELETE,
         resultIndex.opResult.tableName, operationResultId, referenceToObjectId);
 
     operations.add(operationDelete);
@@ -83,22 +87,24 @@ class UnitOfWorkDelete {
 
   OpResult bulkDelete<T>(T value, [String? tableName]) {
     if (value is List) {
-      if (value[0] is Map)
+      if (value[0] is Map) {
         return _bulkDeleteMapInstances(tableName!, value.cast<Map>());
-      else if (value[0] is String)
+      } else if (value[0] is String) {
         return _bulkDeleteByIds(tableName!, value.cast<String>());
-      else if (reflector.canReflect(value[0]))
+      } else if (reflector.canReflect(value[0])) {
         return _bulkDeleteClassInstances(value);
-      else
+      } else {
         throw ArgumentError(
             "The value should be the list of IDs, Map or Custom Class instances");
-    } else if (value is String)
+      }
+    } else if (value is String) {
       return _bulkDeleteWithQuery(tableName!, value);
-    else if (value is OpResult)
+    } else if (value is OpResult) {
       return _bulkDeleteOpResult(value);
-    else
+    } else {
       throw ArgumentError(
-          "The indetifier should be either whereClause, list of IDs or OpResult");
+          "The identifier should be either whereClause, list of IDs or OpResult");
+    }
   }
 
   OpResult _bulkDeleteClassInstances<E>(List<E?> instances) {
@@ -128,9 +134,10 @@ class UnitOfWorkDelete {
     if (!(OperationTypeExt.supportCollectionEntityDescriptionType
             .contains(result.operationType) ||
         OperationTypeExt.supportListIdsResultType
-            .contains(result.operationType)))
-      throw new ArgumentError(
+            .contains(result.operationType))) {
+      throw ArgumentError(
           "This operation result not supported in this operation");
+    }
 
     return _bulkDelete(result.tableName, null, result.makeReference());
   }
@@ -140,8 +147,8 @@ class UnitOfWorkDelete {
     String operationResultId = opResultIdGenerator.generateOpResultId(
         OperationType.DELETE_BULK, tableName);
     DeleteBulkPayload deleteBulkPayload =
-        new DeleteBulkPayload(whereClause, unconditional);
-    OperationDeleteBulk operationDeleteBulk = new OperationDeleteBulk(
+        DeleteBulkPayload(whereClause, unconditional);
+    OperationDeleteBulk operationDeleteBulk = OperationDeleteBulk(
         OperationType.DELETE_BULK,
         tableName,
         operationResultId,

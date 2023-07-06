@@ -1,8 +1,10 @@
+// ignore_for_file: constant_identifier_names
+
 part of backendless_sdk;
 
 class PushBroadcastMask {
   static const int IOS = 1;
-  static const int ANDROID = 2;
+  static const ANDROID = 2;
   static const int WP = 4;
   static const int OSX = 8;
   static const int ALL = 15;

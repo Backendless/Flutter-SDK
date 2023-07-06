@@ -1,16 +1,16 @@
 part of backendless_sdk;
 
 class TransactionHelper {
-  static const String LAST_LOGIN_COLUMN_NAME = "lastLogin";
-  static const String PASSWORD_KEY = "password";
-  static const String SOCIAL_ACCOUNT_COLUMN_NAME = "socialAccount";
-  static const String USER_STATUS_COLUMN_NAME = "userStatus";
+  static const String lastLoginColumnName = "lastLogin";
+  static const String passwordKey = "password";
+  static const String socialAccountColumnName = "socialAccount";
+  static const String userStatusColumnName = "userStatus";
 
   static void removeSystemField(Map changes) {
-    changes.remove(LAST_LOGIN_COLUMN_NAME);
-    changes.remove(PASSWORD_KEY);
-    changes.remove(SOCIAL_ACCOUNT_COLUMN_NAME);
-    changes.remove(USER_STATUS_COLUMN_NAME);
+    changes.remove(lastLoginColumnName);
+    changes.remove(passwordKey);
+    changes.remove(socialAccountColumnName);
+    changes.remove(userStatusColumnName);
     changes.remove("objectId");
     changes.remove("created");
     changes.remove("updated");
@@ -18,12 +18,14 @@ class TransactionHelper {
 
   static OpResult makeOpResult(
       String tableName, String operationResultId, OperationType operationType) {
-    return new OpResult(tableName, operationType, operationResultId);
+    return OpResult(tableName, operationType, operationResultId);
   }
 
   static List<Map?> convertInstancesToMaps<E>(List<E?> instances) {
-    if (reflector.canReflectType(E))
+    if (reflector.canReflectType(E)) {
       return instances.map((e) => reflector.serialize(e)).toList();
+    }
+
     throw ArgumentError("Serialization error. Cannot serialize $E");
   }
 
@@ -34,8 +36,8 @@ class TransactionHelper {
   }
 
   static Object convertObjectMapToObjectIdOrLeaveReference(Map objectMap) {
-    if (objectMap.containsKey(UnitOfWork.REFERENCE_MARKER)) {
-      objectMap[UnitOfWork.PROP_NAME] = "objectId";
+    if (objectMap.containsKey(UnitOfWork.referenceMarker)) {
+      objectMap[UnitOfWork.propName] = "objectId";
       return objectMap;
     }
 
@@ -46,14 +48,16 @@ class TransactionHelper {
       OpResultValueReference parentObject) {
     Map referenceToObjectId;
     if (OperationTypeExt.supportCollectionEntityDescriptionType
-        .contains(parentObject.opResult.operationType))
+        .contains(parentObject.opResult.operationType)) {
       referenceToObjectId = parentObject.resolveTo('objectId').makeReference();
-    else if (OperationTypeExt.supportListIdsResultType
-        .contains(parentObject.opResult.operationType))
+    } else if (OperationTypeExt.supportListIdsResultType
+        .contains(parentObject.opResult.operationType)) {
       referenceToObjectId = parentObject.makeReference();
-    else
-      throw new ArgumentError(
-          "This operation result not supported in this operation");
+    } else {
+      throw ArgumentError(
+          'This operation result not supported in this operation');
+    }
+
     return referenceToObjectId;
   }
 
@@ -65,7 +69,7 @@ class TransactionHelper {
           value = value.makeReference();
         } else {
           throw ArgumentError(
-              "OpResult/OpResultValueReference from this operation in this place not supported");
+              'OpResult/OpResultValueReference from this operation in this place not supported');
         }
       } else if (value is OpResultValueReference) {
         if (_createUpdatePropName(value) ||
@@ -74,7 +78,7 @@ class TransactionHelper {
           value = value.makeReference();
         } else {
           throw ArgumentError(
-              "OpResult/OpResultValueReference from this operation in this place not supported");
+              'OpResult/OpResultValueReference from this operation in this place not supported');
         }
       }
     });

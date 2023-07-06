@@ -1,7 +1,7 @@
 part of backendless_sdk;
 
 class MapEventHandler<T> implements IEventHandler<T> {
-  String _tableName;
+  final String _tableName;
   static String _rtUrl = '';
 
   MapEventHandler(this._tableName);
@@ -12,19 +12,19 @@ class MapEventHandler<T> implements IEventHandler<T> {
 
   @override
   void addCreateListener(void Function(T? response) callback,
-      {void onError(String error)?, String? whereClause}) async {
+      {void Function(String error)? onError, String? whereClause}) async {
     try {
       if (_rtUrl.isEmpty) _rtUrl = (await RTLookupService.lookup())!;
-
-      print((T).toString());
 
       if (_rtUrl.isNotEmpty) {
         await RTListener.subscribeForObjectsChanges<T>(
             RTEventHandlers.CREATED.toShortString(), _tableName, callback,
             whereClause: whereClause);
       } else {
-        print('empty url');
-        throw ArgumentError.value(ExceptionMessage.NO_INTERNET_CONNECTION);
+        if (kDebugMode) {
+          print('empty url');
+        }
+        throw ArgumentError.value(ExceptionMessage.noInternetConnection);
       }
     } catch (ex) {
       onError!.call(ex.toString());
@@ -33,7 +33,7 @@ class MapEventHandler<T> implements IEventHandler<T> {
 
   @override
   void addUpdateListener(void Function(T? response) callback,
-      {void onError(String error)?, String? whereClause}) async {
+      {void Function(String error)? onError, String? whereClause}) async {
     try {
       if (_rtUrl.isEmpty) _rtUrl = (await RTLookupService.lookup())!;
 
@@ -42,8 +42,10 @@ class MapEventHandler<T> implements IEventHandler<T> {
             RTEventHandlers.UPDATED.toShortString(), _tableName, callback,
             whereClause: whereClause);
       } else {
-        print('empty url');
-        throw ArgumentError.value(ExceptionMessage.NO_INTERNET_CONNECTION);
+        if (kDebugMode) {
+          print('empty url');
+        }
+        throw ArgumentError.value(ExceptionMessage.noInternetConnection);
       }
     } catch (ex) {
       onError!.call(ex.toString());
@@ -52,7 +54,7 @@ class MapEventHandler<T> implements IEventHandler<T> {
 
   @override
   void addUpsertListener(callback,
-      {void onError(String error)?, String? whereClause}) async {
+      {void Function(String error)? onError, String? whereClause}) async {
     try {
       if (_rtUrl.isEmpty) _rtUrl = (await RTLookupService.lookup())!;
 
@@ -61,8 +63,10 @@ class MapEventHandler<T> implements IEventHandler<T> {
             RTEventHandlers.UPSERTED.toShortString(), _tableName, callback,
             whereClause: whereClause);
       } else {
-        print('empty url');
-        throw ArgumentError.value(ExceptionMessage.NO_INTERNET_CONNECTION);
+        if (kDebugMode) {
+          print('empty url');
+        }
+        throw ArgumentError.value(ExceptionMessage.noInternetConnection);
       }
     } catch (ex) {
       onError!.call(ex.toString());
@@ -71,7 +75,7 @@ class MapEventHandler<T> implements IEventHandler<T> {
 
   @override
   void addDeleteListener(callback,
-      {void onError(String error)?, String? whereClause}) async {
+      {void Function(String error)? onError, String? whereClause}) async {
     try {
       if (_rtUrl.isEmpty) _rtUrl = (await RTLookupService.lookup())!;
 
@@ -80,8 +84,10 @@ class MapEventHandler<T> implements IEventHandler<T> {
             RTEventHandlers.DELETED.toShortString(), _tableName, callback,
             whereClause: whereClause);
       } else {
-        print('empty url');
-        throw ArgumentError.value(ExceptionMessage.NO_INTERNET_CONNECTION);
+        if (kDebugMode) {
+          print('empty url');
+        }
+        throw ArgumentError.value(ExceptionMessage.noInternetConnection);
       }
     } catch (ex) {
       onError!.call(ex.toString());
@@ -90,7 +96,7 @@ class MapEventHandler<T> implements IEventHandler<T> {
 
   @override
   void addBulkCreateListener(callback,
-      {void onError(String error)?, String? whereClause}) async {
+      {void Function(String error)? onError, String? whereClause}) async {
     try {
       if (_rtUrl.isEmpty) _rtUrl = (await RTLookupService.lookup())!;
 
@@ -99,8 +105,10 @@ class MapEventHandler<T> implements IEventHandler<T> {
             RTEventHandlers.BULK_CREATED.toShortString(), _tableName, callback,
             whereClause: whereClause);
       } else {
-        print('empty url');
-        throw ArgumentError.value(ExceptionMessage.NO_INTERNET_CONNECTION);
+        if (kDebugMode) {
+          print('empty url');
+        }
+        throw ArgumentError.value(ExceptionMessage.noInternetConnection);
       }
     } catch (ex) {
       onError!.call(ex.toString());
@@ -109,7 +117,7 @@ class MapEventHandler<T> implements IEventHandler<T> {
 
   @override
   void addBulkUpdateListener(callback,
-      {void onError(String error)?, String? whereClause}) async {
+      {void Function(String error)? onError, String? whereClause}) async {
     try {
       if (_rtUrl.isEmpty) _rtUrl = (await RTLookupService.lookup())!;
 
@@ -118,8 +126,10 @@ class MapEventHandler<T> implements IEventHandler<T> {
             RTEventHandlers.BULK_UPDATED.toShortString(), _tableName, callback,
             whereClause: whereClause);
       } else {
-        print('empty url');
-        throw ArgumentError.value(ExceptionMessage.NO_INTERNET_CONNECTION);
+        if (kDebugMode) {
+          print('empty url');
+        }
+        throw ArgumentError.value(ExceptionMessage.noInternetConnection);
       }
     } catch (ex) {
       onError!.call(ex.toString());
@@ -137,8 +147,10 @@ class MapEventHandler<T> implements IEventHandler<T> {
             RTEventHandlers.BULK_UPSERTED.toShortString(), _tableName, callback,
             whereClause: whereClause);
       } else {
-        print('empty url');
-        throw ArgumentError.value(ExceptionMessage.NO_INTERNET_CONNECTION);
+        if (kDebugMode) {
+          print('empty url');
+        }
+        throw ArgumentError.value(ExceptionMessage.noInternetConnection);
       }
     } catch (ex) {
       onError!.call(ex.toString());
@@ -156,8 +168,10 @@ class MapEventHandler<T> implements IEventHandler<T> {
             RTEventHandlers.BULK_DELETED.toShortString(), _tableName, callback,
             whereClause: whereClause);
       } else {
-        print('empty url');
-        throw ArgumentError.value(ExceptionMessage.NO_INTERNET_CONNECTION);
+        if (kDebugMode) {
+          print('empty url');
+        }
+        throw ArgumentError.value(ExceptionMessage.noInternetConnection);
       }
     } catch (ex) {
       onError!.call(ex.toString());
@@ -193,8 +207,10 @@ class MapEventHandler<T> implements IEventHandler<T> {
           parentObjectIds: tempObjectIds,
         );
       } else {
-        print('empty url');
-        throw ArgumentError.value(ExceptionMessage.NO_INTERNET_CONNECTION);
+        if (kDebugMode) {
+          print('empty url');
+        }
+        throw ArgumentError.value(ExceptionMessage.noInternetConnection);
       }
     } catch (ex) {
       onError!.call(ex.toString());
@@ -230,8 +246,10 @@ class MapEventHandler<T> implements IEventHandler<T> {
           parentObjectIds: tempObjectIds,
         );
       } else {
-        print('empty url');
-        throw ArgumentError.value(ExceptionMessage.NO_INTERNET_CONNECTION);
+        if (kDebugMode) {
+          print('empty url');
+        }
+        throw ArgumentError.value(ExceptionMessage.noInternetConnection);
       }
     } catch (ex) {
       onError!.call(ex.toString());
@@ -268,8 +286,10 @@ class MapEventHandler<T> implements IEventHandler<T> {
           parentObjectIds: tempObjectIds,
         );
       } else {
-        print('empty url');
-        throw ArgumentError.value(ExceptionMessage.NO_INTERNET_CONNECTION);
+        if (kDebugMode) {
+          print('empty url');
+        }
+        throw ArgumentError.value(ExceptionMessage.noInternetConnection);
       }
     } catch (ex) {
       onError!.call(ex.toString());
@@ -362,39 +382,5 @@ class MapEventHandler<T> implements IEventHandler<T> {
         SubscriptionNames.RELATIONS_CHANGES.toShortString(),
         RTEventHandlers.DELETE.toShortString(),
         whereClause: whereClause);
-  }
-
-  @override
-  void addConnectListener(callback,
-      {void onError(String error)?, String? whereClause}) async {
-    try {
-      if (_rtUrl.isEmpty) _rtUrl = (await RTLookupService.lookup())!;
-
-      if (_rtUrl.isNotEmpty) {
-        RTListener.connectionHandler(callback);
-      } else {
-        print('empty url');
-        throw ArgumentError.value(ExceptionMessage.NO_INTERNET_CONNECTION);
-      }
-    } catch (ex) {
-      onError!.call(ex.toString());
-    }
-  }
-
-  @override
-  void addDisconnectListener(callback,
-      {void Function(String error)? onError, String? whereClause}) async {
-    try {
-      if (_rtUrl.isEmpty) _rtUrl = (await RTLookupService.lookup())!;
-
-      if (_rtUrl.isNotEmpty) {
-        RTListener.disconnectionHandler(callback);
-      } else {
-        print('empty url');
-        throw ArgumentError.value(ExceptionMessage.NO_INTERNET_CONNECTION);
-      }
-    } catch (ex) {
-      onError!.call(ex.toString());
-    }
   }
 }

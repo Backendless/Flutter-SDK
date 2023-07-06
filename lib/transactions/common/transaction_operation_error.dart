@@ -8,9 +8,7 @@ class TransactionOperationError {
 
   @override
   String toString() {
-    return "TransactionOperationError{operation=" +
-        operation.toString() +
-        ", message=$message}";
+    return "TransactionOperationError{operation=$operation, message=$message}";
   }
 
   TransactionOperationError.fromJson(Map json) {

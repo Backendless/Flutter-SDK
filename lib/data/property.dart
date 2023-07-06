@@ -18,23 +18,24 @@ class ObjectProperty extends AbstractProperty {
     relatedTable = json['relatedTable'];
     defaultValue = json['defaultValue'];
     name = json['name'];
-    this.required = json['required'];
+    required = json['required'];
     String jsonType = json['type'];
-    if (jsonType is int)
+    if (jsonType is int) {
       type = jsonType;
-    else
+    } else {
       type = jsonType;
+    }
   }
 
   Map toJson() => {
         'relatedTable': relatedTable,
         'defaultValue': defaultValue,
         'name': name,
-        'required': this.required,
+        'required': required,
         'type': type,
       };
 
   @override
   String toString() =>
-      "ObjectProperty{name='$name', required=${this.required}, type=$type, relatedTable='$relatedTable', defaultValue=$defaultValue}";
+      "ObjectProperty{name='$name', required=$required, type=$type, relatedTable='$relatedTable', defaultValue=$defaultValue}";
 }

@@ -1,8 +1,8 @@
 part of backendless_sdk;
 
 class GeoJSONParser {
-  static const _TYPE = "type";
-  static const _COORDINATES = "coordinates";
+  static const _type = "type";
+  static const _coordinates = "coordinates";
 
   SpatialReferenceSystemEnum? srs;
 
@@ -10,8 +10,8 @@ class GeoJSONParser {
 
   T? read<T extends Geometry>(String geoJson) {
     Map jsonMap = json.decode(geoJson);
-    final type = jsonMap[GeoJSONParser._TYPE];
-    final rawCoordinates = jsonMap[GeoJSONParser._COORDINATES] as List;
+    final type = jsonMap[GeoJSONParser._type];
+    final rawCoordinates = jsonMap[GeoJSONParser._coordinates] as List;
 
     switch (type) {
       case Point.geoJsonType:

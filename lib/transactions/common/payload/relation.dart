@@ -26,7 +26,7 @@ class Relation extends Selector {
 
   @override
   String toString() {
-    return "Relation{parentObject=$parentObject, relationColumn=$relationColumn, conditional=${this.conditional}, unconditional=${this.unconditional}}";
+    return "Relation{parentObject=$parentObject, relationColumn=$relationColumn, conditional=$conditional, unconditional=$unconditional}";
   }
 
   Map toJson() => {

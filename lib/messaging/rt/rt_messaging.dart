@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_shadowing_type_parameters
+
 part of backendless_sdk;
 
 class RTMessaging<T> extends RTListener {
@@ -113,7 +115,7 @@ class RTMessaging<T> extends RTListener {
         List.from(RTListener.clientInstance!.waitingSubscriptions);
 
     try {
-      tempSubscriptions.forEach((waitingSubscription) {
+      for (var waitingSubscription in tempSubscriptions) {
         var data = waitingSubscription.data;
         var name = data!['name'] as String;
         var options = waitingSubscription.options;
@@ -126,10 +128,12 @@ class RTMessaging<T> extends RTListener {
 
           ///TODO ADD DELETE FROM WAITING SUB
         }
-      });
+      }
       RTListener.clientInstance!.waitingSubscriptions.clear();
     } catch (ex) {
-      print('EXCEPTION IN SUBSCRIBE FOR WAITING SUBSCRIPTIONS');
+      if (kDebugMode) {
+        print('EXCEPTION IN SUBSCRIBE FOR WAITING SUBSCRIPTIONS');
+      }
     }
   }
 
@@ -164,9 +168,9 @@ class RTMessaging<T> extends RTListener {
         }
       }
     });
-    indexesToRemove.forEach((element) {
+    for (var element in indexesToRemove) {
       RTListener.clientInstance!.waitingSubscriptions.removeAt(element);
-    });
+    }
   }
 
   void removeMessageListeners() {

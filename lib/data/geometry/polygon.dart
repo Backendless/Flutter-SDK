@@ -12,8 +12,8 @@ class Polygon extends Geometry {
       List<LineString>? holes,
       SpatialReferenceSystemEnum? srs})
       : super(srs: srs) {
-    this.boundary = boundary != null ? boundary : LineString();
-    this.holes = holes != null ? holes : [];
+    this.boundary = boundary ?? LineString();
+    this.holes = holes ?? [];
   }
 
   @override
@@ -30,11 +30,11 @@ class Polygon extends Geometry {
     result += boundary.getWktCoordinatePairs();
     result += "),";
 
-    holes.forEach((h) {
+    for (var h in holes) {
       result += "(";
       result += h.getWktCoordinatePairs();
       result += "),";
-    });
+    }
 
     result = result.substring(0, result.length - 1);
 
@@ -49,10 +49,10 @@ class Polygon extends Geometry {
     result += boundary.getJsonCoordinatePairs();
     result += ",";
 
-    holes.forEach((h) {
+    for (var h in holes) {
       result += h.getJsonCoordinatePairs();
       result += "),";
-    });
+    }
 
     result = result.substring(0, result.length - 1);
     result += "]";

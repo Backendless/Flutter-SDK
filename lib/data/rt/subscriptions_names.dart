@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 part of backendless_sdk;
 
 enum SubscriptionNames {
@@ -17,6 +19,6 @@ enum SubscriptionNames {
 
 extension RTTypes on SubscriptionNames {
   String toShortString() {
-    return this.toString().split('.').last;
+    return toString().split('.').last;
   }
 }

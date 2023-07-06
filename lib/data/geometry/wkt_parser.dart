@@ -1,8 +1,8 @@
 part of backendless_sdk;
 
 class WKTParser {
-  static const _SPACE = " ";
-  static const _POINT_COORDINATED_LEN = 2;
+  static const _space = " ";
+  static const _pointCoordinatedLen = 2;
 
   SpatialReferenceSystemEnum? srs;
 
@@ -11,14 +11,15 @@ class WKTParser {
   T read<T extends Geometry>(String wellKnownText) {
     final formatterWKT = wellKnownText.toUpperCase();
 
-    if (formatterWKT.startsWith(Point.wktType))
+    if (formatterWKT.startsWith(Point.wktType)) {
       return _readPoint(formatterWKT) as T;
-    else if (formatterWKT.startsWith(LineString.wktType))
+    } else if (formatterWKT.startsWith(LineString.wktType)) {
       return _readLineString(formatterWKT) as T;
-    else if (formatterWKT.startsWith(Polygon.wktType))
+    } else if (formatterWKT.startsWith(Polygon.wktType)) {
       return _readPolygon(formatterWKT) as T;
-    else
+    } else {
       throw ArgumentError("Unknown geometry type: $wellKnownText");
+    }
   }
 
   Geometry? _readPoint(String wellKnownText) {
@@ -28,8 +29,8 @@ class WKTParser {
   }
 
   Point? _getPoint(String rawPoint) {
-    final rawCoordinates = rawPoint.trim().split(WKTParser._SPACE);
-    if (rawCoordinates.length != _POINT_COORDINATED_LEN) {
+    final rawCoordinates = rawPoint.trim().split(WKTParser._space);
+    if (rawCoordinates.length != _pointCoordinatedLen) {
       return null;
     }
 

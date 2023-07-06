@@ -26,12 +26,20 @@ class UserService {
 
   Future<void> setCurrentUser(BackendlessUser user,
       {bool stayLoggedIn = false}) async {
-    await Backendless.setHeader(user.getProperty('user-token'),
-        key: 'user-token');
+    String? objectId;
+    String? userToken;
+    try {
+      objectId = user.getObjectId();
+      userToken = user.getProperty('user-token');
+    } catch (ex) {
+      throw ArgumentError.value(ExceptionMessage.emptyNullUserIdOrUserToken);
+    }
+
+    await Backendless.setHeader(userToken!, key: 'user-token');
 
     if (stayLoggedIn) {
-      (await loginStorage)._userToken = user.getProperty('user-token');
-      (await loginStorage)._objectId = user.getProperty('objectId');
+      (await loginStorage)._userToken = userToken;
+      (await loginStorage)._objectId = objectId;
       (await loginStorage).saveData();
     }
 
@@ -72,6 +80,21 @@ class UserService {
     return getCurrentUser(false);
   }
 
+  Future<String?> getAuthorizationUrlLink(String providerCode,
+      {Map<String, String>? fieldsMappings, List<String>? scope}) async {
+    Map parameters = {};
+    if (fieldsMappings != null) {
+      parameters['fieldsMappings'] = fieldsMappings;
+    }
+
+    if (scope != null) {
+      parameters['scope'] = scope;
+    }
+
+    return await Invoker.post(
+        'users/oauth/$providerCode/request_url', parameters);
+  }
+
   Future<BackendlessUser?> loginWithOAuth1(
       String providerCode,
       String authToken,
@@ -106,7 +129,7 @@ class UserService {
     if (guestUser != null) parameters['guestUser'] = jsonEncode(guestUser);
 
     Map? invokeResult =
-        await Invoker.post('users/social/$providerCode/login', parameters);
+        await Invoker.post('/users/social/$providerCode/login', parameters);
 
     await handleUserLogin(invokeResult, stayLoggedIn);
 
@@ -119,12 +142,12 @@ class UserService {
 
   Future<void> logout() async {
     await Invoker.get('/users/logout');
-    await Backendless.removeHeader(enumKey: HeadersEnum.USER_TOKEN);
+    await Backendless.removeHeader(enumKey: HeadersEnum.userToken);
   }
 
   Future<BackendlessUser?> update(BackendlessUser user) async {
     if (user.getUserId()?.isEmpty ?? false) {
-      throw ArgumentError.value(ExceptionMessage.EMPTY_NULL_USER_ID);
+      throw ArgumentError.value(ExceptionMessage.emptyNullUserId);
     }
 
     return await Invoker.put('/users/${user.getUserId()}', user);
@@ -158,7 +181,7 @@ class UserService {
 
   Future<String?> createEmailConfirmationURL(String identity) async {
     if (identity.isEmpty) {
-      throw ArgumentError.value(ExceptionMessage.EMPTY_IDENTITY);
+      throw ArgumentError.value(ExceptionMessage.emptyIdentity);
     }
 
     return await Invoker.post(
@@ -167,19 +190,18 @@ class UserService {
 
   Future<String?> resendEmailConfirmation(String identity) async {
     if (identity.isEmpty) {
-      throw ArgumentError.value(ExceptionMessage.EMPTY_IDENTITY);
+      throw ArgumentError.value(ExceptionMessage.emptyIdentity);
     }
 
-    return await Invoker.post(
-        '/users/identity/resendEmailConfirmation/$identity', null);
+    return await Invoker.post('/users/resendEmailConfirmation/$identity', null);
   }
 
   Future<void> restorePassword(String identity) async {
     if (identity.isEmpty) {
-      throw ArgumentError.value(ExceptionMessage.EMPTY_IDENTITY);
+      throw ArgumentError.value(ExceptionMessage.emptyIdentity);
     }
 
-    return await Invoker.get('/users/restorePassword/$identity');
+    return await Invoker.get('/users/restorepassword/$identity');
   }
 
   Future<void> handleUserLogin(Map? invokeResult, bool stayLoggedIn) async {

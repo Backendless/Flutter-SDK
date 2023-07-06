@@ -1,13 +1,13 @@
 part of backendless_sdk;
 
 class PagedQueryBuilder {
-  static const int DEFAULT_PAGE_SIZE = 10;
-  static const int DEFAULT_OFFSET = 0;
+  static const int defaultPageSize = 10;
+  static const int defaultOffset = 0;
   int _pageSize;
   int _offset;
 
   PagedQueryBuilder(
-      [this._pageSize = DEFAULT_PAGE_SIZE, this._offset = DEFAULT_OFFSET]);
+      [this._pageSize = defaultPageSize, this._offset = defaultOffset]);
 
   int get pageSize => _pageSize;
 
@@ -36,12 +36,14 @@ class PagedQueryBuilder {
   }
 
   void _validateOffset(int offset) {
-    if (offset < 0)
-      throw new ArgumentError("Offset cannot have a negative value.");
+    if (offset < 0) {
+      throw ArgumentError("Offset cannot have a negative value.");
+    }
   }
 
   void _validatePageSize(int pageSize) {
-    if (pageSize <= 0)
-      throw new ArgumentError("Page size cannot have a negative value.");
+    if (pageSize <= 0) {
+      throw ArgumentError("Page size cannot have a negative value.");
+    }
   }
 }

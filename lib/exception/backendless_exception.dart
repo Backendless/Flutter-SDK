@@ -9,5 +9,6 @@ class BackendlessException extends io.HttpException {
       : code = json['code'],
         super(json['message']);
 
+  @override
   String toString() => "BackendlessException: $message, code = $code";
 }

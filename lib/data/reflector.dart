@@ -7,10 +7,11 @@ class Reflector extends Reflectable {
 
   Map<String, dynamic>? serialize<T>(T? object) {
     if (object == null) return null;
-    if (object is BackendlessUser)
+    if (object is BackendlessUser) {
       return object.properties.cast<String, dynamic>();
+    }
 
-    Map<String, dynamic> result = Map();
+    Map<String, dynamic> result = {};
 
     ClassMirror classMirror;
 
@@ -188,7 +189,7 @@ class Reflector extends Reflectable {
   }
 }
 
-const reflector = const Reflector();
+const reflector = Reflector();
 
 bool _canSerializeObject(Object? object) =>
     _isNativeType(object) || _isSdkType(object);

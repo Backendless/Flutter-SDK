@@ -3,6 +3,10 @@ part of backendless_sdk;
 class RTListener {
   static late RTClient? clientInstance;
   static bool? clientNull;
+  static StreamSubscription<dynamic>? connectSub;
+  static StreamSubscription<dynamic>? disconnectSub;
+  static StreamSubscription<dynamic>? connectErrorSub;
+  static StreamSubscription<dynamic>? reconnectSub;
 
   static void removeListeners(String type, String event,
           {String? whereClause}) =>
@@ -11,32 +15,75 @@ class RTListener {
   static void unsubscribe(String id) => clientInstance!.unsubscribe(id);
 
   static Future connectionHandler(void Function() callback) async {
-    /*if (RTListener.clientNull ?? true) {
-      clientInstance = RTClient<T>._();
-      RTListener.clientNull = false;
-    }*/
+    await removeConnectionHandler();
 
-    if (RTListener.clientNull ?? true) {
-      throw ArgumentError.value(ExceptionMessage.NO_ONE_SUB);
-    } else {
-      clientInstance!.streamController.listen((event) {
-        if (event == 'connect') {
-          callback.call();
-        }
-      });
+    connectSub = RTClient.streamController.listen((event) {
+      if (event == 'connect') {
+        callback.call();
+      }
+    });
+  }
+
+  static Future removeConnectionHandler() async {
+    if (connectSub != null) {
+      connectSub!.cancel();
     }
+
+    connectSub = null;
   }
 
   static Future disconnectionHandler(void Function() callback) async {
-    if (RTListener.clientNull ?? true) {
-      throw ArgumentError.value(ExceptionMessage.NO_ONE_SUB);
-    } else {
-      clientInstance!.streamController.listen((event) {
-        if (event == 'disconnect') {
-          callback.call();
-        }
-      });
+    await removeDisconnectionHandler();
+
+    disconnectSub = RTClient.streamController.listen((event) {
+      if (event == 'disconnect') {
+        callback.call();
+      }
+    });
+  }
+
+  static Future removeDisconnectionHandler() async {
+    if (disconnectSub != null) {
+      disconnectSub!.cancel();
     }
+
+    disconnectSub = null;
+  }
+
+  static Future connectionErrorHandler(void Function() callback) async {
+    await removeConnectionErrorHandler();
+
+    connectErrorSub = RTClient.streamController.listen((event) {
+      if (event == 'connect_error') {
+        callback.call();
+      }
+    });
+  }
+
+  static Future removeConnectionErrorHandler() async {
+    if (connectErrorSub != null) {
+      connectErrorSub!.cancel();
+    }
+
+    connectErrorSub = null;
+  }
+
+  static Future reconnectHandler(void Function() callback) async {
+    await removeReconnectHandler();
+
+    reconnectSub = RTClient.streamController.listen((event) {
+      if (event == 'reconnect') {
+        callback.call();
+      }
+    });
+  }
+
+  static Future removeReconnectHandler() async {
+    if (reconnectSub != null) {
+      reconnectSub!.cancel();
+    }
+
+    reconnectSub = null;
   }
 
   static Future<RTSubscription?> subscribeForObjectsChanges<T>(
@@ -83,8 +130,9 @@ class RTListener {
       'relationColumnName': relationColumnName
     };
 
-    if (parentObjectIds?.isNotEmpty ?? false)
+    if (parentObjectIds?.isNotEmpty ?? false) {
       options['parentObjectIds'] = parentObjectIds!;
+    }
 
     if (whereClause?.isNotEmpty ?? false) options['whereClause'] = whereClause!;
 

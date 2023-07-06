@@ -38,18 +38,18 @@ class MapDrivenDataStore<T> implements IDataStore<Map> {
   }
 
   @override
-  Future<List<Map>?> bulkUpsert(List<Map> entities) async =>
+  Future<List<String>?> bulkUpsert(List<Map> entities) async =>
       await Invoker.put('/data/bulkupsert/$tableName', entities);
 
   @override
   Future<DateTime?> remove(Map entity) async {
     String methodName = '/data/';
-    if (entity.isEmpty) throw ArgumentError.value(ExceptionMessage.EMPTY_MAP);
+    if (entity.isEmpty) throw ArgumentError.value(ExceptionMessage.emptyMap);
 
     String? objectId = entity['objectId'];
 
     if (objectId?.isEmpty ?? true) {
-      throw ArgumentError.value(ExceptionMessage.EMPTY_NULL_OBJECT_ID);
+      throw ArgumentError.value(ExceptionMessage.emptyNullObjectId);
     }
 
     methodName += '$tableName/$objectId';
@@ -62,7 +62,7 @@ class MapDrivenDataStore<T> implements IDataStore<Map> {
     String methodName = '/data/bulk/$tableName';
 
     if (whereClause.isEmpty) {
-      throw ArgumentError.value(ExceptionMessage.NULL_WHERE);
+      throw ArgumentError.value(ExceptionMessage.nullWhere);
     }
 
     methodName += '?where=$whereClause';
@@ -91,7 +91,7 @@ class MapDrivenDataStore<T> implements IDataStore<Map> {
   Future<Map?> findById(String id,
       {List<String>? relations, DataQueryBuilder? queryBuilder}) async {
     if (id.isEmpty) {
-      throw ArgumentError.value(ExceptionMessage.EMPTY_NULL_OBJECT_ID);
+      throw ArgumentError.value(ExceptionMessage.emptyNullObjectId);
     }
 
     queryBuilder ??= DataQueryBuilder()..loadRelations = relations;
@@ -128,22 +128,27 @@ class MapDrivenDataStore<T> implements IDataStore<Map> {
 
   @override
   Future<int?> addRelation(String parentObjectId, String relationColumnName,
-      {List? childrenObjectIds, String? whereClause}) async {
+      {List<String>? childrenObjectIds, String? whereClause}) async {
     String methodName = '/data/$tableName/$parentObjectId/$relationColumnName';
     List? parameters;
 
-    if (childrenObjectIds?.isNotEmpty ?? false) {
-      parameters = childrenObjectIds;
-    } else if (whereClause?.isNotEmpty ?? false) {
+    if (childrenObjectIds?.isEmpty ?? true) {
+      if (whereClause?.isEmpty ?? true) {
+        throw ArgumentError.value(
+            ExceptionMessage.emptyNullChildrenObjectIdsAndWhere);
+      }
+
       methodName += '?where=$whereClause';
     }
+
+    parameters = childrenObjectIds;
 
     return await Invoker.put(methodName, parameters);
   }
 
   @override
   Future<int?> setRelation(String parentObjectId, String relationColumnName,
-      {List? childrenObjectIds, String? whereClause}) async {
+      {List<String>? childrenObjectIds, String? whereClause}) async {
     String methodName = '/data/$tableName/$parentObjectId/$relationColumnName';
     List? parameters;
 
@@ -158,7 +163,7 @@ class MapDrivenDataStore<T> implements IDataStore<Map> {
 
   @override
   Future<int?> deleteRelation(String parentObjectId, String relationColumnName,
-      {List? childrenObjectIds, String? whereClause}) async {
+      {List<String>? childrenObjectIds, String? whereClause}) async {
     String methodName = '/data/$tableName/$parentObjectId/$relationColumnName';
     List? parameters;
 
@@ -175,10 +180,10 @@ class MapDrivenDataStore<T> implements IDataStore<Map> {
   Future<List<R>?> loadRelations<R>(String objectId,
       LoadRelationsQueryBuilder<R> relationsQueryBuilder) async {
     if (objectId.isEmpty) {
-      throw ArgumentError.value(ExceptionMessage.EMPTY_NULL_OBJECT_ID);
+      throw ArgumentError.value(ExceptionMessage.emptyNullObjectId);
     }
     if (relationsQueryBuilder.relationName.isEmpty) {
-      throw ArgumentError.value(ExceptionMessage.EMPTY_RELATION_NAME);
+      throw ArgumentError.value(ExceptionMessage.emptyRelationName);
     }
 
     return await Invoker.get(

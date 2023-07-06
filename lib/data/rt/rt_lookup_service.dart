@@ -1,4 +1,5 @@
 import 'package:backendless_sdk/data/rt/internet_connection.dart';
+import 'package:flutter/foundation.dart';
 import '../../backendless_sdk.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
@@ -22,17 +23,24 @@ class RTLookupService {
   static Future<String?> lookup() async {
     try {
       await _statusConnection.initialize();
-      print(_statusConnection.statusInternet);
+      if (kDebugMode) {
+        print(_statusConnection.statusInternet);
+      }
 
-      if (_statusConnection.statusInternet == ConnectivityResult.none)
-        throw ArgumentError.value(ExceptionMessage.NO_INTERNET_CONNECTION);
+      if (_statusConnection.statusInternet == ConnectivityResult.none) {
+        throw ArgumentError.value(ExceptionMessage.noInternetConnection);
+      }
 
       return await Invoker.get('/rt/lookup');
     } catch (ex) {
-      print('Lookup failed $ex');
-      print(_statusConnection.statusInternet);
+      if (kDebugMode) {
+        print('Lookup failed $ex');
+        print(_statusConnection.statusInternet);
+      }
 
       ///TODO: add wait while connections is down
     }
+
+    return null;
   }
 }

@@ -9,10 +9,10 @@ class RTSubscription<T> {
   void Function(T? response)? callback;
 
   void subscribe() {
-    if (data != null) RTListener.clientInstance!.subscribe<T>(this.data!, this);
+    if (data != null) RTListener.clientInstance!.subscribe<T>(data!, this);
   }
 
   void stop() {
-    RTListener.unsubscribe(this.subscriptionId!);
+    RTListener.unsubscribe(subscriptionId!);
   }
 }

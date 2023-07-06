@@ -16,21 +16,23 @@ class OpResult {
 
   Map makeReference() {
     return {
-      UnitOfWork.REFERENCE_MARKER: true,
-      UnitOfWork.OP_RESULT_ID: _opResultId
+      UnitOfWork.referenceMarker: true,
+      UnitOfWork.opResultId: _opResultId
     };
   }
 
   void setOpResultId(UnitOfWork unitOfWork, String newOpResultId) {
-    if (unitOfWork.opResultIdStrings.contains(newOpResultId))
-      throw new ArgumentError(
-          "This opResultId already present. OpResultId must be unique");
+    if (unitOfWork.opResultIdStrings.contains(newOpResultId)) {
+      throw ArgumentError(
+          'This opResultId already present. OpResultId must be unique');
+    }
 
-    for (Operation operation in unitOfWork.operations)
+    for (Operation operation in unitOfWork.operations) {
       if (operation.opResultId == _opResultId) {
         operation.opResultId = newOpResultId;
         break;
       }
+    }
 
     _opResultId = newOpResultId;
   }
@@ -38,7 +40,7 @@ class OpResult {
 
 class OpResultIdGenerator {
   List<String> opResultIdStrings;
-  final Map<String, int> opResultIdMaps = new Map();
+  final Map<String, int> opResultIdMaps = {};
 
   OpResultIdGenerator(this.opResultIdStrings);
 
@@ -51,7 +53,7 @@ class OpResultIdGenerator {
       opResultIdGenerated = key + count.toString();
     } else {
       opResultIdMaps[key] = 1;
-      opResultIdGenerated = key + "1";
+      opResultIdGenerated = '${key}1';
     }
     opResultIdStrings.add(opResultIdGenerated);
     return opResultIdGenerated;
@@ -66,17 +68,18 @@ class OpResultValueReference {
   OpResultValueReference(this.opResult, {this.resultIndex, this.propName});
 
   OpResultValueReference resolveTo(String propName) {
-    return new OpResultValueReference(this.opResult,
-        resultIndex: this.resultIndex, propName: propName);
+    return OpResultValueReference(opResult,
+        resultIndex: resultIndex, propName: propName);
   }
 
   Map makeReference() {
     Map referenceMap = opResult.makeReference();
 
-    if (resultIndex != null)
-      referenceMap[UnitOfWork.RESULT_INDEX] = resultIndex;
+    if (resultIndex != null) {
+      referenceMap[UnitOfWork.resultIndex] = resultIndex;
+    }
 
-    if (propName != null) referenceMap[UnitOfWork.PROP_NAME] = propName;
+    if (propName != null) referenceMap[UnitOfWork.propName] = propName;
 
     return referenceMap;
   }

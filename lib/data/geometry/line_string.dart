@@ -11,11 +11,11 @@ class LineString extends Geometry {
       other is LineString && listEquals(points, other.points);
 
   @override
-  int get hashCode => hashValues(points, srs);
+  int get hashCode => Object.hash(points, srs);
 
   LineString({List<Point>? points, SpatialReferenceSystemEnum? srs})
       : super(srs: srs) {
-    this.points = points != null ? points : <Point>[];
+    this.points = points ?? <Point>[];
   }
 
   @override
@@ -28,10 +28,10 @@ class LineString extends Geometry {
   String getWktCoordinatePairs() {
     String result = "";
 
-    points.forEach((p) {
+    for (var p in points) {
       result += p.getWktCoordinatePairs();
       result += ", ";
-    });
+    }
     result = result.substring(0, result.length - 2);
 
     return result;
@@ -42,10 +42,10 @@ class LineString extends Geometry {
     String result = "";
 
     result += "[";
-    points.forEach((p) {
+    for (var p in points) {
       result += p.getJsonCoordinatePairs();
       result += ",";
-    });
+    }
 
     result = result.substring(0, result.length - 1);
     result += "]";

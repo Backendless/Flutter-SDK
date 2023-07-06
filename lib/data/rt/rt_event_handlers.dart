@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 part of backendless_sdk;
 
 enum RTEventHandlers {
@@ -16,10 +18,11 @@ enum RTEventHandlers {
 
 extension RTEventHandlerAsString on RTEventHandlers {
   String toShortString() {
-    String stringifiedEnum = this.toString().split('.').last.toLowerCase();
+    String stringifiedEnum = toString().split('.').last.toLowerCase();
 
-    if (stringifiedEnum.contains('_'))
+    if (stringifiedEnum.contains('_')) {
       stringifiedEnum = stringifiedEnum.replaceAll('_', '-');
+    }
 
     return stringifiedEnum;
   }

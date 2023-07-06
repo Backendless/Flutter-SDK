@@ -1,7 +1,9 @@
+// ignore_for_file: annotate_overrides, overridden_fields
+
 part of backendless_sdk;
 
 class LoadRelationsQueryBuilder<T> extends DataQueryBuilder {
-  PagedQueryBuilder pagedQueryBuilder = new PagedQueryBuilder();
+  PagedQueryBuilder pagedQueryBuilder = PagedQueryBuilder();
   late String relationName;
   List<String>? properties;
   List<String>? sortBy;

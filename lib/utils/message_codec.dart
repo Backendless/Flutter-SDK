@@ -16,18 +16,18 @@ class BackendlessMessageCodec extends StandardMessageCodec {
   static const int _kDeliveryOptions = 144;
   static const int _kPublishMessageInfo = 145;
   static const int _kDeviceRegistrationResult = 146;
-  static const int _kCommand = 147;
+  //static const int _kCommand = 147;
   static const int _kUserInfo = 148;
   static const int _kUserStatusResponse = 149;
-  static const int _kReconnectAttempt = 150;
+  //static const int _kReconnectAttempt = 150;
   static const int _kBackendlessUser = 151;
   static const int _kUserProperty = 152;
-  static const int _kBulkEvent = 153;
+  //static const int _kBulkEvent = 153;
   static const int _kEmailEnvelope = 154;
   static const int _kPoint = 155;
   static const int _kLineString = 156;
   static const int _kPolygon = 157;
-  static const int _kRelationStatus = 158;
+  //static const int _kRelationStatus = 158;
 
   @override
   void writeValue(WriteBuffer buffer, dynamic value) {

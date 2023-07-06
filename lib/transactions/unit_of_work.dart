@@ -1,10 +1,10 @@
 part of backendless_sdk;
 
 class UnitOfWork {
-  static const String REFERENCE_MARKER = "___ref";
-  static const String OP_RESULT_ID = "opResultId";
-  static const String RESULT_INDEX = "resultIndex";
-  static const String PROP_NAME = "propName";
+  static const String referenceMarker = "___ref";
+  static const String opResultId = "opResultId";
+  static const String resultIndex = "resultIndex";
+  static const String propName = "propName";
 
   late UnitOfWorkCreate _unitOfWorkCreate;
   late UnitOfWorkUpdate _unitOfWorkUpdate;
@@ -22,15 +22,14 @@ class UnitOfWork {
     _operations = [];
     _opResultIdStrings = [];
     OpResultIdGenerator opResultIdGenerator =
-        new OpResultIdGenerator(_opResultIdStrings);
-    _unitOfWorkCreate = new UnitOfWorkCreate(_operations, opResultIdGenerator);
-    _unitOfWorkUpdate = new UnitOfWorkUpdate(_operations, opResultIdGenerator);
-    _unitOfWorkUpsert = new UnitOfWorkUpsert(_operations, opResultIdGenerator);
-    _unitOfWorkDelete = new UnitOfWorkDelete(_operations, opResultIdGenerator);
-    _unitOfWorkFind = new UnitOfWorkFind(_operations, opResultIdGenerator);
-    _relationOperation =
-        new RelationOperation(_operations, opResultIdGenerator);
-    _unitOfWorkExecutor = new UnitOfWorkExecutor(this);
+        OpResultIdGenerator(_opResultIdStrings);
+    _unitOfWorkCreate = UnitOfWorkCreate(_operations, opResultIdGenerator);
+    _unitOfWorkUpdate = UnitOfWorkUpdate(_operations, opResultIdGenerator);
+    _unitOfWorkUpsert = UnitOfWorkUpsert(_operations, opResultIdGenerator);
+    _unitOfWorkDelete = UnitOfWorkDelete(_operations, opResultIdGenerator);
+    _unitOfWorkFind = UnitOfWorkFind(_operations, opResultIdGenerator);
+    _relationOperation = RelationOperation(_operations, opResultIdGenerator);
+    _unitOfWorkExecutor = UnitOfWorkExecutor(this);
   }
 
   List<Operation> get operations => _operations;

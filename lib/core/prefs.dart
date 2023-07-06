@@ -18,7 +18,7 @@ class BackendlessPrefs {
       {String? appId, String? apiKey, String? customDomain}) async {
     if (customDomain != null) {
       _authKeys = AuthKeys(customDomain: customDomain);
-      if (!customDomain.startsWith('http')) {
+      if (customDomain.startsWith('http')) {
         url = customDomain;
       } else {
         url = 'https://$customDomain';

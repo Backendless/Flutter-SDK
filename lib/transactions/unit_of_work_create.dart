@@ -7,10 +7,11 @@ class UnitOfWorkCreate {
   UnitOfWorkCreate(this.operations, this.opResultIdGenerator);
 
   OpResult create<T>(T instance, [String? tableName]) {
-    if (instance is Map)
+    if (instance is Map) {
       return _createMapInstance(tableName!, instance);
-    else
+    } else {
       return _createClassInstance(instance);
+    }
   }
 
   OpResult _createClassInstance<E>(E instance) {
@@ -25,7 +26,7 @@ class UnitOfWorkCreate {
 
     String operationResultId =
         opResultIdGenerator.generateOpResultId(OperationType.CREATE, tableName);
-    OperationCreate operationCreate = new OperationCreate(
+    OperationCreate operationCreate = OperationCreate(
         OperationType.CREATE, tableName, operationResultId, objectMap);
 
     operations.add(operationCreate);
@@ -35,10 +36,11 @@ class UnitOfWorkCreate {
   }
 
   OpResult bulkCreate<T>(List<T> instances, [String? tableName]) {
-    if (instances[0] is Map)
+    if (instances[0] is Map) {
       return _bulkCreateMapInstances(tableName!, instances.cast<Map>());
-    else
+    } else {
       return _bulkCreateClassInstances(instances);
+    }
   }
 
   OpResult _bulkCreateClassInstances<E>(List<E?> instances) {
@@ -52,12 +54,13 @@ class UnitOfWorkCreate {
 
   OpResult _bulkCreateMapInstances(
       String tableName, List<Map?> arrayOfObjectMaps) {
-    for (Map? mapObject in arrayOfObjectMaps)
+    for (Map? mapObject in arrayOfObjectMaps) {
       TransactionHelper.makeReferenceToValueFromOpResult(mapObject);
+    }
 
     String operationResultId = opResultIdGenerator.generateOpResultId(
         OperationType.CREATE_BULK, tableName);
-    OperationCreateBulk operationCreateBulk = new OperationCreateBulk(
+    OperationCreateBulk operationCreateBulk = OperationCreateBulk(
         OperationType.CREATE_BULK,
         tableName,
         operationResultId,

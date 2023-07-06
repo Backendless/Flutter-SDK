@@ -47,6 +47,14 @@ class _NativeFunctionsContainer {
           streamController.add(deviceToken);
           break;
         }
+      case 'showNotificationWithTemplate':
+        {
+          var t = methodCall.arguments;
+          print(t);
+
+          PushTemplateWorker.showPushNotification(t);
+          break;
+        }
       default:
         {
           throw UnimplementedError('Handler for this method unimplemented');

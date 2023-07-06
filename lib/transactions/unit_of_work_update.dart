@@ -10,8 +10,10 @@ class UnitOfWorkUpdate {
     if (changes is Map) {
       if (identifier is String) return _updateMapInstance(identifier, changes);
       if (identifier is OpResult) return _updateOpResult(identifier, changes);
-      if (identifier is OpResultValueReference)
+      if (identifier is OpResultValueReference) {
         return _updateValueRef(identifier, changes);
+      }
+
       throw ArgumentError(
           "The identifier should either tableName, OpResult or OpResultValueReference");
     } else {
@@ -31,7 +33,7 @@ class UnitOfWorkUpdate {
 
     String operationResultId =
         opResultIdGenerator.generateOpResultId(OperationType.UPDATE, tableName);
-    OperationUpdate operationUpdate = new OperationUpdate(
+    OperationUpdate operationUpdate = OperationUpdate(
         OperationType.UPDATE, tableName, operationResultId, objectMap);
 
     operations.add(operationUpdate);
@@ -42,9 +44,10 @@ class UnitOfWorkUpdate {
 
   OpResult _updateOpResult(OpResult result, Map changes) {
     if (!OperationTypeExt.supportEntityDescriptionResultType
-        .contains(result.operationType))
-      throw new ArgumentError(
-          "This operation result not supported in this operation");
+        .contains(result.operationType)) {
+      throw ArgumentError(
+          'This operation result not supported in this operation');
+    }
 
     changes["objectId"] =
         result.resolveTo(propName: "objectId").makeReference();
@@ -53,33 +56,36 @@ class UnitOfWorkUpdate {
   }
 
   OpResult _updateValueRef(OpResultValueReference result, Map changes) {
-    if (result.resultIndex == null || result.propName != null)
-      throw new ArgumentError(
-          "This operation result in this operation must resolved only to resultIndex");
+    if (result.resultIndex == null || result.propName != null) {
+      throw ArgumentError(
+          'This operation result in this operation must resolved only to resultIndex');
+    }
 
     if (OperationTypeExt.supportCollectionEntityDescriptionType
-        .contains(result.opResult.operationType))
-      changes["objectId"] = result.resolveTo("objectId").makeReference();
-    else if (OperationTypeExt.supportListIdsResultType
-        .contains(result.opResult.operationType))
+        .contains(result.opResult.operationType)) {
+      changes['objectId'] = result.resolveTo('objectId').makeReference();
+    } else if (OperationTypeExt.supportListIdsResultType
+        .contains(result.opResult.operationType)) {
       changes["objectId"] = result.makeReference();
-    else
-      throw new ArgumentError(
+    } else {
+      throw ArgumentError(
           "This operation result not supported in this operation");
+    }
 
     return _updateMapInstance(result.opResult.tableName, changes);
   }
 
   OpResult bulkUpdate(Map changes, dynamic identifier, [String? tableName]) {
-    if (identifier is String)
+    if (identifier is String) {
       return _bulkUpdateWithQuery(tableName!, identifier, changes);
-    else if (identifier is List)
+    } else if (identifier is List) {
       return _bulkUpdateByIds(tableName!, identifier.cast<String>(), changes);
-    else if (identifier is OpResult)
+    } else if (identifier is OpResult) {
       return _bulkUpdateOpResult(identifier, changes);
-    else
+    } else {
       throw ArgumentError(
-          "The indetifier should be either whereClause, list of IDs or OpResult");
+          'The identifier should be either whereClause, list of IDs or OpResult');
+    }
   }
 
   OpResult _bulkUpdateWithQuery(
@@ -96,9 +102,10 @@ class UnitOfWorkUpdate {
     if (!(OperationTypeExt.supportCollectionEntityDescriptionType
             .contains(objectIdsForChanges.operationType) ||
         OperationTypeExt.supportListIdsResultType
-            .contains(objectIdsForChanges.operationType)))
-      throw new ArgumentError(
+            .contains(objectIdsForChanges.operationType))) {
+      throw ArgumentError(
           "This operation result not supported in this operation");
+    }
 
     return _bulkUpdate(objectIdsForChanges.tableName, null,
         objectIdsForChanges.makeReference(), changes);
@@ -113,8 +120,8 @@ class UnitOfWorkUpdate {
     String operationResultId = opResultIdGenerator.generateOpResultId(
         OperationType.UPDATE_BULK, tableName);
     UpdateBulkPayload updateBulkPayload =
-        new UpdateBulkPayload(whereClause, objectsForChanges, changes);
-    OperationUpdateBulk operationUpdateBulk = new OperationUpdateBulk(
+        UpdateBulkPayload(whereClause, objectsForChanges, changes);
+    OperationUpdateBulk operationUpdateBulk = OperationUpdateBulk(
         OperationType.UPDATE_BULK,
         tableName,
         operationResultId,

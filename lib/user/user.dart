@@ -1,10 +1,10 @@
 part of backendless_sdk;
 
 class BackendlessUser {
-  Map<String, dynamic> _properties = new Map<String, dynamic>();
-  static const String PASSWORD_KEY = "password";
-  static const String EMAIL_KEY = "email";
-  static const String ID_KEY = "objectId";
+  Map<String, dynamic> _properties = <String, dynamic>{};
+  static const String passwordKey = "password";
+  static const String emailKey = "email";
+  static const String idKey = "objectId";
 
   BackendlessUser();
 
@@ -28,15 +28,15 @@ class BackendlessUser {
 
   String? getObjectId() => getUserId();
 
-  String? getUserId() => getProperty(ID_KEY);
+  String? getUserId() => getProperty(idKey);
 
-  set password(String password) => setProperty(PASSWORD_KEY, password);
+  set password(String password) => setProperty(passwordKey, password);
 
-  String get password => getProperty(PASSWORD_KEY);
+  String get password => getProperty(passwordKey);
 
-  set email(String email) => setProperty(EMAIL_KEY, email);
+  set email(String email) => setProperty(emailKey, email);
 
-  String get email => getProperty(EMAIL_KEY);
+  String get email => getProperty(emailKey);
 
   void clearProperties() => _properties.clear();
 
@@ -47,10 +47,10 @@ class BackendlessUser {
       identical(this, other) ||
       other is BackendlessUser &&
           runtimeType == other.runtimeType &&
-          MapEquality().equals(_properties, other._properties);
+          const MapEquality().equals(_properties, other._properties);
 
   @override
-  int get hashCode => MapEquality().hash(_properties);
+  int get hashCode => const MapEquality().hash(_properties);
 
   @override
   String toString() => "BackendlessUser{${_properties.toString()}}";

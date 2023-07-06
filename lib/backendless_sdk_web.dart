@@ -14,6 +14,7 @@ class BackendlessSdkWeb {
   BackendlessSdkWeb();
 
   static void registerWith(Registrar registrar) {
+    // ignore: unused_local_variable
     final MethodChannel backendlessChannel = MethodChannel("backendless",
         const StandardMethodCodec(BackendlessMessageCodec()), registrar);
     /*backendlessChannel
@@ -21,7 +22,6 @@ class BackendlessSdkWeb {
   }
 
   /// Returns a [String] containing the version of the platform.
-  @override
   Future<String?> getPlatformVersion() async {
     final version = html.window.navigator.userAgent;
     return version;

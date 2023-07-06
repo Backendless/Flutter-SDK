@@ -1,8 +1,9 @@
+// ignore_for_file: unnecessary_null_comparison
+
 import 'dart:math';
-
 import 'package:backendless_sdk/backendless_sdk.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
-
 import 'util.dart';
 
 class DataMapTest {
@@ -76,7 +77,7 @@ class DataMapTest {
         res.removeWhere((key, value) => key == 'updated' || key == 'created');
         expect(res, expectedObj);
 
-        var resR = await table.remove({'objectId': objectId});
+        await table.remove({'objectId': objectId});
       });
 
       // ----
@@ -101,7 +102,7 @@ class DataMapTest {
 
         // 2
         try {
-          var res = await table.save({'objectId': objectId, 'foo': foo});
+          await table.save({'objectId': objectId, 'foo': foo});
 
           // 3
           expect(0, 1);
@@ -203,7 +204,7 @@ class DataMapTest {
         // 1
         var firstObject = await table.save({'foo': 'first obj'});
         var secondObj = await table.save({'foo': 'second obj'});
-        var thirdObj = await table.save({'foo': 'third obj'});
+        await table.save({'foo': 'third obj'});
         var expectedData = [firstObject, secondObj];
         DataQueryBuilder queryBuilder = DataQueryBuilder()
           ..pageSize = 2
@@ -241,7 +242,7 @@ class DataMapTest {
       test('FindFirst with several obj', () async {
         // 1
         var expectedObj = await table.save({'foo': 'first'});
-        var secondObj = await table.save({'foo': 'second'});
+        await table.save({'foo': 'second'});
 
         // 2
         var res = await table.findFirst();
@@ -293,7 +294,7 @@ class DataMapTest {
 
       test('FindLast with several objects', () async {
         // 1
-        var firstObj = await table.save({'foo': 'first'});
+        await table.save({'foo': 'first'});
         var expectedObj = await table.save({'foo': 'second'});
 
         // 2
@@ -326,7 +327,7 @@ class DataMapTest {
       test('FindById with error', () async {
         try {
           // 2
-          var res = await table.findById('1');
+          await table.findById('1');
 
           // 3
           expect(0, 1);
@@ -480,7 +481,9 @@ class DataMapTest {
         for (var element in mapsToUpdate!) {
           element!['foo'] = 'updated value';
           var res = await table.save(element);
-          print(res);
+          if (kDebugMode) {
+            print(res);
+          }
         }
 
         // 2
@@ -510,7 +513,6 @@ class DataMapTest {
 
       test('Bulk Create empty list', () async {
         // 1
-        List<Map> listMaps = [];
         int expectedCountOfObjects = 0;
 
         // 2
@@ -545,14 +547,16 @@ class DataMapTest {
       });
 
       test('Bulk Upsert', () async {
-      final entities = [{'foo': 'value1'}, {'foo': 'value2'}];
-      final result = await table.bulkUpsert(entities);
+        final entities = [
+          {'foo': 'value1'},
+          {'foo': 'value2'}
+        ];
+        final result = await table.bulkUpsert(entities);
 
-      expect(result, isNotNull);
-      expect(result, isA<List<Map>>());
-      expect(result!.length, equals(2));
-      expect(result[0], containsPair('foo', 'value1'));
-      expect(result[1], containsPair('foo', 'value2'));
+        removeAllObjectsInTable('FlutterTestTable');
+        expect(result, isNotNull);
+        expect(result, isA<List<String>>());
+        expect(result!.length, equals(2));
       });
 
       test('Bulk Remove', () async {
@@ -573,17 +577,18 @@ class DataMapTest {
         var lastObjectThatNeedToRemove = await table.find();
         expect(lastObjectThatNeedToRemove!.length, 1);
 
-        var res =
-            await table.bulkRemove(lastObjectThatNeedToRemove[0]!['objectId']);
+        var res = await table.bulkRemove(
+            'objectId=\'${lastObjectThatNeedToRemove[0]!['objectId']}\'');
         expect(res, 1);
       });
     });
 
     test('DeepSave', () async {
-
       // 1
       Map map = {
-        'fooRel': {'foo': 'hello'}
+        'fooRel': [
+          {'foo': 'hello'}
+        ]
       };
 
       var res = await relationTable.deepSave(map);
@@ -592,6 +597,67 @@ class DataMapTest {
 
       expect(res == null, false);
       expect(res!.containsKey('fooRel'), true);
+
+      var child = res['fooRel'][0];
+      expect(child == null, false);
+      expect(child, isA<Map>());
+      expect(child, containsPair('foo', 'hello'));
+    });
+
+    test('addRelations with children object ids', () async {
+      var tempSavedParentObject = await relationTable.save({});
+      final parentObjectId = tempSavedParentObject!['objectId'];
+      const relationColumnName = 'fooRel';
+
+      var tempSavedChildrenObjectIds = await table.bulkCreate([{}, {}]);
+      final childrenObjectIds = [
+        tempSavedChildrenObjectIds![1],
+        tempSavedChildrenObjectIds[1]
+      ];
+
+      final result = await relationTable.addRelation(
+          parentObjectId, relationColumnName,
+          childrenObjectIds: childrenObjectIds);
+      await removeAllObjectsInTable('FlutterTestTable');
+      targetObjectId = parentObjectId;
+
+      expect(result, isNotNull);
+      expect(result, isA<int>());
+      expect(result, 2);
+    });
+
+    test('addRelations with whereClause', () async {
+      final parentObjectId = targetObjectId!;
+      const relationColumnName = 'fooRel';
+      const whereClause = 'foo = \'ThisNeedAdd\'';
+      await table.bulkCreate([
+        {},
+        {'foo': 'ThisNeedAdd'}
+      ]);
+
+      final result = await relationTable.addRelation(
+          parentObjectId, relationColumnName,
+          whereClause: whereClause);
+      await removeAllObjectsInTable('FlutterTestTable');
+
+      expect(result, isNotNull);
+      expect(result, isA<int>());
+      expect(result, 1);
+    });
+
+    test('addRelation with error', () async {
+      final parentObjectId = targetObjectId!;
+      const relationColumnName = 'fooRel';
+
+      try {
+        await relationTable.addRelation(parentObjectId, relationColumnName);
+
+        expect(1, 0);
+      } on ArgumentError {
+        expect(1, 1);
+      } catch (ex) {
+        expect(1, 0);
+      }
     });
   }
 }

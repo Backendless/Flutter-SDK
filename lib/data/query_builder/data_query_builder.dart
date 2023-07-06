@@ -1,6 +1,7 @@
 part of backendless_sdk;
 
 class DataQueryBuilder {
+  // ignore: constant_identifier_names
   static const int DEFAULT_RELATIONS_DEPTH = 0;
   final PagedQueryBuilder _pagedQueryBuilder = PagedQueryBuilder();
 
@@ -20,17 +21,25 @@ class DataQueryBuilder {
   bool? distinct;
 
   DataQueryBuilder() {
+    properties = [];
+    excludeProperties = [];
+    whereClause = '';
+    groupBy = [];
+    havingClause = '';
+    sortBy = [];
+    loadRelations = [];
     relationsDepth = DEFAULT_RELATIONS_DEPTH;
+    distinct = false;
   }
 
   DataQueryBuilder.fromJson(Map json) {
     pageSize = json['pageSize'];
     offset = json['offset'];
-    properties = json['properties']?.cast<String>();
-    excludeProperties = json['excludeProperties']?.cast<String>();
-    whereClause = json['whereClause'];
+    properties = json['props']?.cast<String>();
+    excludeProperties = json['excludeProps']?.cast<String>();
+    whereClause = json['where'];
     groupBy = json['groupBy']?.cast<String>();
-    havingClause = json['havingClause'];
+    havingClause = json['having'];
     sortBy = json['sortBy']?.cast<String>();
     loadRelations = json['loadRelations']?.cast<String>();
     if (json['relationsDepth'] != null) {
@@ -59,11 +68,11 @@ class DataQueryBuilder {
   Map toJson() => {
         'pageSize': pageSize,
         'offset': offset,
-        'properties': properties,
-        'excludeProperties': excludeProperties,
-        'whereClause': whereClause,
+        'props': properties,
+        'excludeProps': excludeProperties,
+        'where': whereClause,
         'groupBy': groupBy,
-        'havingClause': havingClause,
+        'having': havingClause,
         'sortBy': sortBy,
         'loadRelations': loadRelations?.join(','),
         'relationsDepth': relationsDepth,

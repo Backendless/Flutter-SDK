@@ -12,10 +12,11 @@ class MessageStatus implements Comparable<MessageStatus> {
     errorMessage = json['errorMessage'];
     final jsonStatus = json['status'];
 
-    if (jsonStatus is int)
+    if (jsonStatus is int) {
       status = PublishStatusEnum.values[jsonStatus];
-    else
+    } else {
       status = stringToEnum(PublishStatusEnum.values, jsonStatus);
+    }
   }
 
   Map toJson() => {
@@ -29,11 +30,11 @@ class MessageStatus implements Comparable<MessageStatus> {
       identical(this, other) ||
       other is MessageStatus &&
           runtimeType == other.runtimeType &&
-          this.messageId == other.messageId &&
-          this.status == other.status;
+          messageId == other.messageId &&
+          status == other.status;
 
   @override
-  int get hashCode => hashValues(messageId, status);
+  int get hashCode => Object.hash(messageId, status);
 
   @override
   String toString() =>
@@ -44,18 +45,19 @@ class MessageStatus implements Comparable<MessageStatus> {
     if (this == other) {
       return 0;
     } else {
-      int statusDiff = this.status == null
+      int statusDiff = status == null
           ? (other.status == null ? 0 : -1)
-          : this.status!.index.compareTo(other.status!.index);
+          : status!.index.compareTo(other.status!.index);
       if (statusDiff != 0) {
         return statusDiff;
       } else {
-        return this.messageId == null
+        return messageId == null
             ? (other.messageId == null ? 0 : -1)
-            : this.messageId!.compareTo(other.messageId!);
+            : messageId!.compareTo(other.messageId!);
       }
     }
   }
 }
 
+// ignore: constant_identifier_names
 enum PublishStatusEnum { FAILED, PUBLISHED, SCHEDULED, CANCELLED, UNKNOWN }

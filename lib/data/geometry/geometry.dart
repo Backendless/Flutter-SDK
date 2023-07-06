@@ -24,19 +24,15 @@ abstract class Geometry {
   String getGeoJsonType();
 
   String asWKT() {
-    return getWktType() + " (" + getWktCoordinatePairs() + ")";
+    return "${getWktType()} (${getWktCoordinatePairs()})";
   }
 
   String asGeoJson() {
-    return "{\"type\":\"" +
-        getGeoJsonType() +
-        "\",\"coordinates\":" +
-        getJsonCoordinatePairs() +
-        "}";
+    return "{\"type\":\"${getGeoJsonType()}\",\"coordinates\":${getJsonCoordinatePairs()}}";
   }
 
   @override
   String toString() {
-    return "'" + this.asWKT() + "'";
+    return "'${asWKT()}'";
   }
 }

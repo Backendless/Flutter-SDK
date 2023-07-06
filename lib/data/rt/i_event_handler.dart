@@ -2,52 +2,46 @@ part of backendless_sdk;
 
 abstract class IEventHandler<T> {
   void addCreateListener(void Function(T? response) callback,
-      {void onError(String error)?, String? whereClause});
+      {void Function(String error)? onError, String? whereClause});
 
   void addUpdateListener(void Function(dynamic response) callback,
-      {void onError(String error)?, String? whereClause});
+      {void Function(String error)? onError, String? whereClause});
 
   void addUpsertListener(void Function(dynamic response) callback,
-      {void onError(String error)?, String? whereClause});
+      {void Function(String error)? onError, String? whereClause});
 
   void addDeleteListener(void Function(dynamic response) callback,
-      {void onError(String error)?, String? whereClause});
+      {void Function(String error)? onError, String? whereClause});
 
   void addBulkCreateListener(void Function(dynamic response) callback,
-      {void onError(String error)?, String? whereClause});
+      {void Function(String error)? onError, String? whereClause});
 
   void addBulkUpdateListener(void Function(dynamic response) callback,
-      {void onError(String error)?, String? whereClause});
+      {void Function(String error)? onError, String? whereClause});
 
   void addBulkUpsertListener(void Function(dynamic response) callback,
-      {void onError(String error)?, String? whereClause});
+      {void Function(String error)? onError, String? whereClause});
 
   void addBulkDeleteListener(void Function(dynamic response) callback,
-      {void onError(String error)?, String? whereClause});
+      {void Function(String error)? onError, String? whereClause});
 
   void addSetRelationListener(String relationColumnName, callback,
       {List<String>? parentObjectIds,
       List? parents,
-      void onError(String error)?,
+      void Function(String error)? onError,
       String? whereClause});
 
   void addAddRelationListener(String relationColumnName, callback,
       {List<String>? parentObjectIds,
       List? parents,
-      void onError(String error)?,
+      void Function(String error)? onError,
       String? whereClause});
 
   void addDeleteRelationListener(String relationColumnName, callback,
       {List<String>? parentObjectIds,
       List? parents,
-      void onError(String error)?,
+      void Function(String error)? onError,
       String? whereClause});
-
-  void addConnectListener(void Function() callback,
-      {void onError(String error)?, String? whereClause});
-
-  void addDisconnectListener(void Function() callback,
-      {void onError(String error)?, String? whereClause});
 
   void removeCreateListeners({String? whereClause});
 

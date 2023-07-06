@@ -7,9 +7,9 @@ class Invoker<T> {
 
   static Future<T?> get<T>(String methodName, {String? queryString}) async {
     if (queryString?.isNotEmpty ?? false) {
-      queryString = '?' + queryString!.substring(0, queryString.length);
+      queryString = '?${queryString!.substring(0, queryString.length)}';
     }
-    if (queryString == null) queryString = '';
+    queryString ??= '';
 
     final result = await _invoke(methodName + queryString, Method.get);
     return decoder.decode<T>(result);
@@ -75,7 +75,13 @@ class Invoker<T> {
     }
     if (response.body.isEmpty) return;
 
-    return jsonDecode(response.body);
+    try {
+      return jsonDecode(utf8.decode(response.bodyBytes));
+    } on FormatException catch (_) {
+      return response.body;
+    } catch (ex) {
+      throw BackendlessException(ex.toString());
+    }
   }
 
   static String _getApplicationUrl() {
@@ -136,14 +142,16 @@ class Invoker<T> {
   static Future _invokeCustomService(String methodName, body,
       {InvokeOptions? options}) async {
     final encodedBody = await _encodeBody(body);
-    final url = Uri.parse(_getApplicationUrl() + "/$methodName");
+    final url = Uri.parse("${_getApplicationUrl()}/$methodName");
     final headers = prefs.headers;
 
     if (options != null) {
-      if (options.executionType != null)
+      if (options.executionType != null) {
         headers['bl-execution-type'] = describeEnum(options.executionType!);
-      if (options.httpRequestHeaders != null)
+      }
+      if (options.httpRequestHeaders != null) {
         headers.addAll(options.httpRequestHeaders!);
+      }
     }
 
     if ((await Backendless.userService.loginStorage)._hasData) {
@@ -160,9 +168,9 @@ class Invoker<T> {
         .then((response) {
       if (response.statusCode >= 400) {
         try {
-          throw new BackendlessException.fromJson(jsonDecode(response.body));
+          throw BackendlessException.fromJson(jsonDecode(response.body));
         } on FormatException {
-          throw new BackendlessException(response.body);
+          throw BackendlessException(response.body);
         }
       }
       return jsonDecode(utf8.decode(response.bodyBytes));

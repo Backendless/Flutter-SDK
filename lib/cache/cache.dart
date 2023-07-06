@@ -2,7 +2,7 @@ part of backendless_sdk;
 
 class Cache {
   factory Cache() => _instance;
-  static final Cache _instance = new Cache._internal();
+  static final Cache _instance = Cache._internal();
   Cache._internal();
 
   Future<bool?> contains(String key) => Invoker.get<bool>("/cache/$key/check");

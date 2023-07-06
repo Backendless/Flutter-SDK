@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_null_comparison
+
 import 'package:backendless_sdk/backendless_sdk.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'dart:io' as io;
@@ -99,7 +101,7 @@ class InitTest {
 
       // ----
       test('Default Headers', () async {
-        final headers = await Backendless.headers;
+        final headers = Backendless.headers;
 
         expect(headers, currentHeaders);
       });
@@ -111,7 +113,7 @@ class InitTest {
         currentHeaders.addAll({stringKey: stringValue});
 
         await Backendless.setHeader(stringValue, key: stringKey);
-        var actualHeaders = await Backendless.headers;
+        var actualHeaders = Backendless.headers;
 
         expect(actualHeaders, currentHeaders);
 
@@ -121,12 +123,11 @@ class InitTest {
       // ----
       test('Set Header by Enum key', () async {
         const stringValue = 'StringValue';
-        currentHeaders
-            .addAll({HeadersEnum.SESSION_TIME_OUT.header: stringValue});
+        currentHeaders.addAll({HeadersEnum.sessionTimeOut.header: stringValue});
 
         await Backendless.setHeader(stringValue,
-            enumKey: HeadersEnum.SESSION_TIME_OUT);
-        var actualHeaders = await Backendless.headers;
+            enumKey: HeadersEnum.sessionTimeOut);
+        var actualHeaders = Backendless.headers;
 
         expect(actualHeaders, currentHeaders);
       });
@@ -137,16 +138,16 @@ class InitTest {
         currentHeaders.remove(keyToRemove);
 
         await Backendless.removeHeader(key: keyToRemove);
-        var actualHeaders = await Backendless.headers;
+        var actualHeaders = Backendless.headers;
 
         expect(actualHeaders, currentHeaders);
       });
 
       // ----
       test('Remove Header by Enum key', () async {
-        currentHeaders.remove(HeadersEnum.SESSION_TIME_OUT.header);
+        currentHeaders.remove(HeadersEnum.sessionTimeOut.header);
 
-        await Backendless.removeHeader(enumKey: HeadersEnum.SESSION_TIME_OUT);
+        await Backendless.removeHeader(enumKey: HeadersEnum.sessionTimeOut);
         var actualHeaders = Backendless.headers;
 
         expect(actualHeaders, currentHeaders);

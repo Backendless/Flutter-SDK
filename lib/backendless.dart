@@ -7,6 +7,7 @@ class Backendless {
   static final userService = UserService();
   static final files = FileService();
   static final messaging = Messaging();
+  static final rt = RTConnector();
 
   static final BackendlessPrefs _prefs = BackendlessPrefs();
   static const MethodChannel _channelNative =
@@ -20,15 +21,22 @@ class Backendless {
       {String? applicationId,
       String? androidApiKey,
       String? iosApiKey,
-      String? jsApiKey,
+      //String? jsApiKey,
       String? customDomain}) async {
     if (customDomain != null && customDomain.isNotEmpty) {
       _prefs.initPreferences(customDomain: customDomain);
+
+      _channelNative.setMethodCallHandler(
+          (call) => _NativeFunctionsContainer.backendlessEventHandler(call));
+      return;
     } else if (applicationId?.isNotEmpty ?? true) {
       String? apiKey;
 
       if (kIsWeb) {
-        apiKey = jsApiKey;
+        throw PlatformException(
+            code: '0',
+            message: 'In alpha version web unsupported for this skd.');
+        //apiKey = jsApiKey;
       } else if (io.Platform.isAndroid) {
         apiKey = androidApiKey;
       } else {
@@ -38,7 +46,7 @@ class Backendless {
       }
 
       if (apiKey == null) {
-        throw ArgumentError.value(ExceptionMessage.EMPTY_NULL_API_KEY);
+        throw ArgumentError.value(ExceptionMessage.emptyNullApiKey);
       }
 
       await _prefs.initPreferences(appId: applicationId, apiKey: apiKey);
@@ -46,7 +54,7 @@ class Backendless {
       return;
     }
 
-    throw ArgumentError.value(ExceptionMessage.EMPTY_NULL_APP_ID);
+    throw ArgumentError.value(ExceptionMessage.emptyNullAppId);
   }
 
   static bool get isInitialized => _isInitialized;
