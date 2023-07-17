@@ -2,7 +2,13 @@ part of backendless_sdk;
 
 class FileService {
   Future<bool?> exists(String path) async {
-    return await Invoker.get('/files/$path?action=exists');
+    if (!path.startsWith('/')) {
+      path = '/$path';
+    }
+
+    String methodName = '/files$path?action=exists';
+
+    return await Invoker.get(methodName);
   }
 
   Future<String?> copyFile(String sourcePath, String targetPath) async {
@@ -84,7 +90,7 @@ class FileService {
 
   Future<String?> saveFile(Uint8List fileContent, String path, String fileName,
       {bool overwrite = false}) async {
-    var methodName = '/files/binary/$path/$fileName';
+    String methodName = '/files/binary/$path/$fileName';
     if (overwrite) methodName += '?overwrite=$overwrite';
 
     var parameters = fileContent;
