@@ -227,8 +227,6 @@ class Messaging {
         await TemplateStorage.saveTemplate('$key', templateValues[key]);
       }
     }
-
-    print(templateValues);
   }
 
   Future<Map<String, String>> _getDeviceDetails() async {

@@ -30,4 +30,8 @@ class ExceptionMessage {
       'Not one event was set. First subscribe to the event and then subscribe to the connection.';
   static const String nullSub =
       'You cannot remove a non-existing subscription.';
+  static const String groupsNotFound =
+      'List of items does not contain instances of GroupedData. Use the getter \'plainItems\' method to access data.';
+  static const String itemsNotFound =
+      'List of items contains instances of GroupedData. Use the getter \'groupedData\' method to access data.';
 }

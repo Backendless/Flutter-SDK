@@ -51,6 +51,10 @@ class Reflector extends Reflectable {
     if (T == DeviceRegistrationResult) {
       return DeviceRegistrationResult.fromJson(map) as T;
     }
+    if (T == GroupResult) {
+      return GroupResult.fromJson(map) as T;
+    }
+
     return _deserialize(map, reflectType(T) as ClassMirror) as T;
   }
 

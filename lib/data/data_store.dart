@@ -6,7 +6,9 @@ abstract class IDataStore<T> {
   ///Otherwise, the create method will be called, which creates a new object in the table.
   Future<T?> save(T entity, {bool isUpsert = false});
 
-  ///TODO: add doc
+  ///The "Deep Save" functionality is a single API request that can create or update a complete "object tree"
+  ///in the database using a single transaction. The object tree starts with the root object
+  ///and includes other child objects, their corresponding children and so on.
   Future<T?> deepSave(T entity);
 
   ///Creates multiple objects in the database.
@@ -74,9 +76,20 @@ abstract class IDataStore<T> {
   Future<int?> deleteRelation(String parentObjectId, String relationColumnName,
       {List<String>? childrenObjectIds, String? whereClause});
 
-  ///TODO: add doc
+  ///Load related objects. You need to specify relationName in relationQueryBuilder.
+  ///Also you can customize pageSize and offset with the same parameter.
   Future<List<R?>?> loadRelations<R>(
       String objectId, LoadRelationsQueryBuilder<R> relationsQueryBuilder);
+
+  ///Grouping is applicable for tables and views. In case with tables usage of data from relations is not allowed.
+  ///When grouping is applied it returns list of group items for each top-level field value.
+  ///Each group item could contain list of nested group items or data records.
+  ///When no grouping is selected  - it returns plain list of records.
+  Future<GroupResult?> group({GroupDataQueryBuilder? queryBuilder});
+
+  ///Count items in group.
+  ///'groupPath'(this field in queryBuilder - required) - Identifies group for which count is performed.
+  Future<int?> getGroupObjectCount({GroupDataQueryBuilder? queryBuilder});
 
   Future<IEventHandler<T>> rt();
 }

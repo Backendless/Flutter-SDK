@@ -46,6 +46,11 @@ part 'data/rt/rt_subscription.dart';
 part 'data/rt/rt_listener.dart';
 part 'data/rt/subscriptions_names.dart';
 part 'data/rt/rt_event_handlers.dart';
+part 'exception/group_result_error.dart';
+part 'data/group/grouped_data.dart';
+part 'data/group/group_result.dart';
+part 'data/group/group_column_value.dart';
+part 'data/group/group_data_query_builder.dart';
 
 part 'core/invoker.dart';
 part 'core/prefs.dart';

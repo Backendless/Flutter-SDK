@@ -192,6 +192,22 @@ class MapDrivenDataStore<T> implements IDataStore<Map> {
   }
 
   @override
+  Future<GroupResult?> group({GroupDataQueryBuilder? queryBuilder}) async {
+    queryBuilder ??= GroupDataQueryBuilder();
+
+    return await Invoker.post('/data/data-grouping/$tableName', queryBuilder);
+  }
+
+  @override
+  Future<int?> getGroupObjectCount(
+      {GroupDataQueryBuilder? queryBuilder}) async {
+    queryBuilder ??= GroupDataQueryBuilder();
+
+    return await Invoker.post(
+        '/data/data-grouping/$tableName/count', queryBuilder);
+  }
+
+  @override
   Future<MapEventHandler<Map>> rt() async {
     await MapEventHandler.initialize();
 
