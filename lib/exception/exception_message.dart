@@ -14,12 +14,17 @@ class ExceptionMessage {
   static const String emptyMap = 'Map cannot be empty.';
   static const String emptyEntity = 'Entity cannot be empty.';
   static const String emptyRelationName = 'relationName cannot be empty.';
+  static const String emptyBackendlessExpression =
+      'The BackendlessExpression class can be initialized with non empty string value only';
+  static const String emptyPath = 'Path cannot be null.';
+  static const String emptySourceOrTargetPaths =
+      'sourcePath or targetPath cannot be null.';
+  static const String emptyNullIdentifier =
+      'Identifier in transactions API should not be null or empty';
+
   static const String noOneArgumentSpecified =
       'At least one argument must be specified.';
   static const String nullWhere = 'whereClause cannot be null.';
-  static const String emptySourceOrTargetPaths =
-      'sourcePath or targetPath cannot be null.';
-  static const String emptyPath = 'Path cannot be null.';
   static const String noInternetConnection = 'No internet connection.';
   static const String errorDuringRemoveSub =
       'An error occurred while deleting a subscription.\n'

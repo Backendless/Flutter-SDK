@@ -6,13 +6,18 @@ class MapDrivenDataStore<T> implements IDataStore<Map> {
   const MapDrivenDataStore(this.tableName);
 
   @override
-  Future<Map?> save(Map entity, {bool isUpsert = false}) async {
+  Future<Map?> save(Map entity,
+      {bool isUpsert = false,
+      Map<String, BackendlessExpression>? expression}) async {
     String methodName = '/data/$tableName';
 
     if (isUpsert) {
       methodName += '/upsert';
     } else if (entity.containsKey('objectId')) {
       methodName += '/${entity['objectId']}';
+      if (expression?.isNotEmpty ?? false) {
+        entity.addAll(expression!);
+      }
     } else {
       return await Invoker.post(methodName, entity);
     }
@@ -29,10 +34,17 @@ class MapDrivenDataStore<T> implements IDataStore<Map> {
       await Invoker.post('/data/bulk/$tableName', entities);
 
   @override
-  Future<int?> bulkUpdate(String whereClause, Map changes) async {
+  Future<int?> bulkUpdate(String whereClause, Map changes,
+      {Map<String, BackendlessExpression>? expression}) async {
     String methodName = '/data/bulk/$tableName';
 
-    if (whereClause.isNotEmpty) methodName += '?where=$whereClause';
+    if (whereClause.isNotEmpty) {
+      methodName += '?where=$whereClause';
+    }
+
+    if (expression?.isNotEmpty ?? false) {
+      changes.addAll(expression!);
+    }
 
     return await Invoker.put(methodName, changes);
   }

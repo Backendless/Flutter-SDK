@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:ffi';
 import 'dart:math';
 import 'dart:io';
 import 'dart:ui';
@@ -49,7 +48,6 @@ class PushTemplateWorker {
         String templateAsString =
             await TemplateStorage.getTemplate(templateName) as String;
         templateFromStorage = jsonDecode(templateAsString);
-        print(templateFromStorage);
       }
 
       if (Platform.isIOS) {

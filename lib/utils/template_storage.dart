@@ -26,6 +26,7 @@ class TemplateStorage {
   static Future<void> removeAllTemplates() async {
     var template = await _templates;
     var res = await template.clear();
+    // ignore:avoid_print
     print('clearing result: $res');
   }
 

@@ -8,7 +8,9 @@ class ClassDrivenDataStore<E> implements IDataStore<E> {
   }
 
   @override
-  Future<E?> save(E entity, {bool isUpsert = false}) async {
+  Future<E?> save(E entity,
+      {bool isUpsert = false,
+      Map<String, BackendlessExpression>? expression}) async {
     Map<String, dynamic> map = reflector.serialize(entity)!;
     String methodName = '/data/$tableName';
     Map? result;
@@ -17,11 +19,15 @@ class ClassDrivenDataStore<E> implements IDataStore<E> {
       methodName += '/upsert';
     } else if (map.containsKey('objectId')) {
       methodName += '/${map['objectId']}';
+
+      if (expression?.isNotEmpty ?? false) {
+        map.addAll(expression!);
+      }
     } else {
       result = await Invoker.post(methodName, entity);
     }
 
-    result ??= await Invoker.put(methodName, entity);
+    result ??= await Invoker.put(methodName, map);
 
     return reflector.deserialize<E>(result!);
   }
@@ -43,12 +49,17 @@ class ClassDrivenDataStore<E> implements IDataStore<E> {
   }
 
   @override
-  Future<int?> bulkUpdate(String whereClause, E changes) async {
+  Future<int?> bulkUpdate(String whereClause, E changes,
+      {Map<String, BackendlessExpression>? expression}) async {
     String methodName = '/data/bulk/$tableName';
     Map? mapChanges = reflector.serialize(changes);
 
     if (whereClause.isNotEmpty) {
       methodName += '?where=$whereClause';
+    }
+
+    if (expression?.isNotEmpty ?? false) {
+      mapChanges!.addAll(expression!);
     }
 
     return await Invoker.put(methodName, mapChanges);

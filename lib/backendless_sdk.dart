@@ -130,5 +130,6 @@ part 'transactions/common/operations/relations/operation_delete_relation.dart';
 
 part 'utils/native_functions_container.dart';
 part 'utils/headers_enum.dart';
+part 'utils/expression/backendless_expression.dart';
 
 part 'rt/rt_connector.dart';

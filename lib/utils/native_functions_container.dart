@@ -50,6 +50,7 @@ class _NativeFunctionsContainer {
       case 'showNotificationWithTemplate':
         {
           var t = methodCall.arguments;
+          // ignore:avoid_print
           print(t);
 
           PushTemplateWorker.showPushNotification(t);

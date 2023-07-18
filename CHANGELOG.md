@@ -1,3 +1,7 @@
+# 8.0.0-alpha.9
+
+* Added support for BackendlessExpressions in methods: 'update', 'bulkUpdate' in Transaction and Data API.
+
 # 8.0.0-alpha.8
 
 * Added support grouping api. Methods: 'group' and 'getGroupObjectCount'.
