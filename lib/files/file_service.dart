@@ -88,21 +88,70 @@ class FileService {
     return await Invoker.get(methodName);
   }
 
-  Future<String?> saveFile(Uint8List fileContent, String path, String fileName,
+  ///Save a file to the specified path.
+  ///File content should be encoded in base64.
+  ///Example:
+  ///```dart
+  ///var base64Str = base64.encode('The quick brown fox jumps over the lazy dog'.codeUnits);
+  ///```
+  Future<String?> saveFile(String fileContent, String path, String fileName,
       {bool overwrite = false}) async {
     String methodName = '/files/binary/$path/$fileName';
     if (overwrite) methodName += '?overwrite=$overwrite';
 
     var parameters = fileContent;
+    var headers = <String, String>{
+      'Content-Type': 'text/plain',
+    };
 
-    return await Invoker.put(methodName, parameters);
+    return await Invoker.put(methodName, parameters, customHeaders: headers);
   }
 
+  ///Upload a file from the specified URL at the specified path.
   Future<String?> upload(String urlToFile, String backendlessPath,
       {bool overwrite = false}) async {
     Map<String, dynamic> parameters = {'url': urlToFile};
     String methodName = '/files/$backendlessPath?overwrite=$overwrite';
 
     return await Invoker.post(methodName, parameters);
+  }
+
+  ///This method adds data to the content of your file from one of the key parameters.
+  ///You need to specify only one of the key parameters: [base64Content], [urlToFile], [dataContent].
+  ///If more than one of the key parameters is specified. Only one of the specifications will be executed.
+  ///The priority looks like this:
+  ///1. [base64Content] - take file and decode from base64 like for [saveFile] method.
+  ///2. [urlToFile] - take file  from URL like in [upload] method.
+  ///3. [dataContent] - take body as is and append to file.
+  Future<String> append(String filePath, String fileName,
+      {String? base64Content, String? urlToFile, String? dataContent}) async {
+    if (base64Content?.isNotEmpty ?? false) {
+      String methodName = '/files/append/binary/$filePath/$fileName';
+      var headers = <String, String>{
+        'Content-Type': 'text/plain',
+      };
+
+      return await Invoker.put(methodName, base64Content,
+          customHeaders: headers);
+    }
+
+    if (urlToFile?.isNotEmpty ?? false) {
+      String methodName = '/files/append/$filePath/$fileName';
+      var parameters = <String, String>{'url': urlToFile!};
+
+      return await Invoker.post(methodName, parameters);
+    }
+
+    if (dataContent?.isNotEmpty ?? false) {
+      String methodName = '/files/append/$filePath/$fileName';
+      var headers = <String, String>{
+        'Content-Type': 'text/plain',
+      };
+
+      return await Invoker.put(methodName, dataContent, customHeaders: headers);
+    }
+
+    throw ArgumentError(
+        "${ExceptionMessage.noOneKeyArgumentSpecified}: 'base64Content', 'urlToFile' or 'dataContent'");
   }
 }

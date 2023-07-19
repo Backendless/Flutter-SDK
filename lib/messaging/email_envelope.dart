@@ -5,6 +5,7 @@ class EmailEnvelope {
   Set<String>? to;
   Set<String>? cc;
   Set<String>? bcc;
+  bool uniqueEmails = true;
 
   EmailEnvelope();
 
@@ -25,6 +26,10 @@ class EmailEnvelope {
     } else {
       bcc = Set<String>.from(jsonBcc);
     }
+
+    if (json['uniqueEmails'] != null) {
+      uniqueEmails = json['uniqueEmails'];
+    }
   }
 
   Map toJson() => {
@@ -32,5 +37,6 @@ class EmailEnvelope {
         'to': to,
         'cc': cc,
         'bcc': bcc,
+        'uniqueEmails': uniqueEmails,
       };
 }

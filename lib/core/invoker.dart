@@ -15,8 +15,10 @@ class Invoker<T> {
     return decoder.decode<T>(result);
   }
 
-  static Future<T?> put<T>(String methodName, dynamic args) async {
-    final result = await _invoke(methodName, Method.put, args: args);
+  static Future<T?> put<T>(String methodName, dynamic args,
+      {Map<String, String>? customHeaders}) async {
+    final result = await _invoke(methodName, Method.put,
+        args: args, customHeaders: customHeaders);
     return decoder.decode<T>(result);
   }
 
@@ -31,10 +33,15 @@ class Invoker<T> {
   }
 
   static Future _invoke(String methodName, Method method,
-      {dynamic args}) async {
+      {dynamic args, Map<String, String>? customHeaders}) async {
     final encodedBody = args != null ? await _encodeBody(args) : null;
     final url = Uri.parse(_getApplicationUrl() + methodName);
-    final headers = prefs.headers;
+
+    var headers = prefs.headers;
+
+    if (customHeaders != null) {
+      headers = customHeaders;
+    }
 
     if ((await Backendless.userService.loginStorage)._hasData) {
       headers['user-token'] =

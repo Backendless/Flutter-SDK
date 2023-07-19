@@ -39,4 +39,6 @@ class ExceptionMessage {
       'List of items does not contain instances of GroupedData. Use the getter \'plainItems\' method to access data.';
   static const String itemsNotFound =
       'List of items contains instances of GroupedData. Use the getter \'groupedData\' method to access data.';
+  static const String noOneKeyArgumentSpecified =
+      'At least one of the key arguments must be specified';
 }

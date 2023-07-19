@@ -1,3 +1,9 @@
+# 8.0.0-alpha.10
+
+* Added 'uniqueEmails' parameter in 'EmailEnvelope'. By default this parameter is true.
+* Added 'append' method in Backendless.files section.
+* Fixed bug in 'saveFile' method. Now file content should be in string format as base64 instead of Uint8List.
+
 # 8.0.0-alpha.9
 
 * Added support for BackendlessExpressions in methods: 'update', 'bulkUpdate' in Transaction and Data API.

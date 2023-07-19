@@ -190,6 +190,7 @@ class Messaging {
       'cc-addresses': envelope.cc,
       'bcc-addresses': envelope.bcc,
       'criteria': envelope.query,
+      'uniqueEmails': envelope.uniqueEmails,
     };
 
     if (attachments?.isNotEmpty ?? false) {
