@@ -78,3 +78,10 @@ class _MyAppState extends State<MyApp> {
     });
   }
 }
+
+class Employee {
+  dynamic hourlyRate;
+  String? name;
+
+  Employee(this.hourlyRate);
+}

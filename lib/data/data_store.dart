@@ -4,8 +4,7 @@ abstract class IDataStore<T> {
   ///If the variable `isUpsert = true`, then it calls the upsert method.
   ///Else if the object contains an objectId, the update method is called, which updates an already existing object.
   ///Otherwise, the create method will be called, which creates a new object in the table.
-  Future<T?> save(T entity,
-      {bool isUpsert = false, Map<String, BackendlessExpression> expression});
+  Future<T?> save(T entity, {bool isUpsert = false});
 
   ///The "Deep Save" functionality is a single API request that can create or update a complete "object tree"
   ///in the database using a single transaction. The object tree starts with the root object
@@ -18,8 +17,7 @@ abstract class IDataStore<T> {
 
   ///This API updates multiple objects in a data table with a single request.
   ///Returns the number object of objects updated as a result of the request.
-  Future<int?> bulkUpdate(String whereClause, T changes,
-      {Map<String, BackendlessExpression> expression});
+  Future<int?> bulkUpdate(String whereClause, T changes);
 
   ///TODO: add doc
   Future<List<String>?> bulkUpsert(List<T> entities);

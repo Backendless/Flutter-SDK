@@ -48,34 +48,17 @@ class UnitOfWork {
     return _unitOfWorkCreate.bulkCreate(instances, tableName);
   }
 
-  OpResult update<T>(T changes,
-      {required dynamic identifier,
-      Map<String, BackendlessExpression>? expression}) {
+  OpResult update<T>(T changes, {required dynamic identifier}) {
     if (identifier == null) {
       throw ArgumentError(ExceptionMessage.emptyNullIdentifier);
-    }
-
-    if (expression?.isNotEmpty ?? false) {
-      Map? mapChanges = reflector.serialize(changes);
-      mapChanges!.addAll(expression!);
-
-      return _unitOfWorkUpdate.update(mapChanges, identifier);
     }
 
     return _unitOfWorkUpdate.update(changes, identifier!);
   }
 
-  OpResult bulkUpdate(Map changes, dynamic identifier,
-      {String? tableName, Map<String, BackendlessExpression>? expression}) {
+  OpResult bulkUpdate(Map changes, dynamic identifier, {String? tableName}) {
     if (identifier == null) {
       throw ArgumentError(ExceptionMessage.emptyNullIdentifier);
-    }
-
-    if (expression?.isNotEmpty ?? false) {
-      Map? mapChanges = reflector.serialize(changes);
-      mapChanges!.addAll(expression!);
-
-      return _unitOfWorkUpdate.bulkUpdate(mapChanges, identifier, tableName);
     }
 
     return _unitOfWorkUpdate.bulkUpdate(changes, identifier, tableName);
