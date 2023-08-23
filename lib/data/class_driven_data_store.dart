@@ -59,7 +59,7 @@ class ClassDrivenDataStore<E> implements IDataStore<E> {
     List<Map<String, dynamic>?> mapObjects =
         entities.map((entity) => reflector.serialize(entity)).toList();
 
-    return await Invoker.put('data/bulkupsert/$tableName', mapObjects);
+    return await Invoker.put('/data/bulkupsert/$tableName', mapObjects);
   }
 
   @override

@@ -1,12 +1,12 @@
 part of backendless_sdk;
 
-class MapDrivenDataStore<T> implements IDataStore<Map> {
+class MapDrivenDataStore<T> implements IDataStore {
   final String tableName;
 
   const MapDrivenDataStore(this.tableName);
 
   @override
-  Future<Map?> save(Map entity, {bool isUpsert = false}) async {
+  Future<Map?> save(covariant Map entity, {bool isUpsert = false}) async {
     String methodName = '/data/$tableName';
 
     if (isUpsert) {
@@ -21,15 +21,15 @@ class MapDrivenDataStore<T> implements IDataStore<Map> {
   }
 
   @override
-  Future<Map?> deepSave(Map map) async =>
+  Future<Map?> deepSave(covariant Map map) async =>
       await Invoker.put('/data/$tableName/deep-save', map);
 
   @override
-  Future<List<String>?> bulkCreate(List<Map> entities) async =>
+  Future<List<String>?> bulkCreate(covariant List<Map> entities) async =>
       await Invoker.post('/data/bulk/$tableName', entities);
 
   @override
-  Future<int?> bulkUpdate(String whereClause, Map changes) async {
+  Future<int?> bulkUpdate(String whereClause, covariant Map changes) async {
     String methodName = '/data/bulk/$tableName';
 
     if (whereClause.isNotEmpty) {
@@ -40,11 +40,11 @@ class MapDrivenDataStore<T> implements IDataStore<Map> {
   }
 
   @override
-  Future<List<String>?> bulkUpsert(List<Map> entities) async =>
+  Future<List<String>?> bulkUpsert(covariant List<Map> entities) async =>
       await Invoker.put('/data/bulkupsert/$tableName', entities);
 
   @override
-  Future<DateTime?> remove(Map entity) async {
+  Future<DateTime?> remove(covariant Map entity) async {
     String methodName = '/data/';
     if (entity.isEmpty) throw ArgumentError.value(ExceptionMessage.emptyMap);
 
@@ -210,9 +210,9 @@ class MapDrivenDataStore<T> implements IDataStore<Map> {
   }
 
   @override
-  Future<MapEventHandler<Map>> rt() async {
+  Future<MapEventHandler<T>> rt() async {
     await MapEventHandler.initialize();
 
-    return MapEventHandler<Map>(tableName);
+    return MapEventHandler<T>(tableName);
   }
 }

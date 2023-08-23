@@ -1,3 +1,7 @@
+# 8.0.0-alpha.12
+
+* Fixed issues with 'addBulkCreateListener'.
+
 # 8.0.0-alpha.11
 
 * BackendlessExpressions removed as a separate parameter. Now it should be used inside an object (for example, 'changes' in the update method) that is sent to the server.

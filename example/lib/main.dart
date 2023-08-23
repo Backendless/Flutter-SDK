@@ -1,12 +1,12 @@
 import 'dart:async';
-import 'main.reflectable.dart';
+//import 'main.reflectable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:backendless_sdk/backendless_sdk.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  initializeReflectable();
+  //initializeReflectable();
 
   runApp(const MyApp());
 }
@@ -19,8 +19,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String? token = 'Text';
-
   @override
   void initState() {
     super.initState();
@@ -77,11 +75,4 @@ class _MyAppState extends State<MyApp> {
       }
     });
   }
-}
-
-class Employee {
-  dynamic hourlyRate;
-  String? name;
-
-  Employee(this.hourlyRate);
 }
