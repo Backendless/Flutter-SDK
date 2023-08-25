@@ -81,10 +81,16 @@ class UserService {
   }
 
   Future<String?> getAuthorizationUrlLink(String providerCode,
-      {Map<String, String>? fieldsMappings, List<String>? scope}) async {
+      {String? callbackUrlDomain,
+      Map<String, String>? fieldsMappings,
+      List<String>? scope}) async {
     Map parameters = {};
     if (fieldsMappings != null) {
       parameters['fieldsMappings'] = fieldsMappings;
+    }
+
+    if (callbackUrlDomain?.isNotEmpty ?? false) {
+      parameters['callbackUrlDomain'] = callbackUrlDomain;
     }
 
     if (scope != null) {

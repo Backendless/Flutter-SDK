@@ -1,3 +1,7 @@
+# 8.0.0-alpha.13
+
+* Added optional parameter `callbackUrlDomain` to `getAuthorizationUrlLink` method.
+
 # 8.0.0-alpha.12
 
 * Fixed issues with 'addBulkCreateListener'.
