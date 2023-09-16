@@ -1,3 +1,27 @@
+# 8.0.0-alpha.19
+
+* Fixed duplicating of push notifications after more then one calling registerDevice method.
+
+# 8.0.0-alpha.18
+
+* Minor optimization changes.
+
+# 8.0.0-alpha.17
+
+* Fixed problem with BackendlessException's object parsing.
+
+# 8.0.0-alpha.16
+
+* Fixed method unregisterDevice.
+
+# 8.0.0-alpha.15
+
+* Hot fix with double displaying of push notification in Android when app in foreground.
+
+# 8.0.0-alpha.14
+
+* Fixed handling of push notifications for Android.
+
 # 8.0.0-alpha.13
 
 * Added optional parameter `callbackUrlDomain` to `getAuthorizationUrlLink` method.

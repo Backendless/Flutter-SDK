@@ -33,8 +33,8 @@ class FirebaseMessagingService {
         }
       }
 
-      var mapMessage = message.toMap();
-      PushTemplateWorker.showPushNotification(mapMessage);
+      //var mapMessage = message.toMap();
+      //PushTemplateWorker.showPushNotification(mapMessage);
 
       if (onMessage != null) {
         await onMessage.call(message.data);

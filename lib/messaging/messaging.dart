@@ -24,6 +24,7 @@ class Messaging {
   static final DeviceInfoPlugin _deviceInfoPlugin = DeviceInfoPlugin();
   static const String defaultChannelName = 'default';
   static String? _deviceToken;
+  static FirebaseMessagingService? _messagingService;
 
   Future<MessageStatus?> pushWithTemplate(String templateName,
       {Map<String, dynamic>? templateValues}) async {
@@ -99,16 +100,19 @@ class Messaging {
       if (kIsWeb) {
         ///TODO for WEB
       } else if (io.Platform.isAndroid) {
+        onMessage ??= PushTemplateWorker.showPushNotification;
         await Firebase.initializeApp();
-        final FirebaseMessagingService messagingService =
-            FirebaseMessagingService();
 
-        _deviceToken = await messagingService._firebaseMessaging.getToken();
-        messagingService.init(
-          onMessage: onMessage,
-          onBackgroundMessage: _firebaseMessagingBackgroundHandler,
-          onMessageOpenedApp: onTapPushActionAndroid,
-        );
+        if (_messagingService == null) {
+          _messagingService = FirebaseMessagingService();
+          _messagingService!.init(
+            onMessage: onMessage,
+            onBackgroundMessage: _firebaseMessagingBackgroundHandler,
+            onMessageOpenedApp: onTapPushActionAndroid,
+          );
+        }
+
+        _deviceToken = await _messagingService!._firebaseMessaging.getToken();
       } else {
         await _NativeFunctionsContainer.registerForRemoteNotifications();
         _NativeFunctionsContainer.onTapPushAction = onTapPushActionIOS;
@@ -152,7 +156,8 @@ class Messaging {
     Map<String, String> deviceInfo = await _getDeviceDetails();
     String? deviceId = deviceInfo['identifier'];
 
-    return await Invoker.delete('/messaging/registrations/$deviceId');
+    Map resultMap = await Invoker.delete('/messaging/registrations/$deviceId');
+    return resultMap['result'];
   }
 
   Future<MessageStatus?> sendEmail(

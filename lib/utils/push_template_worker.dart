@@ -25,7 +25,7 @@ void notificationTapBackground(NotificationResponse notificationResponse) {
 class PushTemplateWorker {
   static bool isInitializedPlugin = false;
 
-  static showPushNotification(Map notification) async {
+  static Future<void> showPushNotification(Map notification) async {
     if (!isInitializedPlugin) {
       await initializePlugin();
     }
@@ -40,9 +40,21 @@ class PushTemplateWorker {
     String? threadId;
     int id = Random().nextInt(2147483646);
     String? templateName = notification['template_name'];
-    templateName ??= notification['data']['template_name'];
 
-    if (templateName != null) {
+    if (notification.containsKey('data')) {
+      templateName ??= notification['data']['template_name'];
+    }
+
+    if (templateName == null) {
+      if (Platform.isAndroid) {
+        title = notification['android-content-title'];
+      }
+      if (Platform.isIOS) {
+        title = notification['ios-alert-title'];
+      }
+
+      message = notification['message'];
+    } else {
       Map? templateFromStorage;
       if (await TemplateStorage.containsTemplate(templateName)) {
         String templateAsString =
@@ -64,6 +76,14 @@ class PushTemplateWorker {
         if (templateFromStorage != null) {
           badge = templateFromStorage['badge'];
           Color? color = Color(templateFromStorage['colorCode']);
+
+          if (notification.containsKey('data')) {
+            message = notification['data']['message'];
+            title = notification['data']['android-content-title'];
+          } else {
+            message = notification['message'];
+            title = notification['android-content-title'];
+          }
 
           androidDetails = AndroidNotificationDetails(
             templateName,
