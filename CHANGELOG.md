@@ -1,3 +1,7 @@
+# 8.0.0-alpha.20
+
+* Fixed on tap push action when app in foreground for iOS
+
 # 8.0.0-alpha.19
 
 * Fixed duplicating of push notifications after more then one calling registerDevice method.
