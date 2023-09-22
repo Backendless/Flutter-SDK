@@ -46,6 +46,10 @@ public class SwiftBackendlessSdkPlugin: NSObject, FlutterPlugin, UNUserNotificat
         print(token)
     }
     
+    public func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        SwiftBackendlessSdkPlugin.channelBackendlessNativeApi?.invokeMethod("onTapPushAction", arguments: nil)
+    }
+    
     public func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) -> Bool  {
         print("Received push notification:")
         
@@ -90,5 +94,9 @@ public class SwiftBackendlessSdkPlugin: NSObject, FlutterPlugin, UNUserNotificat
             SwiftBackendlessSdkPlugin.channelBackendlessNativeApi?.invokeMethod("showNotificationWithTemplate", arguments: notification.request.content.userInfo)
             completionHandler([]);
         }
+    }
+
+    public func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse) async {
+        SwiftBackendlessSdkPlugin.channelBackendlessNativeApi?.invokeMethod("onTapPushAction", arguments: nil)
     }
 }
