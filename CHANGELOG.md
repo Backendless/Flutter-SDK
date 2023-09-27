@@ -1,3 +1,11 @@
+# 8.0.0-alpha.22
+
+* Fixed on tap push action when device is locked for iOS.
+
+# 8.0.0-alpha.21
+
+* Minor code refactoring
+
 # 8.0.0-alpha.20
 
 * Fixed on tap push action when app in foreground for iOS

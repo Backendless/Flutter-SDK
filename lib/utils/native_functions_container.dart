@@ -37,7 +37,7 @@ class _NativeFunctionsContainer {
       case 'onTapPushAction':
         {
           if (onTapPushAction != null) {
-            await onTapPushAction!.call();
+            await onTapPushAction!.call(data: methodCall.arguments as Map?);
           }
           break;
         }

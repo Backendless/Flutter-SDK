@@ -45,9 +45,12 @@ public class SwiftBackendlessSdkPlugin: NSObject, FlutterPlugin, UNUserNotificat
         
         print(token)
     }
-    
+
+    @MainActor
     public func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-        SwiftBackendlessSdkPlugin.channelBackendlessNativeApi?.invokeMethod("onTapPushAction", arguments: nil)
+        DispatchQueue.main.sync {
+            SwiftBackendlessSdkPlugin.channelBackendlessNativeApi?.invokeMethod("onTapPushAction", arguments: userInfo)
+        }
     }
     
     public func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) -> Bool  {
@@ -65,7 +68,7 @@ public class SwiftBackendlessSdkPlugin: NSObject, FlutterPlugin, UNUserNotificat
         }
         else if state == .inactive {
             print("INACTIVE")
-            SwiftBackendlessSdkPlugin.channelBackendlessNativeApi?.invokeMethod("onTapPushAction", arguments: nil)
+            SwiftBackendlessSdkPlugin.channelBackendlessNativeApi?.invokeMethod("onTapPushAction", arguments: userInfo)
         }
         
         completionHandler(.newData)
@@ -96,7 +99,10 @@ public class SwiftBackendlessSdkPlugin: NSObject, FlutterPlugin, UNUserNotificat
         }
     }
 
+    @MainActor
     public func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse) async {
-        SwiftBackendlessSdkPlugin.channelBackendlessNativeApi?.invokeMethod("onTapPushAction", arguments: nil)
+        DispatchQueue.main.async {
+            SwiftBackendlessSdkPlugin.channelBackendlessNativeApi?.invokeMethod("onTapPushAction", arguments: response.notification.request.content.userInfo);
+        }
     }
 }
