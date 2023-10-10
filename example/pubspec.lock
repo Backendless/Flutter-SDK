@@ -47,7 +47,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "8.0.0-alpha.21"
+    version: "8.0.0-alpha.23"
   boolean_selector:
     dependency: transitive
     description:

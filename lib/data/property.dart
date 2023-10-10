@@ -5,7 +5,11 @@ abstract class AbstractProperty {
   bool required;
   String? type;
 
-  AbstractProperty({this.name, this.required = false, this.type});
+  AbstractProperty({
+    this.name,
+    this.type,
+    this.required = false,
+  });
 }
 
 class ObjectProperty extends AbstractProperty {
@@ -18,7 +22,7 @@ class ObjectProperty extends AbstractProperty {
     relatedTable = json['relatedTable'];
     defaultValue = json['defaultValue'];
     name = json['name'];
-    required = json['required'];
+    this.required = json['required'];
     String jsonType = json['type'];
     if (jsonType is int) {
       type = jsonType;
@@ -31,11 +35,11 @@ class ObjectProperty extends AbstractProperty {
         'relatedTable': relatedTable,
         'defaultValue': defaultValue,
         'name': name,
-        'required': required,
+        'required': this.required,
         'type': type,
       };
 
   @override
   String toString() =>
-      "ObjectProperty{name='$name', required=$required, type=$type, relatedTable='$relatedTable', defaultValue=$defaultValue}";
+      "ObjectProperty{name='$name', required=$this.required, type=$type, relatedTable='$relatedTable', defaultValue=$defaultValue}";
 }

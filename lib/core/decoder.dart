@@ -30,6 +30,8 @@ class Decoder {
         return obj.map((e) => e as double).toList() as T;
       } else if (isSubTypeOf2<bool, T>()) {
         return obj.map((e) => e as bool).toList() as T;
+      } else if (isSubTypeOf2<DeviceRegistration, T>()) {
+        return obj.map((e) => e as DeviceRegistration).toList() as T;
       }
 
       return obj.map((e) => e as Map).toList() as T;

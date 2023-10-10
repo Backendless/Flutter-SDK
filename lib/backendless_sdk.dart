@@ -3,6 +3,8 @@ library backendless_sdk;
 import 'dart:collection';
 import 'dart:convert';
 import 'dart:io' as io;
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:socket_io_client/socket_io_client.dart' as socket_io;
 import 'dart:async';
 import 'package:backendless_sdk/utils/utils.dart';

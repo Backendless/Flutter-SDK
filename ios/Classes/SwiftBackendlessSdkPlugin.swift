@@ -45,14 +45,19 @@ public class SwiftBackendlessSdkPlugin: NSObject, FlutterPlugin, UNUserNotificat
         
         print(token)
     }
-
+    
     @MainActor
-    public func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-        DispatchQueue.main.sync {
-            SwiftBackendlessSdkPlugin.channelBackendlessNativeApi?.invokeMethod("onTapPushAction", arguments: userInfo)
+    public func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any] = [:]) -> Bool {
+        if let userInfo = launchOptions[UIApplication.LaunchOptionsKey.remoteNotification] as? [AnyHashable: Any] {
+            DispatchQueue.main.async {
+                SwiftBackendlessSdkPlugin.channelBackendlessNativeApi?.invokeMethod("onTapPushAction", arguments: userInfo);
+            }
         }
+        
+        return true;
     }
     
+    @MainActor
     public func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) -> Bool  {
         print("Received push notification:")
         

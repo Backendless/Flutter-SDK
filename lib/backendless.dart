@@ -65,6 +65,9 @@ class Backendless {
 
   static String? get customDomain => _prefs.customDomain;
 
+  static Future<NotificationAppLaunchDetails?> get appLaunchDetails =>
+      flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
+
   static String get url => _prefs.url;
 
   static set url(String url) {

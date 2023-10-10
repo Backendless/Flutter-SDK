@@ -2,11 +2,11 @@ import 'dart:convert';
 import 'dart:math';
 import 'dart:io';
 import 'dart:ui';
-
-import 'package:backendless_sdk/utils/template_storage.dart';
+import '../backendless_sdk.dart';
+import '../utils/template_storage.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
 @pragma('vm:entry-point')
@@ -23,6 +23,9 @@ void notificationTapBackground(NotificationResponse notificationResponse) {
 }
 
 class PushTemplateWorker {
+  static OnTapHandlerAndroid onDidReceiveNotificationResponse;
+  static OnTapHandlerBackgroundAndroid
+      onDidReceiveNotificationBackgroundResponse;
   static bool isInitializedPlugin = false;
 
   static Future<void> showPushNotification(Map notification) async {
@@ -104,7 +107,7 @@ class PushTemplateWorker {
     var notificationDetails =
         NotificationDetails(iOS: iosDetails, android: androidDetails);
 
-    await _flutterLocalNotificationsPlugin
+    await flutterLocalNotificationsPlugin
         .show(id, title, message, notificationDetails, payload: payload);
   }
 
@@ -132,15 +135,23 @@ class PushTemplateWorker {
         android: initializationSettingsAndroid,
       );
 
-      _flutterLocalNotificationsPlugin.initialize(
-        initializationSettings,
-        onDidReceiveNotificationResponse:
-            (NotificationResponse notificationResponse) {
-          // ignore: avoid_print
-          print('Notification Response handler called');
-        },
-        onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
-      );
+      if (Platform.isIOS) {
+        flutterLocalNotificationsPlugin.initialize(
+          initializationSettings,
+          onDidReceiveNotificationResponse:
+              (NotificationResponse notificationResponse) {
+            // ignore: avoid_print
+            print('Notification Response handler called');
+          },
+          onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
+        );
+      } else {
+        flutterLocalNotificationsPlugin.initialize(
+          initializationSettings,
+          onDidReceiveNotificationResponse: onDidReceiveNotificationResponse,
+          onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
+        );
+      }
 
       isInitializedPlugin = true;
     } catch (ex) {

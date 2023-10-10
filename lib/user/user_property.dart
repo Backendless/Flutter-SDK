@@ -7,7 +7,7 @@ class UserProperty extends AbstractProperty {
 
   UserProperty.fromJson(Map json) {
     name = json['name'];
-    required = json['required'];
+    this.required = json['required'];
     type = json['type'];
     identity = json['identity'];
   }

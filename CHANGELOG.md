@@ -1,3 +1,7 @@
+# 8.0.0-alpha.23
+
+* Added implementation for on tap push notifications for Android.
+
 # 8.0.0-alpha.22
 
 * Fixed on tap push action when device is locked for iOS.

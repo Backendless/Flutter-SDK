@@ -1,7 +1,7 @@
 part of backendless_sdk;
 
 class _NativeFunctionsContainer {
-  static OnTapPushHandler? onTapPushAction;
+  static OnTapHandlerIOS? onTapPushAction;
   static String? deviceToken;
   static StreamController streamController = StreamController.broadcast();
   static MessageHandler? messageHandler;

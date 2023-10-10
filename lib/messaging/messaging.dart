@@ -1,10 +1,13 @@
 part of backendless_sdk;
 
-typedef OnTapPushHandler = Future<void> Function({Map? data});
+typedef OnTapHandlerIOS = Future<void> Function({Map? data});
 typedef MessageHandler = Future<void> Function(Map pushMessage);
 
-typedef OnTapHandlerNew = Future<void> Function(RemoteMessage message)?;
-typedef OnBackgroundMessageNew = Future<void> Function(RemoteMessage message)?;
+typedef OnTapHandlerAndroid = Future<void> Function(
+    NotificationResponse? message)?;
+typedef OnTapHandlerBackgroundAndroid = Future<void> Function(
+    NotificationResponse? message)?;
+typedef OnMessageOpenedApp = Future<void> Function(RemoteMessage message)?;
 
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(
@@ -90,11 +93,11 @@ class Messaging {
   Future<DeviceRegistrationResult?> registerDevice({
     List<String>? channels = const ['default'],
     DateTime? expiration,
-    OnTapPushHandler? onTapPushActionIOS,
+    OnTapHandlerIOS? onTapPushActionIOS,
     MessageHandler? onMessage,
-    //OnMessageHandler_new? messageHandler_new,
-    //OnBackgroundMessageNew? backgroundMessageTest,
-    OnTapHandlerNew? onTapPushActionAndroid,
+    OnTapHandlerAndroid? onTapPushActionAndroid,
+    OnTapHandlerBackgroundAndroid? onTapPushActionBackgroundAndroid,
+    OnMessageOpenedApp? onMessageOpenedAppAndroid,
   }) async {
     try {
       if (kIsWeb) {
@@ -108,10 +111,12 @@ class Messaging {
           _messagingService!.init(
             onMessage: onMessage,
             onBackgroundMessage: _firebaseMessagingBackgroundHandler,
-            onMessageOpenedApp: onTapPushActionAndroid,
+            onMessageOpenedApp: onMessageOpenedAppAndroid,
           );
         }
 
+        PushTemplateWorker.onDidReceiveNotificationResponse =
+            onTapPushActionAndroid;
         _deviceToken = await _messagingService!._firebaseMessaging.getToken();
       } else {
         await _NativeFunctionsContainer.registerForRemoteNotifications();
@@ -149,7 +154,10 @@ class Messaging {
     Map<String, String> deviceInfo = await _getDeviceDetails();
     String? deviceId = deviceInfo['identifier'];
 
-    return await Invoker.get('/messaging/registrations/$deviceId');
+    var res = await Invoker.get<List<DeviceRegistration>?>(
+        '/messaging/registrations/$deviceId');
+
+    return res != null ? res[0] : null;
   }
 
   Future<bool> unregisterDevice() async {
