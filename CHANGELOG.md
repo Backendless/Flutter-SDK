@@ -1,3 +1,7 @@
+# 8.0.0-alpha.24
+
+* Added implementation for AtomicCounters
+
 # 8.0.0-alpha.23
 
 * Added implementation for on tap push notifications for Android.

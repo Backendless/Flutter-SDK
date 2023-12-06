@@ -8,6 +8,7 @@ class Backendless {
   static final files = FileService();
   static final messaging = Messaging();
   static final rt = RTConnector();
+  static final counters = BackendlessCounters();
 
   static final BackendlessPrefs _prefs = BackendlessPrefs();
   static const MethodChannel _channelNative =
