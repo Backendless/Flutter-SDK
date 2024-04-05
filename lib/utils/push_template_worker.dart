@@ -24,8 +24,6 @@ void notificationTapBackground(NotificationResponse notificationResponse) {
 
 class PushTemplateWorker {
   static OnTapHandlerAndroid onDidReceiveNotificationResponse;
-  static OnTapHandlerBackgroundAndroid
-      onDidReceiveNotificationBackgroundResponse;
   static bool isInitializedPlugin = false;
 
   static Future<void> showPushNotification(Map notification) async {
@@ -39,8 +37,9 @@ class PushTemplateWorker {
 
     String title = 'Backendless Title';
     String message = 'Backendless Message';
-    int badge = 1;
+    int badge = 0;
     String? threadId;
+    String? subtitle;
     int id = Random().nextInt(2147483646);
     String? templateName = notification['template_name'];
 
@@ -66,18 +65,18 @@ class PushTemplateWorker {
       }
 
       if (Platform.isIOS) {
-        badge = notification['aps']['badge']!;
+        badge = notification['aps']['badge'] ?? 0;
         threadId = notification['thread-id'];
         // String? summaryFormat = notification['summary-format'];
 
         message = notification['message'];
         title = notification['ios-alert-title'];
-        String? subtitle = notification['aps']['alert']['subtitle'];
+        subtitle = notification['aps']['alert']['subtitle'];
         iosDetails = DarwinNotificationDetails(
             badgeNumber: badge, subtitle: subtitle, threadIdentifier: threadId);
       } else if (Platform.isAndroid) {
         if (templateFromStorage != null) {
-          badge = templateFromStorage['badge'];
+          badge = templateFromStorage['badge'] ?? 0;
           Color? color = Color(templateFromStorage['colorCode']);
 
           if (notification.containsKey('data')) {
@@ -86,6 +85,7 @@ class PushTemplateWorker {
           } else {
             message = notification['message'];
             title = notification['android-content-title'];
+            subtitle = notification['android-summary-subtext'];
           }
 
           androidDetails = AndroidNotificationDetails(
@@ -93,6 +93,7 @@ class PushTemplateWorker {
             templateName,
             priority: Priority(templateFromStorage['priority'] - 3),
             importance: Importance(templateFromStorage['priority']),
+            subText: subtitle,
             number: badge,
             icon: templateFromStorage['icon'],
             color: color,

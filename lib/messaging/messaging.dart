@@ -5,8 +5,6 @@ typedef MessageHandler = Future<void> Function(Map pushMessage);
 
 typedef OnTapHandlerAndroid = Future<void> Function(
     NotificationResponse? message)?;
-typedef OnTapHandlerBackgroundAndroid = Future<void> Function(
-    NotificationResponse? message)?;
 typedef OnMessageOpenedApp = Future<void> Function(RemoteMessage message)?;
 
 @pragma('vm:entry-point')
@@ -96,7 +94,6 @@ class Messaging {
     OnTapHandlerIOS? onTapPushActionIOS,
     MessageHandler? onMessage,
     OnTapHandlerAndroid? onTapPushActionAndroid,
-    OnTapHandlerBackgroundAndroid? onTapPushActionBackgroundAndroid,
     OnMessageOpenedApp? onMessageOpenedAppAndroid,
   }) async {
     try {

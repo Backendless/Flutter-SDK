@@ -1,3 +1,11 @@
+# 8.0.0-alpha.26
+
+* Added the ability to ignore badge for push notifications(if badge value in your console was set to 0).
+
+# 8.0.0-alpha.25
+
+* Minor fixes for push templates service.
+
 # 8.0.0-alpha.24
 
 * Added implementation for AtomicCounters
