@@ -1,4 +1,4 @@
-part of backendless_sdk;
+part of '../backendless_sdk.dart';
 
 class UnitOfWork {
   static const String referenceMarker = "___ref";
@@ -103,7 +103,7 @@ class UnitOfWork {
   }
 
   Map toJson() => {
-        "isolationLevelEnum": describeEnum(transactionIsolation),
+        "isolationLevelEnum": transactionIsolation.name,
         "operations": operations,
       };
 }

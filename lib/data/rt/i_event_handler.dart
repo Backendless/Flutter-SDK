@@ -1,4 +1,4 @@
-part of backendless_sdk;
+part of '../../backendless_sdk.dart';
 
 abstract class IEventHandler<T> {
   void addCreateListener(void Function(T? response) callback,

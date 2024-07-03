@@ -1,9 +1,9 @@
-part of backendless_sdk;
+part of '../../../../backendless_sdk.dart';
 
 class OperationFind<T> extends Operation<T> {
   OperationFind(
-      OperationType operationType, String table, String opResultId, T payload)
-      : super.withPayload(operationType, table, opResultId, payload);
+      OperationType super.operationType, String super.table, String super.opResultId, T super.payload)
+      : super.withPayload();
 
-  OperationFind.fromJson(Map json) : super.fromJson(json);
+  OperationFind.fromJson(super.json) : super.fromJson();
 }

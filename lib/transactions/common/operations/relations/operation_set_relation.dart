@@ -1,9 +1,9 @@
-part of backendless_sdk;
+part of '../../../../backendless_sdk.dart';
 
 class OperationSetRelation extends Operation<Relation> {
-  OperationSetRelation(OperationType operationType, String table,
-      String opResultId, Relation payload)
-      : super.withPayload(operationType, table, opResultId, payload);
+  OperationSetRelation(OperationType super.operationType, String super.table,
+      String super.opResultId, Relation super.payload)
+      : super.withPayload();
 
-  OperationSetRelation.fromJson(Map json) : super.fromJson(json);
+  OperationSetRelation.fromJson(super.json) : super.fromJson();
 }

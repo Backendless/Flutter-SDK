@@ -1,4 +1,4 @@
-part of backendless_sdk;
+part of '../../backendless_sdk.dart';
 
 class LineString extends Geometry {
   static const String geoJsonType = "LineString";
@@ -13,8 +13,7 @@ class LineString extends Geometry {
   @override
   int get hashCode => Object.hash(points, srs);
 
-  LineString({List<Point>? points, SpatialReferenceSystemEnum? srs})
-      : super(srs: srs) {
+  LineString({List<Point>? points, super.srs = null}) {
     this.points = points ?? <Point>[];
   }
 

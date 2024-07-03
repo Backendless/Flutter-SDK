@@ -1,26 +1,25 @@
 name: backendless_sdk
 description: Flutter plugin for Backendless SDK. It provides access to the Backendless services that enable the server-side functionality for developing and running mobile and desktop apps.
-version: 8.0.0-alpha.26
+version: 8.0.0-alpha.27
 homepage: https://backendless.com
 
 environment:
-  sdk: ">=2.17.5 <4.0.0"
-  flutter: ">=2.5.0"
+  sdk: ">=3.0.0 <4.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  http: ^0.13.4
+  http: ^1.2.1
   reflectable: ^4.0.2
   connectivity_plus: ^2.0.2
-  device_info_plus: ^8.0.0
-  socket_io_client: ^1.0.2
-  uuid: ^3.0.6
+  device_info_plus: ^10.1.0
+  socket_io_client: ^2.0.3+1
+  uuid: ^4.4.0
   synchronized: ^3.0.0+2
-  flutter_secure_storage: ^7.0.1
-  firebase_core: ^2.3.0
-  firebase_messaging: ^14.1.2
-  flutter_local_notifications: ^13.0.0
+  flutter_secure_storage: ^9.2.2
+  firebase_core: ^3.1.1
+  firebase_messaging: ^15.0.2
+  flutter_local_notifications: ^17.2.1
   collection: ^1.16.0
   shared_preferences: ^2.1.2
 
@@ -28,7 +27,7 @@ dependencies:
     sdk: flutter
 
 dev_dependencies:
-  flutter_lints: ^2.0.0
+  flutter_lints: ^4.0.0
   build_runner: ^2.1.7
 
 # For information on the generic Dart part of this file, see the

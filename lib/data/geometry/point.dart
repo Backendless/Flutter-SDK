@@ -1,4 +1,4 @@
-part of backendless_sdk;
+part of '../../backendless_sdk.dart';
 
 class Point extends Geometry {
   static const double precision = 0.000000001;
@@ -22,8 +22,7 @@ class Point extends Geometry {
   @override
   int get hashCode => Object.hash(x, y, srs);
 
-  Point({this.x = 0.0, this.y = 0.0, SpatialReferenceSystemEnum? srs})
-      : super(srs: srs);
+  Point({this.x = 0.0, this.y = 0.0, super.srs = null});
 
   @override
   String getWktType() => Point.wktType;

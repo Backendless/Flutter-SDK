@@ -1,9 +1,9 @@
-part of backendless_sdk;
+part of '../../../../backendless_sdk.dart';
 
 class OperationCreateBulk extends Operation<List> {
-  OperationCreateBulk(OperationType operationType, String table,
-      String opResultId, List payload)
-      : super.withPayload(operationType, table, opResultId, payload);
+  OperationCreateBulk(OperationType super.operationType, String super.table,
+      String super.opResultId, List super.payload)
+      : super.withPayload();
 
-  OperationCreateBulk.fromJson(Map json) : super.fromJson(json);
+  OperationCreateBulk.fromJson(super.json) : super.fromJson();
 }

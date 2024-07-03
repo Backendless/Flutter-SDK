@@ -1,4 +1,4 @@
-part of backendless_sdk;
+part of '../backendless_sdk.dart';
 
 typedef OnTapHandlerIOS = Future<void> Function({Map? data});
 typedef MessageHandler = Future<void> Function(Map pushMessage);
@@ -253,7 +253,7 @@ class Messaging {
       } else if (io.Platform.isIOS) {
         var data = await _deviceInfoPlugin.iosInfo;
         deviceName = 'IOS';
-        deviceVersion = data.systemVersion!;
+        deviceVersion = data.systemVersion;
         identifier = data.identifierForVendor!; //UUID for iOS
       }
     } on PlatformException {

@@ -1,6 +1,6 @@
 // ignore_for_file: constant_identifier_names
 
-part of backendless_sdk;
+part of '../../backendless_sdk.dart';
 
 enum OperationType {
   CREATE,

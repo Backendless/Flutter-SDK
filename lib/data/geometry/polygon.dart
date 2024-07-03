@@ -1,4 +1,4 @@
-part of backendless_sdk;
+part of '../../backendless_sdk.dart';
 
 class Polygon extends Geometry {
   static const String geoJsonType = "Polygon";
@@ -10,8 +10,7 @@ class Polygon extends Geometry {
   Polygon(
       {LineString? boundary,
       List<LineString>? holes,
-      SpatialReferenceSystemEnum? srs})
-      : super(srs: srs) {
+      super.srs = null}) {
     this.boundary = boundary ?? LineString();
     this.holes = holes ?? [];
   }

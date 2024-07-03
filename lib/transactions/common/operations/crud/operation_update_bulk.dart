@@ -1,9 +1,9 @@
-part of backendless_sdk;
+part of '../../../../backendless_sdk.dart';
 
 class OperationUpdateBulk extends Operation<UpdateBulkPayload> {
-  OperationUpdateBulk(OperationType operationType, String table,
-      String opResultId, UpdateBulkPayload payload)
-      : super.withPayload(operationType, table, opResultId, payload);
+  OperationUpdateBulk(OperationType super.operationType, String super.table,
+      String super.opResultId, UpdateBulkPayload super.payload)
+      : super.withPayload();
 
-  OperationUpdateBulk.fromJson(Map json) : super.fromJson(json);
+  OperationUpdateBulk.fromJson(super.json) : super.fromJson();
 }

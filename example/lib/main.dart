@@ -29,9 +29,9 @@ class _MyAppState extends State<MyApp> {
   Future<void> initPlatformState() async {
     try {
       await Backendless.initApp(
-        applicationId: 'APP_ID',
+        applicationId: '756C19D2-DF82-9D99-FF9C-9BFD2F85DC00',
         androidApiKey: 'ANDROID_API_KEY',
-        iosApiKey: 'IOS_API_KEY',
+        iosApiKey: 'A4470C03-FC06-4009-BD47-9077033BF7F6',
       );
     } on Exception {
       if (kDebugMode) {

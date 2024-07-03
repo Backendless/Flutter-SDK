@@ -1,9 +1,9 @@
-part of backendless_sdk;
+part of '../backendless_sdk.dart';
 
 class BackendlessException extends io.HttpException {
   final int? code;
 
-  BackendlessException(String message, {this.code}) : super(message);
+  BackendlessException(super.message, {this.code});
 
   BackendlessException.fromJson(Map json)
       : code = json['code'],

@@ -1,8 +1,7 @@
-part of backendless_sdk;
+part of '../../../backendless_sdk.dart';
 
 class DeleteBulkPayload extends Selector {
-  DeleteBulkPayload(String? conditional, Object? unconditional)
-      : super(conditional, unconditional);
+  DeleteBulkPayload(super.conditional, super.unconditional);
 
   DeleteBulkPayload.fromJson(Map json)
       : super(json['conditional'], json['unconditional']);

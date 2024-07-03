@@ -1,6 +1,6 @@
 // ignore_for_file: avoid_shadowing_type_parameters
 
-part of backendless_sdk;
+part of '../../backendless_sdk.dart';
 
 class RTMessaging<T> extends RTListener {
   final Channel _channel;

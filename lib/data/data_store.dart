@@ -1,4 +1,4 @@
-part of backendless_sdk;
+part of '../backendless_sdk.dart';
 
 abstract class IDataStore<T> {
   ///If the variable `isUpsert = true`, then it calls the upsert method.

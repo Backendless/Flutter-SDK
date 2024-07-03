@@ -1,9 +1,9 @@
-part of backendless_sdk;
+part of '../../../../backendless_sdk.dart';
 
 class OperationDeleteBulk extends Operation<DeleteBulkPayload> {
-  OperationDeleteBulk(OperationType operationType, String table,
-      String opResultId, DeleteBulkPayload payload)
-      : super.withPayload(operationType, table, opResultId, payload);
+  OperationDeleteBulk(OperationType super.operationType, String super.table,
+      String super.opResultId, DeleteBulkPayload super.payload)
+      : super.withPayload();
 
-  OperationDeleteBulk.fromJson(Map json) : super.fromJson(json);
+  OperationDeleteBulk.fromJson(super.json) : super.fromJson();
 }

@@ -1,4 +1,4 @@
-part of backendless_sdk;
+part of '../../backendless_sdk.dart';
 
 class OperationResult<T> {
   OperationType? operationType;
@@ -8,7 +8,7 @@ class OperationResult<T> {
 
   OperationResult.fromJson(Map json) {
     operationType = OperationType.values.firstWhere(
-        (element) => describeEnum(element) == json['operationType']);
+        (element) => element.name == json['operationType']);
     result = json['result'];
   }
 }

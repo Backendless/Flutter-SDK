@@ -1,4 +1,4 @@
-part of backendless_sdk;
+part of '../backendless_sdk.dart';
 
 class Data {
   IDataStore<dynamic> of(String table) => MapDrivenDataStore(table);

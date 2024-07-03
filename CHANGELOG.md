@@ -1,3 +1,9 @@
+# 8.0.0-alpha.27
+
+* Updated minimum supported Flutter-SDK to 3.0.0 version.
+* Code refactoring to Flutter 3.0.0 standards.
+* **THIS BUILD INCLUDES BREAKING CHANGES.**
+
 # 8.0.0-alpha.26
 
 * Added the ability to ignore badge for push notifications(if badge value in your console was set to 0).

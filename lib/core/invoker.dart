@@ -1,4 +1,4 @@
-part of backendless_sdk;
+part of '../backendless_sdk.dart';
 
 class Invoker<T> {
   static final BackendlessPrefs prefs = Backendless._prefs;
@@ -154,7 +154,7 @@ class Invoker<T> {
 
     if (options != null) {
       if (options.executionType != null) {
-        headers['bl-execution-type'] = describeEnum(options.executionType!);
+        headers['bl-execution-type'] = options.executionType!.name;
       }
       if (options.httpRequestHeaders != null) {
         headers.addAll(options.httpRequestHeaders!);

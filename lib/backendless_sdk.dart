@@ -11,7 +11,7 @@ import 'package:backendless_sdk/utils/utils.dart';
 import 'package:backendless_sdk/utils/push_template_worker.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart'
-    show ReadBuffer, WriteBuffer, describeEnum, kDebugMode, kIsWeb, listEquals;
+    show ReadBuffer, WriteBuffer, kDebugMode, kIsWeb, listEquals;
 import 'package:flutter/services.dart';
 import 'package:http/http.dart';
 import 'package:reflectable/reflectable.dart';

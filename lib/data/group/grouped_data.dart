@@ -1,7 +1,7 @@
-part of backendless_sdk;
+part of '../../backendless_sdk.dart';
 
 class GroupedData extends GroupResult {
   GroupColumnValue? groupBy;
 
-  GroupedData.fromJson(Map map) : super.fromJson(map);
+  GroupedData.fromJson(super.map) : super.fromJson();
 }

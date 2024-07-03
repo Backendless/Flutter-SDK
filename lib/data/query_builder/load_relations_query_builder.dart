@@ -1,6 +1,6 @@
 // ignore_for_file: annotate_overrides, overridden_fields
 
-part of backendless_sdk;
+part of '../../backendless_sdk.dart';
 
 class LoadRelationsQueryBuilder<T> extends DataQueryBuilder {
   PagedQueryBuilder pagedQueryBuilder = PagedQueryBuilder();

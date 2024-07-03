@@ -1,9 +1,9 @@
-part of backendless_sdk;
+part of '../../../../backendless_sdk.dart';
 
 class OperationCreate extends Operation<Map> {
   OperationCreate(
-      OperationType operationType, String table, String opResultId, Map payload)
-      : super.withPayload(operationType, table, opResultId, payload);
+      OperationType super.operationType, String super.table, String super.opResultId, Map super.payload)
+      : super.withPayload();
 
-  OperationCreate.fromJson(Map json) : super.fromJson(json);
+  OperationCreate.fromJson(super.json) : super.fromJson();
 }

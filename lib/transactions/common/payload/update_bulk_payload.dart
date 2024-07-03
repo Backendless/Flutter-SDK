@@ -1,11 +1,10 @@
-part of backendless_sdk;
+part of '../../../backendless_sdk.dart';
 
 class UpdateBulkPayload<T> extends Selector {
   Map changes;
   T? query;
 
-  UpdateBulkPayload(String? conditional, Object? unconditional, this.changes)
-      : super(conditional, unconditional);
+  UpdateBulkPayload(super.conditional, super.unconditional, this.changes);
 
   UpdateBulkPayload.fromJson(Map json)
       : changes = json['changes'],

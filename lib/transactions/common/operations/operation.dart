@@ -1,4 +1,4 @@
-part of backendless_sdk;
+part of '../../../backendless_sdk.dart';
 
 abstract class Operation<T> {
   OperationType? operationType;
@@ -40,7 +40,7 @@ abstract class Operation<T> {
   }
 
   Map toJson() => {
-        "operationType": describeEnum(operationType!),
+        "operationType": operationType!.name,
         "table": table,
         "payload": payload,
         "opResultId": opResultId,
@@ -53,7 +53,7 @@ abstract class Operation<T> {
 
   Operation.fromJson(Map json) {
     operationType = OperationType.values.firstWhere(
-        (element) => describeEnum(element) == json['operationType']);
+        (element) => element.name == json['operationType']);
     table = json['table'];
     opResultId = json['opResultId'];
     if (T == DeleteBulkPayload) {

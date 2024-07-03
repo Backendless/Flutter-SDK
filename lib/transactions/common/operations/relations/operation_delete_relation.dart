@@ -1,9 +1,9 @@
-part of backendless_sdk;
+part of '../../../../backendless_sdk.dart';
 
 class OperationDeleteRelation extends Operation<Relation> {
-  OperationDeleteRelation(OperationType operationType, String table,
-      String opResultId, Relation payload)
-      : super.withPayload(operationType, table, opResultId, payload);
+  OperationDeleteRelation(OperationType super.operationType, String super.table,
+      String super.opResultId, Relation super.payload)
+      : super.withPayload();
 
-  OperationDeleteRelation.fromJson(Map json) : super.fromJson(json);
+  OperationDeleteRelation.fromJson(super.json) : super.fromJson();
 }

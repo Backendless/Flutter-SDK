@@ -1,4 +1,4 @@
-part of backendless_sdk;
+part of '../backendless_sdk.dart';
 
 class GroupResultError implements Exception {
   GroupResultError.groupsNotFound() {

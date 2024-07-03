@@ -1,4 +1,4 @@
-part of backendless_sdk;
+part of '../../../backendless_sdk.dart';
 
 class Relation extends Selector {
   Object? parentObject;
@@ -8,14 +8,13 @@ class Relation extends Selector {
   bool? columnUnique;
 
   Relation(
-      [String? conditional,
-      Object? unconditional,
+      [super.conditional,
+      super.unconditional,
       this.parentObject,
       this.relationColumn,
       this.objectIds,
       this.relationTableName,
-      this.columnUnique])
-      : super(conditional, unconditional);
+      this.columnUnique]);
 
   Relation.fromJson(Map json)
       : parentObject = json['parentObject'],

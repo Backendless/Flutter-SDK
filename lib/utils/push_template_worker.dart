@@ -91,8 +91,8 @@ class PushTemplateWorker {
           androidDetails = AndroidNotificationDetails(
             templateName,
             templateName,
-            priority: Priority(templateFromStorage['priority'] - 3),
-            importance: Importance(templateFromStorage['priority']),
+            priority: Priority.max,
+            importance: Importance.max,
             subText: subtitle,
             number: badge,
             icon: templateFromStorage['icon'],

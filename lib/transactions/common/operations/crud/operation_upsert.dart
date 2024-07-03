@@ -1,9 +1,9 @@
-part of backendless_sdk;
+part of '../../../../backendless_sdk.dart';
 
 class OperationUpsert extends Operation<Map> {
   OperationUpsert(
-      OperationType operationType, String table, String opResultId, Map payload)
-      : super.withPayload(operationType, table, opResultId, payload);
+      OperationType super.operationType, String super.table, String super.opResultId, Map super.payload)
+      : super.withPayload();
 
-  OperationUpsert.fromJson(Map json) : super.fromJson(json);
+  OperationUpsert.fromJson(super.json) : super.fromJson();
 }

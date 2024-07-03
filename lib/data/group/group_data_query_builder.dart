@@ -1,4 +1,4 @@
-part of backendless_sdk;
+part of '../../backendless_sdk.dart';
 
 class GroupDataQueryBuilder extends DataQueryBuilder {
   int groupDepth = 3;
