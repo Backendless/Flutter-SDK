@@ -43,8 +43,10 @@ class UserServiceCallHandler {
                 call.arguments['password'], call.arguments['stayLoggedIn']))
             .then((value) => getUser(value));
       case "Backendless.UserService.setCurrentUser":
-        return Future(() => setCurrentUser(
-            call.arguments['currentUser'], call.arguments('stayLoggedIn')));
+        BackendlessUser user = call.arguments['currentUser'];
+        bool stayLoggedIn = call.arguments['stayLoggedIn'];
+        Future(() => setCurrentUser(convertToJs(user.properties), stayLoggedIn));
+        return Future.value(null);
       // case "Backendless.UserService.getCurrentUser":
       //   return promiseToFuture(getCurrentUser(false))
       //       then((value) => getUser(value));

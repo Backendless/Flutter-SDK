@@ -23,7 +23,7 @@ dev_dependencies:
   intl: ^0.17.0
 
 dependency_overrides:
-  test_api: ^0.4.17
+  test_api:
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec
 

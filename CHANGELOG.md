@@ -1,3 +1,12 @@
+# 7.3.8
+
+* Fixed bug in setCurrentUser method for web.
+
+# 7.3.7
+
+* Fixed error for push notifications in Android when app is closed.
+* Updated dependency to Android-SDK to 7.0.6.
+
 # 7.3.6
 
 * Fixed a bug with receiving push notifications when the application is closed in Android.
