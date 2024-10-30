@@ -5,6 +5,8 @@ import 'dart:ui';
 import '../backendless_sdk.dart';
 import '../utils/template_storage.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -72,12 +74,25 @@ class PushTemplateWorker {
         message = notification['message'];
         title = notification['ios-alert-title'];
         subtitle = notification['aps']['alert']['subtitle'];
+        List<DarwinNotificationAttachment>? iosAttachments;
+
+        if(notification['attachment-url'] != null) {
+          final http.Response response = await http.get(Uri.parse(notification['attachment-url']));
+          final dir = await getTemporaryDirectory();
+          var filename = '${dir.path}/image.png';
+          final file = File(filename);
+          await file.writeAsBytes(response.bodyBytes);
+
+          iosAttachments = [DarwinNotificationAttachment(filename)];
+        }
+
         iosDetails = DarwinNotificationDetails(
-            badgeNumber: badge, subtitle: subtitle, threadIdentifier: threadId);
+            badgeNumber: badge, subtitle: subtitle, threadIdentifier: threadId, attachments: iosAttachments);
       } else if (Platform.isAndroid) {
         if (templateFromStorage != null) {
           badge = templateFromStorage['badge'] ?? 0;
           Color? color = Color(templateFromStorage['colorCode']);
+          String? largeIconPath;
 
           if (notification.containsKey('data')) {
             message = notification['data']['message'];
@@ -86,6 +101,16 @@ class PushTemplateWorker {
             message = notification['message'];
             title = notification['android-content-title'];
             subtitle = notification['android-summary-subtext'];
+          }
+
+          if(notification.containsKey('android-large-icon')) {
+            final http.Response response = await http.get(Uri.parse(notification['android-large-icon']));
+            final dir = await getTemporaryDirectory();
+            var filename = '${dir.path}/largeIcon.png';
+            final file = File(filename);
+            await file.writeAsBytes(response.bodyBytes);
+
+            largeIconPath = filename;
           }
 
           androidDetails = AndroidNotificationDetails(
@@ -97,6 +122,7 @@ class PushTemplateWorker {
             number: badge,
             icon: templateFromStorage['icon'],
             color: color,
+            largeIcon: largeIconPath != null ? FilePathAndroidBitmap(largeIconPath) : null,
           );
         }
       }

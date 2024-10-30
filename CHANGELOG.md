@@ -1,10 +1,15 @@
-# 8.0.0-alpha.27
+# 8.0.0-alpha.29
+
+* Added support for large icons for push notifications Android.
+* Added support for attachments for push notifications iOS.
+
+# 8.0.0-alpha.28
 
 * Updated minimum supported Flutter-SDK to 3.0.0 version.
 * Code refactoring to Flutter 3.0.0 standards.
 * **THIS BUILD INCLUDES BREAKING CHANGES.**
 
-# 8.0.0-alpha.26
+# 8.0.0-alpha.27
 
 * Added the ability to ignore badge for push notifications(if badge value in your console was set to 0).
 

@@ -88,7 +88,7 @@ class Messaging {
   ///backgroundMessage_test and tapHandler_test this is not completed new features(this means that using this may not work as it should.) that will be in coming releases
   ///If you want customise showing of push-notifications for android - use `flutter_local_notifications` plugin in handlers.
   ///If handlers work incorrectly, you can handle notifications with using `firebase_messaging`.
-  Future<DeviceRegistrationResult?> registerDevice({
+  Future<DeviceRegistrationResult?> registerDevice(List<String> list, {
     List<String>? channels = const ['default'],
     DateTime? expiration,
     OnTapHandlerIOS? onTapPushActionIOS,
