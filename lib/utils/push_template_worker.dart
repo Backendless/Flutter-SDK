@@ -76,7 +76,7 @@ class PushTemplateWorker {
         subtitle = notification['aps']['alert']['subtitle'];
         List<DarwinNotificationAttachment>? iosAttachments;
 
-        if(notification['attachment-url'] != null) {
+        if(notification.containsKey('attachment-url') && notification['attachment-url'] != null && (notification['attachment-url'] as String).isNotEmpty) {
           final http.Response response = await http.get(Uri.parse(notification['attachment-url']));
           final dir = await getTemporaryDirectory();
           var filename = '${dir.path}/image.png';
@@ -103,7 +103,7 @@ class PushTemplateWorker {
             subtitle = notification['android-summary-subtext'];
           }
 
-          if(notification.containsKey('android-large-icon')) {
+          if(notification.containsKey('android-large-icon') && notification['android-large-icon'] != null && (notification['android-large-icon'] as String).isNotEmpty) {
             final http.Response response = await http.get(Uri.parse(notification['android-large-icon']));
             final dir = await getTemporaryDirectory();
             var filename = '${dir.path}/largeIcon.png';

@@ -1,3 +1,11 @@
+# 8.0.0-alpha.31
+
+* Minor bug fix.
+
+# 8.0.0-alpha.30
+
+* Minor bug fix.
+
 # 8.0.0-alpha.29
 
 * Added support for large icons for push notifications Android.
